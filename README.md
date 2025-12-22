@@ -11,14 +11,14 @@ It's my personal component library. I got tired of copy-pasting the same damn co
 ## Installation
 
 ```bash
-npm install @drj/ui
+npm install @jcpsimmons/scl
 ```
 
 ## Usage
 
 ```tsx
-import { Button, Card, Input } from '@drj/ui'
-import '@drj/ui/globals.css'  // Don't forget this or everything looks like shit
+import { Button, Card, Input } from '@jcpsimmons/scl'
+import '@jcpsimmons/scl/globals.css'  // Don't forget this or everything looks like shit
 
 function App() {
   return (
