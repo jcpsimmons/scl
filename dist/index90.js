@@ -1,32 +1,13 @@
-import * as f from "react";
-import "react-dom";
-import { createSlot as l } from "./index47.js";
-import { jsx as n } from "react/jsx-runtime";
-var u = [
-  "a",
-  "button",
-  "div",
-  "form",
-  "h2",
-  "h3",
-  "img",
-  "input",
-  "label",
-  "li",
-  "nav",
-  "ol",
-  "p",
-  "select",
-  "span",
-  "svg",
-  "ul"
-], w = u.reduce((t, i) => {
-  const o = l(`Primitive.${i}`), r = f.forwardRef((e, m) => {
-    const { asChild: a, ...p } = e, s = a ? o : i;
-    return typeof window < "u" && (window[Symbol.for("radix-ui")] = !0), /* @__PURE__ */ n(s, { ...p, ref: m });
-  });
-  return r.displayName = `Primitive.${i}`, { ...t, [i]: r };
-}, {});
+import * as r from "react";
+function o(t) {
+  const e = r.useRef(t);
+  return r.useEffect(() => {
+    e.current = t;
+  }), r.useMemo(() => (...n) => {
+    var u;
+    return (u = e.current) == null ? void 0 : u.call(e, ...n);
+  }, []);
+}
 export {
-  w as Primitive
+  o as useCallbackRef
 };

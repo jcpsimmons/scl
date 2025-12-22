@@ -1,674 +1,832 @@
-import { configureNesting as O, parser as H } from "./index134.js";
-import { cssLanguage as _, css as U } from "./index68.js";
-import { typescriptLanguage as W, jsxLanguage as J, tsxLanguage as K, javascriptLanguage as $, javascript as Q } from "./index66.js";
-import { EditorView as X } from "./index64.js";
-import { EditorSelection as Y } from "./index65.js";
-import { LRLanguage as Z, LanguageSupport as ee, indentNodeProp as te, foldNodeProp as le, bracketMatchingHandle as ae, syntaxTree as z } from "./index73.js";
-const T = ["_blank", "_self", "_top", "_parent"], S = ["ascii", "utf-8", "utf-16", "latin1", "latin1"], N = ["get", "post", "put", "delete"], E = ["application/x-www-form-urlencoded", "multipart/form-data", "text/plain"], c = ["true", "false"], l = {}, ne = {
-  a: {
-    attrs: {
-      href: null,
-      ping: null,
-      type: null,
-      media: null,
-      target: T,
-      hreflang: null
-    }
-  },
-  abbr: l,
-  address: l,
-  area: {
-    attrs: {
-      alt: null,
-      coords: null,
-      href: null,
-      target: null,
-      ping: null,
-      media: null,
-      hreflang: null,
-      type: null,
-      shape: ["default", "rect", "circle", "poly"]
-    }
-  },
-  article: l,
-  aside: l,
-  audio: {
-    attrs: {
-      src: null,
-      mediagroup: null,
-      crossorigin: ["anonymous", "use-credentials"],
-      preload: ["none", "metadata", "auto"],
-      autoplay: ["autoplay"],
-      loop: ["loop"],
-      controls: ["controls"]
-    }
-  },
-  b: l,
-  base: { attrs: { href: null, target: T } },
-  bdi: l,
-  bdo: l,
-  blockquote: { attrs: { cite: null } },
-  body: l,
-  br: l,
-  button: {
-    attrs: {
-      form: null,
-      formaction: null,
-      name: null,
-      value: null,
-      autofocus: ["autofocus"],
-      disabled: ["autofocus"],
-      formenctype: E,
-      formmethod: N,
-      formnovalidate: ["novalidate"],
-      formtarget: T,
-      type: ["submit", "reset", "button"]
-    }
-  },
-  canvas: { attrs: { width: null, height: null } },
-  caption: l,
-  center: l,
-  cite: l,
-  code: l,
-  col: { attrs: { span: null } },
-  colgroup: { attrs: { span: null } },
-  command: {
-    attrs: {
-      type: ["command", "checkbox", "radio"],
-      label: null,
-      icon: null,
-      radiogroup: null,
-      command: null,
-      title: null,
-      disabled: ["disabled"],
-      checked: ["checked"]
-    }
-  },
-  data: { attrs: { value: null } },
-  datagrid: { attrs: { disabled: ["disabled"], multiple: ["multiple"] } },
-  datalist: { attrs: { data: null } },
-  dd: l,
-  del: { attrs: { cite: null, datetime: null } },
-  details: { attrs: { open: ["open"] } },
-  dfn: l,
-  div: l,
-  dl: l,
-  dt: l,
-  em: l,
-  embed: { attrs: { src: null, type: null, width: null, height: null } },
-  eventsource: { attrs: { src: null } },
-  fieldset: { attrs: { disabled: ["disabled"], form: null, name: null } },
-  figcaption: l,
-  figure: l,
-  footer: l,
-  form: {
-    attrs: {
-      action: null,
-      name: null,
-      "accept-charset": S,
-      autocomplete: ["on", "off"],
-      enctype: E,
-      method: N,
-      novalidate: ["novalidate"],
-      target: T
-    }
-  },
-  h1: l,
-  h2: l,
-  h3: l,
-  h4: l,
-  h5: l,
-  h6: l,
-  head: {
-    children: ["title", "base", "link", "style", "meta", "script", "noscript", "command"]
-  },
-  header: l,
-  hgroup: l,
-  hr: l,
-  html: {
-    attrs: { manifest: null }
-  },
-  i: l,
-  iframe: {
-    attrs: {
-      src: null,
-      srcdoc: null,
-      name: null,
-      width: null,
-      height: null,
-      sandbox: ["allow-top-navigation", "allow-same-origin", "allow-forms", "allow-scripts"],
-      seamless: ["seamless"]
-    }
-  },
-  img: {
-    attrs: {
-      alt: null,
-      src: null,
-      ismap: null,
-      usemap: null,
-      width: null,
-      height: null,
-      crossorigin: ["anonymous", "use-credentials"]
-    }
-  },
-  input: {
-    attrs: {
-      alt: null,
-      dirname: null,
-      form: null,
-      formaction: null,
-      height: null,
-      list: null,
-      max: null,
-      maxlength: null,
-      min: null,
-      name: null,
-      pattern: null,
-      placeholder: null,
-      size: null,
-      src: null,
-      step: null,
-      value: null,
-      width: null,
-      accept: ["audio/*", "video/*", "image/*"],
-      autocomplete: ["on", "off"],
-      autofocus: ["autofocus"],
-      checked: ["checked"],
-      disabled: ["disabled"],
-      formenctype: E,
-      formmethod: N,
-      formnovalidate: ["novalidate"],
-      formtarget: T,
-      multiple: ["multiple"],
-      readonly: ["readonly"],
-      required: ["required"],
-      type: [
-        "hidden",
-        "text",
-        "search",
-        "tel",
-        "url",
-        "email",
-        "password",
-        "datetime",
-        "date",
-        "month",
-        "week",
-        "time",
-        "datetime-local",
-        "number",
-        "range",
-        "color",
-        "checkbox",
-        "radio",
-        "file",
-        "submit",
-        "image",
-        "reset",
-        "button"
-      ]
-    }
-  },
-  ins: { attrs: { cite: null, datetime: null } },
-  kbd: l,
-  keygen: {
-    attrs: {
-      challenge: null,
-      form: null,
-      name: null,
-      autofocus: ["autofocus"],
-      disabled: ["disabled"],
-      keytype: ["RSA"]
-    }
-  },
-  label: { attrs: { for: null, form: null } },
-  legend: l,
-  li: { attrs: { value: null } },
-  link: {
-    attrs: {
-      href: null,
-      type: null,
-      hreflang: null,
-      media: null,
-      sizes: ["all", "16x16", "16x16 32x32", "16x16 32x32 64x64"]
-    }
-  },
-  map: { attrs: { name: null } },
-  mark: l,
-  menu: { attrs: { label: null, type: ["list", "context", "toolbar"] } },
-  meta: {
-    attrs: {
-      content: null,
-      charset: S,
-      name: ["viewport", "application-name", "author", "description", "generator", "keywords"],
-      "http-equiv": ["content-language", "content-type", "default-style", "refresh"]
-    }
-  },
-  meter: { attrs: { value: null, min: null, low: null, high: null, max: null, optimum: null } },
-  nav: l,
-  noscript: l,
-  object: {
-    attrs: {
-      data: null,
-      type: null,
-      name: null,
-      usemap: null,
-      form: null,
-      width: null,
-      height: null,
-      typemustmatch: ["typemustmatch"]
-    }
-  },
-  ol: {
-    attrs: { reversed: ["reversed"], start: null, type: ["1", "a", "A", "i", "I"] },
-    children: ["li", "script", "template", "ul", "ol"]
-  },
-  optgroup: { attrs: { disabled: ["disabled"], label: null } },
-  option: { attrs: { disabled: ["disabled"], label: null, selected: ["selected"], value: null } },
-  output: { attrs: { for: null, form: null, name: null } },
-  p: l,
-  param: { attrs: { name: null, value: null } },
-  pre: l,
-  progress: { attrs: { value: null, max: null } },
-  q: { attrs: { cite: null } },
-  rp: l,
-  rt: l,
-  ruby: l,
-  samp: l,
-  script: {
-    attrs: {
-      type: ["text/javascript"],
-      src: null,
-      async: ["async"],
-      defer: ["defer"],
-      charset: S
-    }
-  },
-  section: l,
-  select: {
-    attrs: {
-      form: null,
-      name: null,
-      size: null,
-      autofocus: ["autofocus"],
-      disabled: ["disabled"],
-      multiple: ["multiple"]
-    }
-  },
-  slot: { attrs: { name: null } },
-  small: l,
-  source: { attrs: { src: null, type: null, media: null } },
-  span: l,
-  strong: l,
-  style: {
-    attrs: {
-      type: ["text/css"],
-      media: null,
-      scoped: null
-    }
-  },
-  sub: l,
-  summary: l,
-  sup: l,
-  table: l,
-  tbody: l,
-  td: { attrs: { colspan: null, rowspan: null, headers: null } },
-  template: l,
-  textarea: {
-    attrs: {
-      dirname: null,
-      form: null,
-      maxlength: null,
-      name: null,
-      placeholder: null,
-      rows: null,
-      cols: null,
-      autofocus: ["autofocus"],
-      disabled: ["disabled"],
-      readonly: ["readonly"],
-      required: ["required"],
-      wrap: ["soft", "hard"]
-    }
-  },
-  tfoot: l,
-  th: { attrs: { colspan: null, rowspan: null, headers: null, scope: ["row", "col", "rowgroup", "colgroup"] } },
-  thead: l,
-  time: { attrs: { datetime: null } },
-  title: l,
-  tr: l,
-  track: {
-    attrs: {
-      src: null,
-      label: null,
-      default: null,
-      kind: ["subtitles", "captions", "descriptions", "chapters", "metadata"],
-      srclang: null
-    }
-  },
-  ul: { children: ["li", "script", "template", "ul", "ol"] },
-  var: l,
-  video: {
-    attrs: {
-      src: null,
-      poster: null,
-      width: null,
-      height: null,
-      crossorigin: ["anonymous", "use-credentials"],
-      preload: ["auto", "metadata", "none"],
-      autoplay: ["autoplay"],
-      mediagroup: ["movie"],
-      muted: ["muted"],
-      controls: ["controls"]
-    }
-  },
-  wbr: l
-}, D = {
-  accesskey: null,
-  class: null,
-  contenteditable: c,
-  contextmenu: null,
-  dir: ["ltr", "rtl", "auto"],
-  draggable: ["true", "false", "auto"],
-  dropzone: ["copy", "move", "link", "string:", "file:"],
-  hidden: ["hidden"],
-  id: null,
-  inert: ["inert"],
-  itemid: null,
-  itemprop: null,
-  itemref: null,
-  itemscope: ["itemscope"],
-  itemtype: null,
-  lang: ["ar", "bn", "de", "en-GB", "en-US", "es", "fr", "hi", "id", "ja", "pa", "pt", "ru", "tr", "zh"],
-  spellcheck: c,
-  autocorrect: c,
-  autocapitalize: c,
-  style: null,
-  tabindex: null,
-  title: null,
-  translate: ["yes", "no"],
-  rel: ["stylesheet", "alternate", "author", "bookmark", "help", "license", "next", "nofollow", "noreferrer", "prefetch", "prev", "search", "tag"],
-  role: /* @__PURE__ */ "alert application article banner button cell checkbox complementary contentinfo dialog document feed figure form grid gridcell heading img list listbox listitem main navigation region row rowgroup search switch tab table tabpanel textbox timer".split(" "),
-  "aria-activedescendant": null,
-  "aria-atomic": c,
-  "aria-autocomplete": ["inline", "list", "both", "none"],
-  "aria-busy": c,
-  "aria-checked": ["true", "false", "mixed", "undefined"],
-  "aria-controls": null,
-  "aria-describedby": null,
-  "aria-disabled": c,
-  "aria-dropeffect": null,
-  "aria-expanded": ["true", "false", "undefined"],
-  "aria-flowto": null,
-  "aria-grabbed": ["true", "false", "undefined"],
-  "aria-haspopup": c,
-  "aria-hidden": c,
-  "aria-invalid": ["true", "false", "grammar", "spelling"],
-  "aria-label": null,
-  "aria-labelledby": null,
-  "aria-level": null,
-  "aria-live": ["off", "polite", "assertive"],
-  "aria-multiline": c,
-  "aria-multiselectable": c,
-  "aria-owns": null,
-  "aria-posinset": null,
-  "aria-pressed": ["true", "false", "mixed", "undefined"],
-  "aria-readonly": c,
-  "aria-relevant": null,
-  "aria-required": c,
-  "aria-selected": ["true", "false", "undefined"],
-  "aria-setsize": null,
-  "aria-sort": ["ascending", "descending", "none", "other"],
-  "aria-valuemax": null,
-  "aria-valuemin": null,
-  "aria-valuenow": null,
-  "aria-valuetext": null
-}, F = /* @__PURE__ */ "beforeunload copy cut dragstart dragover dragleave dragenter dragend drag paste focus blur change click load mousedown mouseenter mouseleave mouseup keydown keyup resize scroll unload".split(" ").map((e) => "on" + e);
-for (let e of F)
-  D[e] = null;
-class C {
-  constructor(n, r) {
-    this.tags = { ...ne, ...n }, this.globalAttrs = { ...D, ...r }, this.allTags = Object.keys(this.tags), this.globalAttrNames = Object.keys(this.globalAttrs);
+import { parser as b } from "./index115.js";
+import { LanguageSupport as w, LRLanguage as v, indentNodeProp as y, foldNodeProp as k, continuedIndent as x, foldInside as z, syntaxTree as S } from "./index72.js";
+import { NodeWeakMap as q, IterMode as C } from "./index113.js";
+let c = null;
+function u() {
+  if (!c && typeof document == "object" && document.body) {
+    let { style: t } = document.body, a = [], o = /* @__PURE__ */ new Set();
+    for (let r in t)
+      r != "cssText" && r != "cssFloat" && typeof t[r] == "string" && (/[A-Z]/.test(r) && (r = r.replace(/[A-Z]/g, (e) => "-" + e.toLowerCase())), o.has(r) || (a.push(r), o.add(r)));
+    c = a.sort().map((r) => ({ type: "property", label: r, apply: r + ": " }));
+  }
+  return c || [];
+}
+const p = /* @__PURE__ */ [
+  "active",
+  "after",
+  "any-link",
+  "autofill",
+  "backdrop",
+  "before",
+  "checked",
+  "cue",
+  "default",
+  "defined",
+  "disabled",
+  "empty",
+  "enabled",
+  "file-selector-button",
+  "first",
+  "first-child",
+  "first-letter",
+  "first-line",
+  "first-of-type",
+  "focus",
+  "focus-visible",
+  "focus-within",
+  "fullscreen",
+  "has",
+  "host",
+  "host-context",
+  "hover",
+  "in-range",
+  "indeterminate",
+  "invalid",
+  "is",
+  "lang",
+  "last-child",
+  "last-of-type",
+  "left",
+  "link",
+  "marker",
+  "modal",
+  "not",
+  "nth-child",
+  "nth-last-child",
+  "nth-last-of-type",
+  "nth-of-type",
+  "only-child",
+  "only-of-type",
+  "optional",
+  "out-of-range",
+  "part",
+  "placeholder",
+  "placeholder-shown",
+  "read-only",
+  "read-write",
+  "required",
+  "right",
+  "root",
+  "scope",
+  "selection",
+  "slotted",
+  "target",
+  "target-text",
+  "valid",
+  "visited",
+  "where"
+].map((t) => ({ type: "class", label: t })), m = /* @__PURE__ */ [
+  "above",
+  "absolute",
+  "activeborder",
+  "additive",
+  "activecaption",
+  "after-white-space",
+  "ahead",
+  "alias",
+  "all",
+  "all-scroll",
+  "alphabetic",
+  "alternate",
+  "always",
+  "antialiased",
+  "appworkspace",
+  "asterisks",
+  "attr",
+  "auto",
+  "auto-flow",
+  "avoid",
+  "avoid-column",
+  "avoid-page",
+  "avoid-region",
+  "axis-pan",
+  "background",
+  "backwards",
+  "baseline",
+  "below",
+  "bidi-override",
+  "blink",
+  "block",
+  "block-axis",
+  "bold",
+  "bolder",
+  "border",
+  "border-box",
+  "both",
+  "bottom",
+  "break",
+  "break-all",
+  "break-word",
+  "bullets",
+  "button",
+  "button-bevel",
+  "buttonface",
+  "buttonhighlight",
+  "buttonshadow",
+  "buttontext",
+  "calc",
+  "capitalize",
+  "caps-lock-indicator",
+  "caption",
+  "captiontext",
+  "caret",
+  "cell",
+  "center",
+  "checkbox",
+  "circle",
+  "cjk-decimal",
+  "clear",
+  "clip",
+  "close-quote",
+  "col-resize",
+  "collapse",
+  "color",
+  "color-burn",
+  "color-dodge",
+  "column",
+  "column-reverse",
+  "compact",
+  "condensed",
+  "contain",
+  "content",
+  "contents",
+  "content-box",
+  "context-menu",
+  "continuous",
+  "copy",
+  "counter",
+  "counters",
+  "cover",
+  "crop",
+  "cross",
+  "crosshair",
+  "currentcolor",
+  "cursive",
+  "cyclic",
+  "darken",
+  "dashed",
+  "decimal",
+  "decimal-leading-zero",
+  "default",
+  "default-button",
+  "dense",
+  "destination-atop",
+  "destination-in",
+  "destination-out",
+  "destination-over",
+  "difference",
+  "disc",
+  "discard",
+  "disclosure-closed",
+  "disclosure-open",
+  "document",
+  "dot-dash",
+  "dot-dot-dash",
+  "dotted",
+  "double",
+  "down",
+  "e-resize",
+  "ease",
+  "ease-in",
+  "ease-in-out",
+  "ease-out",
+  "element",
+  "ellipse",
+  "ellipsis",
+  "embed",
+  "end",
+  "ethiopic-abegede-gez",
+  "ethiopic-halehame-aa-er",
+  "ethiopic-halehame-gez",
+  "ew-resize",
+  "exclusion",
+  "expanded",
+  "extends",
+  "extra-condensed",
+  "extra-expanded",
+  "fantasy",
+  "fast",
+  "fill",
+  "fill-box",
+  "fixed",
+  "flat",
+  "flex",
+  "flex-end",
+  "flex-start",
+  "footnotes",
+  "forwards",
+  "from",
+  "geometricPrecision",
+  "graytext",
+  "grid",
+  "groove",
+  "hand",
+  "hard-light",
+  "help",
+  "hidden",
+  "hide",
+  "higher",
+  "highlight",
+  "highlighttext",
+  "horizontal",
+  "hsl",
+  "hsla",
+  "hue",
+  "icon",
+  "ignore",
+  "inactiveborder",
+  "inactivecaption",
+  "inactivecaptiontext",
+  "infinite",
+  "infobackground",
+  "infotext",
+  "inherit",
+  "initial",
+  "inline",
+  "inline-axis",
+  "inline-block",
+  "inline-flex",
+  "inline-grid",
+  "inline-table",
+  "inset",
+  "inside",
+  "intrinsic",
+  "invert",
+  "italic",
+  "justify",
+  "keep-all",
+  "landscape",
+  "large",
+  "larger",
+  "left",
+  "level",
+  "lighter",
+  "lighten",
+  "line-through",
+  "linear",
+  "linear-gradient",
+  "lines",
+  "list-item",
+  "listbox",
+  "listitem",
+  "local",
+  "logical",
+  "loud",
+  "lower",
+  "lower-hexadecimal",
+  "lower-latin",
+  "lower-norwegian",
+  "lowercase",
+  "ltr",
+  "luminosity",
+  "manipulation",
+  "match",
+  "matrix",
+  "matrix3d",
+  "medium",
+  "menu",
+  "menutext",
+  "message-box",
+  "middle",
+  "min-intrinsic",
+  "mix",
+  "monospace",
+  "move",
+  "multiple",
+  "multiple_mask_images",
+  "multiply",
+  "n-resize",
+  "narrower",
+  "ne-resize",
+  "nesw-resize",
+  "no-close-quote",
+  "no-drop",
+  "no-open-quote",
+  "no-repeat",
+  "none",
+  "normal",
+  "not-allowed",
+  "nowrap",
+  "ns-resize",
+  "numbers",
+  "numeric",
+  "nw-resize",
+  "nwse-resize",
+  "oblique",
+  "opacity",
+  "open-quote",
+  "optimizeLegibility",
+  "optimizeSpeed",
+  "outset",
+  "outside",
+  "outside-shape",
+  "overlay",
+  "overline",
+  "padding",
+  "padding-box",
+  "painted",
+  "page",
+  "paused",
+  "perspective",
+  "pinch-zoom",
+  "plus-darker",
+  "plus-lighter",
+  "pointer",
+  "polygon",
+  "portrait",
+  "pre",
+  "pre-line",
+  "pre-wrap",
+  "preserve-3d",
+  "progress",
+  "push-button",
+  "radial-gradient",
+  "radio",
+  "read-only",
+  "read-write",
+  "read-write-plaintext-only",
+  "rectangle",
+  "region",
+  "relative",
+  "repeat",
+  "repeating-linear-gradient",
+  "repeating-radial-gradient",
+  "repeat-x",
+  "repeat-y",
+  "reset",
+  "reverse",
+  "rgb",
+  "rgba",
+  "ridge",
+  "right",
+  "rotate",
+  "rotate3d",
+  "rotateX",
+  "rotateY",
+  "rotateZ",
+  "round",
+  "row",
+  "row-resize",
+  "row-reverse",
+  "rtl",
+  "run-in",
+  "running",
+  "s-resize",
+  "sans-serif",
+  "saturation",
+  "scale",
+  "scale3d",
+  "scaleX",
+  "scaleY",
+  "scaleZ",
+  "screen",
+  "scroll",
+  "scrollbar",
+  "scroll-position",
+  "se-resize",
+  "self-start",
+  "self-end",
+  "semi-condensed",
+  "semi-expanded",
+  "separate",
+  "serif",
+  "show",
+  "single",
+  "skew",
+  "skewX",
+  "skewY",
+  "skip-white-space",
+  "slide",
+  "slider-horizontal",
+  "slider-vertical",
+  "sliderthumb-horizontal",
+  "sliderthumb-vertical",
+  "slow",
+  "small",
+  "small-caps",
+  "small-caption",
+  "smaller",
+  "soft-light",
+  "solid",
+  "source-atop",
+  "source-in",
+  "source-out",
+  "source-over",
+  "space",
+  "space-around",
+  "space-between",
+  "space-evenly",
+  "spell-out",
+  "square",
+  "start",
+  "static",
+  "status-bar",
+  "stretch",
+  "stroke",
+  "stroke-box",
+  "sub",
+  "subpixel-antialiased",
+  "svg_masks",
+  "super",
+  "sw-resize",
+  "symbolic",
+  "symbols",
+  "system-ui",
+  "table",
+  "table-caption",
+  "table-cell",
+  "table-column",
+  "table-column-group",
+  "table-footer-group",
+  "table-header-group",
+  "table-row",
+  "table-row-group",
+  "text",
+  "text-bottom",
+  "text-top",
+  "textarea",
+  "textfield",
+  "thick",
+  "thin",
+  "threeddarkshadow",
+  "threedface",
+  "threedhighlight",
+  "threedlightshadow",
+  "threedshadow",
+  "to",
+  "top",
+  "transform",
+  "translate",
+  "translate3d",
+  "translateX",
+  "translateY",
+  "translateZ",
+  "transparent",
+  "ultra-condensed",
+  "ultra-expanded",
+  "underline",
+  "unidirectional-pan",
+  "unset",
+  "up",
+  "upper-latin",
+  "uppercase",
+  "url",
+  "var",
+  "vertical",
+  "vertical-text",
+  "view-box",
+  "visible",
+  "visibleFill",
+  "visiblePainted",
+  "visibleStroke",
+  "visual",
+  "w-resize",
+  "wait",
+  "wave",
+  "wider",
+  "window",
+  "windowframe",
+  "windowtext",
+  "words",
+  "wrap",
+  "wrap-reverse",
+  "x-large",
+  "x-small",
+  "xor",
+  "xx-large",
+  "xx-small"
+].map((t) => ({ type: "keyword", label: t })).concat(/* @__PURE__ */ [
+  "aliceblue",
+  "antiquewhite",
+  "aqua",
+  "aquamarine",
+  "azure",
+  "beige",
+  "bisque",
+  "black",
+  "blanchedalmond",
+  "blue",
+  "blueviolet",
+  "brown",
+  "burlywood",
+  "cadetblue",
+  "chartreuse",
+  "chocolate",
+  "coral",
+  "cornflowerblue",
+  "cornsilk",
+  "crimson",
+  "cyan",
+  "darkblue",
+  "darkcyan",
+  "darkgoldenrod",
+  "darkgray",
+  "darkgreen",
+  "darkkhaki",
+  "darkmagenta",
+  "darkolivegreen",
+  "darkorange",
+  "darkorchid",
+  "darkred",
+  "darksalmon",
+  "darkseagreen",
+  "darkslateblue",
+  "darkslategray",
+  "darkturquoise",
+  "darkviolet",
+  "deeppink",
+  "deepskyblue",
+  "dimgray",
+  "dodgerblue",
+  "firebrick",
+  "floralwhite",
+  "forestgreen",
+  "fuchsia",
+  "gainsboro",
+  "ghostwhite",
+  "gold",
+  "goldenrod",
+  "gray",
+  "grey",
+  "green",
+  "greenyellow",
+  "honeydew",
+  "hotpink",
+  "indianred",
+  "indigo",
+  "ivory",
+  "khaki",
+  "lavender",
+  "lavenderblush",
+  "lawngreen",
+  "lemonchiffon",
+  "lightblue",
+  "lightcoral",
+  "lightcyan",
+  "lightgoldenrodyellow",
+  "lightgray",
+  "lightgreen",
+  "lightpink",
+  "lightsalmon",
+  "lightseagreen",
+  "lightskyblue",
+  "lightslategray",
+  "lightsteelblue",
+  "lightyellow",
+  "lime",
+  "limegreen",
+  "linen",
+  "magenta",
+  "maroon",
+  "mediumaquamarine",
+  "mediumblue",
+  "mediumorchid",
+  "mediumpurple",
+  "mediumseagreen",
+  "mediumslateblue",
+  "mediumspringgreen",
+  "mediumturquoise",
+  "mediumvioletred",
+  "midnightblue",
+  "mintcream",
+  "mistyrose",
+  "moccasin",
+  "navajowhite",
+  "navy",
+  "oldlace",
+  "olive",
+  "olivedrab",
+  "orange",
+  "orangered",
+  "orchid",
+  "palegoldenrod",
+  "palegreen",
+  "paleturquoise",
+  "palevioletred",
+  "papayawhip",
+  "peachpuff",
+  "peru",
+  "pink",
+  "plum",
+  "powderblue",
+  "purple",
+  "rebeccapurple",
+  "red",
+  "rosybrown",
+  "royalblue",
+  "saddlebrown",
+  "salmon",
+  "sandybrown",
+  "seagreen",
+  "seashell",
+  "sienna",
+  "silver",
+  "skyblue",
+  "slateblue",
+  "slategray",
+  "snow",
+  "springgreen",
+  "steelblue",
+  "tan",
+  "teal",
+  "thistle",
+  "tomato",
+  "turquoise",
+  "violet",
+  "wheat",
+  "white",
+  "whitesmoke",
+  "yellow",
+  "yellowgreen"
+].map((t) => ({ type: "constant", label: t }))), F = /* @__PURE__ */ [
+  "a",
+  "abbr",
+  "address",
+  "article",
+  "aside",
+  "b",
+  "bdi",
+  "bdo",
+  "blockquote",
+  "body",
+  "br",
+  "button",
+  "canvas",
+  "caption",
+  "cite",
+  "code",
+  "col",
+  "colgroup",
+  "dd",
+  "del",
+  "details",
+  "dfn",
+  "dialog",
+  "div",
+  "dl",
+  "dt",
+  "em",
+  "figcaption",
+  "figure",
+  "footer",
+  "form",
+  "header",
+  "hgroup",
+  "h1",
+  "h2",
+  "h3",
+  "h4",
+  "h5",
+  "h6",
+  "hr",
+  "html",
+  "i",
+  "iframe",
+  "img",
+  "input",
+  "ins",
+  "kbd",
+  "label",
+  "legend",
+  "li",
+  "main",
+  "meter",
+  "nav",
+  "ol",
+  "output",
+  "p",
+  "pre",
+  "ruby",
+  "section",
+  "select",
+  "small",
+  "source",
+  "span",
+  "strong",
+  "sub",
+  "summary",
+  "sup",
+  "table",
+  "tbody",
+  "td",
+  "template",
+  "textarea",
+  "tfoot",
+  "th",
+  "thead",
+  "tr",
+  "u",
+  "ul"
+].map((t) => ({ type: "type", label: t })), N = /* @__PURE__ */ [
+  "@charset",
+  "@color-profile",
+  "@container",
+  "@counter-style",
+  "@font-face",
+  "@font-feature-values",
+  "@font-palette-values",
+  "@import",
+  "@keyframes",
+  "@layer",
+  "@media",
+  "@namespace",
+  "@page",
+  "@position-try",
+  "@property",
+  "@scope",
+  "@starting-style",
+  "@supports",
+  "@view-transition"
+].map((t) => ({ type: "keyword", label: t })), s = /^(\w[\w-]*|-\w[\w-]*|)$/, L = /^-(-[\w-]*)?$/;
+function A(t, a) {
+  var o;
+  if ((t.name == "(" || t.type.isError) && (t = t.parent || t), t.name != "ArgList")
+    return !1;
+  let r = (o = t.parent) === null || o === void 0 ? void 0 : o.firstChild;
+  return (r == null ? void 0 : r.name) != "Callee" ? !1 : a.sliceString(r.from, r.to) == "var";
+}
+const f = /* @__PURE__ */ new q(), P = ["Declaration"];
+function T(t) {
+  for (let a = t; ; ) {
+    if (a.type.isTop)
+      return a;
+    if (!(a = a.parent))
+      return t;
   }
 }
-C.default = /* @__PURE__ */ new C();
-function y(e, n, r = e.length) {
-  if (!n)
-    return "";
-  let a = n.firstChild, t = a && a.getChild("TagName");
-  return t ? e.sliceString(t.from, Math.min(t.to, r)) : "";
-}
-function v(e, n = !1) {
-  for (; e; e = e.parent)
-    if (e.name == "Element")
-      if (n)
-        n = !1;
-      else
-        return e;
-  return null;
-}
-function P(e, n, r) {
-  let a = r.tags[y(e, v(n))];
-  return (a == null ? void 0 : a.children) || r.allTags;
-}
-function j(e, n) {
-  let r = [];
-  for (let a = v(n); a && !a.type.isTop; a = v(a.parent)) {
-    let t = y(e, a);
-    if (t && a.lastChild.name == "CloseTag")
-      break;
-    t && r.indexOf(t) < 0 && (n.name == "EndTag" || n.from >= a.firstChild.to) && r.push(t);
+function h(t, a, o) {
+  if (a.to - a.from > 4096) {
+    let r = f.get(a);
+    if (r)
+      return r;
+    let e = [], l = /* @__PURE__ */ new Set(), i = a.cursor(C.IncludeAnonymous);
+    if (i.firstChild())
+      do
+        for (let n of h(t, i.node, o))
+          l.has(n.label) || (l.add(n.label), e.push(n));
+      while (i.nextSibling());
+    return f.set(a, e), e;
+  } else {
+    let r = [], e = /* @__PURE__ */ new Set();
+    return a.cursor().iterate((l) => {
+      var i;
+      if (o(l) && l.matchContext(P) && ((i = l.node.nextSibling) === null || i === void 0 ? void 0 : i.name) == ":") {
+        let n = t.sliceString(l.from, l.to);
+        e.has(n) || (e.add(n), r.push({ label: n, type: "variable" }));
+      }
+    }), r;
   }
-  return r;
 }
-const V = /^[:\-\.\w\u00b7-\uffff]*$/;
-function I(e, n, r, a, t) {
-  let s = /\s*>/.test(e.sliceDoc(t, t + 5)) ? "" : ">", o = v(r, r.name == "StartTag" || r.name == "TagName");
-  return {
-    from: a,
-    to: t,
-    options: P(e.doc, o, n).map((u) => ({ label: u, type: "type" })).concat(j(e.doc, r).map((u, i) => ({
-      label: "/" + u,
-      apply: "/" + u + s,
-      type: "type",
-      boost: 99 - i
-    }))),
-    validFor: /^\/?[:\-\.\w\u00b7-\uffff]*$/
-  };
-}
-function L(e, n, r, a) {
-  let t = /\s*>/.test(e.sliceDoc(a, a + 5)) ? "" : ">";
-  return {
-    from: r,
-    to: a,
-    options: j(e.doc, n).map((s, o) => ({ label: s, apply: s + t, type: "type", boost: 99 - o })),
-    validFor: V
-  };
-}
-function re(e, n, r, a) {
-  let t = [], s = 0;
-  for (let o of P(e.doc, r, n))
-    t.push({ label: "<" + o, type: "type" });
-  for (let o of j(e.doc, r))
-    t.push({ label: "</" + o + ">", type: "type", boost: 99 - s++ });
-  return { from: a, to: a, options: t, validFor: /^<\/?[:\-\.\w\u00b7-\uffff]*$/ };
-}
-function oe(e, n, r, a, t) {
-  let s = v(r), o = s ? n.tags[y(e.doc, s)] : null, u = o && o.attrs ? Object.keys(o.attrs) : [], i = o && o.globalAttrs === !1 ? u : u.length ? u.concat(n.globalAttrNames) : n.globalAttrNames;
-  return {
-    from: a,
-    to: t,
-    options: i.map((f) => ({ label: f, type: "property" })),
-    validFor: V
-  };
-}
-function se(e, n, r, a, t) {
-  var s;
-  let o = (s = r.parent) === null || s === void 0 ? void 0 : s.getChild("AttributeName"), u = [], i;
-  if (o) {
-    let f = e.sliceDoc(o.from, o.to), g = n.globalAttrs[f];
-    if (!g) {
-      let p = v(r), m = p ? n.tags[y(e.doc, p)] : null;
-      g = (m == null ? void 0 : m.attrs) && m.attrs[f];
-    }
-    if (g) {
-      let p = e.sliceDoc(a, t).toLowerCase(), m = '"', d = '"';
-      /^['"]/.test(p) ? (i = p[0] == '"' ? /^[^"]*$/ : /^[^']*$/, m = "", d = e.sliceDoc(t, t + 1) == p[0] ? "" : p[0], p = p.slice(1), a++) : i = /^[^\s<>='"]*$/;
-      for (let h of g)
-        u.push({ label: h, apply: m + h + d, type: "constant" });
-    }
+const B = (t) => (a) => {
+  let { state: o, pos: r } = a, e = S(o).resolveInner(r, -1), l = e.type.isError && e.from == e.to - 1 && o.doc.sliceString(e.from, e.to) == "-";
+  if (e.name == "PropertyName" || (l || e.name == "TagName") && /^(Block|Styles)$/.test(e.resolve(e.to).name))
+    return { from: e.from, options: u(), validFor: s };
+  if (e.name == "ValueName")
+    return { from: e.from, options: m, validFor: s };
+  if (e.name == "PseudoClassName")
+    return { from: e.from, options: p, validFor: s };
+  if (t(e) || (a.explicit || l) && A(e, o.doc))
+    return {
+      from: t(e) || l ? e.from : r,
+      options: h(o.doc, T(e), t),
+      validFor: L
+    };
+  if (e.name == "TagName") {
+    for (let { parent: d } = e; d; d = d.parent)
+      if (d.name == "Block")
+        return { from: e.from, options: u(), validFor: s };
+    return { from: e.from, options: F, validFor: s };
   }
-  return { from: a, to: t, options: u, validFor: i };
-}
-function B(e, n) {
-  let { state: r, pos: a } = n, t = z(r).resolveInner(a, -1), s = t.resolve(a);
-  for (let o = a, u; s == t && (u = t.childBefore(o)); ) {
-    let i = u.lastChild;
-    if (!i || !i.type.isError || i.from < i.to)
-      break;
-    s = t = u, o = i.from;
-  }
-  return t.name == "TagName" ? t.parent && /CloseTag$/.test(t.parent.name) ? L(r, t, t.from, a) : I(r, e, t, t.from, a) : t.name == "StartTag" || t.name == "IncompleteTag" ? I(r, e, t, a, a) : t.name == "StartCloseTag" || t.name == "IncompleteCloseTag" ? L(r, t, a, a) : t.name == "OpenTag" || t.name == "SelfClosingTag" || t.name == "AttributeName" ? oe(r, e, t, t.name == "AttributeName" ? t.from : a, a) : t.name == "Is" || t.name == "AttributeValue" || t.name == "UnquotedAttributeValue" ? se(r, e, t, t.name == "Is" ? a : t.from, a) : n.explicit && (s.name == "Element" || s.name == "Text" || s.name == "Document") ? re(r, e, t, a) : null;
-}
-function be(e) {
-  return B(C.default, e);
-}
-function ie(e) {
-  let { extraTags: n, extraGlobalAttributes: r } = e, a = r || n ? new C(n, r) : C.default;
-  return (t) => B(a, t);
-}
-const ue = /* @__PURE__ */ $.parser.configure({ top: "SingleExpression" }), M = [
-  {
-    tag: "script",
-    attrs: (e) => e.type == "text/typescript" || e.lang == "ts",
-    parser: W.parser
-  },
-  {
-    tag: "script",
-    attrs: (e) => e.type == "text/babel" || e.type == "text/jsx",
-    parser: J.parser
-  },
-  {
-    tag: "script",
-    attrs: (e) => e.type == "text/typescript-jsx",
-    parser: K.parser
-  },
-  {
-    tag: "script",
-    attrs(e) {
-      return /^(importmap|speculationrules|application\/(.+\+)?json)$/i.test(e.type);
-    },
-    parser: ue
-  },
-  {
-    tag: "script",
-    attrs(e) {
-      return !e.type || /^(?:text|application)\/(?:x-)?(?:java|ecma)script$|^module$|^$/i.test(e.type);
-    },
-    parser: $.parser
-  },
-  {
-    tag: "style",
-    attrs(e) {
-      return (!e.lang || e.lang == "css") && (!e.type || /^(text\/)?(x-)?(stylesheet|css)$/i.test(e.type));
-    },
-    parser: _.parser
-  }
-], G = /* @__PURE__ */ [
-  {
-    name: "style",
-    parser: /* @__PURE__ */ _.parser.configure({ top: "Styles" })
-  }
-].concat(/* @__PURE__ */ F.map((e) => ({ name: e, parser: $.parser }))), R = /* @__PURE__ */ Z.define({
-  name: "html",
-  parser: /* @__PURE__ */ H.configure({
+  if (e.name == "AtKeyword")
+    return { from: e.from, options: N, validFor: s };
+  if (!a.explicit)
+    return null;
+  let i = e.resolve(r), n = i.childBefore(r);
+  return n && n.name == ":" && i.name == "PseudoClassSelector" ? { from: r, options: p, validFor: s } : n && n.name == ":" && i.name == "Declaration" || i.name == "ArgList" ? { from: r, options: m, validFor: s } : i.name == "Block" || i.name == "Styles" ? { from: r, options: u(), validFor: s } : null;
+}, I = /* @__PURE__ */ B((t) => t.name == "VariableName"), g = /* @__PURE__ */ v.define({
+  name: "css",
+  parser: /* @__PURE__ */ b.configure({
     props: [
-      /* @__PURE__ */ te.add({
-        Element(e) {
-          let n = /^(\s*)(<\/)?/.exec(e.textAfter);
-          return e.node.to <= e.pos + n[0].length ? e.continue() : e.lineIndent(e.node.from) + (n[2] ? 0 : e.unit);
-        },
-        "OpenTag CloseTag SelfClosingTag"(e) {
-          return e.column(e.node.from) + e.unit;
-        },
-        Document(e) {
-          if (e.pos + /\s*/.exec(e.textAfter)[0].length < e.node.to)
-            return e.continue();
-          let n = null, r;
-          for (let a = e.node; ; ) {
-            let t = a.lastChild;
-            if (!t || t.name != "Element" || t.to != a.to)
-              break;
-            n = a = t;
-          }
-          return n && !((r = n.lastChild) && (r.name == "CloseTag" || r.name == "SelfClosingTag")) ? e.lineIndent(n.from) + e.unit : null;
-        }
+      /* @__PURE__ */ y.add({
+        Declaration: /* @__PURE__ */ x()
       }),
-      /* @__PURE__ */ le.add({
-        Element(e) {
-          let n = e.firstChild, r = e.lastChild;
-          return !n || n.name != "OpenTag" ? null : { from: n.to, to: r.name == "CloseTag" ? r.from : e.to };
-        }
-      }),
-      /* @__PURE__ */ ae.add({
-        "OpenTag CloseTag": (e) => e.getChild("TagName")
+      /* @__PURE__ */ k.add({
+        "Block KeyframeList": z
       })
     ]
   }),
   languageData: {
-    commentTokens: { block: { open: "<!--", close: "-->" } },
-    indentOnInput: /^\s*<\/\w+\W$/,
-    wordChars: "-_"
+    commentTokens: { block: { open: "/*", close: "*/" } },
+    indentOnInput: /^\s*\}$/,
+    wordChars: "-"
   }
-}), x = /* @__PURE__ */ R.configure({
-  wrap: /* @__PURE__ */ O(M, G)
 });
-function ye(e = {}) {
-  let n = "", r;
-  e.matchClosingTags === !1 && (n = "noMatch"), e.selfClosingTags === !0 && (n = (n ? n + " " : "") + "selfClosing"), (e.nestedLanguages && e.nestedLanguages.length || e.nestedAttributes && e.nestedAttributes.length) && (r = O((e.nestedLanguages || []).concat(M), (e.nestedAttributes || []).concat(G)));
-  let a = r ? R.configure({ wrap: r, dialect: n }) : n ? x.configure({ dialect: n }) : x;
-  return new ee(a, [
-    x.data.of({ autocomplete: ie(e) }),
-    e.autoCloseTags !== !1 ? de : [],
-    Q().support,
-    U().support
-  ]);
+function j() {
+  return new w(g, g.data.of({ autocomplete: I }));
 }
-const q = /* @__PURE__ */ new Set(/* @__PURE__ */ "area base br col command embed frame hr img input keygen link meta param source track wbr menuitem".split(" ")), de = /* @__PURE__ */ X.inputHandler.of((e, n, r, a, t) => {
-  if (e.composing || e.state.readOnly || n != r || a != ">" && a != "/" || !x.isActiveAt(e.state, n, -1))
-    return !1;
-  let s = t(), { state: o } = s, u = o.changeByRange((i) => {
-    var f, g, p;
-    let m = o.doc.sliceString(i.from - 1, i.to) == a, { head: d } = i, h = z(o).resolveInner(d, -1), b;
-    if (m && a == ">" && h.name == "EndTag") {
-      let w = h.parent;
-      if (((g = (f = w.parent) === null || f === void 0 ? void 0 : f.lastChild) === null || g === void 0 ? void 0 : g.name) != "CloseTag" && (b = y(o.doc, w.parent, d)) && !q.has(b)) {
-        let A = d + (o.doc.sliceString(d, d + 1) === ">" ? 1 : 0), k = `</${b}>`;
-        return { range: i, changes: { from: d, to: A, insert: k } };
-      }
-    } else if (m && a == "/" && h.name == "IncompleteCloseTag") {
-      let w = h.parent;
-      if (h.from == d - 2 && ((p = w.lastChild) === null || p === void 0 ? void 0 : p.name) != "CloseTag" && (b = y(o.doc, w, d)) && !q.has(b)) {
-        let A = d + (o.doc.sliceString(d, d + 1) === ">" ? 1 : 0), k = `${b}>`;
-        return {
-          range: Y.cursor(d + k.length, -1),
-          changes: { from: d, to: A, insert: k }
-        };
-      }
-    }
-    return { range: i };
-  });
-  return u.changes.empty ? !1 : (e.dispatch([
-    s,
-    o.update(u, {
-      userEvent: "input.complete",
-      scrollIntoView: !0
-    })
-  ]), !0);
-});
 export {
-  de as autoCloseTags,
-  ye as html,
-  be as htmlCompletionSource,
-  ie as htmlCompletionSourceWith,
-  x as htmlLanguage
+  j as css,
+  I as cssCompletionSource,
+  g as cssLanguage,
+  B as defineCSSCompletionSource
 };

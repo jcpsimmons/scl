@@ -1,6 +1,6 @@
-function m(t, [a, n]) {
-  return Math.min(n, Math.max(a, t));
-}
+import * as t from "react";
+var e = globalThis != null && globalThis.document ? t.useLayoutEffect : () => {
+};
 export {
-  m as clamp
+  e as useLayoutEffect
 };

@@ -1,120 +1,163 @@
-import * as o from "react";
-import { composeEventHandlers as T } from "./index124.js";
-import { createContextScope as S } from "./index80.js";
-import { useControllableState as D } from "./index84.js";
-import { useLayoutEffect as L } from "./index101.js";
-import { useComposedRefs as M } from "./index82.js";
-import { Primitive as v } from "./index85.js";
-import { Presence as k } from "./index99.js";
-import { useId as F } from "./index86.js";
-import { jsx as c } from "react/jsx-runtime";
-var u = "Collapsible", [B, W] = S(u), [G, g] = B(u), w = o.forwardRef(
-  (e, a) => {
+import * as v from "react";
+import { composeEventHandlers as g } from "./index83.js";
+import { createContextScope as x } from "./index80.js";
+import { createRovingFocusGroupScope as C, Root as E, Item as F } from "./index106.js";
+import { Presence as w } from "./index95.js";
+import { Primitive as b } from "./index85.js";
+import { useDirection as D } from "./index87.js";
+import { useControllableState as V } from "./index84.js";
+import { useId as G } from "./index86.js";
+import { jsx as l } from "react/jsx-runtime";
+var p = "Tabs", [L] = x(p, [
+  C
+]), h = C(), [$, T] = L(p), I = v.forwardRef(
+  (e, r) => {
     const {
-      __scopeCollapsible: i,
-      open: r,
-      defaultOpen: t,
-      disabled: l,
-      onOpenChange: s,
+      __scopeTabs: s,
+      value: t,
+      onValueChange: n,
+      defaultValue: c,
+      orientation: o = "horizontal",
+      dir: d,
+      activationMode: f = "automatic",
       ...m
-    } = e, [d, p] = D({
-      prop: r,
-      defaultProp: t ?? !1,
-      onChange: s,
-      caller: u
+    } = e, i = D(d), [a, u] = V({
+      prop: t,
+      onChange: n,
+      defaultProp: c ?? "",
+      caller: p
     });
-    return /* @__PURE__ */ c(
-      G,
+    return /* @__PURE__ */ l(
+      $,
       {
-        scope: i,
-        disabled: l,
-        contentId: F(),
-        open: d,
-        onOpenToggle: o.useCallback(() => p((C) => !C), [p]),
-        children: /* @__PURE__ */ c(
-          v.div,
+        scope: s,
+        baseId: G(),
+        value: a,
+        onValueChange: u,
+        orientation: o,
+        dir: i,
+        activationMode: f,
+        children: /* @__PURE__ */ l(
+          b.div,
           {
-            "data-state": h(d),
-            "data-disabled": l ? "" : void 0,
+            dir: i,
+            "data-orientation": o,
             ...m,
-            ref: a
+            ref: r
           }
         )
       }
     );
   }
 );
-w.displayName = u;
-var A = "CollapsibleTrigger", I = o.forwardRef(
-  (e, a) => {
-    const { __scopeCollapsible: i, ...r } = e, t = g(A, i);
-    return /* @__PURE__ */ c(
-      v.button,
+I.displayName = p;
+var R = "TabsList", _ = v.forwardRef(
+  (e, r) => {
+    const { __scopeTabs: s, loop: t = !0, ...n } = e, c = T(R, s), o = h(s);
+    return /* @__PURE__ */ l(
+      E,
       {
-        type: "button",
-        "aria-controls": t.contentId,
-        "aria-expanded": t.open || !1,
-        "data-state": h(t.open),
-        "data-disabled": t.disabled ? "" : void 0,
-        disabled: t.disabled,
-        ...r,
-        ref: a,
-        onClick: T(e.onClick, t.onOpenToggle)
+        asChild: !0,
+        ...o,
+        orientation: c.orientation,
+        dir: c.dir,
+        loop: t,
+        children: /* @__PURE__ */ l(
+          b.div,
+          {
+            role: "tablist",
+            "aria-orientation": c.orientation,
+            ...n,
+            ref: r
+          }
+        )
       }
     );
   }
 );
-I.displayName = A;
-var R = "CollapsibleContent", O = o.forwardRef(
-  (e, a) => {
-    const { forceMount: i, ...r } = e, t = g(R, e.__scopeCollapsible);
-    return /* @__PURE__ */ c(k, { present: i || t.open, children: ({ present: l }) => /* @__PURE__ */ c($, { ...r, ref: a, present: l }) });
+_.displayName = R;
+var y = "TabsTrigger", A = v.forwardRef(
+  (e, r) => {
+    const { __scopeTabs: s, value: t, disabled: n = !1, ...c } = e, o = T(y, s), d = h(s), f = P(o.baseId, t), m = S(o.baseId, t), i = t === o.value;
+    return /* @__PURE__ */ l(
+      F,
+      {
+        asChild: !0,
+        ...d,
+        focusable: !n,
+        active: i,
+        children: /* @__PURE__ */ l(
+          b.button,
+          {
+            type: "button",
+            role: "tab",
+            "aria-selected": i,
+            "aria-controls": m,
+            "data-state": i ? "active" : "inactive",
+            "data-disabled": n ? "" : void 0,
+            disabled: n,
+            id: f,
+            ...c,
+            ref: r,
+            onMouseDown: g(e.onMouseDown, (a) => {
+              !n && a.button === 0 && a.ctrlKey === !1 ? o.onValueChange(t) : a.preventDefault();
+            }),
+            onKeyDown: g(e.onKeyDown, (a) => {
+              [" ", "Enter"].includes(a.key) && o.onValueChange(t);
+            }),
+            onFocus: g(e.onFocus, () => {
+              const a = o.activationMode !== "manual";
+              !i && !n && a && o.onValueChange(t);
+            })
+          }
+        )
+      }
+    );
   }
 );
-O.displayName = R;
-var $ = o.forwardRef((e, a) => {
-  const { __scopeCollapsible: i, present: r, children: t, ...l } = e, s = g(R, i), [m, d] = o.useState(r), p = o.useRef(null), C = M(a, p), y = o.useRef(0), x = y.current, N = o.useRef(0), P = N.current, b = s.open || m, _ = o.useRef(b), f = o.useRef(void 0);
-  return o.useEffect(() => {
-    const n = requestAnimationFrame(() => _.current = !1);
-    return () => cancelAnimationFrame(n);
-  }, []), L(() => {
-    const n = p.current;
-    if (n) {
-      f.current = f.current || {
-        transitionDuration: n.style.transitionDuration,
-        animationName: n.style.animationName
-      }, n.style.transitionDuration = "0s", n.style.animationName = "none";
-      const E = n.getBoundingClientRect();
-      y.current = E.height, N.current = E.width, _.current || (n.style.transitionDuration = f.current.transitionDuration, n.style.animationName = f.current.animationName), d(r);
-    }
-  }, [s.open, r]), /* @__PURE__ */ c(
-    v.div,
-    {
-      "data-state": h(s.open),
-      "data-disabled": s.disabled ? "" : void 0,
-      id: s.contentId,
-      hidden: !b,
-      ...l,
-      ref: C,
-      style: {
-        "--radix-collapsible-content-height": x ? `${x}px` : void 0,
-        "--radix-collapsible-content-width": P ? `${P}px` : void 0,
-        ...e.style
-      },
-      children: b && t
-    }
-  );
-});
-function h(e) {
-  return e ? "open" : "closed";
+A.displayName = y;
+var M = "TabsContent", N = v.forwardRef(
+  (e, r) => {
+    const { __scopeTabs: s, value: t, forceMount: n, children: c, ...o } = e, d = T(M, s), f = P(d.baseId, t), m = S(d.baseId, t), i = t === d.value, a = v.useRef(i);
+    return v.useEffect(() => {
+      const u = requestAnimationFrame(() => a.current = !1);
+      return () => cancelAnimationFrame(u);
+    }, []), /* @__PURE__ */ l(w, { present: n || i, children: ({ present: u }) => /* @__PURE__ */ l(
+      b.div,
+      {
+        "data-state": i ? "active" : "inactive",
+        "data-orientation": d.orientation,
+        role: "tabpanel",
+        "aria-labelledby": f,
+        hidden: !u,
+        id: m,
+        tabIndex: 0,
+        ...o,
+        ref: r,
+        style: {
+          ...e.style,
+          animationDuration: a.current ? "0s" : void 0
+        },
+        children: u && c
+      }
+    ) });
+  }
+);
+N.displayName = M;
+function P(e, r) {
+  return `${e}-trigger-${r}`;
 }
-var X = w, Y = I, Z = O;
+function S(e, r) {
+  return `${e}-content-${r}`;
+}
+var Q = I, U = _, W = A, X = N;
 export {
-  w as Collapsible,
-  O as CollapsibleContent,
-  I as CollapsibleTrigger,
-  Z as Content,
-  X as Root,
-  Y as Trigger,
-  W as createCollapsibleScope
+  X as Content,
+  U as List,
+  Q as Root,
+  I as Tabs,
+  N as TabsContent,
+  _ as TabsList,
+  A as TabsTrigger,
+  W as Trigger
 };

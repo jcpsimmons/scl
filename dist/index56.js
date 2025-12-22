@@ -1,33 +1,13 @@
-import * as f from "react";
-import { composeEventHandlers as m } from "./index103.js";
-import { useControllableState as p } from "./index84.js";
-import { Primitive as b } from "./index85.js";
-import { jsx as c } from "react/jsx-runtime";
-var r = "Toggle", t = f.forwardRef((e, a) => {
-  const { pressed: s, defaultPressed: d, onPressedChange: i, ...l } = e, [o, n] = p({
-    prop: s,
-    onChange: i,
-    defaultProp: d ?? !1,
-    caller: r
-  });
-  return /* @__PURE__ */ c(
-    b.button,
-    {
-      type: "button",
-      "aria-pressed": o,
-      "data-state": o ? "on" : "off",
-      "data-disabled": e.disabled ? "" : void 0,
-      ...l,
-      ref: a,
-      onClick: m(e.onClick, () => {
-        e.disabled || n(!o);
-      })
-    }
-  );
-});
-t.displayName = r;
-var C = t;
+import c from "./index121.js";
+/**
+ * @license lucide-react v0.460.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const r = c("Circle", [
+  ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }]
+]);
 export {
-  C as Root,
-  t as Toggle
+  r as default
 };

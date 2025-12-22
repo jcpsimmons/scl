@@ -1,6 +1,6 @@
 import { jsxs as l, jsx as e } from "react/jsx-runtime";
 import * as b from "react";
-import { Root as n, Track as f, Range as a, Thumb as h } from "./index48.js";
+import { Root as n, Track as f, Range as a, Thumb as h } from "./index77.js";
 import { cn as d } from "./index2.js";
 const p = b.forwardRef(({ className: s, defaultValue: o, value: r, ...t }, i) => {
   const c = (r == null ? void 0 : r.length) ?? (o == null ? void 0 : o.length) ?? 1;

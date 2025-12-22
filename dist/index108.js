@@ -1,221 +1,109 @@
-import * as p from "react";
-import { useFloating as xe, offset as Pe, shift as ye, flip as Ae, size as ve, arrow as Ce, hide as be, limitShift as Se } from "./index159.js";
-import { Root as Oe } from "./index160.js";
-import { useComposedRefs as j } from "./index82.js";
-import { createContextScope as Re } from "./index80.js";
-import { Primitive as z } from "./index85.js";
-import { useCallbackRef as Ee } from "./index100.js";
-import { useLayoutEffect as T } from "./index101.js";
-import { useSize as Ne } from "./index94.js";
-import { jsx as f } from "react/jsx-runtime";
-import { autoUpdate as _e } from "./index161.js";
-var N = "Popper", [L, Ue] = Re(N), [$e, Z] = L(N), U = (e) => {
-  const { __scopePopper: s, children: a } = e, [t, i] = p.useState(null);
-  return /* @__PURE__ */ f($e, { scope: s, anchor: t, onAnchorChange: i, children: a });
-};
-U.displayName = N;
-var q = "PopperAnchor", G = p.forwardRef(
-  (e, s) => {
-    const { __scopePopper: a, virtualRef: t, ...i } = e, r = Z(q, a), o = p.useRef(null), w = j(s, o), n = p.useRef(null);
-    return p.useEffect(() => {
-      const c = n.current;
-      n.current = (t == null ? void 0 : t.current) || o.current, c !== n.current && r.onAnchorChange(n.current);
-    }), t ? null : /* @__PURE__ */ f(z.div, { ...i, ref: w });
-  }
-);
-G.displayName = q;
-var _ = "PopperContent", [He, We] = L(_), J = p.forwardRef(
-  (e, s) => {
-    var Y, M, X, D, F, k;
-    const {
-      __scopePopper: a,
-      side: t = "bottom",
-      sideOffset: i = 0,
-      align: r = "center",
-      alignOffset: o = 0,
-      arrowPadding: w = 0,
-      avoidCollisions: n = !0,
-      collisionBoundary: c = [],
-      collisionPadding: x = 0,
-      sticky: m = "partial",
-      hideWhenDetached: y = !1,
-      updatePositionStrategy: A = "optimized",
-      onPlaced: l,
-      ...d
-    } = e, v = Z(_, a), [h, C] = p.useState(null), ee = j(s, (P) => C(P)), [E, te] = p.useState(null), u = Ne(E), re = (u == null ? void 0 : u.width) ?? 0, $ = (u == null ? void 0 : u.height) ?? 0, oe = t + (r !== "center" ? "-" + r : ""), ne = typeof x == "number" ? x : { top: 0, right: 0, bottom: 0, left: 0, ...x }, H = Array.isArray(c) ? c : [c], ae = H.length > 0, b = {
-      padding: ne,
-      boundary: H.filter(Ye),
-      // with `strategy: 'fixed'`, this is the only way to get it to respect boundaries
-      altBoundary: ae
-    }, { refs: ie, floatingStyles: W, placement: se, isPositioned: S, middlewareData: g } = xe({
-      // default to `fixed` strategy so users don't have to pick and we also avoid focus scroll issues
-      strategy: "fixed",
-      placement: oe,
-      whileElementsMounted: (...P) => _e(...P, {
-        animationFrame: A === "always"
-      }),
-      elements: {
-        reference: v.anchor
-      },
-      middleware: [
-        Pe({ mainAxis: i + $, alignmentAxis: o }),
-        n && ye({
-          mainAxis: !0,
-          crossAxis: !1,
-          limiter: m === "partial" ? Se() : void 0,
-          ...b
-        }),
-        n && Ae({ ...b }),
-        ve({
-          ...b,
-          apply: ({ elements: P, rects: B, availableWidth: he, availableHeight: ue }) => {
-            const { width: ge, height: we } = B.reference, R = P.floating.style;
-            R.setProperty("--radix-popper-available-width", `${he}px`), R.setProperty("--radix-popper-available-height", `${ue}px`), R.setProperty("--radix-popper-anchor-width", `${ge}px`), R.setProperty("--radix-popper-anchor-height", `${we}px`);
-          }
-        }),
-        E && Ce({ element: E, padding: w }),
-        Me({ arrowWidth: re, arrowHeight: $ }),
-        y && be({ strategy: "referenceHidden", ...b })
-      ]
-    }), [I, ce] = V(se), O = Ee(l);
-    T(() => {
-      S && (O == null || O());
-    }, [S, O]);
-    const pe = (Y = g.arrow) == null ? void 0 : Y.x, de = (M = g.arrow) == null ? void 0 : M.y, le = ((X = g.arrow) == null ? void 0 : X.centerOffset) !== 0, [fe, me] = p.useState();
-    return T(() => {
-      h && me(window.getComputedStyle(h).zIndex);
-    }, [h]), /* @__PURE__ */ f(
-      "div",
-      {
-        ref: ie.setFloating,
-        "data-radix-popper-content-wrapper": "",
-        style: {
-          ...W,
-          transform: S ? W.transform : "translate(0, -200%)",
-          // keep off the page when measuring
-          minWidth: "max-content",
-          zIndex: fe,
-          "--radix-popper-transform-origin": [
-            (D = g.transformOrigin) == null ? void 0 : D.x,
-            (F = g.transformOrigin) == null ? void 0 : F.y
-          ].join(" "),
-          // hide the content if using the hide middleware and should be hidden
-          // set visibility to hidden and disable pointer events so the UI behaves
-          // as if the PopperContent isn't there at all
-          ...((k = g.hide) == null ? void 0 : k.referenceHidden) && {
-            visibility: "hidden",
-            pointerEvents: "none"
-          }
-        },
-        dir: e.dir,
-        children: /* @__PURE__ */ f(
-          He,
-          {
-            scope: a,
-            placedSide: I,
-            onArrowChange: te,
-            arrowX: pe,
-            arrowY: de,
-            shouldHideArrow: le,
-            children: /* @__PURE__ */ f(
-              z.div,
-              {
-                "data-side": I,
-                "data-align": ce,
-                ...d,
-                ref: ee,
-                style: {
-                  ...d.style,
-                  // if the PopperContent hasn't been placed yet (not all measurements done)
-                  // we prevent animations so that users's animation don't kick in too early referring wrong sides
-                  animation: S ? void 0 : "none"
-                }
-              }
-            )
-          }
-        )
+const S = "ͼ", m = typeof Symbol > "u" ? "__" + S : Symbol.for(S), c = typeof Symbol > "u" ? "__styleSet" + Math.floor(Math.random() * 1e8) : Symbol("styleSet"), w = typeof globalThis < "u" ? globalThis : typeof window < "u" ? window : {};
+class A {
+  // :: (Object<Style>, ?{finish: ?(string) → string})
+  // Create a style module from the given spec.
+  //
+  // When `finish` is given, it is called on regular (non-`@`)
+  // selectors (after `&` expansion) to compute the final selector.
+  constructor(e, s) {
+    this.rules = [];
+    let { finish: i } = s || {};
+    function n(t) {
+      return /^@/.test(t) ? [t] : t.split(/,\s*/);
+    }
+    function l(t, a, h, r) {
+      let p = [], f = /^@(\w+)\b/.exec(t[0]), g = f && f[1] == "keyframes";
+      if (f && a == null) return h.push(t[0] + ";");
+      for (let o in a) {
+        let u = a[o];
+        if (/&/.test(o))
+          l(
+            o.split(/,\s*/).map((d) => t.map((y) => d.replace(/&/, y))).reduce((d, y) => d.concat(y)),
+            u,
+            h
+          );
+        else if (u && typeof u == "object") {
+          if (!f) throw new RangeError("The value of a property (" + o + ") should be a primitive value.");
+          l(n(o), u, p, g);
+        } else u != null && p.push(o.replace(/_.*/, "").replace(/[A-Z]/g, (d) => "-" + d.toLowerCase()) + ": " + u + ";");
       }
-    );
+      (p.length || g) && h.push((i && !f && !r ? t.map(i) : t).join(", ") + " {" + p.join(" ") + "}");
+    }
+    for (let t in e) l(n(t), e[t], this.rules);
   }
-);
-J.displayName = _;
-var K = "PopperArrow", Ie = {
-  top: "bottom",
-  right: "left",
-  bottom: "top",
-  left: "right"
-}, Q = p.forwardRef(function(s, a) {
-  const { __scopePopper: t, ...i } = s, r = We(K, t), o = Ie[r.placedSide];
-  return (
-    // we have to use an extra wrapper because `ResizeObserver` (used by `useSize`)
-    // doesn't report size as we'd expect on SVG elements.
-    // it reports their bounding box which is effectively the largest path inside the SVG.
-    /* @__PURE__ */ f(
-      "span",
-      {
-        ref: r.onArrowChange,
-        style: {
-          position: "absolute",
-          left: r.arrowX,
-          top: r.arrowY,
-          [o]: 0,
-          transformOrigin: {
-            top: "",
-            right: "0 0",
-            bottom: "center 0",
-            left: "100% 0"
-          }[r.placedSide],
-          transform: {
-            top: "translateY(100%)",
-            right: "translateY(50%) rotate(90deg) translateX(-50%)",
-            bottom: "rotate(180deg)",
-            left: "translateY(50%) rotate(-90deg) translateX(50%)"
-          }[r.placedSide],
-          visibility: r.shouldHideArrow ? "hidden" : void 0
-        },
-        children: /* @__PURE__ */ f(
-          Oe,
-          {
-            ...i,
-            ref: a,
-            style: {
-              ...i.style,
-              // ensures the element can be measured correctly (mostly for if SVG)
-              display: "block"
-            }
-          }
-        )
+  // :: () → string
+  // Returns a string containing the module's CSS rules.
+  getRules() {
+    return this.rules.join(`
+`);
+  }
+  // :: () → string
+  // Generate a new unique CSS class name.
+  static newName() {
+    let e = w[m] || 1;
+    return w[m] = e + 1, S + e.toString(36);
+  }
+  // :: (union<Document, ShadowRoot>, union<[StyleModule], StyleModule>, ?{nonce: ?string})
+  //
+  // Mount the given set of modules in the given DOM root, which ensures
+  // that the CSS rules defined by the module are available in that
+  // context.
+  //
+  // Rules are only added to the document once per root.
+  //
+  // Rule order will follow the order of the modules, so that rules from
+  // modules later in the array take precedence of those from earlier
+  // modules. If you call this function multiple times for the same root
+  // in a way that changes the order of already mounted modules, the old
+  // order will be changed.
+  //
+  // If a Content Security Policy nonce is provided, it is added to
+  // the `<style>` tag generated by the library.
+  static mount(e, s, i) {
+    let n = e[c], l = i && i.nonce;
+    n ? l && n.setNonce(l) : n = new x(e, l), n.mount(Array.isArray(s) ? s : [s], e);
+  }
+}
+let T = /* @__PURE__ */ new Map();
+class x {
+  constructor(e, s) {
+    let i = e.ownerDocument || e, n = i.defaultView;
+    if (!e.head && e.adoptedStyleSheets && n.CSSStyleSheet) {
+      let l = T.get(i);
+      if (l) return e[c] = l;
+      this.sheet = new n.CSSStyleSheet(), T.set(i, this);
+    } else
+      this.styleTag = i.createElement("style"), s && this.styleTag.setAttribute("nonce", s);
+    this.modules = [], e[c] = this;
+  }
+  mount(e, s) {
+    let i = this.sheet, n = 0, l = 0;
+    for (let t = 0; t < e.length; t++) {
+      let a = e[t], h = this.modules.indexOf(a);
+      if (h < l && h > -1 && (this.modules.splice(h, 1), l--, h = -1), h == -1) {
+        if (this.modules.splice(l++, 0, a), i) for (let r = 0; r < a.rules.length; r++)
+          i.insertRule(a.rules[r], n++);
+      } else {
+        for (; l < h; ) n += this.modules[l++].rules.length;
+        n += a.rules.length, l++;
       }
-    )
-  );
-});
-Q.displayName = K;
-function Ye(e) {
-  return e !== null;
-}
-var Me = (e) => ({
-  name: "transformOrigin",
-  options: e,
-  fn(s) {
-    var v, h, C;
-    const { placement: a, rects: t, middlewareData: i } = s, o = ((v = i.arrow) == null ? void 0 : v.centerOffset) !== 0, w = o ? 0 : e.arrowWidth, n = o ? 0 : e.arrowHeight, [c, x] = V(a), m = { start: "0%", center: "50%", end: "100%" }[x], y = (((h = i.arrow) == null ? void 0 : h.x) ?? 0) + w / 2, A = (((C = i.arrow) == null ? void 0 : C.y) ?? 0) + n / 2;
-    let l = "", d = "";
-    return c === "bottom" ? (l = o ? m : `${y}px`, d = `${-n}px`) : c === "top" ? (l = o ? m : `${y}px`, d = `${t.floating.height + n}px`) : c === "right" ? (l = `${-n}px`, d = o ? m : `${A}px`) : c === "left" && (l = `${t.floating.width + n}px`, d = o ? m : `${A}px`), { data: { x: l, y: d } };
+    }
+    if (i)
+      s.adoptedStyleSheets.indexOf(this.sheet) < 0 && (s.adoptedStyleSheets = [this.sheet, ...s.adoptedStyleSheets]);
+    else {
+      let t = "";
+      for (let h = 0; h < this.modules.length; h++)
+        t += this.modules[h].getRules() + `
+`;
+      this.styleTag.textContent = t;
+      let a = s.head || s;
+      this.styleTag.parentNode != a && a.insertBefore(this.styleTag, a.firstChild);
+    }
   }
-});
-function V(e) {
-  const [s, a = "center"] = e.split("-");
-  return [s, a];
+  setNonce(e) {
+    this.styleTag && this.styleTag.getAttribute("nonce") != e && this.styleTag.setAttribute("nonce", e);
+  }
 }
-var qe = U, Ge = G, Je = J, Ke = Q;
 export {
-  Ge as Anchor,
-  Ke as Arrow,
-  Je as Content,
-  U as Popper,
-  G as PopperAnchor,
-  Q as PopperArrow,
-  J as PopperContent,
-  qe as Root,
-  Ue as createPopperScope
+  A as StyleModule
 };

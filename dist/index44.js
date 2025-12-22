@@ -1,127 +1,239 @@
-import * as l from "react";
-import { createContextScope as w } from "./index80.js";
-import { useComposedRefs as v } from "./index82.js";
-import { createDialogScope as A, Root as M, Portal as x, Trigger as I, Overlay as L, WarningProvider as $, Content as F, Title as G, Description as j, Close as f } from "./index59.js";
-import { composeEventHandlers as W } from "./index88.js";
-import { createSlottable as Y } from "./index89.js";
-import { jsx as i, jsxs as q } from "react/jsx-runtime";
-var D = "AlertDialog", [B] = w(D, [
-  A
-]), n = A(), m = (e) => {
-  const { __scopeAlertDialog: o, ...r } = e, t = n(o);
-  return /* @__PURE__ */ i(M, { ...t, ...r, modal: !0 });
-};
-m.displayName = D;
-var H = "AlertDialogTrigger", y = l.forwardRef(
-  (e, o) => {
-    const { __scopeAlertDialog: r, ...t } = e, a = n(r);
-    return /* @__PURE__ */ i(I, { ...a, ...t, ref: o });
+import s from "react";
+import { createContextScope as X } from "./index80.js";
+import { createCollection as Z } from "./index81.js";
+import { useComposedRefs as $ } from "./index82.js";
+import { composeEventHandlers as ee } from "./index83.js";
+import { useControllableState as M } from "./index84.js";
+import { Primitive as V } from "./index85.js";
+import { createCollapsibleScope as H, Root as oe, Trigger as re, Content as te } from "./index54.js";
+import { useId as ne } from "./index86.js";
+import { useDirection as ce } from "./index87.js";
+import { jsx as n } from "react/jsx-runtime";
+var d = "Accordion", ie = ["Home", "End", "ArrowDown", "ArrowUp", "ArrowLeft", "ArrowRight"], [E, ae, le] = Z(d), [b] = X(d, [
+  le,
+  H
+]), S = H(), K = s.forwardRef(
+  (o, c) => {
+    const { type: e, ...t } = o, i = t, r = t;
+    return /* @__PURE__ */ n(E.Provider, { scope: o.__scopeAccordion, children: e === "multiple" ? /* @__PURE__ */ n(fe, { ...r, ref: c }) : /* @__PURE__ */ n(pe, { ...i, ref: c }) });
   }
 );
-y.displayName = H;
-var V = "AlertDialogPortal", _ = (e) => {
-  const { __scopeAlertDialog: o, ...r } = e, t = n(o);
-  return /* @__PURE__ */ i(x, { ...t, ...r });
-};
-_.displayName = V;
-var k = "AlertDialogOverlay", N = l.forwardRef(
-  (e, o) => {
-    const { __scopeAlertDialog: r, ...t } = e, a = n(r);
-    return /* @__PURE__ */ i(L, { ...a, ...t, ref: o });
-  }
-);
-N.displayName = k;
-var s = "AlertDialogContent", [z, J] = B(s), K = Y("AlertDialogContent"), R = l.forwardRef(
-  (e, o) => {
-    const { __scopeAlertDialog: r, children: t, ...a } = e, g = n(r), p = l.useRef(null), b = v(o, p), d = l.useRef(null);
-    return /* @__PURE__ */ i(
-      $,
+K.displayName = d;
+var [L, se] = b(d), [z, de] = b(
+  d,
+  { collapsible: !1 }
+), pe = s.forwardRef(
+  (o, c) => {
+    const {
+      value: e,
+      defaultValue: t,
+      onValueChange: i = () => {
+      },
+      collapsible: r = !1,
+      ...l
+    } = o, [a, p] = M({
+      prop: e,
+      defaultProp: t ?? "",
+      onChange: i,
+      caller: d
+    });
+    return /* @__PURE__ */ n(
+      L,
       {
-        contentName: s,
-        titleName: C,
-        docsSlug: "alert-dialog",
-        children: /* @__PURE__ */ i(z, { scope: r, cancelRef: d, children: /* @__PURE__ */ q(
-          F,
+        scope: o.__scopeAccordion,
+        value: s.useMemo(() => a ? [a] : [], [a]),
+        onItemOpen: p,
+        onItemClose: s.useCallback(() => r && p(""), [r, p]),
+        children: /* @__PURE__ */ n(z, { scope: o.__scopeAccordion, collapsible: r, children: /* @__PURE__ */ n(G, { ...l, ref: c }) })
+      }
+    );
+  }
+), fe = s.forwardRef((o, c) => {
+  const {
+    value: e,
+    defaultValue: t,
+    onValueChange: i = () => {
+    },
+    ...r
+  } = o, [l, a] = M({
+    prop: e,
+    defaultProp: t ?? [],
+    onChange: i,
+    caller: d
+  }), p = s.useCallback(
+    (v) => a((u = []) => [...u, v]),
+    [a]
+  ), m = s.useCallback(
+    (v) => a((u = []) => u.filter((h) => h !== v)),
+    [a]
+  );
+  return /* @__PURE__ */ n(
+    L,
+    {
+      scope: o.__scopeAccordion,
+      value: l,
+      onItemOpen: p,
+      onItemClose: m,
+      children: /* @__PURE__ */ n(z, { scope: o.__scopeAccordion, collapsible: !0, children: /* @__PURE__ */ n(G, { ...r, ref: c }) })
+    }
+  );
+}), [ue, I] = b(d), G = s.forwardRef(
+  (o, c) => {
+    const { __scopeAccordion: e, disabled: t, dir: i, orientation: r = "vertical", ...l } = o, a = s.useRef(null), p = $(a, c), m = ae(e), u = ce(i) === "ltr", h = ee(o.onKeyDown, (C) => {
+      var O;
+      if (!ie.includes(C.key)) return;
+      const Q = C.target, x = m().filter((N) => {
+        var T;
+        return !((T = N.ref.current) != null && T.disabled);
+      }), A = x.findIndex((N) => N.ref.current === Q), D = x.length;
+      if (A === -1) return;
+      C.preventDefault();
+      let f = A;
+      const _ = 0, w = D - 1, R = () => {
+        f = A + 1, f > w && (f = _);
+      }, P = () => {
+        f = A - 1, f < _ && (f = w);
+      };
+      switch (C.key) {
+        case "Home":
+          f = _;
+          break;
+        case "End":
+          f = w;
+          break;
+        case "ArrowRight":
+          r === "horizontal" && (u ? R() : P());
+          break;
+        case "ArrowDown":
+          r === "vertical" && R();
+          break;
+        case "ArrowLeft":
+          r === "horizontal" && (u ? P() : R());
+          break;
+        case "ArrowUp":
+          r === "vertical" && P();
+          break;
+      }
+      const W = f % D;
+      (O = x[W].ref.current) == null || O.focus();
+    });
+    return /* @__PURE__ */ n(
+      ue,
+      {
+        scope: e,
+        disabled: t,
+        direction: i,
+        orientation: r,
+        children: /* @__PURE__ */ n(E.Slot, { scope: e, children: /* @__PURE__ */ n(
+          V.div,
           {
-            role: "alertdialog",
-            ...g,
-            ...a,
-            ref: b,
-            onOpenAutoFocus: W(a.onOpenAutoFocus, (c) => {
-              var u;
-              c.preventDefault(), (u = d.current) == null || u.focus({ preventScroll: !0 });
-            }),
-            onPointerDownOutside: (c) => c.preventDefault(),
-            onInteractOutside: (c) => c.preventDefault(),
-            children: [
-              /* @__PURE__ */ i(K, { children: t }),
-              /* @__PURE__ */ i(U, { contentRef: p })
-            ]
+            ...l,
+            "data-orientation": r,
+            ref: p,
+            onKeyDown: t ? void 0 : h
           }
         ) })
       }
     );
   }
-);
-R.displayName = s;
-var C = "AlertDialogTitle", h = l.forwardRef(
-  (e, o) => {
-    const { __scopeAlertDialog: r, ...t } = e, a = n(r);
-    return /* @__PURE__ */ i(G, { ...a, ...t, ref: o });
+), g = "AccordionItem", [me, k] = b(g), U = s.forwardRef(
+  (o, c) => {
+    const { __scopeAccordion: e, value: t, ...i } = o, r = I(g, e), l = se(g, e), a = S(e), p = ne(), m = t && l.value.includes(t) || !1, v = r.disabled || o.disabled;
+    return /* @__PURE__ */ n(
+      me,
+      {
+        scope: e,
+        open: m,
+        disabled: v,
+        triggerId: p,
+        children: /* @__PURE__ */ n(
+          oe,
+          {
+            "data-orientation": r.orientation,
+            "data-state": J(m),
+            ...a,
+            ...i,
+            ref: c,
+            disabled: v,
+            open: m,
+            onOpenChange: (u) => {
+              u ? l.onItemOpen(t) : l.onItemClose(t);
+            }
+          }
+        )
+      }
+    );
   }
 );
-h.displayName = C;
-var E = "AlertDialogDescription", P = l.forwardRef((e, o) => {
-  const { __scopeAlertDialog: r, ...t } = e, a = n(r);
-  return /* @__PURE__ */ i(j, { ...a, ...t, ref: o });
-});
-P.displayName = E;
-var Q = "AlertDialogAction", S = l.forwardRef(
-  (e, o) => {
-    const { __scopeAlertDialog: r, ...t } = e, a = n(r);
-    return /* @__PURE__ */ i(f, { ...a, ...t, ref: o });
+U.displayName = g;
+var j = "AccordionHeader", Y = s.forwardRef(
+  (o, c) => {
+    const { __scopeAccordion: e, ...t } = o, i = I(d, e), r = k(j, e);
+    return /* @__PURE__ */ n(
+      V.h3,
+      {
+        "data-orientation": i.orientation,
+        "data-state": J(r.open),
+        "data-disabled": r.disabled ? "" : void 0,
+        ...t,
+        ref: c
+      }
+    );
   }
 );
-S.displayName = Q;
-var T = "AlertDialogCancel", O = l.forwardRef(
-  (e, o) => {
-    const { __scopeAlertDialog: r, ...t } = e, { cancelRef: a } = J(T, r), g = n(r), p = v(o, a);
-    return /* @__PURE__ */ i(f, { ...g, ...t, ref: p });
+Y.displayName = j;
+var y = "AccordionTrigger", q = s.forwardRef(
+  (o, c) => {
+    const { __scopeAccordion: e, ...t } = o, i = I(d, e), r = k(y, e), l = de(y, e), a = S(e);
+    return /* @__PURE__ */ n(E.ItemSlot, { scope: e, children: /* @__PURE__ */ n(
+      re,
+      {
+        "aria-disabled": r.open && !l.collapsible || void 0,
+        "data-orientation": i.orientation,
+        id: r.triggerId,
+        ...a,
+        ...t,
+        ref: c
+      }
+    ) });
   }
 );
-O.displayName = T;
-var U = ({ contentRef: e }) => {
-  const o = `\`${s}\` requires a description for the component to be accessible for screen reader users.
-
-You can add a description to the \`${s}\` by passing a \`${E}\` component as a child, which also benefits sighted users by adding visible context to the dialog.
-
-Alternatively, you can use your own component as a description by assigning it an \`id\` and passing the same value to the \`aria-describedby\` prop in \`${s}\`. If the description is confusing or duplicative for sighted users, you can use the \`@radix-ui/react-visually-hidden\` primitive as a wrapper around your description component.
-
-For more information, see https://radix-ui.com/primitives/docs/components/alert-dialog`;
-  return l.useEffect(() => {
-    var t;
-    document.getElementById(
-      (t = e.current) == null ? void 0 : t.getAttribute("aria-describedby")
-    ) || console.warn(o);
-  }, [o, e]), null;
-}, ae = m, ie = y, le = _, ne = N, se = R, ce = S, pe = O, ge = h, de = P;
+q.displayName = y;
+var B = "AccordionContent", F = s.forwardRef(
+  (o, c) => {
+    const { __scopeAccordion: e, ...t } = o, i = I(d, e), r = k(B, e), l = S(e);
+    return /* @__PURE__ */ n(
+      te,
+      {
+        role: "region",
+        "aria-labelledby": r.triggerId,
+        "data-orientation": i.orientation,
+        ...l,
+        ...t,
+        ref: c,
+        style: {
+          "--radix-accordion-content-height": "var(--radix-collapsible-content-height)",
+          "--radix-accordion-content-width": "var(--radix-collapsible-content-width)",
+          ...o.style
+        }
+      }
+    );
+  }
+);
+F.displayName = B;
+function J(o) {
+  return o ? "open" : "closed";
+}
+var Pe = K, Ne = U, ye = Y, Ee = q, Se = F;
 export {
-  ce as Action,
-  m as AlertDialog,
-  S as AlertDialogAction,
-  O as AlertDialogCancel,
-  R as AlertDialogContent,
-  P as AlertDialogDescription,
-  N as AlertDialogOverlay,
-  _ as AlertDialogPortal,
-  h as AlertDialogTitle,
-  y as AlertDialogTrigger,
-  pe as Cancel,
-  se as Content,
-  de as Description,
-  ne as Overlay,
-  le as Portal,
-  ae as Root,
-  ge as Title,
-  ie as Trigger
+  K as Accordion,
+  F as AccordionContent,
+  Y as AccordionHeader,
+  U as AccordionItem,
+  q as AccordionTrigger,
+  Se as Content,
+  ye as Header,
+  Ne as Item,
+  Pe as Root,
+  Ee as Trigger
 };

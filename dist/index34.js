@@ -1,6 +1,6 @@
 import { jsx as e } from "react/jsx-runtime";
 import * as d from "react";
-import { Root as s, Trigger as n, Portal as m, Content as a, Provider as l } from "./index62.js";
+import { Root as s, Trigger as n, Portal as m, Content as a, Provider as l } from "./index49.js";
 import { cn as p } from "./index2.js";
 const f = ({ children: o, ...t }) => /* @__PURE__ */ e(l, { delayDuration: 100, skipDelayDuration: 300, ...t, children: o });
 f.displayName = "TooltipProvider";

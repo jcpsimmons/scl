@@ -1,71 +1,56 @@
-import * as a from "react";
-import { useComposedRefs as E } from "./index82.js";
-import { useLayoutEffect as A } from "./index101.js";
-function T(n, e) {
-  return a.useReducer((r, t) => e[r][t] ?? r, n);
-}
-var R = (n) => {
-  const { present: e, children: r } = n, t = v(e), i = typeof r == "function" ? r({ present: t.isPresent }) : a.Children.only(r), c = E(t.ref, P(i));
-  return typeof r == "function" || t.isPresent ? a.cloneElement(i, { ref: c }) : null;
-};
-R.displayName = "Presence";
-function v(n) {
-  const [e, r] = a.useState(), t = a.useRef(null), i = a.useRef(n), c = a.useRef("none"), p = n ? "mounted" : "unmounted", [N, s] = T(p, {
-    mounted: {
-      UNMOUNT: "unmounted",
-      ANIMATION_OUT: "unmountSuspended"
-    },
-    unmountSuspended: {
-      MOUNT: "mounted",
-      ANIMATION_END: "unmounted"
-    },
-    unmounted: {
-      MOUNT: "mounted"
+import * as l from "react";
+import { composeRefs as y } from "./index82.js";
+import { jsx as p, Fragment as S } from "react/jsx-runtime";
+// @__NO_SIDE_EFFECTS__
+function _(e) {
+  const r = /* @__PURE__ */ g(e), o = l.forwardRef((n, t) => {
+    const { children: i, ...a } = n, s = l.Children.toArray(i), c = s.find(E);
+    if (c) {
+      const f = c.props.children, m = s.map((u) => u === c ? l.Children.count(f) > 1 ? l.Children.only(null) : l.isValidElement(f) ? f.props.children : null : u);
+      return /* @__PURE__ */ p(r, { ...a, ref: t, children: l.isValidElement(f) ? l.cloneElement(f, void 0, m) : null });
     }
+    return /* @__PURE__ */ p(r, { ...a, ref: t, children: i });
   });
-  return a.useEffect(() => {
-    const o = l(t.current);
-    c.current = N === "mounted" ? o : "none";
-  }, [N]), A(() => {
-    const o = t.current, m = i.current;
-    if (m !== n) {
-      const f = c.current, u = l(o);
-      n ? s("MOUNT") : u === "none" || (o == null ? void 0 : o.display) === "none" ? s("UNMOUNT") : s(m && f !== u ? "ANIMATION_OUT" : "UNMOUNT"), i.current = n;
+  return o.displayName = `${e}.Slot`, o;
+}
+// @__NO_SIDE_EFFECTS__
+function g(e) {
+  const r = l.forwardRef((o, n) => {
+    const { children: t, ...i } = o;
+    if (l.isValidElement(t)) {
+      const a = b(t), s = C(i, t.props);
+      return t.type !== l.Fragment && (s.ref = n ? y(n, a) : a), l.cloneElement(t, s);
     }
-  }, [n, s]), A(() => {
-    if (e) {
-      let o;
-      const m = e.ownerDocument.defaultView ?? window, d = (u) => {
-        const g = l(t.current).includes(CSS.escape(u.animationName));
-        if (u.target === e && g && (s("ANIMATION_END"), !i.current)) {
-          const O = e.style.animationFillMode;
-          e.style.animationFillMode = "forwards", o = m.setTimeout(() => {
-            e.style.animationFillMode === "forwards" && (e.style.animationFillMode = O);
-          });
-        }
-      }, f = (u) => {
-        u.target === e && (c.current = l(t.current));
-      };
-      return e.addEventListener("animationstart", f), e.addEventListener("animationcancel", d), e.addEventListener("animationend", d), () => {
-        m.clearTimeout(o), e.removeEventListener("animationstart", f), e.removeEventListener("animationcancel", d), e.removeEventListener("animationend", d);
-      };
-    } else
-      s("ANIMATION_END");
-  }, [e, s]), {
-    isPresent: ["mounted", "unmountSuspended"].includes(N),
-    ref: a.useCallback((o) => {
-      t.current = o ? getComputedStyle(o) : null, r(o);
-    }, [])
-  };
+    return l.Children.count(t) > 1 ? l.Children.only(null) : null;
+  });
+  return r.displayName = `${e}.SlotClone`, r;
 }
-function l(n) {
-  return (n == null ? void 0 : n.animationName) || "none";
+var d = Symbol("radix.slottable");
+// @__NO_SIDE_EFFECTS__
+function x(e) {
+  const r = ({ children: o }) => /* @__PURE__ */ p(S, { children: o });
+  return r.displayName = `${e}.Slottable`, r.__radixId = d, r;
 }
-function P(n) {
-  var t, i;
-  let e = (t = Object.getOwnPropertyDescriptor(n.props, "ref")) == null ? void 0 : t.get, r = e && "isReactWarning" in e && e.isReactWarning;
-  return r ? n.ref : (e = (i = Object.getOwnPropertyDescriptor(n, "ref")) == null ? void 0 : i.get, r = e && "isReactWarning" in e && e.isReactWarning, r ? n.props.ref : n.props.ref || n.ref);
+function E(e) {
+  return l.isValidElement(e) && typeof e.type == "function" && "__radixId" in e.type && e.type.__radixId === d;
+}
+function C(e, r) {
+  const o = { ...r };
+  for (const n in r) {
+    const t = e[n], i = r[n];
+    /^on[A-Z]/.test(n) ? t && i ? o[n] = (...s) => {
+      const c = i(...s);
+      return t(...s), c;
+    } : t && (o[n] = t) : n === "style" ? o[n] = { ...t, ...i } : n === "className" && (o[n] = [t, i].filter(Boolean).join(" "));
+  }
+  return { ...e, ...o };
+}
+function b(e) {
+  var n, t;
+  let r = (n = Object.getOwnPropertyDescriptor(e.props, "ref")) == null ? void 0 : n.get, o = r && "isReactWarning" in r && r.isReactWarning;
+  return o ? e.ref : (r = (t = Object.getOwnPropertyDescriptor(e, "ref")) == null ? void 0 : t.get, o = r && "isReactWarning" in r && r.isReactWarning, o ? e.props.ref : e.props.ref || e.ref);
 }
 export {
-  R as Presence
+  _ as createSlot,
+  x as createSlottable
 };

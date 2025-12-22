@@ -1,6 +1,6 @@
 import { jsxs as n, jsx as e } from "react/jsx-runtime";
 import * as t from "react";
-import { Root as s, Viewport as d, Corner as p, ScrollAreaScrollbar as c, ScrollAreaThumb as f } from "./index57.js";
+import { Root as s, Viewport as d, Corner as p, ScrollAreaScrollbar as c, ScrollAreaThumb as f } from "./index62.js";
 import { cn as i } from "./index2.js";
 const h = t.forwardRef(({ className: l, children: r, ...a }, o) => /* @__PURE__ */ n(
   s,

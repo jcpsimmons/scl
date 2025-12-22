@@ -1,24 +1,13 @@
-import * as p from "react";
-import { Primitive as v } from "./index90.js";
-import { jsx as m } from "react/jsx-runtime";
-var d = "Separator", a = "horizontal", l = ["horizontal", "vertical"], i = p.forwardRef((r, n) => {
-  const { decorative: e, orientation: t = a, ...s } = r, o = f(t) ? t : a, c = e ? { role: "none" } : { "aria-orientation": o === "vertical" ? o : void 0, role: "separator" };
-  return /* @__PURE__ */ m(
-    v.div,
-    {
-      "data-orientation": o,
-      ...c,
-      ...s,
-      ref: n
-    }
-  );
-});
-i.displayName = d;
-function f(r) {
-  return l.includes(r);
-}
-var T = i;
+import o from "./index121.js";
+/**
+ * @license lucide-react v0.460.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const n = o("ChevronDown", [
+  ["path", { d: "m6 9 6 6 6-6", key: "qrunsl" }]
+]);
 export {
-  T as Root,
-  i as Separator
+  n as default
 };

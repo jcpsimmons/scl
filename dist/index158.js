@@ -1,9 +1,7 @@
-function h(f, c, { checkForDefaultPrevented: p = !0 } = {}) {
-  return function(s) {
-    if (f == null || f(s), p === !1 || !s.defaultPrevented)
-      return c == null ? void 0 : c(s);
-  };
-}
+var e = function() {
+  if (typeof __webpack_nonce__ < "u")
+    return __webpack_nonce__;
+};
 export {
-  h as composeEventHandlers
+  e as getNonce
 };

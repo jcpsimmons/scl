@@ -1,32 +1,8 @@
-import * as f from "react";
-import "react-dom";
-import { createSlot as l } from "./index47.js";
-import { jsx as n } from "react/jsx-runtime";
-var u = [
-  "a",
-  "button",
-  "div",
-  "form",
-  "h2",
-  "h3",
-  "img",
-  "input",
-  "label",
-  "li",
-  "nav",
-  "ol",
-  "p",
-  "select",
-  "span",
-  "svg",
-  "ul"
-], w = u.reduce((t, i) => {
-  const o = l(`Primitive.${i}`), r = f.forwardRef((e, m) => {
-    const { asChild: a, ...p } = e, s = a ? o : i;
-    return typeof window < "u" && (window[Symbol.for("radix-ui")] = !0), /* @__PURE__ */ n(s, { ...p, ref: m });
-  });
-  return r.displayName = `Primitive.${i}`, { ...t, [i]: r };
-}, {});
+import { __module as r } from "./index132.js";
+import { __require as e } from "./index133.js";
+import { __require as o } from "./index134.js";
+process.env.NODE_ENV === "production" ? r.exports = e() : r.exports = o();
+var m = r.exports;
 export {
-  w as Primitive
+  m as s
 };

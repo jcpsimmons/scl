@@ -1,338 +1,532 @@
-import * as s from "react";
-import { composeEventHandlers as g } from "./index121.js";
-import { useComposedRefs as N } from "./index82.js";
-import { createContextScope as K } from "./index80.js";
-import { DismissableLayer as W } from "./index105.js";
-import { useId as $ } from "./index86.js";
-import { createPopperScope as S, Root as z, Anchor as J, Content as Q, Arrow as Z } from "./index108.js";
-import { Portal as ee } from "./index109.js";
-import { Presence as G } from "./index99.js";
-import { Primitive as te } from "./index85.js";
-import { createSlottable as oe } from "./index122.js";
-import { useControllableState as re } from "./index84.js";
-import { Root as ne } from "./index111.js";
-import { jsx as f, jsxs as se } from "react/jsx-runtime";
-var [D] = K("Tooltip", [
-  S
-]), O = S(), j = "TooltipProvider", ie = 700, L = "tooltip.open", [ae, k] = D(j), F = (t) => {
-  const {
-    __scopeTooltip: o,
-    delayDuration: e = ie,
-    skipDelayDuration: r = 300,
-    disableHoverableContent: n = !1,
-    children: a
-  } = t, l = s.useRef(!0), v = s.useRef(!1), i = s.useRef(0);
-  return s.useEffect(() => {
-    const p = i.current;
-    return () => window.clearTimeout(p);
-  }, []), /* @__PURE__ */ f(
-    ae,
-    {
-      scope: o,
-      isOpenDelayedRef: l,
-      delayDuration: e,
-      onOpen: s.useCallback(() => {
-        window.clearTimeout(i.current), l.current = !1;
-      }, []),
-      onClose: s.useCallback(() => {
-        window.clearTimeout(i.current), i.current = window.setTimeout(
-          () => l.current = !0,
-          r
-        );
-      }, [r]),
-      isPointerInTransitRef: v,
-      onPointerInTransitChange: s.useCallback((p) => {
-        v.current = p;
-      }, []),
-      disableHoverableContent: n,
-      children: a
-    }
-  );
-};
-F.displayName = j;
-var R = "Tooltip", [le, _] = D(R), B = (t) => {
-  const {
-    __scopeTooltip: o,
-    children: e,
-    open: r,
-    defaultOpen: n,
-    onOpenChange: a,
-    disableHoverableContent: l,
-    delayDuration: v
-  } = t, i = k(R, t.__scopeTooltip), p = O(o), [c, d] = s.useState(null), h = $(), u = s.useRef(0), m = l ?? i.disableHoverableContent, y = v ?? i.delayDuration, T = s.useRef(!1), [x, C] = re({
-    prop: r,
-    defaultProp: n ?? !1,
-    onChange: (H) => {
-      H ? (i.onOpen(), document.dispatchEvent(new CustomEvent(L))) : i.onClose(), a == null || a(H);
-    },
-    caller: R
-  }), w = s.useMemo(() => x ? T.current ? "delayed-open" : "instant-open" : "closed", [x]), P = s.useCallback(() => {
-    window.clearTimeout(u.current), u.current = 0, T.current = !1, C(!0);
-  }, [C]), E = s.useCallback(() => {
-    window.clearTimeout(u.current), u.current = 0, C(!1);
-  }, [C]), I = s.useCallback(() => {
-    window.clearTimeout(u.current), u.current = window.setTimeout(() => {
-      T.current = !0, C(!0), u.current = 0;
-    }, y);
-  }, [y, C]);
-  return s.useEffect(() => () => {
-    u.current && (window.clearTimeout(u.current), u.current = 0);
-  }, []), /* @__PURE__ */ f(z, { ...p, children: /* @__PURE__ */ f(
-    le,
-    {
-      scope: o,
-      contentId: h,
-      open: x,
-      stateAttribute: w,
-      trigger: c,
-      onTriggerChange: d,
-      onTriggerEnter: s.useCallback(() => {
-        i.isOpenDelayedRef.current ? I() : P();
-      }, [i.isOpenDelayedRef, I, P]),
-      onTriggerLeave: s.useCallback(() => {
-        m ? E() : (window.clearTimeout(u.current), u.current = 0);
-      }, [E, m]),
-      onOpen: P,
-      onClose: E,
-      disableHoverableContent: m,
-      children: e
-    }
-  ) });
-};
-B.displayName = R;
-var A = "TooltipTrigger", U = s.forwardRef(
-  (t, o) => {
-    const { __scopeTooltip: e, ...r } = t, n = _(A, e), a = k(A, e), l = O(e), v = s.useRef(null), i = N(o, v, n.onTriggerChange), p = s.useRef(!1), c = s.useRef(!1), d = s.useCallback(() => p.current = !1, []);
-    return s.useEffect(() => () => document.removeEventListener("pointerup", d), [d]), /* @__PURE__ */ f(J, { asChild: !0, ...l, children: /* @__PURE__ */ f(
-      te.button,
-      {
-        "aria-describedby": n.open ? n.contentId : void 0,
-        "data-state": n.stateAttribute,
-        ...r,
-        ref: i,
-        onPointerMove: g(t.onPointerMove, (h) => {
-          h.pointerType !== "touch" && !c.current && !a.isPointerInTransitRef.current && (n.onTriggerEnter(), c.current = !0);
-        }),
-        onPointerLeave: g(t.onPointerLeave, () => {
-          n.onTriggerLeave(), c.current = !1;
-        }),
-        onPointerDown: g(t.onPointerDown, () => {
-          n.open && n.onClose(), p.current = !0, document.addEventListener("pointerup", d, { once: !0 });
-        }),
-        onFocus: g(t.onFocus, () => {
-          p.current || n.onOpen();
-        }),
-        onBlur: g(t.onBlur, n.onClose),
-        onClick: g(t.onClick, n.onClose)
-      }
-    ) });
-  }
-);
-U.displayName = A;
-var M = "TooltipPortal", [ce, ue] = D(M, {
-  forceMount: void 0
-}), V = (t) => {
-  const { __scopeTooltip: o, forceMount: e, children: r, container: n } = t, a = _(M, o);
-  return /* @__PURE__ */ f(ce, { scope: o, forceMount: e, children: /* @__PURE__ */ f(G, { present: e || a.open, children: /* @__PURE__ */ f(ee, { asChild: !0, container: n, children: r }) }) });
-};
-V.displayName = M;
-var b = "TooltipContent", Y = s.forwardRef(
-  (t, o) => {
-    const e = ue(b, t.__scopeTooltip), { forceMount: r = e.forceMount, side: n = "top", ...a } = t, l = _(b, t.__scopeTooltip);
-    return /* @__PURE__ */ f(G, { present: r || l.open, children: l.disableHoverableContent ? /* @__PURE__ */ f(q, { side: n, ...a, ref: o }) : /* @__PURE__ */ f(pe, { side: n, ...a, ref: o }) });
-  }
-), pe = s.forwardRef((t, o) => {
-  const e = _(b, t.__scopeTooltip), r = k(b, t.__scopeTooltip), n = s.useRef(null), a = N(o, n), [l, v] = s.useState(null), { trigger: i, onClose: p } = e, c = n.current, { onPointerInTransitChange: d } = r, h = s.useCallback(() => {
-    v(null), d(!1);
-  }, [d]), u = s.useCallback(
-    (m, y) => {
-      const T = m.currentTarget, x = { x: m.clientX, y: m.clientY }, C = me(x, T.getBoundingClientRect()), w = Te(x, C), P = ye(y.getBoundingClientRect()), E = xe([...w, ...P]);
-      v(E), d(!0);
-    },
-    [d]
-  );
-  return s.useEffect(() => () => h(), [h]), s.useEffect(() => {
-    if (i && c) {
-      const m = (T) => u(T, c), y = (T) => u(T, i);
-      return i.addEventListener("pointerleave", m), c.addEventListener("pointerleave", y), () => {
-        i.removeEventListener("pointerleave", m), c.removeEventListener("pointerleave", y);
-      };
-    }
-  }, [i, c, u, h]), s.useEffect(() => {
-    if (l) {
-      const m = (y) => {
-        const T = y.target, x = { x: y.clientX, y: y.clientY }, C = (i == null ? void 0 : i.contains(T)) || (c == null ? void 0 : c.contains(T)), w = !Ce(x, l);
-        C ? h() : w && (h(), p());
-      };
-      return document.addEventListener("pointermove", m), () => document.removeEventListener("pointermove", m);
-    }
-  }, [i, c, l, p, h]), /* @__PURE__ */ f(q, { ...t, ref: a });
-}), [de, fe] = D(R, { isInside: !1 }), ve = oe("TooltipContent"), q = s.forwardRef(
-  (t, o) => {
+import * as c from "react";
+import { Primitive as L } from "./index85.js";
+import { Presence as I } from "./index95.js";
+import { createContextScope as te } from "./index80.js";
+import { useComposedRefs as A } from "./index82.js";
+import { useCallbackRef as C } from "./index90.js";
+import { useDirection as ne } from "./index87.js";
+import { useLayoutEffect as le } from "./index91.js";
+import { clamp as ce } from "./index105.js";
+import { composeEventHandlers as R } from "./index83.js";
+import { jsx as b, jsxs as ie, Fragment as se } from "react/jsx-runtime";
+function ae(e, t) {
+  return c.useReducer((r, l) => t[r][l] ?? r, e);
+}
+var V = "ScrollArea", [j] = te(V), [de, v] = j(V), q = c.forwardRef(
+  (e, t) => {
     const {
-      __scopeTooltip: e,
-      children: r,
-      "aria-label": n,
-      onEscapeKeyDown: a,
-      onPointerDownOutside: l,
-      ...v
-    } = t, i = _(b, e), p = O(e), { onClose: c } = i;
-    return s.useEffect(() => (document.addEventListener(L, c), () => document.removeEventListener(L, c)), [c]), s.useEffect(() => {
-      if (i.trigger) {
-        const d = (h) => {
-          const u = h.target;
-          u != null && u.contains(i.trigger) && c();
-        };
-        return window.addEventListener("scroll", d, { capture: !0 }), () => window.removeEventListener("scroll", d, { capture: !0 });
-      }
-    }, [i.trigger, c]), /* @__PURE__ */ f(
-      W,
+      __scopeScrollArea: r,
+      type: l = "hover",
+      dir: o,
+      scrollHideDelay: n = 600,
+      ...i
+    } = e, [s, a] = c.useState(null), [f, d] = c.useState(null), [h, u] = c.useState(null), [S, p] = c.useState(null), [y, M] = c.useState(null), [P, _] = c.useState(0), [U, D] = c.useState(0), [W, x] = c.useState(!1), [H, z] = c.useState(!1), m = A(t, (E) => a(E)), w = ne(o);
+    return /* @__PURE__ */ b(
+      de,
       {
-        asChild: !0,
-        disableOutsidePointerEvents: !1,
-        onEscapeKeyDown: a,
-        onPointerDownOutside: l,
-        onFocusOutside: (d) => d.preventDefault(),
-        onDismiss: c,
-        children: /* @__PURE__ */ se(
-          Q,
+        scope: r,
+        type: l,
+        dir: w,
+        scrollHideDelay: n,
+        scrollArea: s,
+        viewport: f,
+        onViewportChange: d,
+        content: h,
+        onContentChange: u,
+        scrollbarX: S,
+        onScrollbarXChange: p,
+        scrollbarXEnabled: W,
+        onScrollbarXEnabledChange: x,
+        scrollbarY: y,
+        onScrollbarYChange: M,
+        scrollbarYEnabled: H,
+        onScrollbarYEnabledChange: z,
+        onCornerWidthChange: _,
+        onCornerHeightChange: D,
+        children: /* @__PURE__ */ b(
+          L.div,
           {
-            "data-state": i.stateAttribute,
-            ...p,
-            ...v,
-            ref: o,
+            dir: w,
+            ...i,
+            ref: m,
             style: {
-              ...v.style,
-              "--radix-tooltip-content-transform-origin": "var(--radix-popper-transform-origin)",
-              "--radix-tooltip-content-available-width": "var(--radix-popper-available-width)",
-              "--radix-tooltip-content-available-height": "var(--radix-popper-available-height)",
-              "--radix-tooltip-trigger-width": "var(--radix-popper-anchor-width)",
-              "--radix-tooltip-trigger-height": "var(--radix-popper-anchor-height)"
-            },
-            children: [
-              /* @__PURE__ */ f(ve, { children: r }),
-              /* @__PURE__ */ f(de, { scope: e, isInside: !0, children: /* @__PURE__ */ f(ne, { id: i.contentId, role: "tooltip", children: n || r }) })
-            ]
+              position: "relative",
+              // Pass corner sizes as CSS vars to reduce re-renders of context consumers
+              "--radix-scroll-area-corner-width": P + "px",
+              "--radix-scroll-area-corner-height": U + "px",
+              ...e.style
+            }
           }
         )
       }
     );
   }
 );
-Y.displayName = b;
-var X = "TooltipArrow", he = s.forwardRef(
-  (t, o) => {
-    const { __scopeTooltip: e, ...r } = t, n = O(e);
-    return fe(
-      X,
-      e
-    ).isInside ? null : /* @__PURE__ */ f(Z, { ...n, ...r, ref: o });
+q.displayName = V;
+var $ = "ScrollAreaViewport", G = c.forwardRef(
+  (e, t) => {
+    const { __scopeScrollArea: r, children: l, nonce: o, ...n } = e, i = v($, r), s = c.useRef(null), a = A(t, s, i.onViewportChange);
+    return /* @__PURE__ */ ie(se, { children: [
+      /* @__PURE__ */ b(
+        "style",
+        {
+          dangerouslySetInnerHTML: {
+            __html: "[data-radix-scroll-area-viewport]{scrollbar-width:none;-ms-overflow-style:none;-webkit-overflow-scrolling:touch;}[data-radix-scroll-area-viewport]::-webkit-scrollbar{display:none}"
+          },
+          nonce: o
+        }
+      ),
+      /* @__PURE__ */ b(
+        L.div,
+        {
+          "data-radix-scroll-area-viewport": "",
+          ...n,
+          ref: a,
+          style: {
+            /**
+             * We don't support `visible` because the intention is to have at least one scrollbar
+             * if this component is used and `visible` will behave like `auto` in that case
+             * https://developer.mozilla.org/en-US/docs/Web/CSS/overflow#description
+             *
+             * We don't handle `auto` because the intention is for the native implementation
+             * to be hidden if using this component. We just want to ensure the node is scrollable
+             * so could have used either `scroll` or `auto` here. We picked `scroll` to prevent
+             * the browser from having to work out whether to render native scrollbars or not,
+             * we tell it to with the intention of hiding them in CSS.
+             */
+            overflowX: i.scrollbarXEnabled ? "scroll" : "hidden",
+            overflowY: i.scrollbarYEnabled ? "scroll" : "hidden",
+            ...e.style
+          },
+          children: /* @__PURE__ */ b("div", { ref: i.onContentChange, style: { minWidth: "100%", display: "table" }, children: l })
+        }
+      )
+    ] });
   }
 );
-he.displayName = X;
-function me(t, o) {
-  const e = Math.abs(o.top - t.y), r = Math.abs(o.bottom - t.y), n = Math.abs(o.right - t.x), a = Math.abs(o.left - t.x);
-  switch (Math.min(e, r, n, a)) {
-    case a:
-      return "left";
-    case n:
-      return "right";
-    case e:
-      return "top";
-    case r:
-      return "bottom";
-    default:
-      throw new Error("unreachable");
+G.displayName = $;
+var g = "ScrollAreaScrollbar", ue = c.forwardRef(
+  (e, t) => {
+    const { forceMount: r, ...l } = e, o = v(g, e.__scopeScrollArea), { onScrollbarXEnabledChange: n, onScrollbarYEnabledChange: i } = o, s = e.orientation === "horizontal";
+    return c.useEffect(() => (s ? n(!0) : i(!0), () => {
+      s ? n(!1) : i(!1);
+    }), [s, n, i]), o.type === "hover" ? /* @__PURE__ */ b(fe, { ...l, ref: t, forceMount: r }) : o.type === "scroll" ? /* @__PURE__ */ b(he, { ...l, ref: t, forceMount: r }) : o.type === "auto" ? /* @__PURE__ */ b(J, { ...l, ref: t, forceMount: r }) : o.type === "always" ? /* @__PURE__ */ b(k, { ...l, ref: t }) : null;
   }
-}
-function Te(t, o, e = 5) {
-  const r = [];
-  switch (o) {
-    case "top":
-      r.push(
-        { x: t.x - e, y: t.y + e },
-        { x: t.x + e, y: t.y + e }
-      );
-      break;
-    case "bottom":
-      r.push(
-        { x: t.x - e, y: t.y - e },
-        { x: t.x + e, y: t.y - e }
-      );
-      break;
-    case "left":
-      r.push(
-        { x: t.x + e, y: t.y - e },
-        { x: t.x + e, y: t.y + e }
-      );
-      break;
-    case "right":
-      r.push(
-        { x: t.x - e, y: t.y - e },
-        { x: t.x - e, y: t.y + e }
-      );
-      break;
-  }
-  return r;
-}
-function ye(t) {
-  const { top: o, right: e, bottom: r, left: n } = t;
-  return [
-    { x: n, y: o },
-    { x: e, y: o },
-    { x: e, y: r },
-    { x: n, y: r }
-  ];
-}
-function Ce(t, o) {
-  const { x: e, y: r } = t;
-  let n = !1;
-  for (let a = 0, l = o.length - 1; a < o.length; l = a++) {
-    const v = o[a], i = o[l], p = v.x, c = v.y, d = i.x, h = i.y;
-    c > r != h > r && e < (d - p) * (r - c) / (h - c) + p && (n = !n);
-  }
-  return n;
-}
-function xe(t) {
-  const o = t.slice();
-  return o.sort((e, r) => e.x < r.x ? -1 : e.x > r.x ? 1 : e.y < r.y ? -1 : e.y > r.y ? 1 : 0), ge(o);
-}
-function ge(t) {
-  if (t.length <= 1) return t.slice();
-  const o = [];
-  for (let r = 0; r < t.length; r++) {
-    const n = t[r];
-    for (; o.length >= 2; ) {
-      const a = o[o.length - 1], l = o[o.length - 2];
-      if ((a.x - l.x) * (n.y - l.y) >= (a.y - l.y) * (n.x - l.x)) o.pop();
-      else break;
+);
+ue.displayName = g;
+var fe = c.forwardRef((e, t) => {
+  const { forceMount: r, ...l } = e, o = v(g, e.__scopeScrollArea), [n, i] = c.useState(!1);
+  return c.useEffect(() => {
+    const s = o.scrollArea;
+    let a = 0;
+    if (s) {
+      const f = () => {
+        window.clearTimeout(a), i(!0);
+      }, d = () => {
+        a = window.setTimeout(() => i(!1), o.scrollHideDelay);
+      };
+      return s.addEventListener("pointerenter", f), s.addEventListener("pointerleave", d), () => {
+        window.clearTimeout(a), s.removeEventListener("pointerenter", f), s.removeEventListener("pointerleave", d);
+      };
     }
-    o.push(n);
-  }
-  o.pop();
-  const e = [];
-  for (let r = t.length - 1; r >= 0; r--) {
-    const n = t[r];
-    for (; e.length >= 2; ) {
-      const a = e[e.length - 1], l = e[e.length - 2];
-      if ((a.x - l.x) * (n.y - l.y) >= (a.y - l.y) * (n.x - l.x)) e.pop();
-      else break;
+  }, [o.scrollArea, o.scrollHideDelay]), /* @__PURE__ */ b(I, { present: r || n, children: /* @__PURE__ */ b(
+    J,
+    {
+      "data-state": n ? "visible" : "hidden",
+      ...l,
+      ref: t
     }
-    e.push(n);
+  ) });
+}), he = c.forwardRef((e, t) => {
+  const { forceMount: r, ...l } = e, o = v(g, e.__scopeScrollArea), n = e.orientation === "horizontal", i = Y(() => a("SCROLL_END"), 100), [s, a] = ae("hidden", {
+    hidden: {
+      SCROLL: "scrolling"
+    },
+    scrolling: {
+      SCROLL_END: "idle",
+      POINTER_ENTER: "interacting"
+    },
+    interacting: {
+      SCROLL: "interacting",
+      POINTER_LEAVE: "idle"
+    },
+    idle: {
+      HIDE: "hidden",
+      SCROLL: "scrolling",
+      POINTER_ENTER: "interacting"
+    }
+  });
+  return c.useEffect(() => {
+    if (s === "idle") {
+      const f = window.setTimeout(() => a("HIDE"), o.scrollHideDelay);
+      return () => window.clearTimeout(f);
+    }
+  }, [s, o.scrollHideDelay, a]), c.useEffect(() => {
+    const f = o.viewport, d = n ? "scrollLeft" : "scrollTop";
+    if (f) {
+      let h = f[d];
+      const u = () => {
+        const S = f[d];
+        h !== S && (a("SCROLL"), i()), h = S;
+      };
+      return f.addEventListener("scroll", u), () => f.removeEventListener("scroll", u);
+    }
+  }, [o.viewport, n, a, i]), /* @__PURE__ */ b(I, { present: r || s !== "hidden", children: /* @__PURE__ */ b(
+    k,
+    {
+      "data-state": s === "hidden" ? "hidden" : "visible",
+      ...l,
+      ref: t,
+      onPointerEnter: R(e.onPointerEnter, () => a("POINTER_ENTER")),
+      onPointerLeave: R(e.onPointerLeave, () => a("POINTER_LEAVE"))
+    }
+  ) });
+}), J = c.forwardRef((e, t) => {
+  const r = v(g, e.__scopeScrollArea), { forceMount: l, ...o } = e, [n, i] = c.useState(!1), s = e.orientation === "horizontal", a = Y(() => {
+    if (r.viewport) {
+      const f = r.viewport.offsetWidth < r.viewport.scrollWidth, d = r.viewport.offsetHeight < r.viewport.scrollHeight;
+      i(s ? f : d);
+    }
+  }, 10);
+  return T(r.viewport, a), T(r.content, a), /* @__PURE__ */ b(I, { present: l || n, children: /* @__PURE__ */ b(
+    k,
+    {
+      "data-state": n ? "visible" : "hidden",
+      ...o,
+      ref: t
+    }
+  ) });
+}), k = c.forwardRef((e, t) => {
+  const { orientation: r = "vertical", ...l } = e, o = v(g, e.__scopeScrollArea), n = c.useRef(null), i = c.useRef(0), [s, a] = c.useState({
+    content: 0,
+    viewport: 0,
+    scrollbar: { size: 0, paddingStart: 0, paddingEnd: 0 }
+  }), f = ee(s.viewport, s.content), d = {
+    ...l,
+    sizes: s,
+    onSizesChange: a,
+    hasThumb: f > 0 && f < 1,
+    onThumbChange: (u) => n.current = u,
+    onThumbPointerUp: () => i.current = 0,
+    onThumbPointerDown: (u) => i.current = u
+  };
+  function h(u, S) {
+    return ge(u, i.current, s, S);
   }
-  return e.pop(), o.length === 1 && e.length === 1 && o[0].x === e[0].x && o[0].y === e[0].y ? o : o.concat(e);
+  return r === "horizontal" ? /* @__PURE__ */ b(
+    be,
+    {
+      ...d,
+      ref: t,
+      onThumbPositionChange: () => {
+        if (o.viewport && n.current) {
+          const u = o.viewport.scrollLeft, S = F(u, s, o.dir);
+          n.current.style.transform = `translate3d(${S}px, 0, 0)`;
+        }
+      },
+      onWheelScroll: (u) => {
+        o.viewport && (o.viewport.scrollLeft = u);
+      },
+      onDragScroll: (u) => {
+        o.viewport && (o.viewport.scrollLeft = h(u, o.dir));
+      }
+    }
+  ) : r === "vertical" ? /* @__PURE__ */ b(
+    Se,
+    {
+      ...d,
+      ref: t,
+      onThumbPositionChange: () => {
+        if (o.viewport && n.current) {
+          const u = o.viewport.scrollTop, S = F(u, s);
+          n.current.style.transform = `translate3d(0, ${S}px, 0)`;
+        }
+      },
+      onWheelScroll: (u) => {
+        o.viewport && (o.viewport.scrollTop = u);
+      },
+      onDragScroll: (u) => {
+        o.viewport && (o.viewport.scrollTop = h(u));
+      }
+    }
+  ) : null;
+}), be = c.forwardRef((e, t) => {
+  const { sizes: r, onSizesChange: l, ...o } = e, n = v(g, e.__scopeScrollArea), [i, s] = c.useState(), a = c.useRef(null), f = A(t, a, n.onScrollbarXChange);
+  return c.useEffect(() => {
+    a.current && s(getComputedStyle(a.current));
+  }, [a]), /* @__PURE__ */ b(
+    Q,
+    {
+      "data-orientation": "horizontal",
+      ...o,
+      ref: f,
+      sizes: r,
+      style: {
+        bottom: 0,
+        left: n.dir === "rtl" ? "var(--radix-scroll-area-corner-width)" : 0,
+        right: n.dir === "ltr" ? "var(--radix-scroll-area-corner-width)" : 0,
+        "--radix-scroll-area-thumb-width": X(r) + "px",
+        ...e.style
+      },
+      onThumbPointerDown: (d) => e.onThumbPointerDown(d.x),
+      onDragScroll: (d) => e.onDragScroll(d.x),
+      onWheelScroll: (d, h) => {
+        if (n.viewport) {
+          const u = n.viewport.scrollLeft + d.deltaX;
+          e.onWheelScroll(u), oe(u, h) && d.preventDefault();
+        }
+      },
+      onResize: () => {
+        a.current && n.viewport && i && l({
+          content: n.viewport.scrollWidth,
+          viewport: n.viewport.offsetWidth,
+          scrollbar: {
+            size: a.current.clientWidth,
+            paddingStart: O(i.paddingLeft),
+            paddingEnd: O(i.paddingRight)
+          }
+        });
+      }
+    }
+  );
+}), Se = c.forwardRef((e, t) => {
+  const { sizes: r, onSizesChange: l, ...o } = e, n = v(g, e.__scopeScrollArea), [i, s] = c.useState(), a = c.useRef(null), f = A(t, a, n.onScrollbarYChange);
+  return c.useEffect(() => {
+    a.current && s(getComputedStyle(a.current));
+  }, [a]), /* @__PURE__ */ b(
+    Q,
+    {
+      "data-orientation": "vertical",
+      ...o,
+      ref: f,
+      sizes: r,
+      style: {
+        top: 0,
+        right: n.dir === "ltr" ? 0 : void 0,
+        left: n.dir === "rtl" ? 0 : void 0,
+        bottom: "var(--radix-scroll-area-corner-height)",
+        "--radix-scroll-area-thumb-height": X(r) + "px",
+        ...e.style
+      },
+      onThumbPointerDown: (d) => e.onThumbPointerDown(d.y),
+      onDragScroll: (d) => e.onDragScroll(d.y),
+      onWheelScroll: (d, h) => {
+        if (n.viewport) {
+          const u = n.viewport.scrollTop + d.deltaY;
+          e.onWheelScroll(u), oe(u, h) && d.preventDefault();
+        }
+      },
+      onResize: () => {
+        a.current && n.viewport && i && l({
+          content: n.viewport.scrollHeight,
+          viewport: n.viewport.offsetHeight,
+          scrollbar: {
+            size: a.current.clientHeight,
+            paddingStart: O(i.paddingTop),
+            paddingEnd: O(i.paddingBottom)
+          }
+        });
+      }
+    }
+  );
+}), [me, K] = j(g), Q = c.forwardRef((e, t) => {
+  const {
+    __scopeScrollArea: r,
+    sizes: l,
+    hasThumb: o,
+    onThumbChange: n,
+    onThumbPointerUp: i,
+    onThumbPointerDown: s,
+    onThumbPositionChange: a,
+    onDragScroll: f,
+    onWheelScroll: d,
+    onResize: h,
+    ...u
+  } = e, S = v(g, r), [p, y] = c.useState(null), M = A(t, (m) => y(m)), P = c.useRef(null), _ = c.useRef(""), U = S.viewport, D = l.content - l.viewport, W = C(d), x = C(a), H = Y(h, 10);
+  function z(m) {
+    if (P.current) {
+      const w = m.clientX - P.current.left, E = m.clientY - P.current.top;
+      f({ x: w, y: E });
+    }
+  }
+  return c.useEffect(() => {
+    const m = (w) => {
+      const E = w.target;
+      (p == null ? void 0 : p.contains(E)) && W(w, D);
+    };
+    return document.addEventListener("wheel", m, { passive: !1 }), () => document.removeEventListener("wheel", m, { passive: !1 });
+  }, [U, p, D, W]), c.useEffect(x, [l, x]), T(p, H), T(S.content, H), /* @__PURE__ */ b(
+    me,
+    {
+      scope: r,
+      scrollbar: p,
+      hasThumb: o,
+      onThumbChange: C(n),
+      onThumbPointerUp: C(i),
+      onThumbPositionChange: x,
+      onThumbPointerDown: C(s),
+      children: /* @__PURE__ */ b(
+        L.div,
+        {
+          ...u,
+          ref: M,
+          style: { position: "absolute", ...u.style },
+          onPointerDown: R(e.onPointerDown, (m) => {
+            m.button === 0 && (m.target.setPointerCapture(m.pointerId), P.current = p.getBoundingClientRect(), _.current = document.body.style.webkitUserSelect, document.body.style.webkitUserSelect = "none", S.viewport && (S.viewport.style.scrollBehavior = "auto"), z(m));
+          }),
+          onPointerMove: R(e.onPointerMove, z),
+          onPointerUp: R(e.onPointerUp, (m) => {
+            const w = m.target;
+            w.hasPointerCapture(m.pointerId) && w.releasePointerCapture(m.pointerId), document.body.style.webkitUserSelect = _.current, S.viewport && (S.viewport.style.scrollBehavior = ""), P.current = null;
+          })
+        }
+      )
+    }
+  );
+}), N = "ScrollAreaThumb", pe = c.forwardRef(
+  (e, t) => {
+    const { forceMount: r, ...l } = e, o = K(N, e.__scopeScrollArea);
+    return /* @__PURE__ */ b(I, { present: r || o.hasThumb, children: /* @__PURE__ */ b(ve, { ref: t, ...l }) });
+  }
+), ve = c.forwardRef(
+  (e, t) => {
+    const { __scopeScrollArea: r, style: l, ...o } = e, n = v(N, r), i = K(N, r), { onThumbPositionChange: s } = i, a = A(
+      t,
+      (h) => i.onThumbChange(h)
+    ), f = c.useRef(void 0), d = Y(() => {
+      f.current && (f.current(), f.current = void 0);
+    }, 100);
+    return c.useEffect(() => {
+      const h = n.viewport;
+      if (h) {
+        const u = () => {
+          if (d(), !f.current) {
+            const S = Pe(h, s);
+            f.current = S, s();
+          }
+        };
+        return s(), h.addEventListener("scroll", u), () => h.removeEventListener("scroll", u);
+      }
+    }, [n.viewport, d, s]), /* @__PURE__ */ b(
+      L.div,
+      {
+        "data-state": i.hasThumb ? "visible" : "hidden",
+        ...o,
+        ref: a,
+        style: {
+          width: "var(--radix-scroll-area-thumb-width)",
+          height: "var(--radix-scroll-area-thumb-height)",
+          ...l
+        },
+        onPointerDownCapture: R(e.onPointerDownCapture, (h) => {
+          const S = h.target.getBoundingClientRect(), p = h.clientX - S.left, y = h.clientY - S.top;
+          i.onThumbPointerDown({ x: p, y });
+        }),
+        onPointerUp: R(e.onPointerUp, i.onThumbPointerUp)
+      }
+    );
+  }
+);
+pe.displayName = N;
+var B = "ScrollAreaCorner", Z = c.forwardRef(
+  (e, t) => {
+    const r = v(B, e.__scopeScrollArea), l = !!(r.scrollbarX && r.scrollbarY);
+    return r.type !== "scroll" && l ? /* @__PURE__ */ b(we, { ...e, ref: t }) : null;
+  }
+);
+Z.displayName = B;
+var we = c.forwardRef((e, t) => {
+  const { __scopeScrollArea: r, ...l } = e, o = v(B, r), [n, i] = c.useState(0), [s, a] = c.useState(0), f = !!(n && s);
+  return T(o.scrollbarX, () => {
+    var h;
+    const d = ((h = o.scrollbarX) == null ? void 0 : h.offsetHeight) || 0;
+    o.onCornerHeightChange(d), a(d);
+  }), T(o.scrollbarY, () => {
+    var h;
+    const d = ((h = o.scrollbarY) == null ? void 0 : h.offsetWidth) || 0;
+    o.onCornerWidthChange(d), i(d);
+  }), f ? /* @__PURE__ */ b(
+    L.div,
+    {
+      ...l,
+      ref: t,
+      style: {
+        width: n,
+        height: s,
+        position: "absolute",
+        right: o.dir === "ltr" ? 0 : void 0,
+        left: o.dir === "rtl" ? 0 : void 0,
+        bottom: 0,
+        ...e.style
+      }
+    }
+  ) : null;
+});
+function O(e) {
+  return e ? parseInt(e, 10) : 0;
 }
-var He = F, Ne = B, Se = U, Ge = V, je = Y;
+function ee(e, t) {
+  const r = e / t;
+  return isNaN(r) ? 0 : r;
+}
+function X(e) {
+  const t = ee(e.viewport, e.content), r = e.scrollbar.paddingStart + e.scrollbar.paddingEnd, l = (e.scrollbar.size - r) * t;
+  return Math.max(l, 18);
+}
+function ge(e, t, r, l = "ltr") {
+  const o = X(r), n = o / 2, i = t || n, s = o - i, a = r.scrollbar.paddingStart + i, f = r.scrollbar.size - r.scrollbar.paddingEnd - s, d = r.content - r.viewport, h = l === "ltr" ? [0, d] : [d * -1, 0];
+  return re([a, f], h)(e);
+}
+function F(e, t, r = "ltr") {
+  const l = X(t), o = t.scrollbar.paddingStart + t.scrollbar.paddingEnd, n = t.scrollbar.size - o, i = t.content - t.viewport, s = n - l, a = r === "ltr" ? [0, i] : [i * -1, 0], f = ce(e, a);
+  return re([0, i], [0, s])(f);
+}
+function re(e, t) {
+  return (r) => {
+    if (e[0] === e[1] || t[0] === t[1]) return t[0];
+    const l = (t[1] - t[0]) / (e[1] - e[0]);
+    return t[0] + l * (r - e[0]);
+  };
+}
+function oe(e, t) {
+  return e > 0 && e < t;
+}
+var Pe = (e, t = () => {
+}) => {
+  let r = { left: e.scrollLeft, top: e.scrollTop }, l = 0;
+  return function o() {
+    const n = { left: e.scrollLeft, top: e.scrollTop }, i = r.left !== n.left, s = r.top !== n.top;
+    (i || s) && t(), r = n, l = window.requestAnimationFrame(o);
+  }(), () => window.cancelAnimationFrame(l);
+};
+function Y(e, t) {
+  const r = C(e), l = c.useRef(0);
+  return c.useEffect(() => () => window.clearTimeout(l.current), []), c.useCallback(() => {
+    window.clearTimeout(l.current), l.current = window.setTimeout(r, t);
+  }, [r, t]);
+}
+function T(e, t) {
+  const r = C(t);
+  le(() => {
+    let l = 0;
+    if (e) {
+      const o = new ResizeObserver(() => {
+        cancelAnimationFrame(l), l = window.requestAnimationFrame(r);
+      });
+      return o.observe(e), () => {
+        window.cancelAnimationFrame(l), o.unobserve(e);
+      };
+    }
+  }, [e, r]);
+}
+var He = q, ze = G, Ne = Z;
 export {
-  je as Content,
-  Ge as Portal,
-  He as Provider,
-  Ne as Root,
-  B as Tooltip,
-  he as TooltipArrow,
-  Y as TooltipContent,
-  V as TooltipPortal,
-  F as TooltipProvider,
-  U as TooltipTrigger,
-  Se as Trigger
+  Ne as Corner,
+  He as Root,
+  q as ScrollArea,
+  Z as ScrollAreaCorner,
+  ue as ScrollAreaScrollbar,
+  pe as ScrollAreaThumb,
+  G as ScrollAreaViewport,
+  ze as Viewport
 };

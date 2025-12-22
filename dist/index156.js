@@ -1,9 +1,15 @@
-function h(f, c, { checkForDefaultPrevented: p = !0 } = {}) {
-  return function(s) {
-    if (f == null || f(s), p === !1 || !s.defaultPrevented)
-      return c == null ? void 0 : c(s);
+import * as o from "react";
+import { stylesheetSingleton as r } from "./index157.js";
+var i = function() {
+  var t = r();
+  return function(e, n) {
+    o.useEffect(function() {
+      return t.add(e), function() {
+        t.remove();
+      };
+    }, [e && n]);
   };
-}
+};
 export {
-  h as composeEventHandlers
+  i as styleHookSingleton
 };
