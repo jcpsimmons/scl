@@ -1,6 +1,6 @@
 # SCL - Simsies Component Library
 
-A goddamn React component library that doesn't suck. Built on [shadcn/ui](https://ui.shadcn.com/), Radix primitives, and Tailwind CSS because I'm not a masochist who writes CSS from scratch anymore.
+A BASED React component library that doesn't suck. Built on [shadcn/ui](https://ui.shadcn.com/), Radix primitives, and Tailwind CSS because I'm not a masochist who writes CSS from scratch anymore.
 
 [![Storybook](https://img.shields.io/badge/Storybook-ff4785?logo=storybook&logoColor=white)](https://jcpsimmons.github.io/scl/)
 
@@ -17,8 +17,8 @@ npm install @jcpsimmons/scl
 ## Usage
 
 ```tsx
-import { Button, Card, Input } from '@jcpsimmons/scl'
-import '@jcpsimmons/scl/globals.css'  // Don't forget this or everything looks like shit
+import { Button, Card, Input } from "@jcpsimmons/scl";
+import "@jcpsimmons/scl/globals.css"; // Don't forget this or everything looks like shit
 
 function App() {
   return (
@@ -26,7 +26,7 @@ function App() {
       <Input placeholder="Type some crap..." />
       <Button>Do the thing</Button>
     </Card>
-  )
+  );
 }
 ```
 
