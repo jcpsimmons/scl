@@ -8,6 +8,7 @@ export const palette = {
   hotpink: '300 100% 50%',  // #ff00ff
   yellow: '60 100% 50%',    // #ffff00
   blue: '240 100% 50%',     // #0000ff
+  cyan: '180 100% 50%',     // #00ffff
   white: '0 0% 100%',       // #ffffff
   amber: '45 100% 50%',     // #ffbf00
   red: '0 100% 50%',        // #ff0000
