@@ -91,6 +91,9 @@
   .theme-hotpink {
     --primary: var(--color-hotpink);
   }
+  .theme-cyan {
+    --primary: var(--color-cyan);
+  }
   .theme-secondary {
     --primary: var(--secondary);
     --primary-foreground: var(--secondary-foreground);
