@@ -38,18 +38,65 @@ export interface StatuslineProps extends React.HTMLAttributes<HTMLDivElement> {
   rightContent?: React.ReactNode
 }
 
-const modeStyles = {
-  default: 'bg-primary text-primary-foreground',
-  insert: 'bg-secondary text-secondary-foreground',
-  visual: 'bg-accent text-accent-foreground',
-  command: 'bg-destructive text-destructive-foreground',
+// Powerline-style vim mode colors
+const modeConfig = {
+  default: {
+    bg: 'bg-blue-600',
+    fg: 'text-yellow-300',
+    label: 'NORMAL',
+  },
+  insert: {
+    bg: 'bg-green-600',
+    fg: 'text-black',
+    label: 'INSERT',
+  },
+  visual: {
+    bg: 'bg-fuchsia-500',
+    fg: 'text-black',
+    label: 'VISUAL',
+  },
+  command: {
+    bg: 'bg-red-600',
+    fg: 'text-white',
+    label: 'COMMAND',
+  },
+}
+
+// Powerline arrow separator
+const PowerlineArrow = ({
+  direction = 'right',
+  fromBg,
+  toBg,
+}: {
+  direction?: 'right' | 'left'
+  fromBg: string
+  toBg: string
+}) => {
+  if (direction === 'right') {
+    return (
+      <span
+        className={cn('inline-flex items-center', toBg)}
+        style={{ fontSize: '1.5rem', lineHeight: 1 }}
+      >
+        <span className={fromBg.replace('bg-', 'text-')}></span>
+      </span>
+    )
+  }
+  return (
+    <span
+      className={cn('inline-flex items-center', fromBg)}
+      style={{ fontSize: '1.5rem', lineHeight: 1 }}
+    >
+      <span className={toBg.replace('bg-', 'text-')}></span>
+    </span>
+  )
 }
 
 const Statusline = React.forwardRef<HTMLDivElement, StatuslineProps>(
   (
     {
       className,
-      mode = 'NORMAL',
+      mode,
       modeVariant = 'default',
       filename,
       filetype,
@@ -70,6 +117,9 @@ const Statusline = React.forwardRef<HTMLDivElement, StatuslineProps>(
     },
     ref
   ) => {
+    const modeStyle = modeConfig[modeVariant]
+    const displayMode = mode || modeStyle.label
+
     // Calculate percentage if line and totalLines provided
     const displayPercentage = React.useMemo(() => {
       if (percentage !== undefined) return percentage
@@ -85,43 +135,50 @@ const Statusline = React.forwardRef<HTMLDivElement, StatuslineProps>(
       <div
         ref={ref}
         className={cn(
-          'flex h-6 w-full items-stretch font-mono text-sm bg-background text-primary',
+          'flex h-6 w-full items-stretch font-mono text-sm',
           className
         )}
         {...props}
       >
         {/* Left section */}
         <div className="flex items-stretch">
-          {/* Mode indicator */}
+          {/* Mode indicator with powerline arrow */}
           <div
             className={cn(
-              'flex items-center px-3 font-bold',
-              modeStyles[modeVariant]
+              'flex items-center px-2 font-bold',
+              modeStyle.bg,
+              modeStyle.fg
             )}
           >
-            {mode}
+            {displayMode}
           </div>
+          <PowerlineArrow fromBg={modeStyle.bg} toBg="bg-muted" />
 
           {leftContent}
 
           {/* Branch */}
           {branch && (
-            <div className="flex items-center px-2 text-primary">
-              <span className="mr-1">⎇</span>
-              {branch}
-            </div>
+            <>
+              <div className="flex items-center px-2 bg-muted text-yellow-400">
+                <span className="mr-1"></span>
+                {branch}
+              </div>
+            </>
           )}
         </div>
 
         {/* Center section - filename */}
-        <div className="flex flex-1 items-center px-3 bg-muted mx-2">
+        <div className="flex flex-1 items-center px-3 bg-muted">
           {centerContent || (
             <>
+              <span className="mr-1 text-muted-foreground"></span>
               {filename && (
                 <span className="text-primary truncate">
                   {filename}
-                  {modified && <span className="text-secondary ml-1">[+]</span>}
-                  {readonly && <span className="text-destructive ml-1">[RO]</span>}
+                  {modified && (
+                    <span className="text-yellow-400 ml-1">[+]</span>
+                  )}
+                  {readonly && <span className="text-red-500 ml-1">[RO]</span>}
                 </span>
               )}
             </>
@@ -129,19 +186,46 @@ const Statusline = React.forwardRef<HTMLDivElement, StatuslineProps>(
         </div>
 
         {/* Right section */}
-        <div className="flex items-stretch gap-2">
+        <div className="flex items-stretch">
           {rightContent}
+
+          {/* Filetype */}
+          {(filetype || filetypeAbbr) && (
+            <div className="flex items-center px-2 bg-muted text-cyan-400">
+              <span className="mr-1"></span>
+              {filetypeAbbr || filetype}
+            </div>
+          )}
+
+          {/* Encoding */}
+          <div className="flex items-center px-2 bg-muted text-muted-foreground">
+            {encoding}
+          </div>
+
+          <PowerlineArrow direction="left" fromBg={modeStyle.bg} toBg="bg-muted" />
 
           {/* Percentage */}
           {displayPercentage !== undefined && (
-            <div className="flex items-center px-3 text-primary">
+            <div
+              className={cn(
+                'flex items-center px-2 font-bold',
+                modeStyle.bg,
+                modeStyle.fg
+              )}
+            >
               {displayPercentage}
             </div>
           )}
 
           {/* Position indicator */}
           {(line !== undefined || column !== undefined) && (
-            <div className="flex items-center px-3 bg-primary text-primary-foreground font-bold">
+            <div
+              className={cn(
+                'flex items-center px-2 font-bold',
+                modeStyle.bg,
+                modeStyle.fg
+              )}
+            >
               {line !== undefined && column !== undefined
                 ? `${line}:${column}`
                 : line !== undefined
