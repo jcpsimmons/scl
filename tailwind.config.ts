@@ -11,15 +11,6 @@ export default {
         terminal: ['BigBlueTerm437', 'monospace'],
       },
       colors: {
-        // Terminal color palette
-        'terminal-green': 'var(--terminal-green)',
-        'terminal-yellow': 'var(--terminal-yellow)',
-        'terminal-blue': 'var(--terminal-blue)',
-        'terminal-magenta': 'var(--terminal-magenta)',
-        'terminal-red': 'var(--terminal-red)',
-        'terminal-orange': 'var(--terminal-orange)',
-        'terminal-deepblue': 'var(--terminal-deepblue)',
-        // Semantic colors
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
         ring: 'hsl(var(--ring))',

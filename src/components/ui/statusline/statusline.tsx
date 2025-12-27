@@ -39,10 +39,10 @@ export interface StatuslineProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const modeStyles = {
-  default: 'bg-terminal-yellow text-black',
-  insert: 'bg-terminal-blue text-black',
-  visual: 'bg-terminal-magenta text-black',
-  command: 'bg-terminal-red text-black',
+  default: 'bg-primary text-primary-foreground',
+  insert: 'bg-secondary text-secondary-foreground',
+  visual: 'bg-accent text-accent-foreground',
+  command: 'bg-destructive text-destructive-foreground',
 }
 
 const Statusline = React.forwardRef<HTMLDivElement, StatuslineProps>(
@@ -85,7 +85,7 @@ const Statusline = React.forwardRef<HTMLDivElement, StatuslineProps>(
       <div
         ref={ref}
         className={cn(
-          'flex h-6 w-full items-stretch font-mono text-sm bg-black text-white',
+          'flex h-6 w-full items-stretch font-mono text-sm bg-background text-primary',
           className
         )}
         {...props}
@@ -106,7 +106,7 @@ const Statusline = React.forwardRef<HTMLDivElement, StatuslineProps>(
 
           {/* Branch */}
           {branch && (
-            <div className="flex items-center px-2 text-white">
+            <div className="flex items-center px-2 text-primary">
               <span className="mr-1">⎇</span>
               {branch}
             </div>
@@ -114,14 +114,14 @@ const Statusline = React.forwardRef<HTMLDivElement, StatuslineProps>(
         </div>
 
         {/* Center section - filename */}
-        <div className="flex flex-1 items-center px-3 bg-blue-800 mx-2">
+        <div className="flex flex-1 items-center px-3 bg-muted mx-2">
           {centerContent || (
             <>
               {filename && (
-                <span className="text-white truncate">
+                <span className="text-primary truncate">
                   {filename}
-                  {modified && <span className="text-terminal-yellow ml-1">[+]</span>}
-                  {readonly && <span className="text-terminal-orange ml-1">[RO]</span>}
+                  {modified && <span className="text-secondary ml-1">[+]</span>}
+                  {readonly && <span className="text-destructive ml-1">[RO]</span>}
                 </span>
               )}
             </>
@@ -134,14 +134,14 @@ const Statusline = React.forwardRef<HTMLDivElement, StatuslineProps>(
 
           {/* Percentage */}
           {displayPercentage !== undefined && (
-            <div className="flex items-center px-3 text-white">
+            <div className="flex items-center px-3 text-primary">
               {displayPercentage}
             </div>
           )}
 
           {/* Position indicator */}
           {(line !== undefined || column !== undefined) && (
-            <div className="flex items-center px-3 bg-terminal-yellow text-black font-bold">
+            <div className="flex items-center px-3 bg-primary text-primary-foreground font-bold">
               {line !== undefined && column !== undefined
                 ? `${line}:${column}`
                 : line !== undefined

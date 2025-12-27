@@ -289,14 +289,14 @@ const TerminalTextarea = React.forwardRef<HTMLDivElement, TerminalTextareaProps>
       <div
         ref={ref}
         className={cn(
-          'font-mono text-sm bg-black border-2 border-terminal-green overflow-hidden',
+          'font-mono text-sm bg-background border-2 border-primary overflow-hidden',
           vimMode && 'vim-mode',
           className
         )}
       >
         <div ref={editorRef} />
         {vimMode && (
-          <div className="text-xs text-terminal-yellow px-2 py-1 border-t border-terminal-green bg-black">
+          <div className="text-xs text-secondary px-2 py-1 border-t border-primary bg-background">
             VIM MODE ENABLED
           </div>
         )}

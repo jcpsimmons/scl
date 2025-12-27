@@ -8,86 +8,87 @@
 }
 
 @layer base {
-  /* Dark mode only - terminal aesthetic */
   :root {
-    --background: 0 0% 0%;
-    --foreground: 120 100% 50%;
-    --card: 0 0% 0%;
-    --card-foreground: 120 100% 50%;
-    --popover: 0 0% 0%;
-    --popover-foreground: 120 100% 50%;
-    --primary: 60 100% 50%;
-    --primary-foreground: 0 0% 0%;
-    --secondary: 300 100% 50%;
-    --secondary-foreground: 0 0% 0%;
-    --muted: 0 0% 8%;
-    --muted-foreground: 120 100% 40%;
-    --accent: 240 100% 50%;
-    --accent-foreground: 60 100% 50%;
-    --destructive: 0 100% 50%;
-    --destructive-foreground: 0 0% 0%;
-    --border: 120 100% 50%;
-    --input: 0 0% 0%;
-    --ring: 60 100% 50%;
-    --chart-1: 120 100% 50%;
-    --chart-2: 60 100% 50%;
-    --chart-3: 300 100% 50%;
-    --chart-4: 240 100% 50%;
-    --chart-5: 39 100% 50%;
-    --radius: 0px;
-    --sidebar-background: 0 0% 0%;
-    --sidebar-foreground: 120 100% 50%;
-    --sidebar-primary: 60 100% 50%;
-    --sidebar-primary-foreground: 0 0% 0%;
-    --sidebar-accent: 300 100% 50%;
-    --sidebar-accent-foreground: 0 0% 0%;
-    --sidebar-border: 120 100% 50%;
-    --sidebar-ring: 60 100% 50%;
+    /* Color palette */
+    --color-green: 120 100% 50%;
+    --color-hotpink: 300 100% 50%;
+    --color-yellow: 60 100% 50%;
+    --color-blue: 240 100% 50%;
+    --color-white: 0 0% 100%;
+    --color-amber: 45 100% 50%;
+    --color-red: 0 100% 50%;
 
-    /* Terminal specific colors */
-    --terminal-green: #00ff00;
-    --terminal-yellow: #ffff00;
-    --terminal-blue: #0000ff;
-    --terminal-magenta: #ff00ff;
-    --terminal-red: #ff0000;
-    --terminal-orange: #ffa700;
-    --terminal-deepblue: #000098;
+    /* Semantic colors (swappable) */
+    --primary: var(--color-green);
+    --primary-foreground: 0 0% 0%;
+    --secondary: var(--color-hotpink);
+    --secondary-foreground: 0 0% 0%;
+
+    /* Core UI (derived from primary) */
+    --background: 0 0% 0%;
+    --foreground: var(--primary);
+    --border: var(--primary);
+    --input: 0 0% 0%;
+    --ring: var(--primary);
+
+    /* Card/popover */
+    --card: 0 0% 0%;
+    --card-foreground: var(--primary);
+    --popover: 0 0% 0%;
+    --popover-foreground: var(--primary);
+
+    /* Muted */
+    --muted: 0 0% 8%;
+    --muted-foreground: var(--primary);
+
+    /* Accent (secondary) */
+    --accent: var(--secondary);
+    --accent-foreground: var(--secondary-foreground);
+
+    /* Destructive (always red) */
+    --destructive: var(--color-red);
+    --destructive-foreground: 0 0% 0%;
+
+    /* Chart colors */
+    --chart-1: var(--color-green);
+    --chart-2: var(--color-yellow);
+    --chart-3: var(--color-hotpink);
+    --chart-4: var(--color-blue);
+    --chart-5: var(--color-amber);
+
+    /* Sidebar */
+    --sidebar-background: 0 0% 0%;
+    --sidebar-foreground: var(--primary);
+    --sidebar-primary: var(--primary);
+    --sidebar-primary-foreground: var(--primary-foreground);
+    --sidebar-accent: var(--secondary);
+    --sidebar-accent-foreground: var(--secondary-foreground);
+    --sidebar-border: var(--primary);
+    --sidebar-ring: var(--primary);
+
+    --radius: 0px;
   }
 
-  /* Same as root - dark mode only */
-  .dark {
-    --background: 0 0% 0%;
-    --foreground: 120 100% 50%;
-    --card: 0 0% 0%;
-    --card-foreground: 120 100% 50%;
-    --popover: 0 0% 0%;
-    --popover-foreground: 120 100% 50%;
-    --primary: 60 100% 50%;
-    --primary-foreground: 0 0% 0%;
-    --secondary: 300 100% 50%;
-    --secondary-foreground: 0 0% 0%;
-    --muted: 0 0% 8%;
-    --muted-foreground: 120 100% 40%;
-    --accent: 240 100% 50%;
-    --accent-foreground: 60 100% 50%;
-    --destructive: 0 100% 50%;
-    --destructive-foreground: 0 0% 0%;
-    --border: 120 100% 50%;
-    --input: 0 0% 0%;
-    --ring: 60 100% 50%;
-    --chart-1: 120 100% 50%;
-    --chart-2: 60 100% 50%;
-    --chart-3: 300 100% 50%;
-    --chart-4: 240 100% 50%;
-    --chart-5: 39 100% 50%;
-    --sidebar-background: 0 0% 0%;
-    --sidebar-foreground: 120 100% 50%;
-    --sidebar-primary: 60 100% 50%;
-    --sidebar-primary-foreground: 0 0% 0%;
-    --sidebar-accent: 300 100% 50%;
-    --sidebar-accent-foreground: 0 0% 0%;
-    --sidebar-border: 120 100% 50%;
-    --sidebar-ring: 60 100% 50%;
+  /* Theme utility classes for per-section color swapping */
+  .theme-yellow {
+    --primary: var(--color-yellow);
+  }
+  .theme-blue {
+    --primary: var(--color-blue);
+    --primary-foreground: 0 0% 100%;
+  }
+  .theme-white {
+    --primary: var(--color-white);
+  }
+  .theme-amber {
+    --primary: var(--color-amber);
+  }
+  .theme-hotpink {
+    --primary: var(--color-hotpink);
+  }
+  .theme-secondary {
+    --primary: var(--secondary);
+    --primary-foreground: var(--secondary-foreground);
   }
 }
 
@@ -101,8 +102,8 @@
   }
 
   body {
-    background-color: #000000;
-    color: #00ff00;
+    background-color: hsl(var(--background));
+    color: hsl(var(--primary));
     font-family: 'BigBlueTerm437', monospace;
   }
 
@@ -156,8 +157,8 @@
 
   /* Terminal header styles */
   .header-title {
-    background: #ffff00;
-    color: black;
+    background: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
     font-weight: bold;
     line-height: 1;
     display: inline-block;
@@ -169,7 +170,7 @@
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    border-left-color: #ffff00;
+    border-left-color: hsl(var(--primary));
     border-top-color: transparent;
     border-bottom-color: transparent;
     border-style: solid;
@@ -184,27 +185,27 @@
     right: 0;
     top: 0;
     bottom: 0;
-    background: #000000;
+    background: hsl(var(--background));
     padding-left: 0.5rem;
     padding-right: 0.5rem;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    color: #00ff00;
+    color: hsl(var(--primary));
     transition: background-color 0.2s;
     display: flex;
     align-items: center;
   }
 
   .header-button:hover {
-    background: #111111;
+    background: hsl(var(--muted));
   }
 
   .header-button:focus {
-    outline: 1px solid #ffff00;
+    outline: 1px solid hsl(var(--primary));
   }
 
   .terminal-glow {
-    box-shadow: 0 0 8px rgba(0, 255, 0, 0.6) !important;
+    box-shadow: 0 0 8px hsl(var(--primary) / 0.6) !important;
   }
 }

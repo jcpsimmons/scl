@@ -4,42 +4,26 @@ import { cva, type VariantProps } from 'class-variance-authority'
 import { cn } from '@/lib/utils'
 
 const buttonVariants = cva(
-  'inline-flex items-center justify-center gap-2 whitespace-nowrap font-mono font-bold uppercase tracking-wider transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-terminal-green focus-visible:ring-offset-2 focus-visible:ring-offset-black disabled:pointer-events-none disabled:opacity-30 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0',
+  'inline-flex items-center justify-center gap-2 whitespace-nowrap font-mono font-bold uppercase tracking-wider transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-30 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0',
   {
     variants: {
       variant: {
         default:
-          'bg-terminal-green text-black border-2 border-terminal-green hover:bg-terminal-green/90 active:bg-terminal-green/80',
+          'bg-primary text-primary-foreground border-2 border-primary hover:bg-primary/90 active:bg-primary/80',
         secondary:
-          'bg-transparent text-terminal-magenta border-2 border-terminal-magenta hover:bg-terminal-magenta/10 active:bg-terminal-magenta/20',
-        destructive:
-          'bg-transparent text-terminal-red border-2 border-terminal-red hover:bg-terminal-red/10 active:bg-terminal-red/20',
+          'bg-secondary text-secondary-foreground border-2 border-secondary hover:bg-secondary/90 active:bg-secondary/80',
         outline:
-          'bg-transparent text-terminal-green border-2 border-terminal-green hover:bg-terminal-green/10 active:bg-terminal-green/20',
+          'bg-transparent text-primary border-2 border-primary hover:bg-primary/10 active:bg-primary/20',
+        'secondary-outline':
+          'bg-transparent text-secondary border-2 border-secondary hover:bg-secondary/10 active:bg-secondary/20',
         ghost:
-          'bg-transparent text-terminal-green border-2 border-transparent hover:border-terminal-green/50 active:bg-terminal-green/10',
+          'bg-transparent text-primary border-2 border-transparent hover:border-primary/50 active:bg-primary/10',
         link:
-          'bg-transparent text-terminal-green underline-offset-4 hover:underline border-none',
-        green:
-          'bg-[#00ff00] text-black border-2 border-[#00ff00] hover:bg-black hover:text-[#00ff00]',
-        'green-outline':
-          'bg-transparent text-[#00ff00] border-2 border-[#00ff00] hover:bg-[#00ff00] hover:text-black',
-        white:
-          'bg-white text-black border-2 border-white hover:bg-black hover:text-white',
-        'white-outline':
-          'bg-transparent text-white border-2 border-white hover:bg-white hover:text-black',
-        yellow:
-          'bg-[#ffff00] text-black border-2 border-[#ffff00] hover:bg-black hover:text-[#ffff00]',
-        'yellow-outline':
-          'bg-transparent text-[#ffff00] border-2 border-[#ffff00] hover:bg-[#ffff00] hover:text-black',
-        hotpink:
-          'bg-[#ff00ff] text-black border-2 border-[#ff00ff] hover:bg-black hover:text-[#ff00ff]',
-        'hotpink-outline':
-          'bg-transparent text-[#ff00ff] border-2 border-[#ff00ff] hover:bg-[#ff00ff] hover:text-black',
-        blue:
-          'bg-[#0000ff] text-white border-2 border-[#0000ff] hover:bg-black hover:text-[#0000ff]',
-        'blue-outline':
-          'bg-transparent text-[#0000ff] border-2 border-[#0000ff] hover:bg-[#0000ff] hover:text-white',
+          'bg-transparent text-primary underline-offset-4 hover:underline border-none',
+        destructive:
+          'bg-destructive text-destructive-foreground border-2 border-destructive hover:bg-destructive/90 active:bg-destructive/80',
+        'destructive-outline':
+          'bg-transparent text-destructive border-2 border-destructive hover:bg-destructive/10 active:bg-destructive/20',
       },
       size: {
         default: 'h-11 px-6 py-3 text-sm',
