@@ -1,6 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { Progress } from './progress'
-import { useState, useEffect } from 'react'
 
 const meta: Meta<typeof Progress> = {
   title: 'Components/Progress',
@@ -8,17 +7,10 @@ const meta: Meta<typeof Progress> = {
   tags: ['autodocs'],
   argTypes: {
     value: {
-      control: { type: 'range', min: 0, max: 100 },
+      control: { type: 'range', min: 0, max: 100, step: 1 },
     },
     segments: {
-      control: { type: 'number', min: 5, max: 50 },
-    },
-    colorRange: {
-      control: 'boolean',
-    },
-    color: {
-      control: 'select',
-      options: ['red', 'yellow', 'green', 'magenta', 'blue'],
+      control: { type: 'range', min: 5, max: 50, step: 1 },
     },
     showPercentage: {
       control: 'boolean',
@@ -31,121 +23,99 @@ type Story = StoryObj<typeof Progress>
 
 export const Default: Story = {
   args: {
-    value: 20,
-    segments: 20,
+    value: 50,
   },
 }
 
-export const WithPercentage: Story = {
+export const Empty: Story = {
   args: {
-    value: 65,
+    value: 0,
+    label: 'Not started',
+    showPercentage: true,
+  },
+}
+
+export const Quarter: Story = {
+  args: {
+    value: 25,
+    label: 'Loading...',
+    showPercentage: true,
+  },
+}
+
+export const Half: Story = {
+  args: {
+    value: 50,
+    label: 'Processing...',
+    showPercentage: true,
+  },
+}
+
+export const ThreeQuarters: Story = {
+  args: {
+    value: 75,
+    label: 'Almost there...',
+    showPercentage: true,
+  },
+}
+
+export const Complete: Story = {
+  args: {
+    value: 100,
+    label: 'Complete!',
     showPercentage: true,
   },
 }
 
 export const WithLabel: Story = {
   args: {
-    value: 75,
-    label: 'Loading...',
+    value: 66,
+    label: 'Upload progress',
     showPercentage: true,
   },
 }
 
-export const ColorRange: Story = {
-  args: {
-    value: 50,
-    colorRange: true,
-    showPercentage: true,
-    label: 'Health',
-  },
-}
-
-export const ColorRangeLow: Story = {
-  args: {
-    value: 20,
-    colorRange: true,
-    showPercentage: true,
-    label: 'Critical',
-  },
-}
-
-export const ColorRangeMedium: Story = {
-  args: {
-    value: 50,
-    colorRange: true,
-    showPercentage: true,
-    label: 'Warning',
-  },
-}
-
-export const ColorRangeHigh: Story = {
-  args: {
-    value: 85,
-    colorRange: true,
-    showPercentage: true,
-    label: 'Good',
-  },
-}
-
-export const CustomColor: Story = {
+export const CustomSegments: Story = {
   args: {
     value: 60,
-    color: 'magenta',
+    segments: 10,
     showPercentage: true,
+    label: '10 segments',
   },
 }
 
-export const DifferentSegments: Story = {
-  render: () => (
-    <div className="space-y-4">
-      <Progress value={60} segments={10} label="10 segments" showPercentage />
-      <Progress value={60} segments={20} label="20 segments" showPercentage />
-      <Progress value={60} segments={30} label="30 segments" showPercentage />
-      <Progress value={60} segments={40} label="40 segments" showPercentage />
-    </div>
-  ),
+export const ManySegments: Story = {
+  args: {
+    value: 73,
+    segments: 40,
+    showPercentage: true,
+    label: '40 segments',
+  },
 }
 
-export const AllColors: Story = {
+export const WithThemeColors: Story = {
   render: () => (
-    <div className="space-y-4">
-      <Progress value={70} color="red" label="Red" showPercentage />
-      <Progress value={70} color="yellow" label="Yellow" showPercentage />
-      <Progress value={70} color="green" label="Green" showPercentage />
-      <Progress value={70} color="magenta" label="Magenta" showPercentage />
-      <Progress value={70} color="blue" label="Blue" showPercentage />
-    </div>
-  ),
-}
-
-export const AnimatedDemo: Story = {
-  render: () => {
-    const [value, setValue] = useState(0)
-
-    useEffect(() => {
-      const interval = setInterval(() => {
-        setValue((prev) => (prev >= 100 ? 0 : prev + 1))
-      }, 50)
-      return () => clearInterval(interval)
-    }, [])
-
-    return (
-      <div className="space-y-6">
-        <Progress value={value} colorRange label="Animated with color range" showPercentage />
-        <Progress value={value} color="green" label="Animated green" showPercentage />
+    <div className="flex flex-col gap-6 w-full">
+      <Progress value={60} label="Default (Green)" showPercentage />
+      <div className="theme-cyan">
+        <Progress value={45} label="Cyan Theme" showPercentage />
       </div>
-    )
-  },
+      <div className="theme-yellow">
+        <Progress value={80} label="Yellow Theme" showPercentage />
+      </div>
+      <div className="theme-hotpink">
+        <Progress value={30} label="Hot Pink Theme" showPercentage />
+      </div>
+    </div>
+  ),
 }
 
-export const GameStats: Story = {
+export const ComparisonDemo: Story = {
   render: () => (
-    <div className="space-y-6 p-6 bg-black border-2 border-terminal-green">
-      <h3 className="font-mono text-terminal-yellow font-bold mb-4">PLAYER STATUS</h3>
-      <Progress value={85} colorRange label="HEALTH" showPercentage />
-      <Progress value={45} colorRange label="STAMINA" showPercentage />
-      <Progress value={20} colorRange label="MANA" showPercentage />
-      <Progress value={65} color="blue" label="EXPERIENCE" showPercentage />
+    <div className="flex flex-col gap-4 w-full">
+      <Progress value={25} label="CPU Usage" showPercentage />
+      <Progress value={60} label="Memory" showPercentage />
+      <Progress value={90} label="Disk Space" showPercentage />
     </div>
   ),
 }
