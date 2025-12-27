@@ -1,68 +1,130 @@
-var N = function(r) {
-  return r.tagName === "TEXTAREA";
-}, b = function(r, e) {
-  if (!(r instanceof Element))
-    return !1;
-  var t = window.getComputedStyle(r);
-  return (
-    // not-not-scrollable
-    t[e] !== "hidden" && // contains scroll inside self
-    !(t.overflowY === t.overflowX && !N(r) && t[e] === "visible")
-  );
-}, D = function(r) {
-  return b(r, "overflowY");
-}, E = function(r) {
-  return b(r, "overflowX");
-}, T = function(r, e) {
-  var t = e.ownerDocument, l = e;
-  do {
-    typeof ShadowRoot < "u" && l instanceof ShadowRoot && (l = l.host);
-    var f = g(r, l);
-    if (f) {
-      var n = m(r, l), i = n[1], o = n[2];
-      if (i > o)
-        return !0;
-    }
-    l = l.parentNode;
-  } while (l && l !== t.body);
-  return !1;
-}, H = function(r) {
-  var e = r.scrollTop, t = r.scrollHeight, l = r.clientHeight;
-  return [
-    e,
-    t,
-    l
-  ];
-}, p = function(r) {
-  var e = r.scrollLeft, t = r.scrollWidth, l = r.clientWidth;
-  return [
-    e,
-    t,
-    l
-  ];
-}, g = function(r, e) {
-  return r === "v" ? D(e) : E(e);
-}, m = function(r, e) {
-  return r === "v" ? H(e) : p(e);
-}, B = function(r, e) {
-  return r === "h" && e === "rtl" ? -1 : 1;
-}, V = function(r, e, t, l, f) {
-  var n = B(r, window.getComputedStyle(e).direction), i = n * l, o = t.target, d = e.contains(o), c = !1, s = i > 0, h = 0, S = 0;
-  do {
-    if (!o)
-      break;
-    var u = m(r, o), v = u[0], C = u[1], y = u[2], w = C - y - n * v;
-    (v || w) && g(r, o) && (h += w, S += v);
-    var a = o.parentNode;
-    o = a && a.nodeType === Node.DOCUMENT_FRAGMENT_NODE ? a.host : a;
-  } while (
-    // portaled content
-    !d && o !== document.body || // self content
-    d && (e.contains(o) || e === o)
-  );
-  return (s && Math.abs(h) < 1 || !s && Math.abs(S) < 1) && (c = !0), c;
+const j = ["top", "right", "bottom", "left"], m = Math.min, p = Math.max, C = Math.round, L = Math.floor, E = (t) => ({
+  x: t,
+  y: t
+}), h = {
+  left: "right",
+  right: "left",
+  bottom: "top",
+  top: "bottom"
+}, x = {
+  start: "end",
+  end: "start"
 };
+function R(t, e, n) {
+  return p(t, m(e, n));
+}
+function T(t, e) {
+  return typeof t == "function" ? t(e) : t;
+}
+function g(t) {
+  return t.split("-")[0];
+}
+function a(t) {
+  return t.split("-")[1];
+}
+function b(t) {
+  return t === "x" ? "y" : "x";
+}
+function d(t) {
+  return t === "y" ? "height" : "width";
+}
+const A = /* @__PURE__ */ new Set(["top", "bottom"]);
+function P(t) {
+  return A.has(g(t)) ? "y" : "x";
+}
+function y(t) {
+  return b(P(t));
+}
+function k(t, e, n) {
+  n === void 0 && (n = !1);
+  const r = a(t), i = y(t), o = d(i);
+  let c = i === "x" ? r === (n ? "end" : "start") ? "right" : "left" : r === "start" ? "bottom" : "top";
+  return e.reference[o] > e.floating[o] && (c = f(c)), [c, f(c)];
+}
+function q(t) {
+  const e = f(t);
+  return [s(t), e, s(e)];
+}
+function s(t) {
+  return t.replace(/start|end/g, (e) => x[e]);
+}
+const u = ["left", "right"], l = ["right", "left"], M = ["top", "bottom"], O = ["bottom", "top"];
+function S(t, e, n) {
+  switch (t) {
+    case "top":
+    case "bottom":
+      return n ? e ? l : u : e ? u : l;
+    case "left":
+    case "right":
+      return e ? M : O;
+    default:
+      return [];
+  }
+}
+function z(t, e, n, r) {
+  const i = a(t);
+  let o = S(g(t), n === "start", r);
+  return i && (o = o.map((c) => c + "-" + i), e && (o = o.concat(o.map(s)))), o;
+}
+function f(t) {
+  return t.replace(/left|right|bottom|top/g, (e) => h[e]);
+}
+function w(t) {
+  return {
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0,
+    ...t
+  };
+}
+function B(t) {
+  return typeof t != "number" ? w(t) : {
+    top: t,
+    right: t,
+    bottom: t,
+    left: t
+  };
+}
+function D(t) {
+  const {
+    x: e,
+    y: n,
+    width: r,
+    height: i
+  } = t;
+  return {
+    width: r,
+    height: i,
+    top: n,
+    left: e,
+    right: e + r,
+    bottom: n + i,
+    x: e,
+    y: n
+  };
+}
 export {
-  V as handleScroll,
-  T as locationCouldBeScrolled
+  R as clamp,
+  E as createCoords,
+  T as evaluate,
+  w as expandPaddingObject,
+  L as floor,
+  a as getAlignment,
+  y as getAlignmentAxis,
+  k as getAlignmentSides,
+  d as getAxisLength,
+  q as getExpandedPlacements,
+  s as getOppositeAlignmentPlacement,
+  b as getOppositeAxis,
+  z as getOppositeAxisPlacements,
+  f as getOppositePlacement,
+  B as getPaddingObject,
+  g as getSide,
+  P as getSideAxis,
+  p as max,
+  m as min,
+  D as rectToClientRect,
+  C as round,
+  j as sides
 };

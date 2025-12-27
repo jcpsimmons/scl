@@ -1,90 +1,34 @@
-import { jsx as t } from "react/jsx-runtime";
-import * as l from "react";
-import { cn as r } from "./index2.js";
-const d = l.forwardRef(({ className: e, ...a }, o) => /* @__PURE__ */ t("div", { className: "relative w-full overflow-auto", children: /* @__PURE__ */ t(
-  "table",
-  {
-    ref: o,
-    className: r("w-full caption-bottom text-sm", e),
-    ...a
-  }
-) }));
-d.displayName = "Table";
-const s = l.forwardRef(({ className: e, ...a }, o) => /* @__PURE__ */ t("thead", { ref: o, className: r("[&_tr]:border-b", e), ...a }));
-s.displayName = "TableHeader";
-const m = l.forwardRef(({ className: e, ...a }, o) => /* @__PURE__ */ t(
-  "tbody",
-  {
-    ref: o,
-    className: r("[&_tr:last-child]:border-0", e),
-    ...a
-  }
-));
-m.displayName = "TableBody";
-const b = l.forwardRef(({ className: e, ...a }, o) => /* @__PURE__ */ t(
-  "tfoot",
-  {
-    ref: o,
-    className: r(
-      "border-t bg-muted/50 font-medium [&>tr]:last:border-b-0",
-      e
-    ),
-    ...a
-  }
-));
-b.displayName = "TableFooter";
-const c = l.forwardRef(({ className: e, ...a }, o) => /* @__PURE__ */ t(
-  "tr",
-  {
-    ref: o,
-    className: r(
-      "border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted",
-      e
-    ),
-    ...a
-  }
-));
-c.displayName = "TableRow";
-const f = l.forwardRef(({ className: e, ...a }, o) => /* @__PURE__ */ t(
-  "th",
-  {
-    ref: o,
-    className: r(
-      "h-10 px-2 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]",
-      e
-    ),
-    ...a
-  }
-));
-f.displayName = "TableHead";
-const i = l.forwardRef(({ className: e, ...a }, o) => /* @__PURE__ */ t(
-  "td",
-  {
-    ref: o,
-    className: r(
-      "p-2 align-middle [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]",
-      e
-    ),
-    ...a
-  }
-));
-i.displayName = "TableCell";
-const n = l.forwardRef(({ className: e, ...a }, o) => /* @__PURE__ */ t(
-  "caption",
-  {
-    ref: o,
-    className: r("mt-4 text-sm text-muted-foreground", e),
-    ...a
-  }
-));
-n.displayName = "TableCaption";
+import { jsxs as a, jsx as e } from "react/jsx-runtime";
+import * as b from "react";
+import { Root as n, Track as l, Range as p, Thumb as d } from "./index85.js";
+import { cn as h } from "./index2.js";
+const g = b.forwardRef(({ className: i, defaultValue: r, value: o, ...s }, m) => {
+  const t = (o == null ? void 0 : o.length) ?? (r == null ? void 0 : r.length) ?? 1;
+  return /* @__PURE__ */ a(
+    n,
+    {
+      ref: m,
+      defaultValue: r,
+      value: o,
+      className: h(
+        "relative flex w-full touch-none select-none items-center",
+        i
+      ),
+      ...s,
+      children: [
+        /* @__PURE__ */ e(l, { className: "relative h-2 w-full grow overflow-hidden border border-primary bg-background", children: /* @__PURE__ */ e(p, { className: "absolute h-full bg-primary" }) }),
+        Array.from({ length: t }).map((f, c) => /* @__PURE__ */ e(
+          d,
+          {
+            className: "block h-5 w-3 border-2 border-primary bg-primary transition-all focus-visible:outline-none hover:bg-background disabled:pointer-events-none disabled:opacity-50"
+          },
+          c
+        ))
+      ]
+    }
+  );
+});
+g.displayName = n.displayName;
 export {
-  d as Table,
-  m as TableBody,
-  n as TableCaption,
-  i as TableCell,
-  b as TableFooter,
-  f as TableHead,
-  s as TableHeader,
-  c as TableRow
+  g as Slider
 };

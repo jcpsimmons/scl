@@ -1,81 +1,72 @@
-import { jsxs as a, jsx as t, Fragment as w } from "react/jsx-runtime";
-import * as m from "react";
-import { cn as n } from "./index2.js";
-const y = {
-  default: "bg-terminal-yellow text-black",
-  insert: "bg-terminal-blue text-black",
-  visual: "bg-terminal-magenta text-black",
-  command: "bg-terminal-red text-black"
-}, k = m.forwardRef(
-  ({
-    className: o,
-    mode: f = "NORMAL",
-    modeVariant: x = "default",
-    filename: s,
-    filetype: $,
-    filetypeAbbr: R,
-    encoding: S = "utf-8",
-    line: e,
-    column: r,
-    totalLines: l,
-    percentage: i,
-    branch: d,
-    diffStat: M,
-    modified: h = !1,
-    readonly: v = !1,
-    leftContent: b,
-    centerContent: p,
-    rightContent: u,
-    ...N
-  }, g) => {
-    const c = m.useMemo(() => {
-      if (i !== void 0) return i;
-      if (e !== void 0 && l !== void 0 && l > 0)
-        return e <= 1 ? "Top" : e >= l ? "Bot" : `${Math.round(e / l * 100)}%`;
-    }, [i, e, l]);
-    return /* @__PURE__ */ a(
-      "div",
-      {
-        ref: g,
-        className: n(
-          "flex h-6 w-full items-stretch font-mono text-sm bg-black text-white",
-          o
-        ),
-        ...N,
-        children: [
-          /* @__PURE__ */ a("div", { className: "flex items-stretch", children: [
-            /* @__PURE__ */ t(
-              "div",
-              {
-                className: n(
-                  "flex items-center px-3 font-bold",
-                  y[x]
-                ),
-                children: f
-              }
-            ),
-            b,
-            d && /* @__PURE__ */ a("div", { className: "flex items-center px-2 text-white", children: [
-              /* @__PURE__ */ t("span", { className: "mr-1", children: "⎇" }),
-              d
-            ] })
-          ] }),
-          /* @__PURE__ */ t("div", { className: "flex flex-1 items-center px-3 bg-blue-800 mx-2", children: p || /* @__PURE__ */ t(w, { children: s && /* @__PURE__ */ a("span", { className: "text-white truncate", children: [
-            s,
-            h && /* @__PURE__ */ t("span", { className: "text-terminal-yellow ml-1", children: "[+]" }),
-            v && /* @__PURE__ */ t("span", { className: "text-terminal-orange ml-1", children: "[RO]" })
-          ] }) }) }),
-          /* @__PURE__ */ a("div", { className: "flex items-stretch gap-2", children: [
-            u,
-            c !== void 0 && /* @__PURE__ */ t("div", { className: "flex items-center px-3 text-white", children: c }),
-            (e !== void 0 || r !== void 0) && /* @__PURE__ */ t("div", { className: "flex items-center px-3 bg-terminal-yellow text-black font-bold", children: e !== void 0 && r !== void 0 ? `${e}:${r}` : e !== void 0 ? `Ln ${e}` : `Col ${r}` })
-          ] })
-        ]
-      }
-    );
+import { jsx as a, jsxs as r } from "react/jsx-runtime";
+import * as i from "react";
+import { Root as g, Portal as u, Trigger as x, Close as d, Overlay as n, Content as l, Title as m, Description as c } from "./index75.js";
+import { cva as y } from "./index54.js";
+import { cn as s } from "./index2.js";
+import N from "./index76.js";
+const H = g, O = x, P = d, b = u, f = i.forwardRef(({ className: e, ...t }, o) => /* @__PURE__ */ a(
+  n,
+  {
+    className: s(
+      "fixed inset-0 z-50 bg-black/80 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
+      e
+    ),
+    ...t,
+    ref: o
   }
-);
-k.displayName = "Statusline";
+));
+f.displayName = n.displayName;
+const S = y(
+  "fixed z-[60] gap-4 bg-black p-6 shadow-lg transition ease-in-out data-[state=closed]:duration-300 data-[state=open]:duration-500 data-[state=open]:animate-in data-[state=closed]:animate-out",
+  {
+    variants: {
+      side: {
+        top: "inset-x-0 top-0 border-b data-[state=closed]:slide-out-to-top data-[state=open]:slide-in-from-top",
+        bottom: "inset-x-0 bottom-0 border-t data-[state=closed]:slide-out-to-bottom data-[state=open]:slide-in-from-bottom",
+        left: "inset-y-0 left-0 h-full w-3/4 border-r data-[state=closed]:slide-out-to-left data-[state=open]:slide-in-from-left sm:max-w-sm",
+        right: "inset-y-0 right-0 h-full w-3/4 border-l data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right sm:max-w-sm"
+      }
+    },
+    defaultVariants: {
+      side: "right"
+    }
+  }
+), w = i.forwardRef(({ side: e = "right", className: t, children: o, ...p }, h) => /* @__PURE__ */ r(b, { children: [
+  /* @__PURE__ */ a(f, {}),
+  /* @__PURE__ */ r(
+    l,
+    {
+      ref: h,
+      className: s(S({ side: e }), t),
+      ...p,
+      children: [
+        /* @__PURE__ */ r(d, { className: "absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-secondary", children: [
+          /* @__PURE__ */ a(N, { className: "h-4 w-4" }),
+          /* @__PURE__ */ a("span", { className: "sr-only", children: "Close" })
+        ] }),
+        o
+      ]
+    }
+  )
+] }));
+w.displayName = l.displayName;
+const v = ({ className: e, ...t }) => /* @__PURE__ */ a("div", { className: s("flex flex-col space-y-2 text-center sm:text-left", e), ...t });
+v.displayName = "SheetHeader";
+const R = ({ className: e, ...t }) => /* @__PURE__ */ a("div", { className: s("flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2", e), ...t });
+R.displayName = "SheetFooter";
+const C = i.forwardRef(({ className: e, ...t }, o) => /* @__PURE__ */ a(m, { ref: o, className: s("text-lg font-semibold text-foreground", e), ...t }));
+C.displayName = m.displayName;
+const T = i.forwardRef(({ className: e, ...t }, o) => /* @__PURE__ */ a(c, { ref: o, className: s("text-sm text-muted-foreground", e), ...t }));
+T.displayName = c.displayName;
 export {
-  k as Statusline
+  H as Sheet,
+  P as SheetClose,
+  w as SheetContent,
+  T as SheetDescription,
+  R as SheetFooter,
+  v as SheetHeader,
+  f as SheetOverlay,
+  b as SheetPortal,
+  C as SheetTitle,
+  O as SheetTrigger
 };

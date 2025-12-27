@@ -1,26 +1,31 @@
-import * as f from "react";
-import { assignRef as o } from "./index153.js";
-import { useCallbackRef as l } from "./index154.js";
-var s = typeof window < "u" ? f.useLayoutEffect : f.useEffect, c = /* @__PURE__ */ new WeakMap();
-function v(e, m) {
-  var t = l(null, function(n) {
-    return e.forEach(function(u) {
-      return o(u, n);
-    });
-  });
-  return s(function() {
-    var n = c.get(t);
-    if (n) {
-      var u = new Set(n), r = new Set(e), i = t.current;
-      u.forEach(function(a) {
-        r.has(a) || o(a, null);
-      }), r.forEach(function(a) {
-        u.has(a) || o(a, i);
-      });
-    }
-    c.set(t, e);
-  }, [e]), t;
-}
+import { __rest as E, __assign as r } from "./index141.js";
+import * as a from "react";
+import { zeroRightClassName as I, fullWidthClassName as Z } from "./index146.js";
+import { effectCar as W } from "./index147.js";
+import { useMergeRefs as z } from "./index148.js";
+var l = function() {
+}, m = a.forwardRef(function(e, d) {
+  var o = a.useRef(null), n = a.useState({
+    onScrollCapture: l,
+    onWheelCapture: l,
+    onTouchMoveCapture: l
+  }), f = n[0], v = n[1], h = e.forwardProps, t = e.children, u = e.className, C = e.removeScrollBar, R = e.enabled, g = e.shards, P = e.sideCar, S = e.noRelative, b = e.noIsolation, w = e.inert, N = e.allowPinchZoom, i = e.as, M = i === void 0 ? "div" : i, _ = e.gapMode, B = E(e, ["forwardProps", "children", "className", "removeScrollBar", "enabled", "shards", "sideCar", "noRelative", "noIsolation", "inert", "allowPinchZoom", "as", "gapMode"]), k = P, s = z([o, d]), c = r(r({}, B), f);
+  return a.createElement(
+    a.Fragment,
+    null,
+    R && a.createElement(k, { sideCar: W, removeScrollBar: C, shards: g, noRelative: S, noIsolation: b, inert: w, setCallbacks: v, allowPinchZoom: !!N, lockRef: o, gapMode: _ }),
+    h ? a.cloneElement(a.Children.only(t), r(r({}, c), { ref: s })) : a.createElement(M, r({}, c, { className: u, ref: s }), t)
+  );
+});
+m.defaultProps = {
+  enabled: !0,
+  removeScrollBar: !0,
+  inert: !1
+};
+m.classNames = {
+  fullWidth: Z,
+  zeroRight: I
+};
 export {
-  v as useMergeRefs
+  m as RemoveScroll
 };

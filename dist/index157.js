@@ -1,30 +1,16 @@
-import { getNonce as o } from "./index158.js";
-function r() {
-  if (!document)
-    return null;
-  var t = document.createElement("style");
-  t.type = "text/css";
-  var e = o();
-  return e && t.setAttribute("nonce", e), t;
-}
-function l(t, e) {
-  t.styleSheet ? t.styleSheet.cssText = e : t.appendChild(document.createTextNode(e));
-}
-function a(t) {
-  var e = document.head || document.getElementsByTagName("head")[0];
-  e.appendChild(t);
-}
-var c = function() {
-  var t = 0, e = null;
-  return {
-    add: function(n) {
-      t == 0 && (e = r()) && (l(e, n), a(e)), t++;
-    },
-    remove: function() {
-      t--, !t && e && (e.parentNode && e.parentNode.removeChild(e), e = null);
-    }
-  };
-};
+var r = !1;
+if (typeof window < "u")
+  try {
+    var e = Object.defineProperty({}, "passive", {
+      get: function() {
+        return r = !0, !0;
+      }
+    });
+    window.addEventListener("test", e, e), window.removeEventListener("test", e, e);
+  } catch {
+    r = !1;
+  }
+var a = r ? { passive: !1 } : !1;
 export {
-  c as stylesheetSingleton
+  a as nonPassive
 };

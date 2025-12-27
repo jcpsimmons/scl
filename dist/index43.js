@@ -1,20 +1,17 @@
-import * as i from "react";
-import { Primitive as f } from "./index88.js";
-import { jsx as l } from "react/jsx-runtime";
-var m = "Label", r = i.forwardRef((e, o) => /* @__PURE__ */ l(
-  f.label,
-  {
-    ...e,
-    ref: o,
-    onMouseDown: (t) => {
-      var a;
-      t.target.closest("button, input, select, textarea") || ((a = e.onMouseDown) == null || a.call(e, t), !t.defaultPrevented && t.detail > 1 && t.preventDefault());
-    }
-  }
-));
-r.displayName = m;
-var b = r;
+function a(r) {
+  var n, f, t = "";
+  if (typeof r == "string" || typeof r == "number") t += r;
+  else if (typeof r == "object") if (Array.isArray(r)) {
+    var o = r.length;
+    for (n = 0; n < o; n++) r[n] && (f = a(r[n])) && (t && (t += " "), t += f);
+  } else for (f in r) r[f] && (t && (t += " "), t += f);
+  return t;
+}
+function i() {
+  for (var r, n, f = 0, t = "", o = arguments.length; f < o; f++) (r = arguments[f]) && (n = a(r)) && (t && (t += " "), t += n);
+  return t;
+}
 export {
-  r as Label,
-  b as Root
+  i as clsx,
+  i as default
 };

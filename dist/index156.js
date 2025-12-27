@@ -1,15 +1,11 @@
-import * as o from "react";
-import { stylesheetSingleton as r } from "./index157.js";
-var i = function() {
-  var t = r();
-  return function(e, n) {
-    o.useEffect(function() {
-      return t.add(e), function() {
-        t.remove();
-      };
-    }, [e && n]);
+import { styleHookSingleton as o } from "./index162.js";
+var s = function() {
+  var e = o(), n = function(t) {
+    var r = t.styles, l = t.dynamic;
+    return e(r, l), null;
   };
+  return n;
 };
 export {
-  i as styleHookSingleton
+  s as styleSingleton
 };

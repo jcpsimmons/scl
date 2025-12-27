@@ -1,862 +1,338 @@
-import * as t from "react";
-import * as be from "react-dom";
-import { clamp as Re } from "./index105.js";
-import { composeEventHandlers as E } from "./index83.js";
-import { createCollection as st } from "./index81.js";
-import { useComposedRefs as B } from "./index82.js";
-import { createContextScope as lt } from "./index80.js";
-import { useDirection as ct } from "./index87.js";
-import { DismissableLayer as it } from "./index96.js";
-import { useFocusGuards as at } from "./index101.js";
-import { FocusScope as dt } from "./index102.js";
-import { useId as Ie } from "./index86.js";
-import { createPopperScope as _e, Root as ut, Anchor as pt, Content as ft, Arrow as mt } from "./index97.js";
-import { Portal as ht } from "./index98.js";
-import { Primitive as M } from "./index85.js";
-import { createSlot as vt } from "./index99.js";
-import { useCallbackRef as gt } from "./index90.js";
-import { useControllableState as Ee } from "./index84.js";
-import { useLayoutEffect as Y } from "./index91.js";
-import { usePrevious as St } from "./index93.js";
-import { VISUALLY_HIDDEN_STYLES as wt } from "./index100.js";
-import { hideOthers as Ct } from "./index103.js";
-import yt from "./index104.js";
-import { jsx as m, jsxs as ce, Fragment as Te } from "react/jsx-runtime";
-var xt = [" ", "Enter", "ArrowUp", "ArrowDown"], It = [" ", "Enter"], J = "Select", [ae, de, Tt] = st(J), [te] = lt(J, [
-  Tt,
-  _e
-]), ue = _e(), [Pt, j] = te(J), [Rt, Et] = te(J), Ne = (n) => {
+import * as s from "react";
+import { composeEventHandlers as g } from "./index89.js";
+import { useComposedRefs as N } from "./index88.js";
+import { createContextScope as K } from "./index87.js";
+import { DismissableLayer as W } from "./index101.js";
+import { useId as $ } from "./index97.js";
+import { createPopperScope as S, Root as z, Anchor as J, Content as Q, Arrow as Z } from "./index102.js";
+import { Portal as ee } from "./index103.js";
+import { Presence as G } from "./index94.js";
+import { Primitive as te } from "./index95.js";
+import { createSlottable as oe } from "./index90.js";
+import { useControllableState as re } from "./index91.js";
+import { Root as ne } from "./index104.js";
+import { jsx as f, jsxs as se } from "react/jsx-runtime";
+var [D] = K("Tooltip", [
+  S
+]), O = S(), j = "TooltipProvider", ie = 700, L = "tooltip.open", [ae, k] = D(j), F = (t) => {
   const {
-    __scopeSelect: c,
-    children: e,
-    open: i,
-    defaultOpen: l,
-    onOpenChange: u,
-    value: r,
-    defaultValue: s,
-    onValueChange: o,
-    dir: p,
-    name: g,
-    autoComplete: C,
-    disabled: P,
-    required: R,
-    form: T
-  } = n, a = ue(c), [v, y] = t.useState(null), [d, h] = t.useState(null), [A, O] = t.useState(!1), oe = ct(p), [b, L] = Ee({
-    prop: i,
-    defaultProp: l ?? !1,
-    onChange: u,
-    caller: J
-  }), [K, X] = Ee({
-    prop: r,
-    defaultProp: s,
-    onChange: o,
-    caller: J
-  }), V = t.useRef(null), H = v ? T || !!v.closest("form") : !0, [G, U] = t.useState(/* @__PURE__ */ new Set()), W = Array.from(G).map((_) => _.props.value).join(";");
-  return /* @__PURE__ */ m(ut, { ...a, children: /* @__PURE__ */ ce(
-    Pt,
+    __scopeTooltip: o,
+    delayDuration: e = ie,
+    skipDelayDuration: r = 300,
+    disableHoverableContent: n = !1,
+    children: a
+  } = t, l = s.useRef(!0), v = s.useRef(!1), i = s.useRef(0);
+  return s.useEffect(() => {
+    const p = i.current;
+    return () => window.clearTimeout(p);
+  }, []), /* @__PURE__ */ f(
+    ae,
     {
-      required: R,
-      scope: c,
-      trigger: v,
-      onTriggerChange: y,
-      valueNode: d,
-      onValueNodeChange: h,
-      valueNodeHasChildren: A,
-      onValueNodeHasChildrenChange: O,
-      contentId: Ie(),
-      value: K,
-      onValueChange: X,
-      open: b,
-      onOpenChange: L,
-      dir: oe,
-      triggerPointerDownPosRef: V,
-      disabled: P,
-      children: [
-        /* @__PURE__ */ m(ae.Provider, { scope: c, children: /* @__PURE__ */ m(
-          Rt,
-          {
-            scope: n.__scopeSelect,
-            onNativeOptionAdd: t.useCallback((_) => {
-              U((k) => new Set(k).add(_));
-            }, []),
-            onNativeOptionRemove: t.useCallback((_) => {
-              U((k) => {
-                const F = new Set(k);
-                return F.delete(_), F;
-              });
-            }, []),
-            children: e
-          }
-        ) }),
-        H ? /* @__PURE__ */ ce(
-          tt,
-          {
-            "aria-hidden": !0,
-            required: R,
-            tabIndex: -1,
-            name: g,
-            autoComplete: C,
-            value: K,
-            onChange: (_) => X(_.target.value),
-            disabled: P,
-            form: T,
-            children: [
-              K === void 0 ? /* @__PURE__ */ m("option", { value: "" }) : null,
-              Array.from(G)
-            ]
-          },
-          W
-        ) : null
-      ]
+      scope: o,
+      isOpenDelayedRef: l,
+      delayDuration: e,
+      onOpen: s.useCallback(() => {
+        window.clearTimeout(i.current), l.current = !1;
+      }, []),
+      onClose: s.useCallback(() => {
+        window.clearTimeout(i.current), i.current = window.setTimeout(
+          () => l.current = !0,
+          r
+        );
+      }, [r]),
+      isPointerInTransitRef: v,
+      onPointerInTransitChange: s.useCallback((p) => {
+        v.current = p;
+      }, []),
+      disableHoverableContent: n,
+      children: a
+    }
+  );
+};
+F.displayName = j;
+var R = "Tooltip", [le, _] = D(R), B = (t) => {
+  const {
+    __scopeTooltip: o,
+    children: e,
+    open: r,
+    defaultOpen: n,
+    onOpenChange: a,
+    disableHoverableContent: l,
+    delayDuration: v
+  } = t, i = k(R, t.__scopeTooltip), p = O(o), [c, d] = s.useState(null), h = $(), u = s.useRef(0), m = l ?? i.disableHoverableContent, y = v ?? i.delayDuration, T = s.useRef(!1), [x, C] = re({
+    prop: r,
+    defaultProp: n ?? !1,
+    onChange: (H) => {
+      H ? (i.onOpen(), document.dispatchEvent(new CustomEvent(L))) : i.onClose(), a == null || a(H);
+    },
+    caller: R
+  }), w = s.useMemo(() => x ? T.current ? "delayed-open" : "instant-open" : "closed", [x]), P = s.useCallback(() => {
+    window.clearTimeout(u.current), u.current = 0, T.current = !1, C(!0);
+  }, [C]), E = s.useCallback(() => {
+    window.clearTimeout(u.current), u.current = 0, C(!1);
+  }, [C]), I = s.useCallback(() => {
+    window.clearTimeout(u.current), u.current = window.setTimeout(() => {
+      T.current = !0, C(!0), u.current = 0;
+    }, y);
+  }, [y, C]);
+  return s.useEffect(() => () => {
+    u.current && (window.clearTimeout(u.current), u.current = 0);
+  }, []), /* @__PURE__ */ f(z, { ...p, children: /* @__PURE__ */ f(
+    le,
+    {
+      scope: o,
+      contentId: h,
+      open: x,
+      stateAttribute: w,
+      trigger: c,
+      onTriggerChange: d,
+      onTriggerEnter: s.useCallback(() => {
+        i.isOpenDelayedRef.current ? I() : P();
+      }, [i.isOpenDelayedRef, I, P]),
+      onTriggerLeave: s.useCallback(() => {
+        m ? E() : (window.clearTimeout(u.current), u.current = 0);
+      }, [E, m]),
+      onOpen: P,
+      onClose: E,
+      disableHoverableContent: m,
+      children: e
     }
   ) });
 };
-Ne.displayName = J;
-var Me = "SelectTrigger", Ae = t.forwardRef(
-  (n, c) => {
-    const { __scopeSelect: e, disabled: i = !1, ...l } = n, u = ue(e), r = j(Me, e), s = r.disabled || i, o = B(c, r.onTriggerChange), p = de(e), g = t.useRef("touch"), [C, P, R] = nt((a) => {
-      const v = p().filter((h) => !h.disabled), y = v.find((h) => h.value === r.value), d = rt(v, a, y);
-      d !== void 0 && r.onValueChange(d.value);
-    }), T = (a) => {
-      s || (r.onOpenChange(!0), R()), a && (r.triggerPointerDownPosRef.current = {
-        x: Math.round(a.pageX),
-        y: Math.round(a.pageY)
-      });
-    };
-    return /* @__PURE__ */ m(pt, { asChild: !0, ...u, children: /* @__PURE__ */ m(
-      M.button,
+B.displayName = R;
+var A = "TooltipTrigger", U = s.forwardRef(
+  (t, o) => {
+    const { __scopeTooltip: e, ...r } = t, n = _(A, e), a = k(A, e), l = O(e), v = s.useRef(null), i = N(o, v, n.onTriggerChange), p = s.useRef(!1), c = s.useRef(!1), d = s.useCallback(() => p.current = !1, []);
+    return s.useEffect(() => () => document.removeEventListener("pointerup", d), [d]), /* @__PURE__ */ f(J, { asChild: !0, ...l, children: /* @__PURE__ */ f(
+      te.button,
       {
-        type: "button",
-        role: "combobox",
-        "aria-controls": r.contentId,
-        "aria-expanded": r.open,
-        "aria-required": r.required,
-        "aria-autocomplete": "none",
-        dir: r.dir,
-        "data-state": r.open ? "open" : "closed",
-        disabled: s,
-        "data-disabled": s ? "" : void 0,
-        "data-placeholder": ot(r.value) ? "" : void 0,
-        ...l,
-        ref: o,
-        onClick: E(l.onClick, (a) => {
-          a.currentTarget.focus(), g.current !== "mouse" && T(a);
+        "aria-describedby": n.open ? n.contentId : void 0,
+        "data-state": n.stateAttribute,
+        ...r,
+        ref: i,
+        onPointerMove: g(t.onPointerMove, (h) => {
+          h.pointerType !== "touch" && !c.current && !a.isPointerInTransitRef.current && (n.onTriggerEnter(), c.current = !0);
         }),
-        onPointerDown: E(l.onPointerDown, (a) => {
-          g.current = a.pointerType;
-          const v = a.target;
-          v.hasPointerCapture(a.pointerId) && v.releasePointerCapture(a.pointerId), a.button === 0 && a.ctrlKey === !1 && a.pointerType === "mouse" && (T(a), a.preventDefault());
+        onPointerLeave: g(t.onPointerLeave, () => {
+          n.onTriggerLeave(), c.current = !1;
         }),
-        onKeyDown: E(l.onKeyDown, (a) => {
-          const v = C.current !== "";
-          !(a.ctrlKey || a.altKey || a.metaKey) && a.key.length === 1 && P(a.key), !(v && a.key === " ") && xt.includes(a.key) && (T(), a.preventDefault());
-        })
+        onPointerDown: g(t.onPointerDown, () => {
+          n.open && n.onClose(), p.current = !0, document.addEventListener("pointerup", d, { once: !0 });
+        }),
+        onFocus: g(t.onFocus, () => {
+          p.current || n.onOpen();
+        }),
+        onBlur: g(t.onBlur, n.onClose),
+        onClick: g(t.onClick, n.onClose)
       }
     ) });
   }
 );
-Ae.displayName = Me;
-var Oe = "SelectValue", De = t.forwardRef(
-  (n, c) => {
-    const { __scopeSelect: e, className: i, style: l, children: u, placeholder: r = "", ...s } = n, o = j(Oe, e), { onValueNodeHasChildrenChange: p } = o, g = u !== void 0, C = B(c, o.onValueNodeChange);
-    return Y(() => {
-      p(g);
-    }, [p, g]), /* @__PURE__ */ m(
-      M.span,
-      {
-        ...s,
-        ref: C,
-        style: { pointerEvents: "none" },
-        children: ot(o.value) ? /* @__PURE__ */ m(Te, { children: r }) : u
-      }
-    );
+U.displayName = A;
+var M = "TooltipPortal", [ce, ue] = D(M, {
+  forceMount: void 0
+}), V = (t) => {
+  const { __scopeTooltip: o, forceMount: e, children: r, container: n } = t, a = _(M, o);
+  return /* @__PURE__ */ f(ce, { scope: o, forceMount: e, children: /* @__PURE__ */ f(G, { present: e || a.open, children: /* @__PURE__ */ f(ee, { asChild: !0, container: n, children: r }) }) });
+};
+V.displayName = M;
+var b = "TooltipContent", Y = s.forwardRef(
+  (t, o) => {
+    const e = ue(b, t.__scopeTooltip), { forceMount: r = e.forceMount, side: n = "top", ...a } = t, l = _(b, t.__scopeTooltip);
+    return /* @__PURE__ */ f(G, { present: r || l.open, children: l.disableHoverableContent ? /* @__PURE__ */ f(q, { side: n, ...a, ref: o }) : /* @__PURE__ */ f(pe, { side: n, ...a, ref: o }) });
   }
-);
-De.displayName = Oe;
-var bt = "SelectIcon", Le = t.forwardRef(
-  (n, c) => {
-    const { __scopeSelect: e, children: i, ...l } = n;
-    return /* @__PURE__ */ m(M.span, { "aria-hidden": !0, ...l, ref: c, children: i || "▼" });
-  }
-);
-Le.displayName = bt;
-var _t = "SelectPortal", ke = (n) => /* @__PURE__ */ m(ht, { asChild: !0, ...n });
-ke.displayName = _t;
-var Q = "SelectContent", Be = t.forwardRef(
-  (n, c) => {
-    const e = j(Q, n.__scopeSelect), [i, l] = t.useState();
-    if (Y(() => {
-      l(new DocumentFragment());
-    }, []), !e.open) {
-      const u = i;
-      return u ? be.createPortal(
-        /* @__PURE__ */ m(Ve, { scope: n.__scopeSelect, children: /* @__PURE__ */ m(ae.Slot, { scope: n.__scopeSelect, children: /* @__PURE__ */ m("div", { children: n.children }) }) }),
-        u
-      ) : null;
-    }
-    return /* @__PURE__ */ m(He, { ...n, ref: c });
-  }
-);
-Be.displayName = Q;
-var D = 10, [Ve, q] = te(Q), Nt = "SelectContentImpl", Mt = vt("SelectContent.RemoveScroll"), He = t.forwardRef(
-  (n, c) => {
-    const {
-      __scopeSelect: e,
-      position: i = "item-aligned",
-      onCloseAutoFocus: l,
-      onEscapeKeyDown: u,
-      onPointerDownOutside: r,
-      //
-      // PopperContent props
-      side: s,
-      sideOffset: o,
-      align: p,
-      alignOffset: g,
-      arrowPadding: C,
-      collisionBoundary: P,
-      collisionPadding: R,
-      sticky: T,
-      hideWhenDetached: a,
-      avoidCollisions: v,
-      //
-      ...y
-    } = n, d = j(Q, e), [h, A] = t.useState(null), [O, oe] = t.useState(null), b = B(c, (f) => A(f)), [L, K] = t.useState(null), [X, V] = t.useState(
-      null
-    ), H = de(e), [G, U] = t.useState(!1), W = t.useRef(!1);
-    t.useEffect(() => {
-      if (h) return Ct(h);
-    }, [h]), at();
-    const _ = t.useCallback(
-      (f) => {
-        const [I, ...N] = H().map((w) => w.ref.current), [x] = N.slice(-1), S = document.activeElement;
-        for (const w of f)
-          if (w === S || (w == null || w.scrollIntoView({ block: "nearest" }), w === I && O && (O.scrollTop = 0), w === x && O && (O.scrollTop = O.scrollHeight), w == null || w.focus(), document.activeElement !== S)) return;
-      },
-      [H, O]
-    ), k = t.useCallback(
-      () => _([L, h]),
-      [_, L, h]
-    );
-    t.useEffect(() => {
-      G && k();
-    }, [G, k]);
-    const { onOpenChange: F, triggerPointerDownPosRef: z } = d;
-    t.useEffect(() => {
-      if (h) {
-        let f = { x: 0, y: 0 };
-        const I = (x) => {
-          var S, w;
-          f = {
-            x: Math.abs(Math.round(x.pageX) - (((S = z.current) == null ? void 0 : S.x) ?? 0)),
-            y: Math.abs(Math.round(x.pageY) - (((w = z.current) == null ? void 0 : w.y) ?? 0))
-          };
-        }, N = (x) => {
-          f.x <= 10 && f.y <= 10 ? x.preventDefault() : h.contains(x.target) || F(!1), document.removeEventListener("pointermove", I), z.current = null;
-        };
-        return z.current !== null && (document.addEventListener("pointermove", I), document.addEventListener("pointerup", N, { capture: !0, once: !0 })), () => {
-          document.removeEventListener("pointermove", I), document.removeEventListener("pointerup", N, { capture: !0 });
-        };
-      }
-    }, [h, F, z]), t.useEffect(() => {
-      const f = () => F(!1);
-      return window.addEventListener("blur", f), window.addEventListener("resize", f), () => {
-        window.removeEventListener("blur", f), window.removeEventListener("resize", f);
-      };
-    }, [F]);
-    const [pe, se] = nt((f) => {
-      const I = H().filter((S) => !S.disabled), N = I.find((S) => S.ref.current === document.activeElement), x = rt(I, f, N);
-      x && setTimeout(() => x.ref.current.focus());
-    }), fe = t.useCallback(
-      (f, I, N) => {
-        const x = !W.current && !N;
-        (d.value !== void 0 && d.value === I || x) && (K(f), x && (W.current = !0));
-      },
-      [d.value]
-    ), me = t.useCallback(() => h == null ? void 0 : h.focus(), [h]), ee = t.useCallback(
-      (f, I, N) => {
-        const x = !W.current && !N;
-        (d.value !== void 0 && d.value === I || x) && V(f);
-      },
-      [d.value]
-    ), le = i === "popper" ? Se : Ue, ne = le === Se ? {
-      side: s,
-      sideOffset: o,
-      align: p,
-      alignOffset: g,
-      arrowPadding: C,
-      collisionBoundary: P,
-      collisionPadding: R,
-      sticky: T,
-      hideWhenDetached: a,
-      avoidCollisions: v
-    } : {};
-    return /* @__PURE__ */ m(
-      Ve,
-      {
-        scope: e,
-        content: h,
-        viewport: O,
-        onViewportChange: oe,
-        itemRefCallback: fe,
-        selectedItem: L,
-        onItemLeave: me,
-        itemTextRefCallback: ee,
-        focusSelectedItem: k,
-        selectedItemText: X,
-        position: i,
-        isPositioned: G,
-        searchRef: pe,
-        children: /* @__PURE__ */ m(yt, { as: Mt, allowPinchZoom: !0, children: /* @__PURE__ */ m(
-          dt,
-          {
-            asChild: !0,
-            trapped: d.open,
-            onMountAutoFocus: (f) => {
-              f.preventDefault();
-            },
-            onUnmountAutoFocus: E(l, (f) => {
-              var I;
-              (I = d.trigger) == null || I.focus({ preventScroll: !0 }), f.preventDefault();
-            }),
-            children: /* @__PURE__ */ m(
-              it,
-              {
-                asChild: !0,
-                disableOutsidePointerEvents: !0,
-                onEscapeKeyDown: u,
-                onPointerDownOutside: r,
-                onFocusOutside: (f) => f.preventDefault(),
-                onDismiss: () => d.onOpenChange(!1),
-                children: /* @__PURE__ */ m(
-                  le,
-                  {
-                    role: "listbox",
-                    id: d.contentId,
-                    "data-state": d.open ? "open" : "closed",
-                    dir: d.dir,
-                    onContextMenu: (f) => f.preventDefault(),
-                    ...y,
-                    ...ne,
-                    onPlaced: () => U(!0),
-                    ref: b,
-                    style: {
-                      // flex layout so we can place the scroll buttons properly
-                      display: "flex",
-                      flexDirection: "column",
-                      // reset the outline by default as the content MAY get focused
-                      outline: "none",
-                      ...y.style
-                    },
-                    onKeyDown: E(y.onKeyDown, (f) => {
-                      const I = f.ctrlKey || f.altKey || f.metaKey;
-                      if (f.key === "Tab" && f.preventDefault(), !I && f.key.length === 1 && se(f.key), ["ArrowUp", "ArrowDown", "Home", "End"].includes(f.key)) {
-                        let x = H().filter((S) => !S.disabled).map((S) => S.ref.current);
-                        if (["ArrowUp", "End"].includes(f.key) && (x = x.slice().reverse()), ["ArrowUp", "ArrowDown"].includes(f.key)) {
-                          const S = f.target, w = x.indexOf(S);
-                          x = x.slice(w + 1);
-                        }
-                        setTimeout(() => _(x)), f.preventDefault();
-                      }
-                    })
-                  }
-                )
-              }
-            )
-          }
-        ) })
-      }
-    );
-  }
-);
-He.displayName = Nt;
-var At = "SelectItemAlignedPosition", Ue = t.forwardRef((n, c) => {
-  const { __scopeSelect: e, onPlaced: i, ...l } = n, u = j(Q, e), r = q(Q, e), [s, o] = t.useState(null), [p, g] = t.useState(null), C = B(c, (b) => g(b)), P = de(e), R = t.useRef(!1), T = t.useRef(!0), { viewport: a, selectedItem: v, selectedItemText: y, focusSelectedItem: d } = r, h = t.useCallback(() => {
-    if (u.trigger && u.valueNode && s && p && a && v && y) {
-      const b = u.trigger.getBoundingClientRect(), L = p.getBoundingClientRect(), K = u.valueNode.getBoundingClientRect(), X = y.getBoundingClientRect();
-      if (u.dir !== "rtl") {
-        const S = X.left - L.left, w = K.left - S, Z = b.left - w, $ = b.width + Z, he = Math.max($, L.width), ve = window.innerWidth - D, ge = Re(w, [
-          D,
-          // Prevents the content from going off the starting edge of the
-          // viewport. It may still go off the ending edge, but this can be
-          // controlled by the user since they may want to manage overflow in a
-          // specific way.
-          // https://github.com/radix-ui/primitives/issues/2049
-          Math.max(D, ve - he)
-        ]);
-        s.style.minWidth = $ + "px", s.style.left = ge + "px";
-      } else {
-        const S = L.right - X.right, w = window.innerWidth - K.right - S, Z = window.innerWidth - b.right - w, $ = b.width + Z, he = Math.max($, L.width), ve = window.innerWidth - D, ge = Re(w, [
-          D,
-          Math.max(D, ve - he)
-        ]);
-        s.style.minWidth = $ + "px", s.style.right = ge + "px";
-      }
-      const V = P(), H = window.innerHeight - D * 2, G = a.scrollHeight, U = window.getComputedStyle(p), W = parseInt(U.borderTopWidth, 10), _ = parseInt(U.paddingTop, 10), k = parseInt(U.borderBottomWidth, 10), F = parseInt(U.paddingBottom, 10), z = W + _ + G + F + k, pe = Math.min(v.offsetHeight * 5, z), se = window.getComputedStyle(a), fe = parseInt(se.paddingTop, 10), me = parseInt(se.paddingBottom, 10), ee = b.top + b.height / 2 - D, le = H - ee, ne = v.offsetHeight / 2, f = v.offsetTop + ne, I = W + _ + f, N = z - I;
-      if (I <= ee) {
-        const S = V.length > 0 && v === V[V.length - 1].ref.current;
-        s.style.bottom = "0px";
-        const w = p.clientHeight - a.offsetTop - a.offsetHeight, Z = Math.max(
-          le,
-          ne + // viewport might have padding bottom, include it to avoid a scrollable viewport
-          (S ? me : 0) + w + k
-        ), $ = I + Z;
-        s.style.height = $ + "px";
-      } else {
-        const S = V.length > 0 && v === V[0].ref.current;
-        s.style.top = "0px";
-        const Z = Math.max(
-          ee,
-          W + a.offsetTop + // viewport might have padding top, include it to avoid a scrollable viewport
-          (S ? fe : 0) + ne
-        ) + N;
-        s.style.height = Z + "px", a.scrollTop = I - ee + a.offsetTop;
-      }
-      s.style.margin = `${D}px 0`, s.style.minHeight = pe + "px", s.style.maxHeight = H + "px", i == null || i(), requestAnimationFrame(() => R.current = !0);
-    }
-  }, [
-    P,
-    u.trigger,
-    u.valueNode,
-    s,
-    p,
-    a,
-    v,
-    y,
-    u.dir,
-    i
-  ]);
-  Y(() => h(), [h]);
-  const [A, O] = t.useState();
-  Y(() => {
-    p && O(window.getComputedStyle(p).zIndex);
-  }, [p]);
-  const oe = t.useCallback(
-    (b) => {
-      b && T.current === !0 && (h(), d == null || d(), T.current = !1);
+), pe = s.forwardRef((t, o) => {
+  const e = _(b, t.__scopeTooltip), r = k(b, t.__scopeTooltip), n = s.useRef(null), a = N(o, n), [l, v] = s.useState(null), { trigger: i, onClose: p } = e, c = n.current, { onPointerInTransitChange: d } = r, h = s.useCallback(() => {
+    v(null), d(!1);
+  }, [d]), u = s.useCallback(
+    (m, y) => {
+      const T = m.currentTarget, x = { x: m.clientX, y: m.clientY }, C = me(x, T.getBoundingClientRect()), w = Te(x, C), P = ye(y.getBoundingClientRect()), E = xe([...w, ...P]);
+      v(E), d(!0);
     },
-    [h, d]
+    [d]
   );
-  return /* @__PURE__ */ m(
-    Dt,
-    {
-      scope: e,
-      contentWrapper: s,
-      shouldExpandOnScrollRef: R,
-      onScrollButtonChange: oe,
-      children: /* @__PURE__ */ m(
-        "div",
-        {
-          ref: o,
-          style: {
-            display: "flex",
-            flexDirection: "column",
-            position: "fixed",
-            zIndex: A
-          },
-          children: /* @__PURE__ */ m(
-            M.div,
-            {
-              ...l,
-              ref: C,
-              style: {
-                // When we get the height of the content, it includes borders. If we were to set
-                // the height without having `boxSizing: 'border-box'` it would be too big.
-                boxSizing: "border-box",
-                // We need to ensure the content doesn't get taller than the wrapper
-                maxHeight: "100%",
-                ...l.style
-              }
-            }
-          )
-        }
-      )
+  return s.useEffect(() => () => h(), [h]), s.useEffect(() => {
+    if (i && c) {
+      const m = (T) => u(T, c), y = (T) => u(T, i);
+      return i.addEventListener("pointerleave", m), c.addEventListener("pointerleave", y), () => {
+        i.removeEventListener("pointerleave", m), c.removeEventListener("pointerleave", y);
+      };
     }
-  );
-});
-Ue.displayName = At;
-var Ot = "SelectPopperPosition", Se = t.forwardRef((n, c) => {
-  const {
-    __scopeSelect: e,
-    align: i = "start",
-    collisionPadding: l = D,
-    ...u
-  } = n, r = ue(e);
-  return /* @__PURE__ */ m(
-    ft,
-    {
-      ...r,
-      ...u,
-      ref: c,
-      align: i,
-      collisionPadding: l,
-      style: {
-        // Ensure border-box for floating-ui calculations
-        boxSizing: "border-box",
-        ...u.style,
-        "--radix-select-content-transform-origin": "var(--radix-popper-transform-origin)",
-        "--radix-select-content-available-width": "var(--radix-popper-available-width)",
-        "--radix-select-content-available-height": "var(--radix-popper-available-height)",
-        "--radix-select-trigger-width": "var(--radix-popper-anchor-width)",
-        "--radix-select-trigger-height": "var(--radix-popper-anchor-height)"
-      }
+  }, [i, c, u, h]), s.useEffect(() => {
+    if (l) {
+      const m = (y) => {
+        const T = y.target, x = { x: y.clientX, y: y.clientY }, C = (i == null ? void 0 : i.contains(T)) || (c == null ? void 0 : c.contains(T)), w = !Ce(x, l);
+        C ? h() : w && (h(), p());
+      };
+      return document.addEventListener("pointermove", m), () => document.removeEventListener("pointermove", m);
     }
-  );
-});
-Se.displayName = Ot;
-var [Dt, Pe] = te(Q, {}), we = "SelectViewport", We = t.forwardRef(
-  (n, c) => {
-    const { __scopeSelect: e, nonce: i, ...l } = n, u = q(we, e), r = Pe(we, e), s = B(c, u.onViewportChange), o = t.useRef(0);
-    return /* @__PURE__ */ ce(Te, { children: [
-      /* @__PURE__ */ m(
-        "style",
-        {
-          dangerouslySetInnerHTML: {
-            __html: "[data-radix-select-viewport]{scrollbar-width:none;-ms-overflow-style:none;-webkit-overflow-scrolling:touch;}[data-radix-select-viewport]::-webkit-scrollbar{display:none}"
-          },
-          nonce: i
-        }
-      ),
-      /* @__PURE__ */ m(ae.Slot, { scope: e, children: /* @__PURE__ */ m(
-        M.div,
-        {
-          "data-radix-select-viewport": "",
-          role: "presentation",
-          ...l,
-          ref: s,
-          style: {
-            // we use position: 'relative' here on the `viewport` so that when we call
-            // `selectedItem.offsetTop` in calculations, the offset is relative to the viewport
-            // (independent of the scrollUpButton).
-            position: "relative",
-            flex: 1,
-            // Viewport should only be scrollable in the vertical direction.
-            // This won't work in vertical writing modes, so we'll need to
-            // revisit this if/when that is supported
-            // https://developer.chrome.com/blog/vertical-form-controls
-            overflow: "hidden auto",
-            ...l.style
-          },
-          onScroll: E(l.onScroll, (p) => {
-            const g = p.currentTarget, { contentWrapper: C, shouldExpandOnScrollRef: P } = r;
-            if (P != null && P.current && C) {
-              const R = Math.abs(o.current - g.scrollTop);
-              if (R > 0) {
-                const T = window.innerHeight - D * 2, a = parseFloat(C.style.minHeight), v = parseFloat(C.style.height), y = Math.max(a, v);
-                if (y < T) {
-                  const d = y + R, h = Math.min(T, d), A = d - h;
-                  C.style.height = h + "px", C.style.bottom === "0px" && (g.scrollTop = A > 0 ? A : 0, C.style.justifyContent = "flex-end");
-                }
-              }
-            }
-            o.current = g.scrollTop;
-          })
-        }
-      ) })
-    ] });
-  }
-);
-We.displayName = we;
-var Fe = "SelectGroup", [Lt, kt] = te(Fe), Ke = t.forwardRef(
-  (n, c) => {
-    const { __scopeSelect: e, ...i } = n, l = Ie();
-    return /* @__PURE__ */ m(Lt, { scope: e, id: l, children: /* @__PURE__ */ m(M.div, { role: "group", "aria-labelledby": l, ...i, ref: c }) });
-  }
-);
-Ke.displayName = Fe;
-var Ge = "SelectLabel", ze = t.forwardRef(
-  (n, c) => {
-    const { __scopeSelect: e, ...i } = n, l = kt(Ge, e);
-    return /* @__PURE__ */ m(M.div, { id: l.id, ...i, ref: c });
-  }
-);
-ze.displayName = Ge;
-var ie = "SelectItem", [Bt, Ye] = te(ie), je = t.forwardRef(
-  (n, c) => {
+  }, [i, c, l, p, h]), /* @__PURE__ */ f(q, { ...t, ref: a });
+}), [de, fe] = D(R, { isInside: !1 }), ve = oe("TooltipContent"), q = s.forwardRef(
+  (t, o) => {
     const {
-      __scopeSelect: e,
-      value: i,
-      disabled: l = !1,
-      textValue: u,
-      ...r
-    } = n, s = j(ie, e), o = q(ie, e), p = s.value === i, [g, C] = t.useState(u ?? ""), [P, R] = t.useState(!1), T = B(
-      c,
-      (d) => {
-        var h;
-        return (h = o.itemRefCallback) == null ? void 0 : h.call(o, d, i, l);
+      __scopeTooltip: e,
+      children: r,
+      "aria-label": n,
+      onEscapeKeyDown: a,
+      onPointerDownOutside: l,
+      ...v
+    } = t, i = _(b, e), p = O(e), { onClose: c } = i;
+    return s.useEffect(() => (document.addEventListener(L, c), () => document.removeEventListener(L, c)), [c]), s.useEffect(() => {
+      if (i.trigger) {
+        const d = (h) => {
+          const u = h.target;
+          u != null && u.contains(i.trigger) && c();
+        };
+        return window.addEventListener("scroll", d, { capture: !0 }), () => window.removeEventListener("scroll", d, { capture: !0 });
       }
-    ), a = Ie(), v = t.useRef("touch"), y = () => {
-      l || (s.onValueChange(i), s.onOpenChange(!1));
-    };
-    if (i === "")
-      throw new Error(
-        "A <Select.Item /> must have a value prop that is not an empty string. This is because the Select value can be set to an empty string to clear the selection and show the placeholder."
-      );
-    return /* @__PURE__ */ m(
-      Bt,
+    }, [i.trigger, c]), /* @__PURE__ */ f(
+      W,
       {
-        scope: e,
-        value: i,
-        disabled: l,
-        textId: a,
-        isSelected: p,
-        onItemTextChange: t.useCallback((d) => {
-          C((h) => h || ((d == null ? void 0 : d.textContent) ?? "").trim());
-        }, []),
-        children: /* @__PURE__ */ m(
-          ae.ItemSlot,
+        asChild: !0,
+        disableOutsidePointerEvents: !1,
+        onEscapeKeyDown: a,
+        onPointerDownOutside: l,
+        onFocusOutside: (d) => d.preventDefault(),
+        onDismiss: c,
+        children: /* @__PURE__ */ se(
+          Q,
           {
-            scope: e,
-            value: i,
-            disabled: l,
-            textValue: g,
-            children: /* @__PURE__ */ m(
-              M.div,
-              {
-                role: "option",
-                "aria-labelledby": a,
-                "data-highlighted": P ? "" : void 0,
-                "aria-selected": p && P,
-                "data-state": p ? "checked" : "unchecked",
-                "aria-disabled": l || void 0,
-                "data-disabled": l ? "" : void 0,
-                tabIndex: l ? void 0 : -1,
-                ...r,
-                ref: T,
-                onFocus: E(r.onFocus, () => R(!0)),
-                onBlur: E(r.onBlur, () => R(!1)),
-                onClick: E(r.onClick, () => {
-                  v.current !== "mouse" && y();
-                }),
-                onPointerUp: E(r.onPointerUp, () => {
-                  v.current === "mouse" && y();
-                }),
-                onPointerDown: E(r.onPointerDown, (d) => {
-                  v.current = d.pointerType;
-                }),
-                onPointerMove: E(r.onPointerMove, (d) => {
-                  var h;
-                  v.current = d.pointerType, l ? (h = o.onItemLeave) == null || h.call(o) : v.current === "mouse" && d.currentTarget.focus({ preventScroll: !0 });
-                }),
-                onPointerLeave: E(r.onPointerLeave, (d) => {
-                  var h;
-                  d.currentTarget === document.activeElement && ((h = o.onItemLeave) == null || h.call(o));
-                }),
-                onKeyDown: E(r.onKeyDown, (d) => {
-                  var A;
-                  ((A = o.searchRef) == null ? void 0 : A.current) !== "" && d.key === " " || (It.includes(d.key) && y(), d.key === " " && d.preventDefault());
-                })
-              }
-            )
+            "data-state": i.stateAttribute,
+            ...p,
+            ...v,
+            ref: o,
+            style: {
+              ...v.style,
+              "--radix-tooltip-content-transform-origin": "var(--radix-popper-transform-origin)",
+              "--radix-tooltip-content-available-width": "var(--radix-popper-available-width)",
+              "--radix-tooltip-content-available-height": "var(--radix-popper-available-height)",
+              "--radix-tooltip-trigger-width": "var(--radix-popper-anchor-width)",
+              "--radix-tooltip-trigger-height": "var(--radix-popper-anchor-height)"
+            },
+            children: [
+              /* @__PURE__ */ f(ve, { children: r }),
+              /* @__PURE__ */ f(de, { scope: e, isInside: !0, children: /* @__PURE__ */ f(ne, { id: i.contentId, role: "tooltip", children: n || r }) })
+            ]
           }
         )
       }
     );
   }
 );
-je.displayName = ie;
-var re = "SelectItemText", qe = t.forwardRef(
-  (n, c) => {
-    const { __scopeSelect: e, className: i, style: l, ...u } = n, r = j(re, e), s = q(re, e), o = Ye(re, e), p = Et(re, e), [g, C] = t.useState(null), P = B(
-      c,
-      (y) => C(y),
-      o.onItemTextChange,
-      (y) => {
-        var d;
-        return (d = s.itemTextRefCallback) == null ? void 0 : d.call(s, y, o.value, o.disabled);
-      }
-    ), R = g == null ? void 0 : g.textContent, T = t.useMemo(
-      () => /* @__PURE__ */ m("option", { value: o.value, disabled: o.disabled, children: R }, o.value),
-      [o.disabled, o.value, R]
-    ), { onNativeOptionAdd: a, onNativeOptionRemove: v } = p;
-    return Y(() => (a(T), () => v(T)), [a, v, T]), /* @__PURE__ */ ce(Te, { children: [
-      /* @__PURE__ */ m(M.span, { id: o.textId, ...u, ref: P }),
-      o.isSelected && r.valueNode && !r.valueNodeHasChildren ? be.createPortal(u.children, r.valueNode) : null
-    ] });
+Y.displayName = b;
+var X = "TooltipArrow", he = s.forwardRef(
+  (t, o) => {
+    const { __scopeTooltip: e, ...r } = t, n = O(e);
+    return fe(
+      X,
+      e
+    ).isInside ? null : /* @__PURE__ */ f(Z, { ...n, ...r, ref: o });
   }
 );
-qe.displayName = re;
-var Xe = "SelectItemIndicator", Ze = t.forwardRef(
-  (n, c) => {
-    const { __scopeSelect: e, ...i } = n;
-    return Ye(Xe, e).isSelected ? /* @__PURE__ */ m(M.span, { "aria-hidden": !0, ...i, ref: c }) : null;
+he.displayName = X;
+function me(t, o) {
+  const e = Math.abs(o.top - t.y), r = Math.abs(o.bottom - t.y), n = Math.abs(o.right - t.x), a = Math.abs(o.left - t.x);
+  switch (Math.min(e, r, n, a)) {
+    case a:
+      return "left";
+    case n:
+      return "right";
+    case e:
+      return "top";
+    case r:
+      return "bottom";
+    default:
+      throw new Error("unreachable");
   }
-);
-Ze.displayName = Xe;
-var Ce = "SelectScrollUpButton", $e = t.forwardRef((n, c) => {
-  const e = q(Ce, n.__scopeSelect), i = Pe(Ce, n.__scopeSelect), [l, u] = t.useState(!1), r = B(c, i.onScrollButtonChange);
-  return Y(() => {
-    if (e.viewport && e.isPositioned) {
-      let s = function() {
-        const p = o.scrollTop > 0;
-        u(p);
-      };
-      const o = e.viewport;
-      return s(), o.addEventListener("scroll", s), () => o.removeEventListener("scroll", s);
-    }
-  }, [e.viewport, e.isPositioned]), l ? /* @__PURE__ */ m(
-    Qe,
-    {
-      ...n,
-      ref: r,
-      onAutoScroll: () => {
-        const { viewport: s, selectedItem: o } = e;
-        s && o && (s.scrollTop = s.scrollTop - o.offsetHeight);
-      }
-    }
-  ) : null;
-});
-$e.displayName = Ce;
-var ye = "SelectScrollDownButton", Je = t.forwardRef((n, c) => {
-  const e = q(ye, n.__scopeSelect), i = Pe(ye, n.__scopeSelect), [l, u] = t.useState(!1), r = B(c, i.onScrollButtonChange);
-  return Y(() => {
-    if (e.viewport && e.isPositioned) {
-      let s = function() {
-        const p = o.scrollHeight - o.clientHeight, g = Math.ceil(o.scrollTop) < p;
-        u(g);
-      };
-      const o = e.viewport;
-      return s(), o.addEventListener("scroll", s), () => o.removeEventListener("scroll", s);
-    }
-  }, [e.viewport, e.isPositioned]), l ? /* @__PURE__ */ m(
-    Qe,
-    {
-      ...n,
-      ref: r,
-      onAutoScroll: () => {
-        const { viewport: s, selectedItem: o } = e;
-        s && o && (s.scrollTop = s.scrollTop + o.offsetHeight);
-      }
-    }
-  ) : null;
-});
-Je.displayName = ye;
-var Qe = t.forwardRef((n, c) => {
-  const { __scopeSelect: e, onAutoScroll: i, ...l } = n, u = q("SelectScrollButton", e), r = t.useRef(null), s = de(e), o = t.useCallback(() => {
-    r.current !== null && (window.clearInterval(r.current), r.current = null);
-  }, []);
-  return t.useEffect(() => () => o(), [o]), Y(() => {
-    var g;
-    const p = s().find((C) => C.ref.current === document.activeElement);
-    (g = p == null ? void 0 : p.ref.current) == null || g.scrollIntoView({ block: "nearest" });
-  }, [s]), /* @__PURE__ */ m(
-    M.div,
-    {
-      "aria-hidden": !0,
-      ...l,
-      ref: c,
-      style: { flexShrink: 0, ...l.style },
-      onPointerDown: E(l.onPointerDown, () => {
-        r.current === null && (r.current = window.setInterval(i, 50));
-      }),
-      onPointerMove: E(l.onPointerMove, () => {
-        var p;
-        (p = u.onItemLeave) == null || p.call(u), r.current === null && (r.current = window.setInterval(i, 50));
-      }),
-      onPointerLeave: E(l.onPointerLeave, () => {
-        o();
-      })
-    }
-  );
-}), Vt = "SelectSeparator", et = t.forwardRef(
-  (n, c) => {
-    const { __scopeSelect: e, ...i } = n;
-    return /* @__PURE__ */ m(M.div, { "aria-hidden": !0, ...i, ref: c });
-  }
-);
-et.displayName = Vt;
-var xe = "SelectArrow", Ht = t.forwardRef(
-  (n, c) => {
-    const { __scopeSelect: e, ...i } = n, l = ue(e), u = j(xe, e), r = q(xe, e);
-    return u.open && r.position === "popper" ? /* @__PURE__ */ m(mt, { ...l, ...i, ref: c }) : null;
-  }
-);
-Ht.displayName = xe;
-var Ut = "SelectBubbleInput", tt = t.forwardRef(
-  ({ __scopeSelect: n, value: c, ...e }, i) => {
-    const l = t.useRef(null), u = B(i, l), r = St(c);
-    return t.useEffect(() => {
-      const s = l.current;
-      if (!s) return;
-      const o = window.HTMLSelectElement.prototype, g = Object.getOwnPropertyDescriptor(
-        o,
-        "value"
-      ).set;
-      if (r !== c && g) {
-        const C = new Event("change", { bubbles: !0 });
-        g.call(s, c), s.dispatchEvent(C);
-      }
-    }, [r, c]), /* @__PURE__ */ m(
-      M.select,
-      {
-        ...e,
-        style: { ...wt, ...e.style },
-        ref: u,
-        defaultValue: c
-      }
-    );
-  }
-);
-tt.displayName = Ut;
-function ot(n) {
-  return n === "" || n === void 0;
 }
-function nt(n) {
-  const c = gt(n), e = t.useRef(""), i = t.useRef(0), l = t.useCallback(
-    (r) => {
-      const s = e.current + r;
-      c(s), function o(p) {
-        e.current = p, window.clearTimeout(i.current), p !== "" && (i.current = window.setTimeout(() => o(""), 1e3));
-      }(s);
-    },
-    [c]
-  ), u = t.useCallback(() => {
-    e.current = "", window.clearTimeout(i.current);
-  }, []);
-  return t.useEffect(() => () => window.clearTimeout(i.current), []), [e, l, u];
+function Te(t, o, e = 5) {
+  const r = [];
+  switch (o) {
+    case "top":
+      r.push(
+        { x: t.x - e, y: t.y + e },
+        { x: t.x + e, y: t.y + e }
+      );
+      break;
+    case "bottom":
+      r.push(
+        { x: t.x - e, y: t.y - e },
+        { x: t.x + e, y: t.y - e }
+      );
+      break;
+    case "left":
+      r.push(
+        { x: t.x + e, y: t.y - e },
+        { x: t.x + e, y: t.y + e }
+      );
+      break;
+    case "right":
+      r.push(
+        { x: t.x - e, y: t.y - e },
+        { x: t.x - e, y: t.y + e }
+      );
+      break;
+  }
+  return r;
 }
-function rt(n, c, e) {
-  const l = c.length > 1 && Array.from(c).every((p) => p === c[0]) ? c[0] : c, u = e ? n.indexOf(e) : -1;
-  let r = Wt(n, Math.max(u, 0));
-  l.length === 1 && (r = r.filter((p) => p !== e));
-  const o = r.find(
-    (p) => p.textValue.toLowerCase().startsWith(l.toLowerCase())
-  );
-  return o !== e ? o : void 0;
+function ye(t) {
+  const { top: o, right: e, bottom: r, left: n } = t;
+  return [
+    { x: n, y: o },
+    { x: e, y: o },
+    { x: e, y: r },
+    { x: n, y: r }
+  ];
 }
-function Wt(n, c) {
-  return n.map((e, i) => n[(c + i) % n.length]);
+function Ce(t, o) {
+  const { x: e, y: r } = t;
+  let n = !1;
+  for (let a = 0, l = o.length - 1; a < o.length; l = a++) {
+    const v = o[a], i = o[l], p = v.x, c = v.y, d = i.x, h = i.y;
+    c > r != h > r && e < (d - p) * (r - c) / (h - c) + p && (n = !n);
+  }
+  return n;
 }
-var uo = Ne, po = Ae, fo = De, mo = Le, ho = ke, vo = Be, go = We, So = Ke, wo = ze, Co = je, yo = qe, xo = Ze, Io = $e, To = Je, Po = et;
+function xe(t) {
+  const o = t.slice();
+  return o.sort((e, r) => e.x < r.x ? -1 : e.x > r.x ? 1 : e.y < r.y ? -1 : e.y > r.y ? 1 : 0), ge(o);
+}
+function ge(t) {
+  if (t.length <= 1) return t.slice();
+  const o = [];
+  for (let r = 0; r < t.length; r++) {
+    const n = t[r];
+    for (; o.length >= 2; ) {
+      const a = o[o.length - 1], l = o[o.length - 2];
+      if ((a.x - l.x) * (n.y - l.y) >= (a.y - l.y) * (n.x - l.x)) o.pop();
+      else break;
+    }
+    o.push(n);
+  }
+  o.pop();
+  const e = [];
+  for (let r = t.length - 1; r >= 0; r--) {
+    const n = t[r];
+    for (; e.length >= 2; ) {
+      const a = e[e.length - 1], l = e[e.length - 2];
+      if ((a.x - l.x) * (n.y - l.y) >= (a.y - l.y) * (n.x - l.x)) e.pop();
+      else break;
+    }
+    e.push(n);
+  }
+  return e.pop(), o.length === 1 && e.length === 1 && o[0].x === e[0].x && o[0].y === e[0].y ? o : o.concat(e);
+}
+var He = F, Ne = B, Se = U, Ge = V, je = Y;
 export {
-  vo as Content,
-  So as Group,
-  mo as Icon,
-  Co as Item,
-  xo as ItemIndicator,
-  yo as ItemText,
-  wo as Label,
-  ho as Portal,
-  uo as Root,
-  To as ScrollDownButton,
-  Io as ScrollUpButton,
-  Ne as Select,
-  Ht as SelectArrow,
-  Be as SelectContent,
-  Ke as SelectGroup,
-  Le as SelectIcon,
-  je as SelectItem,
-  Ze as SelectItemIndicator,
-  qe as SelectItemText,
-  ze as SelectLabel,
-  ke as SelectPortal,
-  Je as SelectScrollDownButton,
-  $e as SelectScrollUpButton,
-  et as SelectSeparator,
-  Ae as SelectTrigger,
-  De as SelectValue,
-  We as SelectViewport,
-  Po as Separator,
-  po as Trigger,
-  fo as Value,
-  go as Viewport
+  je as Content,
+  Ge as Portal,
+  He as Provider,
+  Ne as Root,
+  B as Tooltip,
+  he as TooltipArrow,
+  Y as TooltipContent,
+  V as TooltipPortal,
+  F as TooltipProvider,
+  U as TooltipTrigger,
+  Se as Trigger
 };

@@ -1,137 +1,221 @@
-import * as d from "react";
-import { useComposedRefs as R } from "./index82.js";
-import { Primitive as M } from "./index85.js";
-import { useCallbackRef as y } from "./index90.js";
-import { jsx as _ } from "react/jsx-runtime";
-var F = "focusScope.autoFocusOnMount", T = "focusScope.autoFocusOnUnmount", N = { bubbles: !1, cancelable: !0 }, K = "FocusScope", k = d.forwardRef((e, n) => {
-  const {
-    loop: t = !1,
-    trapped: u = !1,
-    onMountAutoFocus: p,
-    onUnmountAutoFocus: L,
-    ...g
-  } = e, [o, U] = d.useState(null), E = y(p), v = y(L), b = d.useRef(null), A = R(n, (s) => U(s)), a = d.useRef({
-    paused: !1,
-    pause() {
-      this.paused = !0;
-    },
-    resume() {
-      this.paused = !1;
-    }
-  }).current;
-  d.useEffect(() => {
-    if (u) {
-      let s = function(i) {
-        if (a.paused || !o) return;
-        const c = i.target;
-        o.contains(c) ? b.current = c : f(b.current, { select: !0 });
-      }, l = function(i) {
-        if (a.paused || !o) return;
-        const c = i.relatedTarget;
-        c !== null && (o.contains(c) || f(b.current, { select: !0 }));
-      }, r = function(i) {
-        if (document.activeElement === document.body)
-          for (const h of i)
-            h.removedNodes.length > 0 && f(o);
-      };
-      document.addEventListener("focusin", s), document.addEventListener("focusout", l);
-      const m = new MutationObserver(r);
-      return o && m.observe(o, { childList: !0, subtree: !0 }), () => {
-        document.removeEventListener("focusin", s), document.removeEventListener("focusout", l), m.disconnect();
-      };
-    }
-  }, [u, o, a.paused]), d.useEffect(() => {
-    if (o) {
-      S.add(a);
-      const s = document.activeElement;
-      if (!o.contains(s)) {
-        const r = new CustomEvent(F, N);
-        o.addEventListener(F, E), o.dispatchEvent(r), r.defaultPrevented || (w(W(I(o)), { select: !0 }), document.activeElement === s && f(o));
+import * as p from "react";
+import { useFloating as xe, offset as Pe, shift as ye, flip as Ae, size as ve, arrow as Ce, hide as be, limitShift as Se } from "./index129.js";
+import { Root as Oe } from "./index130.js";
+import { useComposedRefs as j } from "./index88.js";
+import { createContextScope as Re } from "./index87.js";
+import { Primitive as z } from "./index95.js";
+import { useCallbackRef as Ee } from "./index106.js";
+import { useLayoutEffect as T } from "./index107.js";
+import { useSize as Ne } from "./index93.js";
+import { jsx as f } from "react/jsx-runtime";
+import { autoUpdate as _e } from "./index131.js";
+var N = "Popper", [L, Ue] = Re(N), [$e, Z] = L(N), U = (e) => {
+  const { __scopePopper: s, children: a } = e, [t, i] = p.useState(null);
+  return /* @__PURE__ */ f($e, { scope: s, anchor: t, onAnchorChange: i, children: a });
+};
+U.displayName = N;
+var q = "PopperAnchor", G = p.forwardRef(
+  (e, s) => {
+    const { __scopePopper: a, virtualRef: t, ...i } = e, r = Z(q, a), o = p.useRef(null), w = j(s, o), n = p.useRef(null);
+    return p.useEffect(() => {
+      const c = n.current;
+      n.current = (t == null ? void 0 : t.current) || o.current, c !== n.current && r.onAnchorChange(n.current);
+    }), t ? null : /* @__PURE__ */ f(z.div, { ...i, ref: w });
+  }
+);
+G.displayName = q;
+var _ = "PopperContent", [He, We] = L(_), J = p.forwardRef(
+  (e, s) => {
+    var Y, M, X, D, F, k;
+    const {
+      __scopePopper: a,
+      side: t = "bottom",
+      sideOffset: i = 0,
+      align: r = "center",
+      alignOffset: o = 0,
+      arrowPadding: w = 0,
+      avoidCollisions: n = !0,
+      collisionBoundary: c = [],
+      collisionPadding: x = 0,
+      sticky: m = "partial",
+      hideWhenDetached: y = !1,
+      updatePositionStrategy: A = "optimized",
+      onPlaced: l,
+      ...d
+    } = e, v = Z(_, a), [h, C] = p.useState(null), ee = j(s, (P) => C(P)), [E, te] = p.useState(null), u = Ne(E), re = (u == null ? void 0 : u.width) ?? 0, $ = (u == null ? void 0 : u.height) ?? 0, oe = t + (r !== "center" ? "-" + r : ""), ne = typeof x == "number" ? x : { top: 0, right: 0, bottom: 0, left: 0, ...x }, H = Array.isArray(c) ? c : [c], ae = H.length > 0, b = {
+      padding: ne,
+      boundary: H.filter(Ye),
+      // with `strategy: 'fixed'`, this is the only way to get it to respect boundaries
+      altBoundary: ae
+    }, { refs: ie, floatingStyles: W, placement: se, isPositioned: S, middlewareData: g } = xe({
+      // default to `fixed` strategy so users don't have to pick and we also avoid focus scroll issues
+      strategy: "fixed",
+      placement: oe,
+      whileElementsMounted: (...P) => _e(...P, {
+        animationFrame: A === "always"
+      }),
+      elements: {
+        reference: v.anchor
+      },
+      middleware: [
+        Pe({ mainAxis: i + $, alignmentAxis: o }),
+        n && ye({
+          mainAxis: !0,
+          crossAxis: !1,
+          limiter: m === "partial" ? Se() : void 0,
+          ...b
+        }),
+        n && Ae({ ...b }),
+        ve({
+          ...b,
+          apply: ({ elements: P, rects: B, availableWidth: he, availableHeight: ue }) => {
+            const { width: ge, height: we } = B.reference, R = P.floating.style;
+            R.setProperty("--radix-popper-available-width", `${he}px`), R.setProperty("--radix-popper-available-height", `${ue}px`), R.setProperty("--radix-popper-anchor-width", `${ge}px`), R.setProperty("--radix-popper-anchor-height", `${we}px`);
+          }
+        }),
+        E && Ce({ element: E, padding: w }),
+        Me({ arrowWidth: re, arrowHeight: $ }),
+        y && be({ strategy: "referenceHidden", ...b })
+      ]
+    }), [I, ce] = V(se), O = Ee(l);
+    T(() => {
+      S && (O == null || O());
+    }, [S, O]);
+    const pe = (Y = g.arrow) == null ? void 0 : Y.x, de = (M = g.arrow) == null ? void 0 : M.y, le = ((X = g.arrow) == null ? void 0 : X.centerOffset) !== 0, [fe, me] = p.useState();
+    return T(() => {
+      h && me(window.getComputedStyle(h).zIndex);
+    }, [h]), /* @__PURE__ */ f(
+      "div",
+      {
+        ref: ie.setFloating,
+        "data-radix-popper-content-wrapper": "",
+        style: {
+          ...W,
+          transform: S ? W.transform : "translate(0, -200%)",
+          // keep off the page when measuring
+          minWidth: "max-content",
+          zIndex: fe,
+          "--radix-popper-transform-origin": [
+            (D = g.transformOrigin) == null ? void 0 : D.x,
+            (F = g.transformOrigin) == null ? void 0 : F.y
+          ].join(" "),
+          // hide the content if using the hide middleware and should be hidden
+          // set visibility to hidden and disable pointer events so the UI behaves
+          // as if the PopperContent isn't there at all
+          ...((k = g.hide) == null ? void 0 : k.referenceHidden) && {
+            visibility: "hidden",
+            pointerEvents: "none"
+          }
+        },
+        dir: e.dir,
+        children: /* @__PURE__ */ f(
+          He,
+          {
+            scope: a,
+            placedSide: I,
+            onArrowChange: te,
+            arrowX: pe,
+            arrowY: de,
+            shouldHideArrow: le,
+            children: /* @__PURE__ */ f(
+              z.div,
+              {
+                "data-side": I,
+                "data-align": ce,
+                ...d,
+                ref: ee,
+                style: {
+                  ...d.style,
+                  // if the PopperContent hasn't been placed yet (not all measurements done)
+                  // we prevent animations so that users's animation don't kick in too early referring wrong sides
+                  animation: S ? void 0 : "none"
+                }
+              }
+            )
+          }
+        )
       }
-      return () => {
-        o.removeEventListener(F, E), setTimeout(() => {
-          const r = new CustomEvent(T, N);
-          o.addEventListener(T, v), o.dispatchEvent(r), r.defaultPrevented || f(s ?? document.body, { select: !0 }), o.removeEventListener(T, v), S.remove(a);
-        }, 0);
-      };
-    }
-  }, [o, E, v, a]);
-  const P = d.useCallback(
-    (s) => {
-      if (!t && !u || a.paused) return;
-      const l = s.key === "Tab" && !s.altKey && !s.ctrlKey && !s.metaKey, r = document.activeElement;
-      if (l && r) {
-        const m = s.currentTarget, [i, c] = x(m);
-        i && c ? !s.shiftKey && r === c ? (s.preventDefault(), t && f(i, { select: !0 })) : s.shiftKey && r === i && (s.preventDefault(), t && f(c, { select: !0 })) : r === m && s.preventDefault();
+    );
+  }
+);
+J.displayName = _;
+var K = "PopperArrow", Ie = {
+  top: "bottom",
+  right: "left",
+  bottom: "top",
+  left: "right"
+}, Q = p.forwardRef(function(s, a) {
+  const { __scopePopper: t, ...i } = s, r = We(K, t), o = Ie[r.placedSide];
+  return (
+    // we have to use an extra wrapper because `ResizeObserver` (used by `useSize`)
+    // doesn't report size as we'd expect on SVG elements.
+    // it reports their bounding box which is effectively the largest path inside the SVG.
+    /* @__PURE__ */ f(
+      "span",
+      {
+        ref: r.onArrowChange,
+        style: {
+          position: "absolute",
+          left: r.arrowX,
+          top: r.arrowY,
+          [o]: 0,
+          transformOrigin: {
+            top: "",
+            right: "0 0",
+            bottom: "center 0",
+            left: "100% 0"
+          }[r.placedSide],
+          transform: {
+            top: "translateY(100%)",
+            right: "translateY(50%) rotate(90deg) translateX(-50%)",
+            bottom: "rotate(180deg)",
+            left: "translateY(50%) rotate(-90deg) translateX(50%)"
+          }[r.placedSide],
+          visibility: r.shouldHideArrow ? "hidden" : void 0
+        },
+        children: /* @__PURE__ */ f(
+          Oe,
+          {
+            ...i,
+            ref: a,
+            style: {
+              ...i.style,
+              // ensures the element can be measured correctly (mostly for if SVG)
+              display: "block"
+            }
+          }
+        )
       }
-    },
-    [t, u, a.paused]
+    )
   );
-  return /* @__PURE__ */ _(M.div, { tabIndex: -1, ...g, ref: A, onKeyDown: P });
 });
-k.displayName = K;
-function w(e, { select: n = !1 } = {}) {
-  const t = document.activeElement;
-  for (const u of e)
-    if (f(u, { select: n }), document.activeElement !== t) return;
+Q.displayName = K;
+function Ye(e) {
+  return e !== null;
 }
-function x(e) {
-  const n = I(e), t = O(n, e), u = O(n.reverse(), e);
-  return [t, u];
-}
-function I(e) {
-  const n = [], t = document.createTreeWalker(e, NodeFilter.SHOW_ELEMENT, {
-    acceptNode: (u) => {
-      const p = u.tagName === "INPUT" && u.type === "hidden";
-      return u.disabled || u.hidden || p ? NodeFilter.FILTER_SKIP : u.tabIndex >= 0 ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_SKIP;
-    }
-  });
-  for (; t.nextNode(); ) n.push(t.currentNode);
-  return n;
-}
-function O(e, n) {
-  for (const t of e)
-    if (!D(t, { upTo: n })) return t;
-}
-function D(e, { upTo: n }) {
-  if (getComputedStyle(e).visibility === "hidden") return !0;
-  for (; e; ) {
-    if (n !== void 0 && e === n) return !1;
-    if (getComputedStyle(e).display === "none") return !0;
-    e = e.parentElement;
+var Me = (e) => ({
+  name: "transformOrigin",
+  options: e,
+  fn(s) {
+    var v, h, C;
+    const { placement: a, rects: t, middlewareData: i } = s, o = ((v = i.arrow) == null ? void 0 : v.centerOffset) !== 0, w = o ? 0 : e.arrowWidth, n = o ? 0 : e.arrowHeight, [c, x] = V(a), m = { start: "0%", center: "50%", end: "100%" }[x], y = (((h = i.arrow) == null ? void 0 : h.x) ?? 0) + w / 2, A = (((C = i.arrow) == null ? void 0 : C.y) ?? 0) + n / 2;
+    let l = "", d = "";
+    return c === "bottom" ? (l = o ? m : `${y}px`, d = `${-n}px`) : c === "top" ? (l = o ? m : `${y}px`, d = `${t.floating.height + n}px`) : c === "right" ? (l = `${-n}px`, d = o ? m : `${A}px`) : c === "left" && (l = `${t.floating.width + n}px`, d = o ? m : `${A}px`), { data: { x: l, y: d } };
   }
-  return !1;
+});
+function V(e) {
+  const [s, a = "center"] = e.split("-");
+  return [s, a];
 }
-function H(e) {
-  return e instanceof HTMLInputElement && "select" in e;
-}
-function f(e, { select: n = !1 } = {}) {
-  if (e && e.focus) {
-    const t = document.activeElement;
-    e.focus({ preventScroll: !0 }), e !== t && H(e) && n && e.select();
-  }
-}
-var S = V();
-function V() {
-  let e = [];
-  return {
-    add(n) {
-      const t = e[0];
-      n !== t && (t == null || t.pause()), e = C(e, n), e.unshift(n);
-    },
-    remove(n) {
-      var t;
-      e = C(e, n), (t = e[0]) == null || t.resume();
-    }
-  };
-}
-function C(e, n) {
-  const t = [...e], u = t.indexOf(n);
-  return u !== -1 && t.splice(u, 1), t;
-}
-function W(e) {
-  return e.filter((n) => n.tagName !== "A");
-}
+var qe = U, Ge = G, Je = J, Ke = Q;
 export {
-  k as FocusScope
+  Ge as Anchor,
+  Ke as Arrow,
+  Je as Content,
+  U as Popper,
+  G as PopperAnchor,
+  Q as PopperArrow,
+  J as PopperContent,
+  qe as Root,
+  Ue as createPopperScope
 };

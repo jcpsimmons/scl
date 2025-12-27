@@ -5,10 +5,6 @@ export interface ProgressProps extends React.ComponentPropsWithoutRef<typeof Pro
     value?: number;
     /** Number of segments/blocks to display */
     segments?: number;
-    /** Enable color changing based on progress ranges (red/yellow/green) */
-    colorRange?: boolean;
-    /** Single color to use (default: 'yellow') */
-    color?: 'red' | 'yellow' | 'green' | 'magenta' | 'blue';
     /** Show percentage text */
     showPercentage?: boolean;
     /** Custom label text */

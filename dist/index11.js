@@ -1,27 +1,27 @@
 import { jsx as e } from "react/jsx-runtime";
-import * as s from "react";
-import { Checkbox as t, CheckboxIndicator as a } from "./index47.js";
+import * as c from "react";
+import { Checkbox as o, CheckboxIndicator as s } from "./index46.js";
 import { cn as r } from "./index2.js";
-import l from "./index48.js";
-const f = s.forwardRef(({ className: c, ...o }, i) => /* @__PURE__ */ e(
-  t,
+import m from "./index47.js";
+const n = c.forwardRef(({ className: i, ...t }, a) => /* @__PURE__ */ e(
+  o,
   {
-    ref: i,
+    ref: a,
     className: r(
-      "peer h-6 w-6 shrink-0 border-2 border-[#00ff00] bg-black focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-[#00ff00] data-[state=checked]:text-black flex items-center justify-center",
-      c
+      "peer h-6 w-6 shrink-0 border-2 border-primary bg-background focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground flex items-center justify-center",
+      i
     ),
-    ...o,
+    ...t,
     children: /* @__PURE__ */ e(
-      a,
+      s,
       {
         className: r("flex items-center justify-center text-current"),
-        children: /* @__PURE__ */ e(l, { className: "h-5 w-5" })
+        children: /* @__PURE__ */ e(m, { className: "h-5 w-5" })
       }
     )
   }
 ));
-f.displayName = t.displayName;
+n.displayName = o.displayName;
 export {
-  f as Checkbox
+  n as Checkbox
 };

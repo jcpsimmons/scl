@@ -1,127 +1,243 @@
-import * as l from "react";
-import { createContextScope as w } from "./index80.js";
-import { useComposedRefs as v } from "./index82.js";
-import { createDialogScope as A, Root as M, Portal as x, Trigger as I, Overlay as L, WarningProvider as $, Content as F, Title as G, Description as j, Close as f } from "./index59.js";
-import { composeEventHandlers as W } from "./index83.js";
-import { createSlottable as Y } from "./index99.js";
-import { jsx as i, jsxs as q } from "react/jsx-runtime";
-var D = "AlertDialog", [B] = w(D, [
-  A
-]), n = A(), m = (e) => {
-  const { __scopeAlertDialog: o, ...r } = e, t = n(o);
-  return /* @__PURE__ */ i(M, { ...t, ...r, modal: !0 });
+import * as i from "react";
+import { composeEventHandlers as P } from "./index89.js";
+import { useComposedRefs as O } from "./index88.js";
+import { createContextScope as G } from "./index87.js";
+import { DismissableLayer as H } from "./index101.js";
+import { useFocusGuards as K } from "./index110.js";
+import { FocusScope as $ } from "./index111.js";
+import { useId as j } from "./index97.js";
+import { createPopperScope as _, Root as U, Anchor as x, Content as V, Arrow as W } from "./index102.js";
+import { Portal as Z } from "./index103.js";
+import { Presence as w } from "./index94.js";
+import { Primitive as E } from "./index95.js";
+import { createSlot as q } from "./index90.js";
+import { useControllableState as z } from "./index91.js";
+import { hideOthers as B } from "./index112.js";
+import J from "./index113.js";
+import { jsx as p } from "react/jsx-runtime";
+var C = "Popover", [b] = G(C, [
+  _
+]), m = _(), [Q, f] = b(C), F = (o) => {
+  const {
+    __scopePopover: n,
+    children: t,
+    open: a,
+    defaultOpen: e,
+    onOpenChange: r,
+    modal: s = !1
+  } = o, c = m(n), u = i.useRef(null), [l, g] = i.useState(!1), [h, d] = z({
+    prop: a,
+    defaultProp: e ?? !1,
+    onChange: r,
+    caller: C
+  });
+  return /* @__PURE__ */ p(U, { ...c, children: /* @__PURE__ */ p(
+    Q,
+    {
+      scope: n,
+      contentId: j(),
+      triggerRef: u,
+      open: h,
+      onOpenChange: d,
+      onOpenToggle: i.useCallback(() => d((R) => !R), [d]),
+      hasCustomAnchor: l,
+      onCustomAnchorAdd: i.useCallback(() => g(!0), []),
+      onCustomAnchorRemove: i.useCallback(() => g(!1), []),
+      modal: s,
+      children: t
+    }
+  ) });
 };
-m.displayName = D;
-var H = "AlertDialogTrigger", y = l.forwardRef(
-  (e, o) => {
-    const { __scopeAlertDialog: r, ...t } = e, a = n(r);
-    return /* @__PURE__ */ i(I, { ...a, ...t, ref: o });
+F.displayName = C;
+var N = "PopoverAnchor", S = i.forwardRef(
+  (o, n) => {
+    const { __scopePopover: t, ...a } = o, e = f(N, t), r = m(t), { onCustomAnchorAdd: s, onCustomAnchorRemove: c } = e;
+    return i.useEffect(() => (s(), () => c()), [s, c]), /* @__PURE__ */ p(x, { ...r, ...a, ref: n });
   }
 );
-y.displayName = H;
-var V = "AlertDialogPortal", _ = (e) => {
-  const { __scopeAlertDialog: o, ...r } = e, t = n(o);
-  return /* @__PURE__ */ i(x, { ...t, ...r });
-};
-_.displayName = V;
-var k = "AlertDialogOverlay", N = l.forwardRef(
-  (e, o) => {
-    const { __scopeAlertDialog: r, ...t } = e, a = n(r);
-    return /* @__PURE__ */ i(L, { ...a, ...t, ref: o });
+S.displayName = N;
+var y = "PopoverTrigger", D = i.forwardRef(
+  (o, n) => {
+    const { __scopePopover: t, ...a } = o, e = f(y, t), r = m(t), s = O(n, e.triggerRef), c = /* @__PURE__ */ p(
+      E.button,
+      {
+        type: "button",
+        "aria-haspopup": "dialog",
+        "aria-expanded": e.open,
+        "aria-controls": e.contentId,
+        "data-state": L(e.open),
+        ...a,
+        ref: s,
+        onClick: P(o.onClick, e.onOpenToggle)
+      }
+    );
+    return e.hasCustomAnchor ? c : /* @__PURE__ */ p(x, { asChild: !0, ...r, children: c });
   }
 );
-N.displayName = k;
-var s = "AlertDialogContent", [z, J] = B(s), K = Y("AlertDialogContent"), R = l.forwardRef(
-  (e, o) => {
-    const { __scopeAlertDialog: r, children: t, ...a } = e, g = n(r), p = l.useRef(null), b = v(o, p), d = l.useRef(null);
-    return /* @__PURE__ */ i(
+D.displayName = y;
+var A = "PopoverPortal", [X, Y] = b(A, {
+  forceMount: void 0
+}), M = (o) => {
+  const { __scopePopover: n, forceMount: t, children: a, container: e } = o, r = f(A, n);
+  return /* @__PURE__ */ p(X, { scope: n, forceMount: t, children: /* @__PURE__ */ p(w, { present: t || r.open, children: /* @__PURE__ */ p(Z, { asChild: !0, container: e, children: a }) }) });
+};
+M.displayName = A;
+var v = "PopoverContent", k = i.forwardRef(
+  (o, n) => {
+    const t = Y(v, o.__scopePopover), { forceMount: a = t.forceMount, ...e } = o, r = f(v, o.__scopePopover);
+    return /* @__PURE__ */ p(w, { present: a || r.open, children: r.modal ? /* @__PURE__ */ p(eo, { ...e, ref: n }) : /* @__PURE__ */ p(ro, { ...e, ref: n }) });
+  }
+);
+k.displayName = v;
+var oo = q("PopoverContent.RemoveScroll"), eo = i.forwardRef(
+  (o, n) => {
+    const t = f(v, o.__scopePopover), a = i.useRef(null), e = O(n, a), r = i.useRef(!1);
+    return i.useEffect(() => {
+      const s = a.current;
+      if (s) return B(s);
+    }, []), /* @__PURE__ */ p(J, { as: oo, allowPinchZoom: !0, children: /* @__PURE__ */ p(
+      I,
+      {
+        ...o,
+        ref: e,
+        trapFocus: t.open,
+        disableOutsidePointerEvents: !0,
+        onCloseAutoFocus: P(o.onCloseAutoFocus, (s) => {
+          var c;
+          s.preventDefault(), r.current || (c = t.triggerRef.current) == null || c.focus();
+        }),
+        onPointerDownOutside: P(
+          o.onPointerDownOutside,
+          (s) => {
+            const c = s.detail.originalEvent, u = c.button === 0 && c.ctrlKey === !0, l = c.button === 2 || u;
+            r.current = l;
+          },
+          { checkForDefaultPrevented: !1 }
+        ),
+        onFocusOutside: P(
+          o.onFocusOutside,
+          (s) => s.preventDefault(),
+          { checkForDefaultPrevented: !1 }
+        )
+      }
+    ) });
+  }
+), ro = i.forwardRef(
+  (o, n) => {
+    const t = f(v, o.__scopePopover), a = i.useRef(!1), e = i.useRef(!1);
+    return /* @__PURE__ */ p(
+      I,
+      {
+        ...o,
+        ref: n,
+        trapFocus: !1,
+        disableOutsidePointerEvents: !1,
+        onCloseAutoFocus: (r) => {
+          var s, c;
+          (s = o.onCloseAutoFocus) == null || s.call(o, r), r.defaultPrevented || (a.current || (c = t.triggerRef.current) == null || c.focus(), r.preventDefault()), a.current = !1, e.current = !1;
+        },
+        onInteractOutside: (r) => {
+          var u, l;
+          (u = o.onInteractOutside) == null || u.call(o, r), r.defaultPrevented || (a.current = !0, r.detail.originalEvent.type === "pointerdown" && (e.current = !0));
+          const s = r.target;
+          ((l = t.triggerRef.current) == null ? void 0 : l.contains(s)) && r.preventDefault(), r.detail.originalEvent.type === "focusin" && e.current && r.preventDefault();
+        }
+      }
+    );
+  }
+), I = i.forwardRef(
+  (o, n) => {
+    const {
+      __scopePopover: t,
+      trapFocus: a,
+      onOpenAutoFocus: e,
+      onCloseAutoFocus: r,
+      disableOutsidePointerEvents: s,
+      onEscapeKeyDown: c,
+      onPointerDownOutside: u,
+      onFocusOutside: l,
+      onInteractOutside: g,
+      ...h
+    } = o, d = f(v, t), R = m(t);
+    return K(), /* @__PURE__ */ p(
       $,
       {
-        contentName: s,
-        titleName: C,
-        docsSlug: "alert-dialog",
-        children: /* @__PURE__ */ i(z, { scope: r, cancelRef: d, children: /* @__PURE__ */ q(
-          F,
+        asChild: !0,
+        loop: !0,
+        trapped: a,
+        onMountAutoFocus: e,
+        onUnmountAutoFocus: r,
+        children: /* @__PURE__ */ p(
+          H,
           {
-            role: "alertdialog",
-            ...g,
-            ...a,
-            ref: b,
-            onOpenAutoFocus: W(a.onOpenAutoFocus, (c) => {
-              var u;
-              c.preventDefault(), (u = d.current) == null || u.focus({ preventScroll: !0 });
-            }),
-            onPointerDownOutside: (c) => c.preventDefault(),
-            onInteractOutside: (c) => c.preventDefault(),
-            children: [
-              /* @__PURE__ */ i(K, { children: t }),
-              /* @__PURE__ */ i(U, { contentRef: p })
-            ]
+            asChild: !0,
+            disableOutsidePointerEvents: s,
+            onInteractOutside: g,
+            onEscapeKeyDown: c,
+            onPointerDownOutside: u,
+            onFocusOutside: l,
+            onDismiss: () => d.onOpenChange(!1),
+            children: /* @__PURE__ */ p(
+              V,
+              {
+                "data-state": L(d.open),
+                role: "dialog",
+                id: d.contentId,
+                ...R,
+                ...h,
+                ref: n,
+                style: {
+                  ...h.style,
+                  "--radix-popover-content-transform-origin": "var(--radix-popper-transform-origin)",
+                  "--radix-popover-content-available-width": "var(--radix-popper-available-width)",
+                  "--radix-popover-content-available-height": "var(--radix-popper-available-height)",
+                  "--radix-popover-trigger-width": "var(--radix-popper-anchor-width)",
+                  "--radix-popover-trigger-height": "var(--radix-popper-anchor-height)"
+                }
+              }
+            )
           }
-        ) })
+        )
+      }
+    );
+  }
+), T = "PopoverClose", to = i.forwardRef(
+  (o, n) => {
+    const { __scopePopover: t, ...a } = o, e = f(T, t);
+    return /* @__PURE__ */ p(
+      E.button,
+      {
+        type: "button",
+        ...a,
+        ref: n,
+        onClick: P(o.onClick, () => e.onOpenChange(!1))
       }
     );
   }
 );
-R.displayName = s;
-var C = "AlertDialogTitle", h = l.forwardRef(
-  (e, o) => {
-    const { __scopeAlertDialog: r, ...t } = e, a = n(r);
-    return /* @__PURE__ */ i(G, { ...a, ...t, ref: o });
+to.displayName = T;
+var no = "PopoverArrow", ao = i.forwardRef(
+  (o, n) => {
+    const { __scopePopover: t, ...a } = o, e = m(t);
+    return /* @__PURE__ */ p(W, { ...e, ...a, ref: n });
   }
 );
-h.displayName = C;
-var E = "AlertDialogDescription", P = l.forwardRef((e, o) => {
-  const { __scopeAlertDialog: r, ...t } = e, a = n(r);
-  return /* @__PURE__ */ i(j, { ...a, ...t, ref: o });
-});
-P.displayName = E;
-var Q = "AlertDialogAction", S = l.forwardRef(
-  (e, o) => {
-    const { __scopeAlertDialog: r, ...t } = e, a = n(r);
-    return /* @__PURE__ */ i(f, { ...a, ...t, ref: o });
-  }
-);
-S.displayName = Q;
-var T = "AlertDialogCancel", O = l.forwardRef(
-  (e, o) => {
-    const { __scopeAlertDialog: r, ...t } = e, { cancelRef: a } = J(T, r), g = n(r), p = v(o, a);
-    return /* @__PURE__ */ i(f, { ...g, ...t, ref: p });
-  }
-);
-O.displayName = T;
-var U = ({ contentRef: e }) => {
-  const o = `\`${s}\` requires a description for the component to be accessible for screen reader users.
-
-You can add a description to the \`${s}\` by passing a \`${E}\` component as a child, which also benefits sighted users by adding visible context to the dialog.
-
-Alternatively, you can use your own component as a description by assigning it an \`id\` and passing the same value to the \`aria-describedby\` prop in \`${s}\`. If the description is confusing or duplicative for sighted users, you can use the \`@radix-ui/react-visually-hidden\` primitive as a wrapper around your description component.
-
-For more information, see https://radix-ui.com/primitives/docs/components/alert-dialog`;
-  return l.useEffect(() => {
-    var t;
-    document.getElementById(
-      (t = e.current) == null ? void 0 : t.getAttribute("aria-describedby")
-    ) || console.warn(o);
-  }, [o, e]), null;
-}, ae = m, ie = y, le = _, ne = N, se = R, ce = S, pe = O, ge = h, de = P;
+ao.displayName = no;
+function L(o) {
+  return o ? "open" : "closed";
+}
+var _o = F, xo = S, wo = D, Eo = M, bo = k;
 export {
-  ce as Action,
-  m as AlertDialog,
-  S as AlertDialogAction,
-  O as AlertDialogCancel,
-  R as AlertDialogContent,
-  P as AlertDialogDescription,
-  N as AlertDialogOverlay,
-  _ as AlertDialogPortal,
-  h as AlertDialogTitle,
-  y as AlertDialogTrigger,
-  pe as Cancel,
-  se as Content,
-  de as Description,
-  ne as Overlay,
-  le as Portal,
-  ae as Root,
-  ge as Title,
-  ie as Trigger
+  xo as Anchor,
+  bo as Content,
+  F as Popover,
+  S as PopoverAnchor,
+  ao as PopoverArrow,
+  to as PopoverClose,
+  k as PopoverContent,
+  M as PopoverPortal,
+  D as PopoverTrigger,
+  Eo as Portal,
+  _o as Root,
+  wo as Trigger
 };

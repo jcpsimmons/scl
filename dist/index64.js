@@ -1,2635 +1,1260 @@
-import { findClusterBreak as Le } from "./index110.js";
-class x {
-  /**
-  Get the line description around the given position.
-  */
-  lineAt(e) {
-    if (e < 0 || e > this.length)
-      throw new RangeError(`Invalid position ${e} in document of length ${this.length}`);
-    return this.lineInner(e, !1, 1, 0);
-  }
-  /**
-  Get the description for the given (1-based) line number.
-  */
-  line(e) {
-    if (e < 1 || e > this.lines)
-      throw new RangeError(`Invalid line number ${e} in ${this.lines}-line document`);
-    return this.lineInner(e, !0, 1, 0);
-  }
-  /**
-  Replace a range of the text with the given content.
-  */
-  replace(e, t, n) {
-    [e, t] = J(this, e, t);
-    let i = [];
-    return this.decompose(
-      0,
-      e,
-      i,
-      2
-      /* Open.To */
-    ), n.length && n.decompose(
-      0,
-      n.length,
-      i,
-      3
-      /* Open.To */
-    ), this.decompose(
-      t,
-      this.length,
-      i,
-      1
-      /* Open.From */
-    ), O.from(i, this.length - (t - e) + n.length);
-  }
-  /**
-  Append another document to this one.
-  */
-  append(e) {
-    return this.replace(this.length, this.length, e);
-  }
-  /**
-  Retrieve the text between the given points.
-  */
-  slice(e, t = this.length) {
-    [e, t] = J(this, e, t);
-    let n = [];
-    return this.decompose(e, t, n, 0), O.from(n, t - e);
-  }
-  /**
-  Test whether this text is equal to another instance.
-  */
-  eq(e) {
-    if (e == this)
-      return !0;
-    if (e.length != this.length || e.lines != this.lines)
-      return !1;
-    let t = this.scanIdentical(e, 1), n = this.length - this.scanIdentical(e, -1), i = new D(this), s = new D(e);
-    for (let r = t, h = t; ; ) {
-      if (i.next(r), s.next(r), r = 0, i.lineBreak != s.lineBreak || i.done != s.done || i.value != s.value)
-        return !1;
-      if (h += i.value.length, i.done || h >= n)
-        return !0;
-    }
-  }
-  /**
-  Iterate over the text. When `dir` is `-1`, iteration happens
-  from end to start. This will return lines and the breaks between
-  them as separate strings.
-  */
-  iter(e = 1) {
-    return new D(this, e);
-  }
-  /**
-  Iterate over a range of the text. When `from` > `to`, the
-  iterator will run in reverse.
-  */
-  iterRange(e, t = this.length) {
-    return new Se(this, e, t);
-  }
-  /**
-  Return a cursor that iterates over the given range of lines,
-  _without_ returning the line breaks between, and yielding empty
-  strings for empty lines.
-  
-  When `from` and `to` are given, they should be 1-based line numbers.
-  */
-  iterLines(e, t) {
-    let n;
-    if (e == null)
-      n = this.iter();
-    else {
-      t == null && (t = this.lines + 1);
-      let i = this.line(e).from;
-      n = this.iterRange(i, Math.max(i, t == this.lines + 1 ? this.length : t <= 1 ? 0 : this.line(t - 1).to));
-    }
-    return new Ie(n);
-  }
-  /**
-  Return the document as a string, using newline characters to
-  separate lines.
-  */
-  toString() {
-    return this.sliceString(0);
-  }
-  /**
-  Convert the document to an array of lines (which can be
-  deserialized again via [`Text.of`](https://codemirror.net/6/docs/ref/#state.Text^of)).
-  */
-  toJSON() {
-    let e = [];
-    return this.flatten(e), e;
-  }
-  /**
-  @internal
-  */
-  constructor() {
-  }
-  /**
-  Create a `Text` instance for the given array of lines.
-  */
-  static of(e) {
-    if (e.length == 0)
-      throw new RangeError("A document must have at least one line");
-    return e.length == 1 && !e[0] ? x.empty : e.length <= 32 ? new m(e) : O.from(m.split(e, []));
-  }
+import { NodeProp as p, Tree as x, IterMode as me, TreeFragment as P, Parser as ge, NodeType as V } from "./index119.js";
+import { Facet as w, Prec as ke, EditorState as I, countColumn as we, RangeSetBuilder as ye, StateEffect as O, StateField as ee, combineConfig as ve } from "./index56.js";
+import { EditorView as y, ViewPlugin as te, Decoration as g, logException as be, WidgetType as re, Direction as z } from "./index55.js";
+import { tagHighlighter as xe, highlightTree as Te, tags as Se, styleTags as Ce } from "./index65.js";
+import { StyleModule as q } from "./index114.js";
+var N;
+const T = /* @__PURE__ */ new p();
+function Ae(n) {
+  return w.define({
+    combine: n ? (e) => e.concat(n) : void 0
+  });
 }
-class m extends x {
-  constructor(e, t = Ve(e)) {
-    super(), this.text = e, this.length = t;
-  }
-  get lines() {
-    return this.text.length;
-  }
-  get children() {
-    return null;
-  }
-  lineInner(e, t, n, i) {
-    for (let s = 0; ; s++) {
-      let r = this.text[s], h = i + r.length;
-      if ((t ? n : h) >= e)
-        return new Ne(i, h, n, r);
-      i = h + 1, n++;
-    }
-  }
-  decompose(e, t, n, i) {
-    let s = e <= 0 && t >= this.length ? this : new m(we(this.text, e, t), Math.min(t, this.length) - Math.max(0, e));
-    if (i & 1) {
-      let r = n.pop(), h = Q(s.text, r.text.slice(), 0, s.length);
-      if (h.length <= 32)
-        n.push(new m(h, r.length + s.length));
-      else {
-        let o = h.length >> 1;
-        n.push(new m(h.slice(0, o)), new m(h.slice(o)));
-      }
-    } else
-      n.push(s);
-  }
-  replace(e, t, n) {
-    if (!(n instanceof m))
-      return super.replace(e, t, n);
-    [e, t] = J(this, e, t);
-    let i = Q(this.text, Q(n.text, we(this.text, 0, e)), t), s = this.length + n.length - (t - e);
-    return i.length <= 32 ? new m(i, s) : O.from(m.split(i, []), s);
-  }
-  sliceString(e, t = this.length, n = `
-`) {
-    [e, t] = J(this, e, t);
-    let i = "";
-    for (let s = 0, r = 0; s <= t && r < this.text.length; r++) {
-      let h = this.text[r], o = s + h.length;
-      s > e && r && (i += n), e < o && t > s && (i += h.slice(Math.max(0, e - s), t - s)), s = o + 1;
-    }
-    return i;
-  }
-  flatten(e) {
-    for (let t of this.text)
-      e.push(t);
-  }
-  scanIdentical() {
-    return 0;
-  }
-  static split(e, t) {
-    let n = [], i = -1;
-    for (let s of e)
-      n.push(s), i += s.length + 1, n.length == 32 && (t.push(new m(n, i)), n = [], i = -1);
-    return i > -1 && t.push(new m(n, i)), t;
-  }
-}
-class O extends x {
-  constructor(e, t) {
-    super(), this.children = e, this.length = t, this.lines = 0;
-    for (let n of e)
-      this.lines += n.lines;
-  }
-  lineInner(e, t, n, i) {
-    for (let s = 0; ; s++) {
-      let r = this.children[s], h = i + r.length, o = n + r.lines - 1;
-      if ((t ? o : h) >= e)
-        return r.lineInner(e, t, n, i);
-      i = h + 1, n = o + 1;
-    }
-  }
-  decompose(e, t, n, i) {
-    for (let s = 0, r = 0; r <= t && s < this.children.length; s++) {
-      let h = this.children[s], o = r + h.length;
-      if (e <= o && t >= r) {
-        let a = i & ((r <= e ? 1 : 0) | (o >= t ? 2 : 0));
-        r >= e && o <= t && !a ? n.push(h) : h.decompose(e - r, t - r, n, a);
-      }
-      r = o + 1;
-    }
-  }
-  replace(e, t, n) {
-    if ([e, t] = J(this, e, t), n.lines < this.lines)
-      for (let i = 0, s = 0; i < this.children.length; i++) {
-        let r = this.children[i], h = s + r.length;
-        if (e >= s && t <= h) {
-          let o = r.replace(e - s, t - s, n), a = this.lines - r.lines + o.lines;
-          if (o.lines < a >> 4 && o.lines > a >> 6) {
-            let u = this.children.slice();
-            return u[i] = o, new O(u, this.length - (t - e) + n.length);
-          }
-          return super.replace(s, h, o);
+const Pe = /* @__PURE__ */ new p();
+class c {
+  /**
+  Construct a language object. If you need to invoke this
+  directly, first define a data facet with
+  [`defineLanguageFacet`](https://codemirror.net/6/docs/ref/#language.defineLanguageFacet), and then
+  configure your parser to [attach](https://codemirror.net/6/docs/ref/#language.languageDataProp) it
+  to the language's outer syntax node.
+  */
+  constructor(e, t, r = [], i = "") {
+    this.data = e, this.name = i, I.prototype.hasOwnProperty("tree") || Object.defineProperty(I.prototype, "tree", { get() {
+      return k(this);
+    } }), this.parser = t, this.extension = [
+      C.of(this),
+      I.languageData.of((s, o, a) => {
+        let l = J(s, o, a), u = l.type.prop(T);
+        if (!u)
+          return [];
+        let h = s.facet(u), f = l.type.prop(Pe);
+        if (f) {
+          let m = l.resolve(o - l.from, a);
+          for (let d of f)
+            if (d.test(m, s)) {
+              let v = s.facet(d.facet);
+              return d.type == "replace" ? v : v.concat(h);
+            }
         }
-        s = h + 1;
-      }
-    return super.replace(e, t, n);
-  }
-  sliceString(e, t = this.length, n = `
-`) {
-    [e, t] = J(this, e, t);
-    let i = "";
-    for (let s = 0, r = 0; s < this.children.length && r <= t; s++) {
-      let h = this.children[s], o = r + h.length;
-      r > e && s && (i += n), e < o && t > r && (i += h.sliceString(e - r, t - r, n)), r = o + 1;
-    }
-    return i;
-  }
-  flatten(e) {
-    for (let t of this.children)
-      t.flatten(e);
-  }
-  scanIdentical(e, t) {
-    if (!(e instanceof O))
-      return 0;
-    let n = 0, [i, s, r, h] = t > 0 ? [0, 0, this.children.length, e.children.length] : [this.children.length - 1, e.children.length - 1, -1, -1];
-    for (; ; i += t, s += t) {
-      if (i == r || s == h)
-        return n;
-      let o = this.children[i], a = e.children[s];
-      if (o != a)
-        return n + o.scanIdentical(a, t);
-      n += o.length + 1;
-    }
-  }
-  static from(e, t = e.reduce((n, i) => n + i.length + 1, -1)) {
-    let n = 0;
-    for (let d of e)
-      n += d.lines;
-    if (n < 32) {
-      let d = [];
-      for (let p of e)
-        p.flatten(d);
-      return new m(d, t);
-    }
-    let i = Math.max(
-      32,
-      n >> 5
-      /* Tree.BranchShift */
-    ), s = i << 1, r = i >> 1, h = [], o = 0, a = -1, u = [];
-    function f(d) {
-      let p;
-      if (d.lines > s && d instanceof O)
-        for (let E of d.children)
-          f(E);
-      else d.lines > r && (o > r || !o) ? (c(), h.push(d)) : d instanceof m && o && (p = u[u.length - 1]) instanceof m && d.lines + p.lines <= 32 ? (o += d.lines, a += d.length + 1, u[u.length - 1] = new m(p.text.concat(d.text), p.length + 1 + d.length)) : (o + d.lines > i && c(), o += d.lines, a += d.length + 1, u.push(d));
-    }
-    function c() {
-      o != 0 && (h.push(u.length == 1 ? u[0] : O.from(u, a)), a = -1, o = u.length = 0);
-    }
-    for (let d of e)
-      f(d);
-    return c(), h.length == 1 ? h[0] : new O(h, t);
-  }
-}
-x.empty = /* @__PURE__ */ new m([""], 0);
-function Ve(l) {
-  let e = -1;
-  for (let t of l)
-    e += t.length + 1;
-  return e;
-}
-function Q(l, e, t = 0, n = 1e9) {
-  for (let i = 0, s = 0, r = !0; s < l.length && i <= n; s++) {
-    let h = l[s], o = i + h.length;
-    o >= t && (o > n && (h = h.slice(0, n - i)), i < t && (h = h.slice(t - i)), r ? (e[e.length - 1] += h, r = !1) : e.push(h)), i = o + 1;
-  }
-  return e;
-}
-function we(l, e, t) {
-  return Q(l, [""], e, t);
-}
-class D {
-  constructor(e, t = 1) {
-    this.dir = t, this.done = !1, this.lineBreak = !1, this.value = "", this.nodes = [e], this.offsets = [t > 0 ? 1 : (e instanceof m ? e.text.length : e.children.length) << 1];
-  }
-  nextInner(e, t) {
-    for (this.done = this.lineBreak = !1; ; ) {
-      let n = this.nodes.length - 1, i = this.nodes[n], s = this.offsets[n], r = s >> 1, h = i instanceof m ? i.text.length : i.children.length;
-      if (r == (t > 0 ? h : 0)) {
-        if (n == 0)
-          return this.done = !0, this.value = "", this;
-        t > 0 && this.offsets[n - 1]++, this.nodes.pop(), this.offsets.pop();
-      } else if ((s & 1) == (t > 0 ? 0 : 1)) {
-        if (this.offsets[n] += t, e == 0)
-          return this.lineBreak = !0, this.value = `
-`, this;
-        e--;
-      } else if (i instanceof m) {
-        let o = i.text[r + (t < 0 ? -1 : 0)];
-        if (this.offsets[n] += t, o.length > Math.max(0, e))
-          return this.value = e == 0 ? o : t > 0 ? o.slice(e) : o.slice(0, o.length - e), this;
-        e -= o.length;
-      } else {
-        let o = i.children[r + (t < 0 ? -1 : 0)];
-        e > o.length ? (e -= o.length, this.offsets[n] += t) : (t < 0 && this.offsets[n]--, this.nodes.push(o), this.offsets.push(t > 0 ? 1 : (o instanceof m ? o.text.length : o.children.length) << 1));
-      }
-    }
-  }
-  next(e = 0) {
-    return e < 0 && (this.nextInner(-e, -this.dir), e = this.value.length), this.nextInner(e, this.dir);
-  }
-}
-class Se {
-  constructor(e, t, n) {
-    this.value = "", this.done = !1, this.cursor = new D(e, t > n ? -1 : 1), this.pos = t > n ? e.length : 0, this.from = Math.min(t, n), this.to = Math.max(t, n);
-  }
-  nextInner(e, t) {
-    if (t < 0 ? this.pos <= this.from : this.pos >= this.to)
-      return this.value = "", this.done = !0, this;
-    e += Math.max(0, t < 0 ? this.pos - this.to : this.from - this.pos);
-    let n = t < 0 ? this.pos - this.from : this.to - this.pos;
-    e > n && (e = n), n -= e;
-    let { value: i } = this.cursor.next(e);
-    return this.pos += (i.length + e) * t, this.value = i.length <= n ? i : t < 0 ? i.slice(i.length - n) : i.slice(0, n), this.done = !this.value, this;
-  }
-  next(e = 0) {
-    return e < 0 ? e = Math.max(e, this.from - this.pos) : e > 0 && (e = Math.min(e, this.to - this.pos)), this.nextInner(e, this.cursor.dir);
-  }
-  get lineBreak() {
-    return this.cursor.lineBreak && this.value != "";
-  }
-}
-class Ie {
-  constructor(e) {
-    this.inner = e, this.afterBreak = !0, this.value = "", this.done = !1;
-  }
-  next(e = 0) {
-    let { done: t, lineBreak: n, value: i } = this.inner.next(e);
-    return t && this.afterBreak ? (this.value = "", this.afterBreak = !1) : t ? (this.done = !0, this.value = "") : n ? this.afterBreak ? this.value = "" : (this.afterBreak = !0, this.next()) : (this.value = i, this.afterBreak = !1), this;
-  }
-  get lineBreak() {
-    return !1;
-  }
-}
-typeof Symbol < "u" && (x.prototype[Symbol.iterator] = function() {
-  return this.iter();
-}, D.prototype[Symbol.iterator] = Se.prototype[Symbol.iterator] = Ie.prototype[Symbol.iterator] = function() {
-  return this;
-});
-class Ne {
-  /**
-  @internal
-  */
-  constructor(e, t, n, i) {
-    this.from = e, this.to = t, this.number = n, this.text = i;
+        return h;
+      })
+    ].concat(r);
   }
   /**
-  The length of the line (not including any line break after it).
+  Query whether this language is active at the given position.
   */
-  get length() {
-    return this.to - this.from;
-  }
-}
-function J(l, e, t) {
-  return e = Math.max(0, Math.min(l.length, e)), [e, Math.max(e, Math.min(l.length, t))];
-}
-function Y(l, e, t = !0, n = !0) {
-  return Le(l, e, t, n);
-}
-function De(l) {
-  return l >= 56320 && l < 57344;
-}
-function $e(l) {
-  return l >= 55296 && l < 56320;
-}
-function et(l, e) {
-  let t = l.charCodeAt(e);
-  if (!$e(t) || e + 1 == l.length)
-    return t;
-  let n = l.charCodeAt(e + 1);
-  return De(n) ? (t - 55296 << 10) + (n - 56320) + 65536 : t;
-}
-function tt(l) {
-  return l < 65536 ? 1 : 2;
-}
-const se = /\r\n?|\n/;
-var b = /* @__PURE__ */ function(l) {
-  return l[l.Simple = 0] = "Simple", l[l.TrackDel = 1] = "TrackDel", l[l.TrackBefore = 2] = "TrackBefore", l[l.TrackAfter = 3] = "TrackAfter", l;
-}(b || (b = {}));
-class M {
-  // Sections are encoded as pairs of integers. The first is the
-  // length in the current document, and the second is -1 for
-  // unaffected sections, and the length of the replacement content
-  // otherwise. So an insertion would be (0, n>0), a deletion (n>0,
-  // 0), and a replacement two positive numbers.
-  /**
-  @internal
-  */
-  constructor(e) {
-    this.sections = e;
+  isActiveAt(e, t, r = -1) {
+    return J(e, t, r).type.prop(T) == this.data;
   }
   /**
-  The length of the document before the change.
+  Find the document regions that were parsed using this language.
+  The returned regions will _include_ any nested languages rooted
+  in this language, when those exist.
   */
-  get length() {
-    let e = 0;
-    for (let t = 0; t < this.sections.length; t += 2)
-      e += this.sections[t];
-    return e;
-  }
-  /**
-  The length of the document after the change.
-  */
-  get newLength() {
-    let e = 0;
-    for (let t = 0; t < this.sections.length; t += 2) {
-      let n = this.sections[t + 1];
-      e += n < 0 ? this.sections[t] : n;
-    }
-    return e;
-  }
-  /**
-  False when there are actual changes in this set.
-  */
-  get empty() {
-    return this.sections.length == 0 || this.sections.length == 2 && this.sections[1] < 0;
-  }
-  /**
-  Iterate over the unchanged parts left by these changes. `posA`
-  provides the position of the range in the old document, `posB`
-  the new position in the changed document.
-  */
-  iterGaps(e) {
-    for (let t = 0, n = 0, i = 0; t < this.sections.length; ) {
-      let s = this.sections[t++], r = this.sections[t++];
-      r < 0 ? (e(n, i, s), i += s) : i += r, n += s;
-    }
-  }
-  /**
-  Iterate over the ranges changed by these changes. (See
-  [`ChangeSet.iterChanges`](https://codemirror.net/6/docs/ref/#state.ChangeSet.iterChanges) for a
-  variant that also provides you with the inserted text.)
-  `fromA`/`toA` provides the extent of the change in the starting
-  document, `fromB`/`toB` the extent of the replacement in the
-  changed document.
-  
-  When `individual` is true, adjacent changes (which are kept
-  separate for [position mapping](https://codemirror.net/6/docs/ref/#state.ChangeDesc.mapPos)) are
-  reported separately.
-  */
-  iterChangedRanges(e, t = !1) {
-    re(this, e, t);
-  }
-  /**
-  Get a description of the inverted form of these changes.
-  */
-  get invertedDesc() {
-    let e = [];
-    for (let t = 0; t < this.sections.length; ) {
-      let n = this.sections[t++], i = this.sections[t++];
-      i < 0 ? e.push(n, i) : e.push(i, n);
-    }
-    return new M(e);
-  }
-  /**
-  Compute the combined effect of applying another set of changes
-  after this one. The length of the document after this set should
-  match the length before `other`.
-  */
-  composeDesc(e) {
-    return this.empty ? e : e.empty ? this : Pe(this, e);
-  }
-  /**
-  Map this description, which should start with the same document
-  as `other`, over another set of changes, so that it can be
-  applied after it. When `before` is true, map as if the changes
-  in `this` happened before the ones in `other`.
-  */
-  mapDesc(e, t = !1) {
-    return e.empty ? this : le(this, e, t);
-  }
-  mapPos(e, t = -1, n = b.Simple) {
-    let i = 0, s = 0;
-    for (let r = 0; r < this.sections.length; ) {
-      let h = this.sections[r++], o = this.sections[r++], a = i + h;
-      if (o < 0) {
-        if (a > e)
-          return s + (e - i);
-        s += h;
-      } else {
-        if (n != b.Simple && a >= e && (n == b.TrackDel && i < e && a > e || n == b.TrackBefore && i < e || n == b.TrackAfter && a > e))
-          return null;
-        if (a > e || a == e && t < 0 && !h)
-          return e == i || t < 0 ? s : s + o;
-        s += o;
-      }
-      i = a;
-    }
-    if (e > i)
-      throw new RangeError(`Position ${e} is out of range for changeset of length ${i}`);
-    return s;
-  }
-  /**
-  Check whether these changes touch a given range. When one of the
-  changes entirely covers the range, the string `"cover"` is
-  returned.
-  */
-  touchesRange(e, t = e) {
-    for (let n = 0, i = 0; n < this.sections.length && i <= t; ) {
-      let s = this.sections[n++], r = this.sections[n++], h = i + s;
-      if (r >= 0 && i <= t && h >= e)
-        return i < e && h > t ? "cover" : !0;
-      i = h;
-    }
-    return !1;
-  }
-  /**
-  @internal
-  */
-  toString() {
-    let e = "";
-    for (let t = 0; t < this.sections.length; ) {
-      let n = this.sections[t++], i = this.sections[t++];
-      e += (e ? " " : "") + n + (i >= 0 ? ":" + i : "");
-    }
-    return e;
-  }
-  /**
-  Serialize this change desc to a JSON-representable value.
-  */
-  toJSON() {
-    return this.sections;
-  }
-  /**
-  Create a change desc from its JSON representation (as produced
-  by [`toJSON`](https://codemirror.net/6/docs/ref/#state.ChangeDesc.toJSON).
-  */
-  static fromJSON(e) {
-    if (!Array.isArray(e) || e.length % 2 || e.some((t) => typeof t != "number"))
-      throw new RangeError("Invalid JSON representation of ChangeDesc");
-    return new M(e);
-  }
-  /**
-  @internal
-  */
-  static create(e) {
-    return new M(e);
-  }
-}
-class y extends M {
-  constructor(e, t) {
-    super(e), this.inserted = t;
-  }
-  /**
-  Apply the changes to a document, returning the modified
-  document.
-  */
-  apply(e) {
-    if (this.length != e.length)
-      throw new RangeError("Applying change set to a document with the wrong length");
-    return re(this, (t, n, i, s, r) => e = e.replace(i, i + (n - t), r), !1), e;
-  }
-  mapDesc(e, t = !1) {
-    return le(this, e, t, !0);
-  }
-  /**
-  Given the document as it existed _before_ the changes, return a
-  change set that represents the inverse of this set, which could
-  be used to go from the document created by the changes back to
-  the document as it existed before the changes.
-  */
-  invert(e) {
-    let t = this.sections.slice(), n = [];
-    for (let i = 0, s = 0; i < t.length; i += 2) {
-      let r = t[i], h = t[i + 1];
-      if (h >= 0) {
-        t[i] = h, t[i + 1] = r;
-        let o = i >> 1;
-        for (; n.length < o; )
-          n.push(x.empty);
-        n.push(r ? e.slice(s, s + r) : x.empty);
-      }
-      s += r;
-    }
-    return new y(t, n);
-  }
-  /**
-  Combine two subsequent change sets into a single set. `other`
-  must start in the document produced by `this`. If `this` goes
-  `docA` → `docB` and `other` represents `docB` → `docC`, the
-  returned value will represent the change `docA` → `docC`.
-  */
-  compose(e) {
-    return this.empty ? e : e.empty ? this : Pe(this, e, !0);
-  }
-  /**
-  Given another change set starting in the same document, maps this
-  change set over the other, producing a new change set that can be
-  applied to the document produced by applying `other`. When
-  `before` is `true`, order changes as if `this` comes before
-  `other`, otherwise (the default) treat `other` as coming first.
-  
-  Given two changes `A` and `B`, `A.compose(B.map(A))` and
-  `B.compose(A.map(B, true))` will produce the same document. This
-  provides a basic form of [operational
-  transformation](https://en.wikipedia.org/wiki/Operational_transformation),
-  and can be used for collaborative editing.
-  */
-  map(e, t = !1) {
-    return e.empty ? this : le(this, e, t, !0);
-  }
-  /**
-  Iterate over the changed ranges in the document, calling `f` for
-  each, with the range in the original document (`fromA`-`toA`)
-  and the range that replaces it in the new document
-  (`fromB`-`toB`).
-  
-  When `individual` is true, adjacent changes are reported
-  separately.
-  */
-  iterChanges(e, t = !1) {
-    re(this, e, t);
-  }
-  /**
-  Get a [change description](https://codemirror.net/6/docs/ref/#state.ChangeDesc) for this change
-  set.
-  */
-  get desc() {
-    return M.create(this.sections);
-  }
-  /**
-  @internal
-  */
-  filter(e) {
-    let t = [], n = [], i = [], s = new q(this);
-    e: for (let r = 0, h = 0; ; ) {
-      let o = r == e.length ? 1e9 : e[r++];
-      for (; h < o || h == o && s.len == 0; ) {
-        if (s.done)
-          break e;
-        let u = Math.min(s.len, o - h);
-        k(i, u, -1);
-        let f = s.ins == -1 ? -1 : s.off == 0 ? s.ins : 0;
-        k(t, u, f), f > 0 && R(n, t, s.text), s.forward(u), h += u;
-      }
-      let a = e[r++];
-      for (; h < a; ) {
-        if (s.done)
-          break e;
-        let u = Math.min(s.len, a - h);
-        k(t, u, -1), k(i, u, s.ins == -1 ? -1 : s.off == 0 ? s.ins : 0), s.forward(u), h += u;
-      }
-    }
-    return {
-      changes: new y(t, n),
-      filtered: M.create(i)
-    };
-  }
-  /**
-  Serialize this change set to a JSON-representable value.
-  */
-  toJSON() {
-    let e = [];
-    for (let t = 0; t < this.sections.length; t += 2) {
-      let n = this.sections[t], i = this.sections[t + 1];
-      i < 0 ? e.push(n) : i == 0 ? e.push([n]) : e.push([n].concat(this.inserted[t >> 1].toJSON()));
-    }
-    return e;
-  }
-  /**
-  Create a change set for the given changes, for a document of the
-  given length, using `lineSep` as line separator.
-  */
-  static of(e, t, n) {
-    let i = [], s = [], r = 0, h = null;
-    function o(u = !1) {
-      if (!u && !i.length)
+  findRegions(e) {
+    let t = e.facet(C);
+    if ((t == null ? void 0 : t.data) == this.data)
+      return [{ from: 0, to: e.doc.length }];
+    if (!t || !t.allowsNesting)
+      return [];
+    let r = [], i = (s, o) => {
+      if (s.prop(T) == this.data) {
+        r.push({ from: o, to: o + s.length });
         return;
-      r < t && k(i, t - r, -1);
-      let f = new y(i, s);
-      h = h ? h.compose(f.map(h)) : f, i = [], s = [], r = 0;
-    }
-    function a(u) {
-      if (Array.isArray(u))
-        for (let f of u)
-          a(f);
-      else if (u instanceof y) {
-        if (u.length != t)
-          throw new RangeError(`Mismatched change set length (got ${u.length}, expected ${t})`);
-        o(), h = h ? h.compose(u.map(h)) : u;
-      } else {
-        let { from: f, to: c = f, insert: d } = u;
-        if (f > c || f < 0 || c > t)
-          throw new RangeError(`Invalid change range ${f} to ${c} (in doc of length ${t})`);
-        let p = d ? typeof d == "string" ? x.of(d.split(n || se)) : d : x.empty, E = p.length;
-        if (f == c && E == 0)
-          return;
-        f < r && o(), f > r && k(i, f - r, -1), k(i, c - f, E), R(s, i, p), r = c;
       }
-    }
-    return a(e), o(!h), h;
-  }
-  /**
-  Create an empty changeset of the given length.
-  */
-  static empty(e) {
-    return new y(e ? [e, -1] : [], []);
-  }
-  /**
-  Create a changeset from its JSON representation (as produced by
-  [`toJSON`](https://codemirror.net/6/docs/ref/#state.ChangeSet.toJSON).
-  */
-  static fromJSON(e) {
-    if (!Array.isArray(e))
-      throw new RangeError("Invalid JSON representation of ChangeSet");
-    let t = [], n = [];
-    for (let i = 0; i < e.length; i++) {
-      let s = e[i];
-      if (typeof s == "number")
-        t.push(s, -1);
-      else {
-        if (!Array.isArray(s) || typeof s[0] != "number" || s.some((r, h) => h && typeof r != "string"))
-          throw new RangeError("Invalid JSON representation of ChangeSet");
-        if (s.length == 1)
-          t.push(s[0], 0);
-        else {
-          for (; n.length < i; )
-            n.push(x.empty);
-          n[i] = x.of(s.slice(1)), t.push(s[0], n[i].length);
+      let a = s.prop(p.mounted);
+      if (a) {
+        if (a.tree.prop(T) == this.data) {
+          if (a.overlay)
+            for (let l of a.overlay)
+              r.push({ from: l.from + o, to: l.to + o });
+          else
+            r.push({ from: o, to: o + s.length });
+          return;
+        } else if (a.overlay) {
+          let l = r.length;
+          if (i(a.tree, a.overlay[0].from + o), r.length > l)
+            return;
         }
       }
-    }
-    return new y(t, n);
-  }
-  /**
-  @internal
-  */
-  static createSet(e, t) {
-    return new y(e, t);
-  }
-}
-function k(l, e, t, n = !1) {
-  if (e == 0 && t <= 0)
-    return;
-  let i = l.length - 2;
-  i >= 0 && t <= 0 && t == l[i + 1] ? l[i] += e : i >= 0 && e == 0 && l[i] == 0 ? l[i + 1] += t : n ? (l[i] += e, l[i + 1] += t) : l.push(e, t);
-}
-function R(l, e, t) {
-  if (t.length == 0)
-    return;
-  let n = e.length - 2 >> 1;
-  if (n < l.length)
-    l[l.length - 1] = l[l.length - 1].append(t);
-  else {
-    for (; l.length < n; )
-      l.push(x.empty);
-    l.push(t);
-  }
-}
-function re(l, e, t) {
-  let n = l.inserted;
-  for (let i = 0, s = 0, r = 0; r < l.sections.length; ) {
-    let h = l.sections[r++], o = l.sections[r++];
-    if (o < 0)
-      i += h, s += h;
-    else {
-      let a = i, u = s, f = x.empty;
-      for (; a += h, u += o, o && n && (f = f.append(n[r - 2 >> 1])), !(t || r == l.sections.length || l.sections[r + 1] < 0); )
-        h = l.sections[r++], o = l.sections[r++];
-      e(i, a, s, u, f), i = a, s = u;
-    }
-  }
-}
-function le(l, e, t, n = !1) {
-  let i = [], s = n ? [] : null, r = new q(l), h = new q(e);
-  for (let o = -1; ; ) {
-    if (r.done && h.len || h.done && r.len)
-      throw new Error("Mismatched change set lengths");
-    if (r.ins == -1 && h.ins == -1) {
-      let a = Math.min(r.len, h.len);
-      k(i, a, -1), r.forward(a), h.forward(a);
-    } else if (h.ins >= 0 && (r.ins < 0 || o == r.i || r.off == 0 && (h.len < r.len || h.len == r.len && !t))) {
-      let a = h.len;
-      for (k(i, h.ins, -1); a; ) {
-        let u = Math.min(r.len, a);
-        r.ins >= 0 && o < r.i && r.len <= u && (k(i, 0, r.ins), s && R(s, i, r.text), o = r.i), r.forward(u), a -= u;
+      for (let l = 0; l < s.children.length; l++) {
+        let u = s.children[l];
+        u instanceof x && i(u, s.positions[l] + o);
       }
-      h.next();
-    } else if (r.ins >= 0) {
-      let a = 0, u = r.len;
-      for (; u; )
-        if (h.ins == -1) {
-          let f = Math.min(u, h.len);
-          a += f, u -= f, h.forward(f);
-        } else if (h.ins == 0 && h.len < u)
-          u -= h.len, h.next();
-        else
-          break;
-      k(i, a, o < r.i ? r.ins : 0), s && o < r.i && R(s, i, r.text), o = r.i, r.forward(r.len - u);
-    } else {
-      if (r.done && h.done)
-        return s ? y.createSet(i, s) : M.create(i);
-      throw new Error("Mismatched change set lengths");
-    }
-  }
-}
-function Pe(l, e, t = !1) {
-  let n = [], i = t ? [] : null, s = new q(l), r = new q(e);
-  for (let h = !1; ; ) {
-    if (s.done && r.done)
-      return i ? y.createSet(n, i) : M.create(n);
-    if (s.ins == 0)
-      k(n, s.len, 0, h), s.next();
-    else if (r.len == 0 && !r.done)
-      k(n, 0, r.ins, h), i && R(i, n, r.text), r.next();
-    else {
-      if (s.done || r.done)
-        throw new Error("Mismatched change set lengths");
-      {
-        let o = Math.min(s.len2, r.len), a = n.length;
-        if (s.ins == -1) {
-          let u = r.ins == -1 ? -1 : r.off ? 0 : r.ins;
-          k(n, o, u, h), i && u && R(i, n, r.text);
-        } else r.ins == -1 ? (k(n, s.off ? 0 : s.len, o, h), i && R(i, n, s.textBit(o))) : (k(n, s.off ? 0 : s.len, r.off ? 0 : r.ins, h), i && !r.off && R(i, n, r.text));
-        h = (s.ins > o || r.ins >= 0 && r.len > o) && (h || n.length > a), s.forward2(o), r.forward(o);
-      }
-    }
-  }
-}
-class q {
-  constructor(e) {
-    this.set = e, this.i = 0, this.next();
-  }
-  next() {
-    let { sections: e } = this.set;
-    this.i < e.length ? (this.len = e[this.i++], this.ins = e[this.i++]) : (this.len = 0, this.ins = -2), this.off = 0;
-  }
-  get done() {
-    return this.ins == -2;
-  }
-  get len2() {
-    return this.ins < 0 ? this.len : this.ins;
-  }
-  get text() {
-    let { inserted: e } = this.set, t = this.i - 2 >> 1;
-    return t >= e.length ? x.empty : e[t];
-  }
-  textBit(e) {
-    let { inserted: t } = this.set, n = this.i - 2 >> 1;
-    return n >= t.length && !e ? x.empty : t[n].slice(this.off, e == null ? void 0 : this.off + e);
-  }
-  forward(e) {
-    e == this.len ? this.next() : (this.len -= e, this.off += e);
-  }
-  forward2(e) {
-    this.ins == -1 ? this.forward(e) : e == this.ins ? this.next() : (this.ins -= e, this.off += e);
-  }
-}
-class C {
-  constructor(e, t, n) {
-    this.from = e, this.to = t, this.flags = n;
+    };
+    return i(k(e), 0), r;
   }
   /**
-  The anchor of the range—the side that doesn't move when you
-  extend it.
+  Indicates whether this language allows nested languages. The
+  default implementation returns true.
   */
-  get anchor() {
-    return this.flags & 32 ? this.to : this.from;
-  }
-  /**
-  The head of the range, which is moved when the range is
-  [extended](https://codemirror.net/6/docs/ref/#state.SelectionRange.extend).
-  */
-  get head() {
-    return this.flags & 32 ? this.from : this.to;
-  }
-  /**
-  True when `anchor` and `head` are at the same position.
-  */
-  get empty() {
-    return this.from == this.to;
-  }
-  /**
-  If this is a cursor that is explicitly associated with the
-  character on one of its sides, this returns the side. -1 means
-  the character before its position, 1 the character after, and 0
-  means no association.
-  */
-  get assoc() {
-    return this.flags & 8 ? -1 : this.flags & 16 ? 1 : 0;
-  }
-  /**
-  The bidirectional text level associated with this cursor, if
-  any.
-  */
-  get bidiLevel() {
-    let e = this.flags & 7;
-    return e == 7 ? null : e;
-  }
-  /**
-  The goal column (stored vertical offset) associated with a
-  cursor. This is used to preserve the vertical position when
-  [moving](https://codemirror.net/6/docs/ref/#view.EditorView.moveVertically) across
-  lines of different length.
-  */
-  get goalColumn() {
-    let e = this.flags >> 6;
-    return e == 16777215 ? void 0 : e;
-  }
-  /**
-  Map this range through a change, producing a valid range in the
-  updated document.
-  */
-  map(e, t = -1) {
-    let n, i;
-    return this.empty ? n = i = e.mapPos(this.from, t) : (n = e.mapPos(this.from, 1), i = e.mapPos(this.to, -1)), n == this.from && i == this.to ? this : new C(n, i, this.flags);
-  }
-  /**
-  Extend this range to cover at least `from` to `to`.
-  */
-  extend(e, t = e) {
-    if (e <= this.anchor && t >= this.anchor)
-      return g.range(e, t);
-    let n = Math.abs(e - this.anchor) > Math.abs(t - this.anchor) ? e : t;
-    return g.range(this.anchor, n);
-  }
-  /**
-  Compare this range to another range.
-  */
-  eq(e, t = !1) {
-    return this.anchor == e.anchor && this.head == e.head && (!t || !this.empty || this.assoc == e.assoc);
-  }
-  /**
-  Return a JSON-serializable object representing the range.
-  */
-  toJSON() {
-    return { anchor: this.anchor, head: this.head };
-  }
-  /**
-  Convert a JSON representation of a range to a `SelectionRange`
-  instance.
-  */
-  static fromJSON(e) {
-    if (!e || typeof e.anchor != "number" || typeof e.head != "number")
-      throw new RangeError("Invalid JSON representation for SelectionRange");
-    return g.range(e.anchor, e.head);
-  }
-  /**
-  @internal
-  */
-  static create(e, t, n) {
-    return new C(e, t, n);
-  }
-}
-class g {
-  constructor(e, t) {
-    this.ranges = e, this.mainIndex = t;
-  }
-  /**
-  Map a selection through a change. Used to adjust the selection
-  position for changes.
-  */
-  map(e, t = -1) {
-    return e.empty ? this : g.create(this.ranges.map((n) => n.map(e, t)), this.mainIndex);
-  }
-  /**
-  Compare this selection to another selection. By default, ranges
-  are compared only by position. When `includeAssoc` is true,
-  cursor ranges must also have the same
-  [`assoc`](https://codemirror.net/6/docs/ref/#state.SelectionRange.assoc) value.
-  */
-  eq(e, t = !1) {
-    if (this.ranges.length != e.ranges.length || this.mainIndex != e.mainIndex)
-      return !1;
-    for (let n = 0; n < this.ranges.length; n++)
-      if (!this.ranges[n].eq(e.ranges[n], t))
-        return !1;
+  get allowsNesting() {
     return !0;
   }
-  /**
-  Get the primary selection range. Usually, you should make sure
-  your code applies to _all_ ranges, by using methods like
-  [`changeByRange`](https://codemirror.net/6/docs/ref/#state.EditorState.changeByRange).
-  */
-  get main() {
-    return this.ranges[this.mainIndex];
-  }
-  /**
-  Make sure the selection only has one range. Returns a selection
-  holding only the main range from this selection.
-  */
-  asSingle() {
-    return this.ranges.length == 1 ? this : new g([this.main], 0);
-  }
-  /**
-  Extend this selection with an extra range.
-  */
-  addRange(e, t = !0) {
-    return g.create([e].concat(this.ranges), t ? 0 : this.mainIndex + 1);
-  }
-  /**
-  Replace a given range with another range, and then normalize the
-  selection to merge and sort ranges if necessary.
-  */
-  replaceRange(e, t = this.mainIndex) {
-    let n = this.ranges.slice();
-    return n[t] = e, g.create(n, this.mainIndex);
-  }
-  /**
-  Convert this selection to an object that can be serialized to
-  JSON.
-  */
-  toJSON() {
-    return { ranges: this.ranges.map((e) => e.toJSON()), main: this.mainIndex };
-  }
-  /**
-  Create a selection from a JSON representation.
-  */
-  static fromJSON(e) {
-    if (!e || !Array.isArray(e.ranges) || typeof e.main != "number" || e.main >= e.ranges.length)
-      throw new RangeError("Invalid JSON representation for EditorSelection");
-    return new g(e.ranges.map((t) => C.fromJSON(t)), e.main);
-  }
-  /**
-  Create a selection holding a single range.
-  */
-  static single(e, t = e) {
-    return new g([g.range(e, t)], 0);
-  }
-  /**
-  Sort and merge the given set of ranges, creating a valid
-  selection.
-  */
-  static create(e, t = 0) {
-    if (e.length == 0)
-      throw new RangeError("A selection needs at least one range");
-    for (let n = 0, i = 0; i < e.length; i++) {
-      let s = e[i];
-      if (s.empty ? s.from <= n : s.from < n)
-        return g.normalized(e.slice(), t);
-      n = s.to;
-    }
-    return new g(e, t);
-  }
-  /**
-  Create a cursor selection range at the given position. You can
-  safely ignore the optional arguments in most situations.
-  */
-  static cursor(e, t = 0, n, i) {
-    return C.create(e, e, (t == 0 ? 0 : t < 0 ? 8 : 16) | (n == null ? 7 : Math.min(6, n)) | (i ?? 16777215) << 6);
-  }
-  /**
-  Create a selection range.
-  */
-  static range(e, t, n, i) {
-    let s = (n ?? 16777215) << 6 | (i == null ? 7 : Math.min(6, i));
-    return t < e ? C.create(t, e, 48 | s) : C.create(e, t, (t > e ? 8 : 0) | s);
-  }
-  /**
-  @internal
-  */
-  static normalized(e, t = 0) {
-    let n = e[t];
-    e.sort((i, s) => i.from - s.from), t = e.indexOf(n);
-    for (let i = 1; i < e.length; i++) {
-      let s = e[i], r = e[i - 1];
-      if (s.empty ? s.from <= r.to : s.from < r.to) {
-        let h = r.from, o = Math.max(s.to, r.to);
-        i <= t && t--, e.splice(--i, 2, s.anchor > s.head ? g.range(o, h) : g.range(h, o));
-      }
-    }
-    return new g(e, t);
-  }
 }
-function Ae(l, e) {
-  for (let t of l.ranges)
-    if (t.to > e)
-      throw new RangeError("Selection points outside of document");
+c.setState = /* @__PURE__ */ O.define();
+function J(n, e, t) {
+  let r = n.facet(C), i = k(n).topNode;
+  if (!r || r.allowsNesting)
+    for (let s = i; s; s = s.enter(e, t, me.ExcludeBuffers))
+      s.type.isTop && (i = s);
+  return i;
 }
-let ge = 0;
-class A {
-  constructor(e, t, n, i, s) {
-    this.combine = e, this.compareInput = t, this.compare = n, this.isStatic = i, this.id = ge++, this.default = e([]), this.extensions = typeof s == "function" ? s(this) : s;
+class M extends c {
+  constructor(e, t, r) {
+    super(e, t, [], r), this.parser = t;
   }
   /**
-  Returns a facet reader for this facet, which can be used to
-  [read](https://codemirror.net/6/docs/ref/#state.EditorState.facet) it but not to define values for it.
-  */
-  get reader() {
-    return this;
-  }
-  /**
-  Define a new facet.
-  */
-  static define(e = {}) {
-    return new A(e.combine || ((t) => t), e.compareInput || ((t, n) => t === n), e.compare || (e.combine ? (t, n) => t === n : pe), !!e.static, e.enables);
-  }
-  /**
-  Returns an extension that adds the given value to this facet.
-  */
-  of(e) {
-    return new X([], this, 0, e);
-  }
-  /**
-  Create an extension that computes a value for the facet from a
-  state. You must take care to declare the parts of the state that
-  this value depends on, since your function is only called again
-  for a new state when one of those parts changed.
-  
-  In cases where your value depends only on a single field, you'll
-  want to use the [`from`](https://codemirror.net/6/docs/ref/#state.Facet.from) method instead.
-  */
-  compute(e, t) {
-    if (this.isStatic)
-      throw new Error("Can't compute a static facet");
-    return new X(e, this, 1, t);
-  }
-  /**
-  Create an extension that computes zero or more values for this
-  facet from a state.
-  */
-  computeN(e, t) {
-    if (this.isStatic)
-      throw new Error("Can't compute a static facet");
-    return new X(e, this, 2, t);
-  }
-  from(e, t) {
-    return t || (t = (n) => n), this.compute([e], (n) => t(n.field(e)));
-  }
-}
-function pe(l, e) {
-  return l == e || l.length == e.length && l.every((t, n) => t === e[n]);
-}
-class X {
-  constructor(e, t, n, i) {
-    this.dependencies = e, this.facet = t, this.type = n, this.value = i, this.id = ge++;
-  }
-  dynamicSlot(e) {
-    var t;
-    let n = this.value, i = this.facet.compareInput, s = this.id, r = e[s] >> 1, h = this.type == 2, o = !1, a = !1, u = [];
-    for (let f of this.dependencies)
-      f == "doc" ? o = !0 : f == "selection" ? a = !0 : ((t = e[f.id]) !== null && t !== void 0 ? t : 1) & 1 || u.push(e[f.id]);
-    return {
-      create(f) {
-        return f.values[r] = n(f), 1;
-      },
-      update(f, c) {
-        if (o && c.docChanged || a && (c.docChanged || c.selection) || he(f, u)) {
-          let d = n(f);
-          if (h ? !ve(d, f.values[r], i) : !i(d, f.values[r]))
-            return f.values[r] = d, 1;
-        }
-        return 0;
-      },
-      reconfigure: (f, c) => {
-        let d, p = c.config.address[s];
-        if (p != null) {
-          let E = j(c, p);
-          if (this.dependencies.every((v) => v instanceof A ? c.facet(v) === f.facet(v) : v instanceof L ? c.field(v, !1) == f.field(v, !1) : !0) || (h ? ve(d = n(f), E, i) : i(d = n(f), E)))
-            return f.values[r] = E, 0;
-        } else
-          d = n(f);
-        return f.values[r] = d, 1;
-      }
-    };
-  }
-}
-function ve(l, e, t) {
-  if (l.length != e.length)
-    return !1;
-  for (let n = 0; n < l.length; n++)
-    if (!t(l[n], e[n]))
-      return !1;
-  return !0;
-}
-function he(l, e) {
-  let t = !1;
-  for (let n of e)
-    $(l, n) & 1 && (t = !0);
-  return t;
-}
-function qe(l, e, t) {
-  let n = t.map((o) => l[o.id]), i = t.map((o) => o.type), s = n.filter((o) => !(o & 1)), r = l[e.id] >> 1;
-  function h(o) {
-    let a = [];
-    for (let u = 0; u < n.length; u++) {
-      let f = j(o, n[u]);
-      if (i[u] == 2)
-        for (let c of f)
-          a.push(c);
-      else
-        a.push(f);
-    }
-    return e.combine(a);
-  }
-  return {
-    create(o) {
-      for (let a of n)
-        $(o, a);
-      return o.values[r] = h(o), 1;
-    },
-    update(o, a) {
-      if (!he(o, s))
-        return 0;
-      let u = h(o);
-      return e.compare(u, o.values[r]) ? 0 : (o.values[r] = u, 1);
-    },
-    reconfigure(o, a) {
-      let u = he(o, n), f = a.config.facets[e.id], c = a.facet(e);
-      if (f && !u && pe(t, f))
-        return o.values[r] = c, 0;
-      let d = h(o);
-      return e.compare(d, c) ? (o.values[r] = c, 0) : (o.values[r] = d, 1);
-    }
-  };
-}
-const G = /* @__PURE__ */ A.define({ static: !0 });
-class L {
-  constructor(e, t, n, i, s) {
-    this.id = e, this.createF = t, this.updateF = n, this.compareF = i, this.spec = s, this.provides = void 0;
-  }
-  /**
-  Define a state field.
+  Define a language from a parser.
   */
   static define(e) {
-    let t = new L(ge++, e.create, e.update, e.compare || ((n, i) => n === i), e);
-    return e.provide && (t.provides = e.provide(t)), t;
-  }
-  create(e) {
-    let t = e.facet(G).find((n) => n.field == this);
-    return ((t == null ? void 0 : t.create) || this.createF)(e);
+    let t = Ae(e.languageData);
+    return new M(t, e.parser.configure({
+      props: [T.add((r) => r.isTop ? t : void 0)]
+    }), e.name);
   }
   /**
-  @internal
+  Create a new instance of this language with a reconfigured
+  version of its parser and optionally a new name.
   */
-  slot(e) {
-    let t = e[this.id] >> 1;
-    return {
-      create: (n) => (n.values[t] = this.create(n), 1),
-      update: (n, i) => {
-        let s = n.values[t], r = this.updateF(s, i);
-        return this.compareF(s, r) ? 0 : (n.values[t] = r, 1);
-      },
-      reconfigure: (n, i) => {
-        let s = n.facet(G), r = i.facet(G), h;
-        return (h = s.find((o) => o.field == this)) && h != r.find((o) => o.field == this) ? (n.values[t] = h.create(n), 1) : i.config.address[this.id] != null ? (n.values[t] = i.field(this), 0) : (n.values[t] = this.create(n), 1);
-      }
-    };
+  configure(e, t) {
+    return new M(this.data, this.parser.configure(e), t || this.name);
   }
-  /**
-  Returns an extension that enables this field and overrides the
-  way it is initialized. Can be useful when you need to provide a
-  non-default starting value for the field.
-  */
-  init(e) {
-    return [this, G.of({ field: this, create: e })];
-  }
-  /**
-  State field instances can be used as
-  [`Extension`](https://codemirror.net/6/docs/ref/#state.Extension) values to enable the field in a
-  given state.
-  */
-  get extension() {
-    return this;
+  get allowsNesting() {
+    return this.parser.hasWrappers();
   }
 }
-const B = { lowest: 4, low: 3, default: 2, high: 1, highest: 0 };
-function V(l) {
-  return (e) => new Ee(e, l);
+function k(n) {
+  let e = n.field(c.state, !1);
+  return e ? e.tree : x.empty;
 }
-const nt = {
-  /**
-  The highest precedence level, for extensions that should end up
-  near the start of the precedence ordering.
-  */
-  highest: /* @__PURE__ */ V(B.highest),
-  /**
-  A higher-than-default precedence, for extensions that should
-  come before those with default precedence.
-  */
-  high: /* @__PURE__ */ V(B.high),
-  /**
-  The default precedence, which is also used for extensions
-  without an explicit precedence.
-  */
-  default: /* @__PURE__ */ V(B.default),
-  /**
-  A lower-than-default precedence.
-  */
-  low: /* @__PURE__ */ V(B.low),
-  /**
-  The lowest precedence level. Meant for things that should end up
-  near the end of the extension order.
-  */
-  lowest: /* @__PURE__ */ V(B.lowest)
-};
-class Ee {
-  constructor(e, t) {
-    this.inner = e, this.prec = t;
-  }
+function mt(n, e, t = 50) {
+  var r;
+  let i = (r = n.field(c.state, !1)) === null || r === void 0 ? void 0 : r.context;
+  if (!i)
+    return null;
+  let s = i.viewport;
+  i.updateViewport({ from: 0, to: e });
+  let o = i.isDone(e) || i.work(t, e) ? i.tree : null;
+  return i.updateViewport(s), o;
 }
-class te {
+class Ie {
   /**
-  Create an instance of this compartment to add to your [state
-  configuration](https://codemirror.net/6/docs/ref/#state.EditorStateConfig.extensions).
-  */
-  of(e) {
-    return new oe(this, e);
-  }
-  /**
-  Create an [effect](https://codemirror.net/6/docs/ref/#state.TransactionSpec.effects) that
-  reconfigures this compartment.
-  */
-  reconfigure(e) {
-    return te.reconfigure.of({ compartment: this, extension: e });
-  }
-  /**
-  Get the current content of the compartment in the state, or
-  `undefined` if it isn't present.
-  */
-  get(e) {
-    return e.config.compartments.get(this);
-  }
-}
-class oe {
-  constructor(e, t) {
-    this.compartment = e, this.inner = t;
-  }
-}
-class Z {
-  constructor(e, t, n, i, s, r) {
-    for (this.base = e, this.compartments = t, this.dynamicSlots = n, this.address = i, this.staticValues = s, this.facets = r, this.statusTemplate = []; this.statusTemplate.length < n.length; )
-      this.statusTemplate.push(
-        0
-        /* SlotStatus.Unresolved */
-      );
-  }
-  staticFacet(e) {
-    let t = this.address[e.id];
-    return t == null ? e.default : this.staticValues[t >> 1];
-  }
-  static resolve(e, t, n) {
-    let i = [], s = /* @__PURE__ */ Object.create(null), r = /* @__PURE__ */ new Map();
-    for (let c of ze(e, t, r))
-      c instanceof L ? i.push(c) : (s[c.facet.id] || (s[c.facet.id] = [])).push(c);
-    let h = /* @__PURE__ */ Object.create(null), o = [], a = [];
-    for (let c of i)
-      h[c.id] = a.length << 1, a.push((d) => c.slot(d));
-    let u = n == null ? void 0 : n.config.facets;
-    for (let c in s) {
-      let d = s[c], p = d[0].facet, E = u && u[c] || [];
-      if (d.every(
-        (v) => v.type == 0
-        /* Provider.Static */
-      ))
-        if (h[p.id] = o.length << 1 | 1, pe(E, d))
-          o.push(n.facet(p));
-        else {
-          let v = p.combine(d.map((ne) => ne.value));
-          o.push(n && p.compare(v, n.facet(p)) ? n.facet(p) : v);
-        }
-      else {
-        for (let v of d)
-          v.type == 0 ? (h[v.id] = o.length << 1 | 1, o.push(v.value)) : (h[v.id] = a.length << 1, a.push((ne) => v.dynamicSlot(ne)));
-        h[p.id] = a.length << 1, a.push((v) => qe(v, p, d));
-      }
-    }
-    let f = a.map((c) => c(h));
-    return new Z(e, r, f, h, o, s);
-  }
-}
-function ze(l, e, t) {
-  let n = [[], [], [], [], []], i = /* @__PURE__ */ new Map();
-  function s(r, h) {
-    let o = i.get(r);
-    if (o != null) {
-      if (o <= h)
-        return;
-      let a = n[o].indexOf(r);
-      a > -1 && n[o].splice(a, 1), r instanceof oe && t.delete(r.compartment);
-    }
-    if (i.set(r, h), Array.isArray(r))
-      for (let a of r)
-        s(a, h);
-    else if (r instanceof oe) {
-      if (t.has(r.compartment))
-        throw new RangeError("Duplicate use of compartment in extensions");
-      let a = e.get(r.compartment) || r.inner;
-      t.set(r.compartment, a), s(a, h);
-    } else if (r instanceof Ee)
-      s(r.inner, r.prec);
-    else if (r instanceof L)
-      n[h].push(r), r.provides && s(r.provides, h);
-    else if (r instanceof X)
-      n[h].push(r), r.facet.extensions && s(r.facet.extensions, B.default);
-    else {
-      let a = r.extension;
-      if (!a)
-        throw new Error(`Unrecognized extension value in extension set (${r}). This sometimes happens because multiple instances of @codemirror/state are loaded, breaking instanceof checks.`);
-      s(a, h);
-    }
-  }
-  return s(l, B.default), n.reduce((r, h) => r.concat(h));
-}
-function $(l, e) {
-  if (e & 1)
-    return 2;
-  let t = e >> 1, n = l.status[t];
-  if (n == 4)
-    throw new Error("Cyclic dependency between fields and/or facets");
-  if (n & 2)
-    return n;
-  l.status[t] = 4;
-  let i = l.computeSlot(l, l.config.dynamicSlots[t]);
-  return l.status[t] = 2 | i;
-}
-function j(l, e) {
-  return e & 1 ? l.config.staticValues[e >> 1] : l.values[e >> 1];
-}
-const Oe = /* @__PURE__ */ A.define(), ae = /* @__PURE__ */ A.define({
-  combine: (l) => l.some((e) => e),
-  static: !0
-}), Me = /* @__PURE__ */ A.define({
-  combine: (l) => l.length ? l[0] : void 0,
-  static: !0
-}), be = /* @__PURE__ */ A.define(), Re = /* @__PURE__ */ A.define(), Te = /* @__PURE__ */ A.define(), Be = /* @__PURE__ */ A.define({
-  combine: (l) => l.length ? l[0] : !1
-});
-class U {
-  /**
-  @internal
-  */
-  constructor(e, t) {
-    this.type = e, this.value = t;
-  }
-  /**
-  Define a new type of annotation.
-  */
-  static define() {
-    return new We();
-  }
-}
-class We {
-  /**
-  Create an instance of this annotation.
-  */
-  of(e) {
-    return new U(this, e);
-  }
-}
-class Ue {
-  /**
-  @internal
+  Create an input object for the given document.
   */
   constructor(e) {
-    this.map = e;
+    this.doc = e, this.cursorPos = 0, this.string = "", this.cursor = e.iter();
   }
-  /**
-  Create a [state effect](https://codemirror.net/6/docs/ref/#state.StateEffect) instance of this
-  type.
-  */
-  of(e) {
-    return new I(this, e);
+  get length() {
+    return this.doc.length;
   }
-}
-class I {
-  /**
-  @internal
-  */
-  constructor(e, t) {
-    this.type = e, this.value = t;
+  syncTo(e) {
+    return this.string = this.cursor.next(e - this.cursorPos).value, this.cursorPos = e + this.string.length, this.cursorPos - this.string.length;
   }
-  /**
-  Map this effect through a position mapping. Will return
-  `undefined` when that ends up deleting the effect.
-  */
-  map(e) {
-    let t = this.type.map(this.value, e);
-    return t === void 0 ? void 0 : t == this.value ? this : new I(this.type, t);
+  chunk(e) {
+    return this.syncTo(e), this.string;
   }
-  /**
-  Tells you whether this effect object is of a given
-  [type](https://codemirror.net/6/docs/ref/#state.StateEffectType).
-  */
-  is(e) {
-    return this.type == e;
+  get lineChunks() {
+    return !0;
   }
-  /**
-  Define a new effect type. The type parameter indicates the type
-  of values that his effect holds. It should be a type that
-  doesn't include `undefined`, since that is used in
-  [mapping](https://codemirror.net/6/docs/ref/#state.StateEffect.map) to indicate that an effect is
-  removed.
-  */
-  static define(e = {}) {
-    return new Ue(e.map || ((t) => t));
-  }
-  /**
-  Map an array of effects through a change set.
-  */
-  static mapEffects(e, t) {
-    if (!e.length)
-      return e;
-    let n = [];
-    for (let i of e) {
-      let s = i.map(t);
-      s && n.push(s);
-    }
-    return n;
+  read(e, t) {
+    let r = this.cursorPos - this.string.length;
+    return e < r || t >= this.cursorPos ? this.doc.sliceString(e, t) : this.string.slice(e - r, t - r);
   }
 }
-I.reconfigure = /* @__PURE__ */ I.define();
-I.appendConfig = /* @__PURE__ */ I.define();
-class P {
-  constructor(e, t, n, i, s, r) {
-    this.startState = e, this.changes = t, this.selection = n, this.effects = i, this.annotations = s, this.scrollIntoView = r, this._doc = null, this._state = null, n && Ae(n, t.newLength), s.some((h) => h.type == P.time) || (this.annotations = s.concat(P.time.of(Date.now())));
+let A = null;
+class D {
+  constructor(e, t, r = [], i, s, o, a, l) {
+    this.parser = e, this.state = t, this.fragments = r, this.tree = i, this.treeLen = s, this.viewport = o, this.skipped = a, this.scheduleOn = l, this.parse = null, this.tempSkipped = [];
   }
   /**
   @internal
   */
-  static create(e, t, n, i, s, r) {
-    return new P(e, t, n, i, s, r);
+  static create(e, t, r) {
+    return new D(e, t, [], x.empty, 0, r, [], null);
   }
-  /**
-  The new document produced by the transaction. Contrary to
-  [`.state`](https://codemirror.net/6/docs/ref/#state.Transaction.state)`.doc`, accessing this won't
-  force the entire new state to be computed right away, so it is
-  recommended that [transaction
-  filters](https://codemirror.net/6/docs/ref/#state.EditorState^transactionFilter) use this getter
-  when they need to look at the new document.
-  */
-  get newDoc() {
-    return this._doc || (this._doc = this.changes.apply(this.startState.doc));
-  }
-  /**
-  The new selection produced by the transaction. If
-  [`this.selection`](https://codemirror.net/6/docs/ref/#state.Transaction.selection) is undefined,
-  this will [map](https://codemirror.net/6/docs/ref/#state.EditorSelection.map) the start state's
-  current selection through the changes made by the transaction.
-  */
-  get newSelection() {
-    return this.selection || this.startState.selection.map(this.changes);
-  }
-  /**
-  The new state created by the transaction. Computed on demand
-  (but retained for subsequent access), so it is recommended not to
-  access it in [transaction
-  filters](https://codemirror.net/6/docs/ref/#state.EditorState^transactionFilter) when possible.
-  */
-  get state() {
-    return this._state || this.startState.applyTransaction(this), this._state;
-  }
-  /**
-  Get the value of the given annotation type, if any.
-  */
-  annotation(e) {
-    for (let t of this.annotations)
-      if (t.type == e)
-        return t.value;
-  }
-  /**
-  Indicates whether the transaction changed the document.
-  */
-  get docChanged() {
-    return !this.changes.empty;
-  }
-  /**
-  Indicates whether this transaction reconfigures the state
-  (through a [configuration compartment](https://codemirror.net/6/docs/ref/#state.Compartment) or
-  with a top-level configuration
-  [effect](https://codemirror.net/6/docs/ref/#state.StateEffect^reconfigure).
-  */
-  get reconfigured() {
-    return this.startState.config != this.state.config;
-  }
-  /**
-  Returns true if the transaction has a [user
-  event](https://codemirror.net/6/docs/ref/#state.Transaction^userEvent) annotation that is equal to
-  or more specific than `event`. For example, if the transaction
-  has `"select.pointer"` as user event, `"select"` and
-  `"select.pointer"` will match it.
-  */
-  isUserEvent(e) {
-    let t = this.annotation(P.userEvent);
-    return !!(t && (t == e || t.length > e.length && t.slice(0, e.length) == e && t[e.length] == "."));
-  }
-}
-P.time = /* @__PURE__ */ U.define();
-P.userEvent = /* @__PURE__ */ U.define();
-P.addToHistory = /* @__PURE__ */ U.define();
-P.remote = /* @__PURE__ */ U.define();
-function Ge(l, e) {
-  let t = [];
-  for (let n = 0, i = 0; ; ) {
-    let s, r;
-    if (n < l.length && (i == e.length || e[i] >= l[n]))
-      s = l[n++], r = l[n++];
-    else if (i < e.length)
-      s = e[i++], r = e[i++];
-    else
-      return t;
-    !t.length || t[t.length - 1] < s ? t.push(s, r) : t[t.length - 1] < r && (t[t.length - 1] = r);
-  }
-}
-function Ce(l, e, t) {
-  var n;
-  let i, s, r;
-  return t ? (i = e.changes, s = y.empty(e.changes.length), r = l.changes.compose(e.changes)) : (i = e.changes.map(l.changes), s = l.changes.mapDesc(e.changes, !0), r = l.changes.compose(i)), {
-    changes: r,
-    selection: e.selection ? e.selection.map(s) : (n = l.selection) === null || n === void 0 ? void 0 : n.map(i),
-    effects: I.mapEffects(l.effects, i).concat(I.mapEffects(e.effects, s)),
-    annotations: l.annotations.length ? l.annotations.concat(e.annotations) : e.annotations,
-    scrollIntoView: l.scrollIntoView || e.scrollIntoView
-  };
-}
-function ue(l, e, t) {
-  let n = e.selection, i = F(e.annotations);
-  return e.userEvent && (i = i.concat(P.userEvent.of(e.userEvent))), {
-    changes: e.changes instanceof y ? e.changes : y.of(e.changes || [], t, l.facet(Me)),
-    selection: n && (n instanceof g ? n : g.single(n.anchor, n.head)),
-    effects: F(e.effects),
-    annotations: i,
-    scrollIntoView: !!e.scrollIntoView
-  };
-}
-function Fe(l, e, t) {
-  let n = ue(l, e.length ? e[0] : {}, l.doc.length);
-  e.length && e[0].filter === !1 && (t = !1);
-  for (let s = 1; s < e.length; s++) {
-    e[s].filter === !1 && (t = !1);
-    let r = !!e[s].sequential;
-    n = Ce(n, ue(l, e[s], r ? n.changes.newLength : l.doc.length), r);
-  }
-  let i = P.create(l, n.changes, n.selection, n.effects, n.annotations, n.scrollIntoView);
-  return Ke(t ? He(i) : i);
-}
-function He(l) {
-  let e = l.startState, t = !0;
-  for (let i of e.facet(be)) {
-    let s = i(l);
-    if (s === !1) {
-      t = !1;
-      break;
-    }
-    Array.isArray(s) && (t = t === !0 ? s : Ge(t, s));
-  }
-  if (t !== !0) {
-    let i, s;
-    if (t === !1)
-      s = l.changes.invertedDesc, i = y.empty(e.doc.length);
-    else {
-      let r = l.changes.filter(t);
-      i = r.changes, s = r.filtered.mapDesc(r.changes).invertedDesc;
-    }
-    l = P.create(e, i, l.selection && l.selection.map(s), I.mapEffects(l.effects, s), l.annotations, l.scrollIntoView);
-  }
-  let n = e.facet(Re);
-  for (let i = n.length - 1; i >= 0; i--) {
-    let s = n[i](l);
-    s instanceof P ? l = s : Array.isArray(s) && s.length == 1 && s[0] instanceof P ? l = s[0] : l = Fe(e, F(s), !1);
-  }
-  return l;
-}
-function Ke(l) {
-  let e = l.startState, t = e.facet(Te), n = l;
-  for (let i = t.length - 1; i >= 0; i--) {
-    let s = t[i](l);
-    s && Object.keys(s).length && (n = Ce(n, ue(e, s, l.changes.newLength), !0));
-  }
-  return n == l ? l : P.create(e, l.changes, l.selection, n.effects, n.annotations, n.scrollIntoView);
-}
-const Qe = [];
-function F(l) {
-  return l == null ? Qe : Array.isArray(l) ? l : [l];
-}
-var T = /* @__PURE__ */ function(l) {
-  return l[l.Word = 0] = "Word", l[l.Space = 1] = "Space", l[l.Other = 2] = "Other", l;
-}(T || (T = {}));
-const Xe = /[\u00df\u0587\u0590-\u05f4\u0600-\u06ff\u3040-\u309f\u30a0-\u30ff\u3400-\u4db5\u4e00-\u9fcc\uac00-\ud7af]/;
-let fe;
-try {
-  fe = /* @__PURE__ */ new RegExp("[\\p{Alphabetic}\\p{Number}_]", "u");
-} catch {
-}
-function Ye(l) {
-  if (fe)
-    return fe.test(l);
-  for (let e = 0; e < l.length; e++) {
-    let t = l[e];
-    if (/\w/.test(t) || t > "" && (t.toUpperCase() != t.toLowerCase() || Xe.test(t)))
-      return !0;
-  }
-  return !1;
-}
-function Ze(l) {
-  return (e) => {
-    if (!/\S/.test(e))
-      return T.Space;
-    if (Ye(e))
-      return T.Word;
-    for (let t = 0; t < l.length; t++)
-      if (e.indexOf(l[t]) > -1)
-        return T.Word;
-    return T.Other;
-  };
-}
-class w {
-  constructor(e, t, n, i, s, r) {
-    this.config = e, this.doc = t, this.selection = n, this.values = i, this.status = e.statusTemplate.slice(), this.computeSlot = s, r && (r._state = this);
-    for (let h = 0; h < this.config.dynamicSlots.length; h++)
-      $(this, h << 1);
-    this.computeSlot = null;
-  }
-  field(e, t = !0) {
-    let n = this.config.address[e.id];
-    if (n == null) {
-      if (t)
-        throw new RangeError("Field is not present in this state");
-      return;
-    }
-    return $(this, n), j(this, n);
-  }
-  /**
-  Create a [transaction](https://codemirror.net/6/docs/ref/#state.Transaction) that updates this
-  state. Any number of [transaction specs](https://codemirror.net/6/docs/ref/#state.TransactionSpec)
-  can be passed. Unless
-  [`sequential`](https://codemirror.net/6/docs/ref/#state.TransactionSpec.sequential) is set, the
-  [changes](https://codemirror.net/6/docs/ref/#state.TransactionSpec.changes) (if any) of each spec
-  are assumed to start in the _current_ document (not the document
-  produced by previous specs), and its
-  [selection](https://codemirror.net/6/docs/ref/#state.TransactionSpec.selection) and
-  [effects](https://codemirror.net/6/docs/ref/#state.TransactionSpec.effects) are assumed to refer
-  to the document created by its _own_ changes. The resulting
-  transaction contains the combined effect of all the different
-  specs. For [selection](https://codemirror.net/6/docs/ref/#state.TransactionSpec.selection), later
-  specs take precedence over earlier ones.
-  */
-  update(...e) {
-    return Fe(this, e, !0);
+  startParse() {
+    return this.parser.startParse(new Ie(this.state.doc), this.fragments);
   }
   /**
   @internal
   */
-  applyTransaction(e) {
-    let t = this.config, { base: n, compartments: i } = t;
-    for (let h of e.effects)
-      h.is(te.reconfigure) ? (t && (i = /* @__PURE__ */ new Map(), t.compartments.forEach((o, a) => i.set(a, o)), t = null), i.set(h.value.compartment, h.value.extension)) : h.is(I.reconfigure) ? (t = null, n = h.value) : h.is(I.appendConfig) && (t = null, n = F(n).concat(h.value));
-    let s;
-    t ? s = e.startState.values.slice() : (t = Z.resolve(n, i, this), s = new w(t, this.doc, this.selection, t.dynamicSlots.map(() => null), (o, a) => a.reconfigure(o, this), null).values);
-    let r = e.startState.facet(ae) ? e.newSelection : e.newSelection.asSingle();
-    new w(t, e.newDoc, r, s, (h, o) => o.update(h, e), e);
-  }
-  /**
-  Create a [transaction spec](https://codemirror.net/6/docs/ref/#state.TransactionSpec) that
-  replaces every selection range with the given content.
-  */
-  replaceSelection(e) {
-    return typeof e == "string" && (e = this.toText(e)), this.changeByRange((t) => ({
-      changes: { from: t.from, to: t.to, insert: e },
-      range: g.cursor(t.from + e.length)
-    }));
-  }
-  /**
-  Create a set of changes and a new selection by running the given
-  function for each range in the active selection. The function
-  can return an optional set of changes (in the coordinate space
-  of the start document), plus an updated range (in the coordinate
-  space of the document produced by the call's own changes). This
-  method will merge all the changes and ranges into a single
-  changeset and selection, and return it as a [transaction
-  spec](https://codemirror.net/6/docs/ref/#state.TransactionSpec), which can be passed to
-  [`update`](https://codemirror.net/6/docs/ref/#state.EditorState.update).
-  */
-  changeByRange(e) {
-    let t = this.selection, n = e(t.ranges[0]), i = this.changes(n.changes), s = [n.range], r = F(n.effects);
-    for (let h = 1; h < t.ranges.length; h++) {
-      let o = e(t.ranges[h]), a = this.changes(o.changes), u = a.map(i);
-      for (let c = 0; c < h; c++)
-        s[c] = s[c].map(u);
-      let f = i.mapDesc(a, !0);
-      s.push(o.range.map(f)), i = i.compose(u), r = I.mapEffects(r, u).concat(I.mapEffects(F(o.effects), f));
-    }
-    return {
-      changes: i,
-      selection: g.create(s, t.mainIndex),
-      effects: r
-    };
-  }
-  /**
-  Create a [change set](https://codemirror.net/6/docs/ref/#state.ChangeSet) from the given change
-  description, taking the state's document length and line
-  separator into account.
-  */
-  changes(e = []) {
-    return e instanceof y ? e : y.of(e, this.doc.length, this.facet(w.lineSeparator));
-  }
-  /**
-  Using the state's [line
-  separator](https://codemirror.net/6/docs/ref/#state.EditorState^lineSeparator), create a
-  [`Text`](https://codemirror.net/6/docs/ref/#state.Text) instance from the given string.
-  */
-  toText(e) {
-    return x.of(e.split(this.facet(w.lineSeparator) || se));
-  }
-  /**
-  Return the given range of the document as a string.
-  */
-  sliceDoc(e = 0, t = this.doc.length) {
-    return this.doc.sliceString(e, t, this.lineBreak);
-  }
-  /**
-  Get the value of a state [facet](https://codemirror.net/6/docs/ref/#state.Facet).
-  */
-  facet(e) {
-    let t = this.config.address[e.id];
-    return t == null ? e.default : ($(this, t), j(this, t));
-  }
-  /**
-  Convert this state to a JSON-serializable object. When custom
-  fields should be serialized, you can pass them in as an object
-  mapping property names (in the resulting object, which should
-  not use `doc` or `selection`) to fields.
-  */
-  toJSON(e) {
-    let t = {
-      doc: this.sliceDoc(),
-      selection: this.selection.toJSON()
-    };
-    if (e)
-      for (let n in e) {
-        let i = e[n];
-        i instanceof L && this.config.address[i.id] != null && (t[n] = i.spec.toJSON(this.field(e[n]), this));
+  work(e, t) {
+    return t != null && t >= this.state.doc.length && (t = void 0), this.tree != x.empty && this.isDone(t ?? this.state.doc.length) ? (this.takeTree(), !0) : this.withContext(() => {
+      var r;
+      if (typeof e == "number") {
+        let i = Date.now() + e;
+        e = () => Date.now() > i;
       }
-    return t;
-  }
-  /**
-  Deserialize a state from its JSON representation. When custom
-  fields should be deserialized, pass the same object you passed
-  to [`toJSON`](https://codemirror.net/6/docs/ref/#state.EditorState.toJSON) when serializing as
-  third argument.
-  */
-  static fromJSON(e, t = {}, n) {
-    if (!e || typeof e.doc != "string")
-      throw new RangeError("Invalid JSON representation for EditorState");
-    let i = [];
-    if (n) {
-      for (let s in n)
-        if (Object.prototype.hasOwnProperty.call(e, s)) {
-          let r = n[s], h = e[s];
-          i.push(r.init((o) => r.spec.fromJSON(h, o)));
-        }
-    }
-    return w.create({
-      doc: e.doc,
-      selection: g.fromJSON(e.selection),
-      extensions: t.extensions ? i.concat([t.extensions]) : i
+      for (this.parse || (this.parse = this.startParse()), t != null && (this.parse.stoppedAt == null || this.parse.stoppedAt > t) && t < this.state.doc.length && this.parse.stopAt(t); ; ) {
+        let i = this.parse.advance();
+        if (i)
+          if (this.fragments = this.withoutTempSkipped(P.addTree(i, this.fragments, this.parse.stoppedAt != null)), this.treeLen = (r = this.parse.stoppedAt) !== null && r !== void 0 ? r : this.state.doc.length, this.tree = i, this.parse = null, this.treeLen < (t ?? this.state.doc.length))
+            this.parse = this.startParse();
+          else
+            return !0;
+        if (e())
+          return !1;
+      }
     });
   }
   /**
-  Create a new state. You'll usually only need this when
-  initializing an editor—updated states are created by applying
-  transactions.
-  */
-  static create(e = {}) {
-    let t = Z.resolve(e.extensions || [], /* @__PURE__ */ new Map()), n = e.doc instanceof x ? e.doc : x.of((e.doc || "").split(t.staticFacet(w.lineSeparator) || se)), i = e.selection ? e.selection instanceof g ? e.selection : g.single(e.selection.anchor, e.selection.head) : g.single(0);
-    return Ae(i, n.length), t.staticFacet(ae) || (i = i.asSingle()), new w(t, n, i, t.dynamicSlots.map(() => null), (s, r) => r.create(s), null);
-  }
-  /**
-  The size (in columns) of a tab in the document, determined by
-  the [`tabSize`](https://codemirror.net/6/docs/ref/#state.EditorState^tabSize) facet.
-  */
-  get tabSize() {
-    return this.facet(w.tabSize);
-  }
-  /**
-  Get the proper [line-break](https://codemirror.net/6/docs/ref/#state.EditorState^lineSeparator)
-  string for this state.
-  */
-  get lineBreak() {
-    return this.facet(w.lineSeparator) || `
-`;
-  }
-  /**
-  Returns true when the editor is
-  [configured](https://codemirror.net/6/docs/ref/#state.EditorState^readOnly) to be read-only.
-  */
-  get readOnly() {
-    return this.facet(Be);
-  }
-  /**
-  Look up a translation for the given phrase (via the
-  [`phrases`](https://codemirror.net/6/docs/ref/#state.EditorState^phrases) facet), or return the
-  original string if no translation is found.
-  
-  If additional arguments are passed, they will be inserted in
-  place of markers like `$1` (for the first value) and `$2`, etc.
-  A single `$` is equivalent to `$1`, and `$$` will produce a
-  literal dollar sign.
-  */
-  phrase(e, ...t) {
-    for (let n of this.facet(w.phrases))
-      if (Object.prototype.hasOwnProperty.call(n, e)) {
-        e = n[e];
-        break;
-      }
-    return t.length && (e = e.replace(/\$(\$|\d*)/g, (n, i) => {
-      if (i == "$")
-        return "$";
-      let s = +(i || 1);
-      return !s || s > t.length ? n : t[s - 1];
-    })), e;
-  }
-  /**
-  Find the values for a given language data field, provided by the
-  the [`languageData`](https://codemirror.net/6/docs/ref/#state.EditorState^languageData) facet.
-  
-  Examples of language data fields are...
-  
-  - [`"commentTokens"`](https://codemirror.net/6/docs/ref/#commands.CommentTokens) for specifying
-    comment syntax.
-  - [`"autocomplete"`](https://codemirror.net/6/docs/ref/#autocomplete.autocompletion^config.override)
-    for providing language-specific completion sources.
-  - [`"wordChars"`](https://codemirror.net/6/docs/ref/#state.EditorState.charCategorizer) for adding
-    characters that should be considered part of words in this
-    language.
-  - [`"closeBrackets"`](https://codemirror.net/6/docs/ref/#autocomplete.CloseBracketConfig) controls
-    bracket closing behavior.
-  */
-  languageDataAt(e, t, n = -1) {
-    let i = [];
-    for (let s of this.facet(Oe))
-      for (let r of s(this, t, n))
-        Object.prototype.hasOwnProperty.call(r, e) && i.push(r[e]);
-    return i;
-  }
-  /**
-  Return a function that can categorize strings (expected to
-  represent a single [grapheme cluster](https://codemirror.net/6/docs/ref/#state.findClusterBreak))
-  into one of:
-  
-   - Word (contains an alphanumeric character or a character
-     explicitly listed in the local language's `"wordChars"`
-     language data, which should be a string)
-   - Space (contains only whitespace)
-   - Other (anything else)
-  */
-  charCategorizer(e) {
-    return Ze(this.languageDataAt("wordChars", e).join(""));
-  }
-  /**
-  Find the word at the given position, meaning the range
-  containing all [word](https://codemirror.net/6/docs/ref/#state.CharCategory.Word) characters
-  around it. If no word characters are adjacent to the position,
-  this returns null.
-  */
-  wordAt(e) {
-    let { text: t, from: n, length: i } = this.doc.lineAt(e), s = this.charCategorizer(e), r = e - n, h = e - n;
-    for (; r > 0; ) {
-      let o = Y(t, r, !1);
-      if (s(t.slice(o, r)) != T.Word)
-        break;
-      r = o;
-    }
-    for (; h < i; ) {
-      let o = Y(t, h);
-      if (s(t.slice(h, o)) != T.Word)
-        break;
-      h = o;
-    }
-    return r == h ? null : g.range(r + n, h + n);
-  }
-}
-w.allowMultipleSelections = ae;
-w.tabSize = /* @__PURE__ */ A.define({
-  combine: (l) => l.length ? l[0] : 4
-});
-w.lineSeparator = Me;
-w.readOnly = Be;
-w.phrases = /* @__PURE__ */ A.define({
-  compare(l, e) {
-    let t = Object.keys(l), n = Object.keys(e);
-    return t.length == n.length && t.every((i) => l[i] == e[i]);
-  }
-});
-w.languageData = Oe;
-w.changeFilter = be;
-w.transactionFilter = Re;
-w.transactionExtender = Te;
-te.reconfigure = /* @__PURE__ */ I.define();
-function it(l, e, t = {}) {
-  let n = {};
-  for (let i of l)
-    for (let s of Object.keys(i)) {
-      let r = i[s], h = n[s];
-      if (h === void 0)
-        n[s] = r;
-      else if (!(h === r || r === void 0)) if (Object.hasOwnProperty.call(t, s))
-        n[s] = t[s](h, r);
-      else
-        throw new Error("Config merge conflict for field " + s);
-    }
-  for (let i in e)
-    n[i] === void 0 && (n[i] = e[i]);
-  return n;
-}
-class _ {
-  /**
-  Compare this value with another value. Used when comparing
-  rangesets. The default implementation compares by identity.
-  Unless you are only creating a fixed number of unique instances
-  of your value type, it is a good idea to implement this
-  properly.
-  */
-  eq(e) {
-    return this == e;
-  }
-  /**
-  Create a [range](https://codemirror.net/6/docs/ref/#state.Range) with this value.
-  */
-  range(e, t = e) {
-    return z.create(e, t, this);
-  }
-}
-_.prototype.startSide = _.prototype.endSide = 0;
-_.prototype.point = !1;
-_.prototype.mapMode = b.TrackDel;
-class z {
-  constructor(e, t, n) {
-    this.from = e, this.to = t, this.value = n;
-  }
-  /**
   @internal
   */
-  static create(e, t, n) {
-    return new z(e, t, n);
+  takeTree() {
+    let e, t;
+    this.parse && (e = this.parse.parsedPos) >= this.treeLen && ((this.parse.stoppedAt == null || this.parse.stoppedAt > e) && this.parse.stopAt(e), this.withContext(() => {
+      for (; !(t = this.parse.advance()); )
+        ;
+    }), this.treeLen = e, this.tree = t, this.fragments = this.withoutTempSkipped(P.addTree(this.tree, this.fragments, !0)), this.parse = null);
   }
-}
-function ce(l, e) {
-  return l.from - e.from || l.value.startSide - e.value.startSide;
-}
-class me {
-  constructor(e, t, n, i) {
-    this.from = e, this.to = t, this.value = n, this.maxPoint = i;
-  }
-  get length() {
-    return this.to[this.to.length - 1];
-  }
-  // Find the index of the given position and side. Use the ranges'
-  // `from` pos when `end == false`, `to` when `end == true`.
-  findIndex(e, t, n, i = 0) {
-    let s = n ? this.to : this.from;
-    for (let r = i, h = s.length; ; ) {
-      if (r == h)
-        return r;
-      let o = r + h >> 1, a = s[o] - e || (n ? this.value[o].endSide : this.value[o].startSide) - t;
-      if (o == r)
-        return a >= 0 ? r : h;
-      a >= 0 ? h = o : r = o + 1;
+  withContext(e) {
+    let t = A;
+    A = this;
+    try {
+      return e();
+    } finally {
+      A = t;
     }
   }
-  between(e, t, n, i) {
-    for (let s = this.findIndex(t, -1e9, !0), r = this.findIndex(n, 1e9, !1, s); s < r; s++)
-      if (i(this.from[s] + e, this.to[s] + e, this.value[s]) === !1)
-        return !1;
-  }
-  map(e, t) {
-    let n = [], i = [], s = [], r = -1, h = -1;
-    for (let o = 0; o < this.value.length; o++) {
-      let a = this.value[o], u = this.from[o] + e, f = this.to[o] + e, c, d;
-      if (u == f) {
-        let p = t.mapPos(u, a.startSide, a.mapMode);
-        if (p == null || (c = d = p, a.startSide != a.endSide && (d = t.mapPos(u, a.endSide), d < c)))
-          continue;
-      } else if (c = t.mapPos(u, a.startSide), d = t.mapPos(f, a.endSide), c > d || c == d && a.startSide > 0 && a.endSide <= 0)
-        continue;
-      (d - c || a.endSide - a.startSide) < 0 || (r < 0 && (r = c), a.point && (h = Math.max(h, d - c)), n.push(a), i.push(c - r), s.push(d - r));
-    }
-    return { mapped: n.length ? new me(i, s, n, h) : null, pos: r };
-  }
-}
-class S {
-  constructor(e, t, n, i) {
-    this.chunkPos = e, this.chunk = t, this.nextLayer = n, this.maxPoint = i;
-  }
-  /**
-  @internal
-  */
-  static create(e, t, n, i) {
-    return new S(e, t, n, i);
-  }
-  /**
-  @internal
-  */
-  get length() {
-    let e = this.chunk.length - 1;
-    return e < 0 ? 0 : Math.max(this.chunkEnd(e), this.nextLayer.length);
-  }
-  /**
-  The number of ranges in the set.
-  */
-  get size() {
-    if (this.isEmpty)
-      return 0;
-    let e = this.nextLayer.size;
-    for (let t of this.chunk)
-      e += t.value.length;
+  withoutTempSkipped(e) {
+    for (let t; t = this.tempSkipped.pop(); )
+      e = G(e, t.from, t.to);
     return e;
   }
   /**
   @internal
   */
-  chunkEnd(e) {
-    return this.chunkPos[e] + this.chunk[e].length;
+  changes(e, t) {
+    let { fragments: r, tree: i, treeLen: s, viewport: o, skipped: a } = this;
+    if (this.takeTree(), !e.empty) {
+      let l = [];
+      if (e.iterChangedRanges((u, h, f, m) => l.push({ fromA: u, toA: h, fromB: f, toB: m })), r = P.applyChanges(r, l), i = x.empty, s = 0, o = { from: e.mapPos(o.from, -1), to: e.mapPos(o.to, 1) }, this.skipped.length) {
+        a = [];
+        for (let u of this.skipped) {
+          let h = e.mapPos(u.from, 1), f = e.mapPos(u.to, -1);
+          h < f && a.push({ from: h, to: f });
+        }
+      }
+    }
+    return new D(this.parser, t, r, i, s, o, a, this.scheduleOn);
   }
   /**
-  Update the range set, optionally adding new ranges or filtering
-  out existing ones.
+  @internal
+  */
+  updateViewport(e) {
+    if (this.viewport.from == e.from && this.viewport.to == e.to)
+      return !1;
+    this.viewport = e;
+    let t = this.skipped.length;
+    for (let r = 0; r < this.skipped.length; r++) {
+      let { from: i, to: s } = this.skipped[r];
+      i < e.to && s > e.from && (this.fragments = G(this.fragments, i, s), this.skipped.splice(r--, 1));
+    }
+    return this.skipped.length >= t ? !1 : (this.reset(), !0);
+  }
+  /**
+  @internal
+  */
+  reset() {
+    this.parse && (this.takeTree(), this.parse = null);
+  }
+  /**
+  Notify the parse scheduler that the given region was skipped
+  because it wasn't in view, and the parse should be restarted
+  when it comes into view.
+  */
+  skipUntilInView(e, t) {
+    this.skipped.push({ from: e, to: t });
+  }
+  /**
+  Returns a parser intended to be used as placeholder when
+  asynchronously loading a nested parser. It'll skip its input and
+  mark it as not-really-parsed, so that the next update will parse
+  it again.
   
-  (Note: The type parameter is just there as a kludge to work
-  around TypeScript variance issues that prevented `RangeSet<X>`
-  from being a subtype of `RangeSet<Y>` when `X` is a subtype of
-  `Y`.)
+  When `until` is given, a reparse will be scheduled when that
+  promise resolves.
   */
-  update(e) {
-    let { add: t = [], sort: n = !1, filterFrom: i = 0, filterTo: s = this.length } = e, r = e.filter;
-    if (t.length == 0 && !r)
-      return this;
-    if (n && (t = t.slice().sort(ce)), this.isEmpty)
-      return t.length ? S.of(t) : this;
-    let h = new Je(this, null, -1).goto(0), o = 0, a = [], u = new ee();
-    for (; h.value || o < t.length; )
-      if (o < t.length && (h.from - t[o].from || h.startSide - t[o].value.startSide) >= 0) {
-        let f = t[o++];
-        u.addInner(f.from, f.to, f.value) || a.push(f);
-      } else h.rangeIndex == 1 && h.chunkIndex < this.chunk.length && (o == t.length || this.chunkEnd(h.chunkIndex) < t[o].from) && (!r || i > this.chunkEnd(h.chunkIndex) || s < this.chunkPos[h.chunkIndex]) && u.addChunk(this.chunkPos[h.chunkIndex], this.chunk[h.chunkIndex]) ? h.nextChunk() : ((!r || i > h.to || s < h.from || r(h.from, h.to, h.value)) && (u.addInner(h.from, h.to, h.value) || a.push(z.create(h.from, h.to, h.value))), h.next());
-    return u.finishInner(this.nextLayer.isEmpty && !a.length ? S.empty : this.nextLayer.update({ add: a, filter: r, filterFrom: i, filterTo: s }));
-  }
-  /**
-  Map this range set through a set of changes, return the new set.
-  */
-  map(e) {
-    if (e.empty || this.isEmpty)
-      return this;
-    let t = [], n = [], i = -1;
-    for (let r = 0; r < this.chunk.length; r++) {
-      let h = this.chunkPos[r], o = this.chunk[r], a = e.touchesRange(h, h + o.length);
-      if (a === !1)
-        i = Math.max(i, o.maxPoint), t.push(o), n.push(e.mapPos(h));
-      else if (a === !0) {
-        let { mapped: u, pos: f } = o.map(h, e);
-        u && (i = Math.max(i, u.maxPoint), t.push(u), n.push(f));
-      }
-    }
-    let s = this.nextLayer.map(e);
-    return t.length == 0 ? s : new S(n, t, s || S.empty, i);
-  }
-  /**
-  Iterate over the ranges that touch the region `from` to `to`,
-  calling `f` for each. There is no guarantee that the ranges will
-  be reported in any specific order. When the callback returns
-  `false`, iteration stops.
-  */
-  between(e, t, n) {
-    if (!this.isEmpty) {
-      for (let i = 0; i < this.chunk.length; i++) {
-        let s = this.chunkPos[i], r = this.chunk[i];
-        if (t >= s && e <= s + r.length && r.between(s, e - s, t - s, n) === !1)
-          return;
-      }
-      this.nextLayer.between(e, t, n);
-    }
-  }
-  /**
-  Iterate over the ranges in this set, in order, including all
-  ranges that end at or after `from`.
-  */
-  iter(e = 0) {
-    return W.from([this]).goto(e);
-  }
-  /**
-  @internal
-  */
-  get isEmpty() {
-    return this.nextLayer == this;
-  }
-  /**
-  Iterate over the ranges in a collection of sets, in order,
-  starting from `from`.
-  */
-  static iter(e, t = 0) {
-    return W.from(e).goto(t);
-  }
-  /**
-  Iterate over two groups of sets, calling methods on `comparator`
-  to notify it of possible differences.
-  */
-  static compare(e, t, n, i, s = -1) {
-    let r = e.filter((f) => f.maxPoint > 0 || !f.isEmpty && f.maxPoint >= s), h = t.filter((f) => f.maxPoint > 0 || !f.isEmpty && f.maxPoint >= s), o = xe(r, h, n), a = new N(r, o, s), u = new N(h, o, s);
-    n.iterGaps((f, c, d) => ye(a, f, u, c, d, i)), n.empty && n.length == 0 && ye(a, 0, u, 0, 0, i);
-  }
-  /**
-  Compare the contents of two groups of range sets, returning true
-  if they are equivalent in the given range.
-  */
-  static eq(e, t, n = 0, i) {
-    i == null && (i = 999999999);
-    let s = e.filter((u) => !u.isEmpty && t.indexOf(u) < 0), r = t.filter((u) => !u.isEmpty && e.indexOf(u) < 0);
-    if (s.length != r.length)
-      return !1;
-    if (!s.length)
-      return !0;
-    let h = xe(s, r), o = new N(s, h, 0).goto(n), a = new N(r, h, 0).goto(n);
-    for (; ; ) {
-      if (o.to != a.to || !de(o.active, a.active) || o.point && (!a.point || !o.point.eq(a.point)))
-        return !1;
-      if (o.to > i)
-        return !0;
-      o.next(), a.next();
-    }
-  }
-  /**
-  Iterate over a group of range sets at the same time, notifying
-  the iterator about the ranges covering every given piece of
-  content. Returns the open count (see
-  [`SpanIterator.span`](https://codemirror.net/6/docs/ref/#state.SpanIterator.span)) at the end
-  of the iteration.
-  */
-  static spans(e, t, n, i, s = -1) {
-    let r = new N(e, null, s).goto(t), h = t, o = r.openStart;
-    for (; ; ) {
-      let a = Math.min(r.to, n);
-      if (r.point) {
-        let u = r.activeForPoint(r.to), f = r.pointFrom < t ? u.length + 1 : r.point.startSide < 0 ? u.length : Math.min(u.length, o);
-        i.point(h, a, r.point, u, f, r.pointRank), o = Math.min(r.openEnd(a), u.length);
-      } else a > h && (i.span(h, a, r.active, o), o = r.openEnd(a));
-      if (r.to > n)
-        return o + (r.point && r.to > n ? 1 : 0);
-      h = r.to, r.next();
-    }
-  }
-  /**
-  Create a range set for the given range or array of ranges. By
-  default, this expects the ranges to be _sorted_ (by start
-  position and, if two start at the same position,
-  `value.startSide`). You can pass `true` as second argument to
-  cause the method to sort them.
-  */
-  static of(e, t = !1) {
-    let n = new ee();
-    for (let i of e instanceof z ? [e] : t ? je(e) : e)
-      n.add(i.from, i.to, i.value);
-    return n.finish();
-  }
-  /**
-  Join an array of range sets into a single set.
-  */
-  static join(e) {
-    if (!e.length)
-      return S.empty;
-    let t = e[e.length - 1];
-    for (let n = e.length - 2; n >= 0; n--)
-      for (let i = e[n]; i != S.empty; i = i.nextLayer)
-        t = new S(i.chunkPos, i.chunk, t, Math.max(i.maxPoint, t.maxPoint));
-    return t;
-  }
-}
-S.empty = /* @__PURE__ */ new S([], [], null, -1);
-function je(l) {
-  if (l.length > 1)
-    for (let e = l[0], t = 1; t < l.length; t++) {
-      let n = l[t];
-      if (ce(e, n) > 0)
-        return l.slice().sort(ce);
-      e = n;
-    }
-  return l;
-}
-S.empty.nextLayer = S.empty;
-class ee {
-  finishChunk(e) {
-    this.chunks.push(new me(this.from, this.to, this.value, this.maxPoint)), this.chunkPos.push(this.chunkStart), this.chunkStart = -1, this.setMaxPoint = Math.max(this.setMaxPoint, this.maxPoint), this.maxPoint = -1, e && (this.from = [], this.to = [], this.value = []);
-  }
-  /**
-  Create an empty builder.
-  */
-  constructor() {
-    this.chunks = [], this.chunkPos = [], this.chunkStart = -1, this.last = null, this.lastFrom = -1e9, this.lastTo = -1e9, this.from = [], this.to = [], this.value = [], this.maxPoint = -1, this.setMaxPoint = -1, this.nextLayer = null;
-  }
-  /**
-  Add a range. Ranges should be added in sorted (by `from` and
-  `value.startSide`) order.
-  */
-  add(e, t, n) {
-    this.addInner(e, t, n) || (this.nextLayer || (this.nextLayer = new ee())).add(e, t, n);
-  }
-  /**
-  @internal
-  */
-  addInner(e, t, n) {
-    let i = e - this.lastTo || n.startSide - this.last.endSide;
-    if (i <= 0 && (e - this.lastFrom || n.startSide - this.last.startSide) < 0)
-      throw new Error("Ranges must be added sorted by `from` position and `startSide`");
-    return i < 0 ? !1 : (this.from.length == 250 && this.finishChunk(!0), this.chunkStart < 0 && (this.chunkStart = e), this.from.push(e - this.chunkStart), this.to.push(t - this.chunkStart), this.last = n, this.lastFrom = e, this.lastTo = t, this.value.push(n), n.point && (this.maxPoint = Math.max(this.maxPoint, t - e)), !0);
-  }
-  /**
-  @internal
-  */
-  addChunk(e, t) {
-    if ((e - this.lastTo || t.value[0].startSide - this.last.endSide) < 0)
-      return !1;
-    this.from.length && this.finishChunk(!0), this.setMaxPoint = Math.max(this.setMaxPoint, t.maxPoint), this.chunks.push(t), this.chunkPos.push(e);
-    let n = t.value.length - 1;
-    return this.last = t.value[n], this.lastFrom = t.from[n] + e, this.lastTo = t.to[n] + e, !0;
-  }
-  /**
-  Finish the range set. Returns the new set. The builder can't be
-  used anymore after this has been called.
-  */
-  finish() {
-    return this.finishInner(S.empty);
-  }
-  /**
-  @internal
-  */
-  finishInner(e) {
-    if (this.from.length && this.finishChunk(!1), this.chunks.length == 0)
-      return e;
-    let t = S.create(this.chunkPos, this.chunks, this.nextLayer ? this.nextLayer.finishInner(e) : e, this.setMaxPoint);
-    return this.from = null, t;
-  }
-}
-function xe(l, e, t) {
-  let n = /* @__PURE__ */ new Map();
-  for (let s of l)
-    for (let r = 0; r < s.chunk.length; r++)
-      s.chunk[r].maxPoint <= 0 && n.set(s.chunk[r], s.chunkPos[r]);
-  let i = /* @__PURE__ */ new Set();
-  for (let s of e)
-    for (let r = 0; r < s.chunk.length; r++) {
-      let h = n.get(s.chunk[r]);
-      h != null && (t ? t.mapPos(h) : h) == s.chunkPos[r] && !(t != null && t.touchesRange(h, h + s.chunk[r].length)) && i.add(s.chunk[r]);
-    }
-  return i;
-}
-class Je {
-  constructor(e, t, n, i = 0) {
-    this.layer = e, this.skip = t, this.minPoint = n, this.rank = i;
-  }
-  get startSide() {
-    return this.value ? this.value.startSide : 0;
-  }
-  get endSide() {
-    return this.value ? this.value.endSide : 0;
-  }
-  goto(e, t = -1e9) {
-    return this.chunkIndex = this.rangeIndex = 0, this.gotoInner(e, t, !1), this;
-  }
-  gotoInner(e, t, n) {
-    for (; this.chunkIndex < this.layer.chunk.length; ) {
-      let i = this.layer.chunk[this.chunkIndex];
-      if (!(this.skip && this.skip.has(i) || this.layer.chunkEnd(this.chunkIndex) < e || i.maxPoint < this.minPoint))
-        break;
-      this.chunkIndex++, n = !1;
-    }
-    if (this.chunkIndex < this.layer.chunk.length) {
-      let i = this.layer.chunk[this.chunkIndex].findIndex(e - this.layer.chunkPos[this.chunkIndex], t, !0);
-      (!n || this.rangeIndex < i) && this.setRangeIndex(i);
-    }
-    this.next();
-  }
-  forward(e, t) {
-    (this.to - e || this.endSide - t) < 0 && this.gotoInner(e, t, !0);
-  }
-  next() {
-    for (; ; )
-      if (this.chunkIndex == this.layer.chunk.length) {
-        this.from = this.to = 1e9, this.value = null;
-        break;
-      } else {
-        let e = this.layer.chunkPos[this.chunkIndex], t = this.layer.chunk[this.chunkIndex], n = e + t.from[this.rangeIndex];
-        if (this.from = n, this.to = e + t.to[this.rangeIndex], this.value = t.value[this.rangeIndex], this.setRangeIndex(this.rangeIndex + 1), this.minPoint < 0 || this.value.point && this.to - this.from >= this.minPoint)
-          break;
-      }
-  }
-  setRangeIndex(e) {
-    if (e == this.layer.chunk[this.chunkIndex].value.length) {
-      if (this.chunkIndex++, this.skip)
-        for (; this.chunkIndex < this.layer.chunk.length && this.skip.has(this.layer.chunk[this.chunkIndex]); )
-          this.chunkIndex++;
-      this.rangeIndex = 0;
-    } else
-      this.rangeIndex = e;
-  }
-  nextChunk() {
-    this.chunkIndex++, this.rangeIndex = 0, this.next();
-  }
-  compare(e) {
-    return this.from - e.from || this.startSide - e.startSide || this.rank - e.rank || this.to - e.to || this.endSide - e.endSide;
-  }
-}
-class W {
-  constructor(e) {
-    this.heap = e;
-  }
-  static from(e, t = null, n = -1) {
-    let i = [];
-    for (let s = 0; s < e.length; s++)
-      for (let r = e[s]; !r.isEmpty; r = r.nextLayer)
-        r.maxPoint >= n && i.push(new Je(r, t, n, s));
-    return i.length == 1 ? i[0] : new W(i);
-  }
-  get startSide() {
-    return this.value ? this.value.startSide : 0;
-  }
-  goto(e, t = -1e9) {
-    for (let n of this.heap)
-      n.goto(e, t);
-    for (let n = this.heap.length >> 1; n >= 0; n--)
-      ie(this.heap, n);
-    return this.next(), this;
-  }
-  forward(e, t) {
-    for (let n of this.heap)
-      n.forward(e, t);
-    for (let n = this.heap.length >> 1; n >= 0; n--)
-      ie(this.heap, n);
-    (this.to - e || this.value.endSide - t) < 0 && this.next();
-  }
-  next() {
-    if (this.heap.length == 0)
-      this.from = this.to = 1e9, this.value = null, this.rank = -1;
-    else {
-      let e = this.heap[0];
-      this.from = e.from, this.to = e.to, this.value = e.value, this.rank = e.rank, e.value && e.next(), ie(this.heap, 0);
-    }
-  }
-}
-function ie(l, e) {
-  for (let t = l[e]; ; ) {
-    let n = (e << 1) + 1;
-    if (n >= l.length)
-      break;
-    let i = l[n];
-    if (n + 1 < l.length && i.compare(l[n + 1]) >= 0 && (i = l[n + 1], n++), t.compare(i) < 0)
-      break;
-    l[n] = t, l[e] = i, e = n;
-  }
-}
-class N {
-  constructor(e, t, n) {
-    this.minPoint = n, this.active = [], this.activeTo = [], this.activeRank = [], this.minActive = -1, this.point = null, this.pointFrom = 0, this.pointRank = 0, this.to = -1e9, this.endSide = 0, this.openStart = -1, this.cursor = W.from(e, t, n);
-  }
-  goto(e, t = -1e9) {
-    return this.cursor.goto(e, t), this.active.length = this.activeTo.length = this.activeRank.length = 0, this.minActive = -1, this.to = e, this.endSide = t, this.openStart = -1, this.next(), this;
-  }
-  forward(e, t) {
-    for (; this.minActive > -1 && (this.activeTo[this.minActive] - e || this.active[this.minActive].endSide - t) < 0; )
-      this.removeActive(this.minActive);
-    this.cursor.forward(e, t);
-  }
-  removeActive(e) {
-    H(this.active, e), H(this.activeTo, e), H(this.activeRank, e), this.minActive = ke(this.active, this.activeTo);
-  }
-  addActive(e) {
-    let t = 0, { value: n, to: i, rank: s } = this.cursor;
-    for (; t < this.activeRank.length && (s - this.activeRank[t] || i - this.activeTo[t]) > 0; )
-      t++;
-    K(this.active, t, n), K(this.activeTo, t, i), K(this.activeRank, t, s), e && K(e, t, this.cursor.from), this.minActive = ke(this.active, this.activeTo);
-  }
-  // After calling this, if `this.point` != null, the next range is a
-  // point. Otherwise, it's a regular range, covered by `this.active`.
-  next() {
-    let e = this.to, t = this.point;
-    this.point = null;
-    let n = this.openStart < 0 ? [] : null;
-    for (; ; ) {
-      let i = this.minActive;
-      if (i > -1 && (this.activeTo[i] - this.cursor.from || this.active[i].endSide - this.cursor.startSide) < 0) {
-        if (this.activeTo[i] > e) {
-          this.to = this.activeTo[i], this.endSide = this.active[i].endSide;
-          break;
-        }
-        this.removeActive(i), n && H(n, i);
-      } else if (this.cursor.value)
-        if (this.cursor.from > e) {
-          this.to = this.cursor.from, this.endSide = this.cursor.startSide;
-          break;
-        } else {
-          let s = this.cursor.value;
-          if (!s.point)
-            this.addActive(n), this.cursor.next();
-          else if (t && this.cursor.to == this.to && this.cursor.from < this.cursor.to)
-            this.cursor.next();
-          else {
-            this.point = s, this.pointFrom = this.cursor.from, this.pointRank = this.cursor.rank, this.to = this.cursor.to, this.endSide = s.endSide, this.cursor.next(), this.forward(this.to, this.endSide);
-            break;
+  static getSkippingParser(e) {
+    return new class extends ge {
+      createParse(t, r, i) {
+        let s = i[0].from, o = i[i.length - 1].to;
+        return {
+          parsedPos: s,
+          advance() {
+            let l = A;
+            if (l) {
+              for (let u of i)
+                l.tempSkipped.push(u);
+              e && (l.scheduleOn = l.scheduleOn ? Promise.all([l.scheduleOn, e]) : e);
+            }
+            return this.parsedPos = o, new x(V.none, [], [], o - s);
+          },
+          stoppedAt: null,
+          stopAt() {
           }
-        }
-      else {
-        this.to = this.endSide = 1e9;
-        break;
+        };
       }
+    }();
+  }
+  /**
+  @internal
+  */
+  isDone(e) {
+    e = Math.min(e, this.state.doc.length);
+    let t = this.fragments;
+    return this.treeLen >= e && t.length && t[0].from == 0 && t[0].to >= e;
+  }
+  /**
+  Get the context for the current parse, or `null` if no editor
+  parse is in progress.
+  */
+  static get() {
+    return A;
+  }
+}
+function G(n, e, t) {
+  return P.applyChanges(n, [{ fromA: e, toA: t, fromB: e, toB: t }]);
+}
+class S {
+  constructor(e) {
+    this.context = e, this.tree = e.tree;
+  }
+  apply(e) {
+    if (!e.docChanged && this.tree == this.context.tree)
+      return this;
+    let t = this.context.changes(e.changes, e.state), r = this.context.treeLen == e.startState.doc.length ? void 0 : Math.max(e.changes.mapPos(this.context.treeLen), t.viewport.to);
+    return t.work(20, r) || t.takeTree(), new S(t);
+  }
+  static init(e) {
+    let t = Math.min(3e3, e.doc.length), r = D.create(e.facet(C).parser, e, { from: 0, to: t });
+    return r.work(20, t) || r.takeTree(), new S(r);
+  }
+}
+c.state = /* @__PURE__ */ ee.define({
+  create: S.init,
+  update(n, e) {
+    for (let t of e.effects)
+      if (t.is(c.setState))
+        return t.value;
+    return e.startState.facet(C) != e.state.facet(C) ? S.init(e.state) : n.apply(e);
+  }
+});
+let ne = (n) => {
+  let e = setTimeout(
+    () => n(),
+    500
+    /* Work.MaxPause */
+  );
+  return () => clearTimeout(e);
+};
+typeof requestIdleCallback < "u" && (ne = (n) => {
+  let e = -1, t = setTimeout(
+    () => {
+      e = requestIdleCallback(n, {
+        timeout: 400
+        /* Work.MinPause */
+      });
+    },
+    100
+    /* Work.MinPause */
+  );
+  return () => e < 0 ? clearTimeout(t) : cancelIdleCallback(e);
+});
+const F = typeof navigator < "u" && (!((N = navigator.scheduling) === null || N === void 0) && N.isInputPending) ? () => navigator.scheduling.isInputPending() : null, De = /* @__PURE__ */ te.fromClass(class {
+  constructor(e) {
+    this.view = e, this.working = null, this.workScheduled = 0, this.chunkEnd = -1, this.chunkBudget = -1, this.work = this.work.bind(this), this.scheduleWork();
+  }
+  update(e) {
+    let t = this.view.state.field(c.state).context;
+    (t.updateViewport(e.view.viewport) || this.view.viewport.to > t.treeLen) && this.scheduleWork(), (e.docChanged || e.selectionSet) && (this.view.hasFocus && (this.chunkBudget += 50), this.scheduleWork()), this.checkAsyncSchedule(t);
+  }
+  scheduleWork() {
+    if (this.working)
+      return;
+    let { state: e } = this.view, t = e.field(c.state);
+    (t.tree != t.context.tree || !t.context.isDone(e.doc.length)) && (this.working = ne(this.work));
+  }
+  work(e) {
+    this.working = null;
+    let t = Date.now();
+    if (this.chunkEnd < t && (this.chunkEnd < 0 || this.view.hasFocus) && (this.chunkEnd = t + 3e4, this.chunkBudget = 3e3), this.chunkBudget <= 0)
+      return;
+    let { state: r, viewport: { to: i } } = this.view, s = r.field(c.state);
+    if (s.tree == s.context.tree && s.context.isDone(
+      i + 1e5
+      /* Work.MaxParseAhead */
+    ))
+      return;
+    let o = Date.now() + Math.min(this.chunkBudget, 100, e && !F ? Math.max(25, e.timeRemaining() - 5) : 1e9), a = s.context.treeLen < i && r.doc.length > i + 1e3, l = s.context.work(() => F && F() || Date.now() > o, i + (a ? 0 : 1e5));
+    this.chunkBudget -= Date.now() - t, (l || this.chunkBudget <= 0) && (s.context.takeTree(), this.view.dispatch({ effects: c.setState.of(new S(s.context)) })), this.chunkBudget > 0 && !(l && !a) && this.scheduleWork(), this.checkAsyncSchedule(s.context);
+  }
+  checkAsyncSchedule(e) {
+    e.scheduleOn && (this.workScheduled++, e.scheduleOn.then(() => this.scheduleWork()).catch((t) => be(this.view.state, t)).then(() => this.workScheduled--), e.scheduleOn = null);
+  }
+  destroy() {
+    this.working && this.working();
+  }
+  isWorking() {
+    return !!(this.working || this.workScheduled > 0);
+  }
+}, {
+  eventHandlers: { focus() {
+    this.scheduleWork();
+  } }
+}), C = /* @__PURE__ */ w.define({
+  combine(n) {
+    return n.length ? n[0] : null;
+  },
+  enables: (n) => [
+    c.state,
+    De,
+    y.contentAttributes.compute([n], (e) => {
+      let t = e.facet(n);
+      return t && t.name ? { "data-language": t.name } : {};
+    })
+  ]
+});
+class kt {
+  /**
+  Create a language support object.
+  */
+  constructor(e, t = []) {
+    this.language = e, this.support = t, this.extension = [e, t];
+  }
+}
+class ie {
+  constructor(e, t, r, i, s, o = void 0) {
+    this.name = e, this.alias = t, this.extensions = r, this.filename = i, this.loadFunc = s, this.support = o, this.loading = null;
+  }
+  /**
+  Start loading the the language. Will return a promise that
+  resolves to a [`LanguageSupport`](https://codemirror.net/6/docs/ref/#language.LanguageSupport)
+  object when the language successfully loads.
+  */
+  load() {
+    return this.loading || (this.loading = this.loadFunc().then((e) => this.support = e, (e) => {
+      throw this.loading = null, e;
+    }));
+  }
+  /**
+  Create a language description.
+  */
+  static of(e) {
+    let { load: t, support: r } = e;
+    if (!t) {
+      if (!r)
+        throw new RangeError("Must pass either 'load' or 'support' to LanguageDescription.of");
+      t = () => Promise.resolve(r);
     }
-    if (n) {
-      this.openStart = 0;
-      for (let i = n.length - 1; i >= 0 && n[i] < e; i--)
-        this.openStart++;
+    return new ie(e.name, (e.alias || []).concat(e.name).map((i) => i.toLowerCase()), e.extensions || [], e.filename, t, r);
+  }
+  /**
+  Look for a language in the given array of descriptions that
+  matches the filename. Will first match
+  [`filename`](https://codemirror.net/6/docs/ref/#language.LanguageDescription.filename) patterns,
+  and then [extensions](https://codemirror.net/6/docs/ref/#language.LanguageDescription.extensions),
+  and return the first language that matches.
+  */
+  static matchFilename(e, t) {
+    for (let i of e)
+      if (i.filename && i.filename.test(t))
+        return i;
+    let r = /\.([^.]+)$/.exec(t);
+    if (r) {
+      for (let i of e)
+        if (i.extensions.indexOf(r[1]) > -1)
+          return i;
     }
+    return null;
   }
-  activeForPoint(e) {
-    if (!this.active.length)
-      return this.active;
-    let t = [];
-    for (let n = this.active.length - 1; n >= 0 && !(this.activeRank[n] < this.pointRank); n--)
-      (this.activeTo[n] > e || this.activeTo[n] == e && this.active[n].endSide >= this.point.endSide) && t.push(this.active[n]);
-    return t.reverse();
-  }
-  openEnd(e) {
-    let t = 0;
-    for (let n = this.activeTo.length - 1; n >= 0 && this.activeTo[n] > e; n--)
-      t++;
-    return t;
-  }
-}
-function ye(l, e, t, n, i, s) {
-  l.goto(e), t.goto(n);
-  let r = n + i, h = n, o = n - e;
-  for (; ; ) {
-    let a = l.to + o - t.to, u = a || l.endSide - t.endSide, f = u < 0 ? l.to + o : t.to, c = Math.min(f, r);
-    if (l.point || t.point ? l.point && t.point && (l.point == t.point || l.point.eq(t.point)) && de(l.activeForPoint(l.to), t.activeForPoint(t.to)) || s.comparePoint(h, c, l.point, t.point) : c > h && !de(l.active, t.active) && s.compareRange(h, c, l.active, t.active), f > r)
-      break;
-    (a || l.openEnd != t.openEnd) && s.boundChange && s.boundChange(f), h = f, u <= 0 && l.next(), u >= 0 && t.next();
+  /**
+  Look for a language whose name or alias matches the the given
+  name (case-insensitively). If `fuzzy` is true, and no direct
+  matchs is found, this'll also search for a language whose name
+  or alias occurs in the string (for names shorter than three
+  characters, only when surrounded by non-word characters).
+  */
+  static matchLanguageName(e, t, r = !0) {
+    t = t.toLowerCase();
+    for (let i of e)
+      if (i.alias.some((s) => s == t))
+        return i;
+    if (r)
+      for (let i of e)
+        for (let s of i.alias) {
+          let o = t.indexOf(s);
+          if (o > -1 && (s.length > 2 || !/\w/.test(t[o - 1]) && !/\w/.test(t[o + s.length])))
+            return i;
+        }
+    return null;
   }
 }
-function de(l, e) {
-  if (l.length != e.length)
-    return !1;
-  for (let t = 0; t < l.length; t++)
-    if (l[t] != e[t] && !l[t].eq(e[t]))
-      return !1;
-  return !0;
+const Oe = /* @__PURE__ */ w.define(), se = /* @__PURE__ */ w.define({
+  combine: (n) => {
+    if (!n.length)
+      return "  ";
+    let e = n[0];
+    if (!e || /\S/.test(e) || Array.from(e).some((t) => t != e[0]))
+      throw new Error("Invalid indent unit: " + JSON.stringify(n[0]));
+    return e;
+  }
+});
+function Be(n) {
+  let e = n.facet(se);
+  return e.charCodeAt(0) == 9 ? n.tabSize * e.length : e.length;
 }
-function H(l, e) {
-  for (let t = e, n = l.length - 1; t < n; t++)
-    l[t] = l[t + 1];
-  l.pop();
-}
-function K(l, e, t) {
-  for (let n = l.length - 1; n >= e; n--)
-    l[n + 1] = l[n];
-  l[e] = t;
-}
-function ke(l, e) {
-  let t = -1, n = 1e9;
-  for (let i = 0; i < e.length; i++)
-    (e[i] - n || l[i].endSide - l[t].endSide) < 0 && (t = i, n = e[i]);
+function wt(n, e) {
+  let t = "", r = n.tabSize, i = n.facet(se)[0];
+  if (i == "	") {
+    for (; e >= r; )
+      t += "	", e -= r;
+    i = " ";
+  }
+  for (let s = 0; s < e; s++)
+    t += i;
   return t;
 }
-function st(l, e, t = l.length) {
-  let n = 0;
-  for (let i = 0; i < t && i < l.length; )
-    l.charCodeAt(i) == 9 ? (n += e - n % e, i++) : (n++, i = Y(l, i));
-  return n;
-}
-function rt(l, e, t, n) {
-  for (let i = 0, s = 0; ; ) {
-    if (s >= e)
+function yt(n, e) {
+  n instanceof I && (n = new oe(n));
+  for (let r of n.state.facet(Oe)) {
+    let i = r(n, e);
+    if (i !== void 0)
       return i;
-    if (i == l.length)
-      break;
-    s += l.charCodeAt(i) == 9 ? t - s % t : 1, i = Y(l, i);
   }
-  return l.length;
+  let t = k(n.state);
+  return t.length >= e ? Fe(n, t, e) : null;
 }
+class oe {
+  /**
+  Create an indent context.
+  */
+  constructor(e, t = {}) {
+    this.state = e, this.options = t, this.unit = Be(e);
+  }
+  /**
+  Get a description of the line at the given position, taking
+  [simulated line
+  breaks](https://codemirror.net/6/docs/ref/#language.IndentContext.constructor^options.simulateBreak)
+  into account. If there is such a break at `pos`, the `bias`
+  argument determines whether the part of the line line before or
+  after the break is used.
+  */
+  lineAt(e, t = 1) {
+    let r = this.state.doc.lineAt(e), { simulateBreak: i, simulateDoubleBreak: s } = this.options;
+    return i != null && i >= r.from && i <= r.to ? s && i == e ? { text: "", from: e } : (t < 0 ? i < e : i <= e) ? { text: r.text.slice(i - r.from), from: i } : { text: r.text.slice(0, i - r.from), from: r.from } : r;
+  }
+  /**
+  Get the text directly after `pos`, either the entire line
+  or the next 100 characters, whichever is shorter.
+  */
+  textAfterPos(e, t = 1) {
+    if (this.options.simulateDoubleBreak && e == this.options.simulateBreak)
+      return "";
+    let { text: r, from: i } = this.lineAt(e, t);
+    return r.slice(e - i, Math.min(r.length, e + 100 - i));
+  }
+  /**
+  Find the column for the given position.
+  */
+  column(e, t = 1) {
+    let { text: r, from: i } = this.lineAt(e, t), s = this.countColumn(r, e - i), o = this.options.overrideIndentation ? this.options.overrideIndentation(i) : -1;
+    return o > -1 && (s += o - this.countColumn(r, r.search(/\S|$/))), s;
+  }
+  /**
+  Find the column position (taking tabs into account) of the given
+  position in the given string.
+  */
+  countColumn(e, t = e.length) {
+    return we(e, this.state.tabSize, t);
+  }
+  /**
+  Find the indentation column of the line at the given point.
+  */
+  lineIndent(e, t = 1) {
+    let { text: r, from: i } = this.lineAt(e, t), s = this.options.overrideIndentation;
+    if (s) {
+      let o = s(i);
+      if (o > -1)
+        return o;
+    }
+    return this.countColumn(r, r.search(/\S|$/));
+  }
+  /**
+  Returns the [simulated line
+  break](https://codemirror.net/6/docs/ref/#language.IndentContext.constructor^options.simulateBreak)
+  for this context, if any.
+  */
+  get simulatedBreak() {
+    return this.options.simulateBreak || null;
+  }
+}
+const Ne = /* @__PURE__ */ new p();
+function Fe(n, e, t) {
+  let r = e.resolveStack(t), i = e.resolveInner(t, -1).resolve(t, 0).enterUnfinishedNodesBefore(t);
+  if (i != r.node) {
+    let s = [];
+    for (let o = i; o && !(o.from < r.node.from || o.to > r.node.to || o.from == r.node.from && o.type == r.node.type); o = o.parent)
+      s.push(o);
+    for (let o = s.length - 1; o >= 0; o--)
+      r = { node: s[o], next: r };
+  }
+  return le(r, n, t);
+}
+function le(n, e, t) {
+  for (let r = n; r; r = r.next) {
+    let i = Le(r.node);
+    if (i)
+      return i($.create(e, t, r));
+  }
+  return 0;
+}
+function Ee(n) {
+  return n.pos == n.options.simulateBreak && n.options.simulateDoubleBreak;
+}
+function Le(n) {
+  let e = n.type.prop(Ne);
+  if (e)
+    return e;
+  let t = n.firstChild, r;
+  if (t && (r = t.type.prop(p.closedBy))) {
+    let i = n.lastChild, s = i && r.indexOf(i.name) > -1;
+    return (o) => ae(o, !0, 1, void 0, s && !Ee(o) ? i.from : void 0);
+  }
+  return n.parent == null ? Me : null;
+}
+function Me() {
+  return 0;
+}
+class $ extends oe {
+  constructor(e, t, r) {
+    super(e.state, e.options), this.base = e, this.pos = t, this.context = r;
+  }
+  /**
+  The syntax tree node to which the indentation strategy
+  applies.
+  */
+  get node() {
+    return this.context.node;
+  }
+  /**
+  @internal
+  */
+  static create(e, t, r) {
+    return new $(e, t, r);
+  }
+  /**
+  Get the text directly after `this.pos`, either the entire line
+  or the next 100 characters, whichever is shorter.
+  */
+  get textAfter() {
+    return this.textAfterPos(this.pos);
+  }
+  /**
+  Get the indentation at the reference line for `this.node`, which
+  is the line on which it starts, unless there is a node that is
+  _not_ a parent of this node covering the start of that line. If
+  so, the line at the start of that node is tried, again skipping
+  on if it is covered by another such node.
+  */
+  get baseIndent() {
+    return this.baseIndentFor(this.node);
+  }
+  /**
+  Get the indentation for the reference line of the given node
+  (see [`baseIndent`](https://codemirror.net/6/docs/ref/#language.TreeIndentContext.baseIndent)).
+  */
+  baseIndentFor(e) {
+    let t = this.state.doc.lineAt(e.from);
+    for (; ; ) {
+      let r = e.resolve(t.from);
+      for (; r.parent && r.parent.from == r.from; )
+        r = r.parent;
+      if (We(r, e))
+        break;
+      t = this.state.doc.lineAt(r.from);
+    }
+    return this.lineIndent(t.from);
+  }
+  /**
+  Continue looking for indentations in the node's parent nodes,
+  and return the result of that.
+  */
+  continue() {
+    return le(this.context.next, this.base, this.pos);
+  }
+}
+function We(n, e) {
+  for (let t = e; t; t = t.parent)
+    if (n == t)
+      return !0;
+  return !1;
+}
+function Re(n) {
+  let e = n.node, t = e.childAfter(e.from), r = e.lastChild;
+  if (!t)
+    return null;
+  let i = n.options.simulateBreak, s = n.state.doc.lineAt(t.from), o = i == null || i <= s.from ? s.to : Math.min(s.to, i);
+  for (let a = t.to; ; ) {
+    let l = e.childAfter(a);
+    if (!l || l == r)
+      return null;
+    if (!l.type.isSkipped) {
+      if (l.from >= o)
+        return null;
+      let u = /^ */.exec(s.text.slice(t.to - s.from))[0].length;
+      return { from: t.from, to: t.to + u };
+    }
+    a = l.to;
+  }
+}
+function vt({ closing: n, align: e = !0, units: t = 1 }) {
+  return (r) => ae(r, e, t, n);
+}
+function ae(n, e, t, r, i) {
+  let s = n.textAfter, o = s.match(/^\s*/)[0].length, a = r && s.slice(o, o + r.length) == r || i == n.pos + o, l = e ? Re(n) : null;
+  return l ? a ? n.column(l.from) : n.column(l.to) : n.baseIndent + (a ? 0 : n.unit * t);
+}
+const bt = (n) => n.baseIndent;
+function xt({ except: n, units: e = 1 } = {}) {
+  return (t) => {
+    let r = n && n.test(t.textAfter);
+    return t.baseIndent + (r ? 0 : e * t.unit);
+  };
+}
+const He = /* @__PURE__ */ w.define(), Ve = /* @__PURE__ */ new p();
+function Tt(n) {
+  let e = n.firstChild, t = n.lastChild;
+  return e && e.to < t.from ? { from: e.to, to: t.type.isError ? n.to : t.from } : null;
+}
+function $e(n, e, t) {
+  let r = k(n);
+  if (r.length < t)
+    return null;
+  let i = r.resolveStack(t, 1), s = null;
+  for (let o = i; o; o = o.next) {
+    let a = o.node;
+    if (a.to <= t || a.from > t)
+      continue;
+    if (s && a.from < e)
+      break;
+    let l = a.type.prop(Ve);
+    if (l && (a.to < r.length - 50 || r.length == n.doc.length || !Ue(a))) {
+      let u = l(a, n);
+      u && u.from <= t && u.from >= e && u.to > t && (s = u);
+    }
+  }
+  return s;
+}
+function Ue(n) {
+  let e = n.lastChild;
+  return e && e.to == n.to && e.type.isError;
+}
+function je(n, e, t) {
+  for (let r of n.facet(He)) {
+    let i = r(n, e, t);
+    if (i)
+      return i;
+  }
+  return $e(n, e, t);
+}
+function ue(n, e) {
+  let t = e.mapPos(n.from, 1), r = e.mapPos(n.to, -1);
+  return t >= r ? void 0 : { from: t, to: r };
+}
+const he = /* @__PURE__ */ O.define({ map: ue }), fe = /* @__PURE__ */ O.define({ map: ue });
+function ze(n) {
+  let e = [];
+  for (let { head: t } of n.state.selection.ranges)
+    e.some((r) => r.from <= t && r.to >= t) || e.push(n.lineBlockAt(t));
+  return e;
+}
+const U = /* @__PURE__ */ ee.define({
+  create() {
+    return g.none;
+  },
+  update(n, e) {
+    e.isUserEvent("delete") && e.changes.iterChangedRanges((t, r) => n = K(n, t, r)), n = n.map(e.changes);
+    for (let t of e.effects)
+      if (t.is(he) && !Je(n, t.value.from, t.value.to)) {
+        let { preparePlaceholder: r } = e.state.facet(ce), i = r ? g.replace({ widget: new Ye(r(e.state, t.value)) }) : Q;
+        n = n.update({ add: [i.range(t.value.from, t.value.to)] });
+      } else t.is(fe) && (n = n.update({
+        filter: (r, i) => t.value.from != r || t.value.to != i,
+        filterFrom: t.value.from,
+        filterTo: t.value.to
+      }));
+    return e.selection && (n = K(n, e.selection.main.head)), n;
+  },
+  provide: (n) => y.decorations.from(n),
+  toJSON(n, e) {
+    let t = [];
+    return n.between(0, e.doc.length, (r, i) => {
+      t.push(r, i);
+    }), t;
+  },
+  fromJSON(n) {
+    if (!Array.isArray(n) || n.length % 2)
+      throw new RangeError("Invalid JSON for fold state");
+    let e = [];
+    for (let t = 0; t < n.length; ) {
+      let r = n[t++], i = n[t++];
+      if (typeof r != "number" || typeof i != "number")
+        throw new RangeError("Invalid JSON for fold state");
+      e.push(Q.range(r, i));
+    }
+    return g.set(e, !0);
+  }
+});
+function K(n, e, t = e) {
+  let r = !1;
+  return n.between(e, t, (i, s) => {
+    i < t && s > e && (r = !0);
+  }), r ? n.update({
+    filterFrom: e,
+    filterTo: t,
+    filter: (i, s) => i >= t || s <= e
+  }) : n;
+}
+function qe(n, e, t) {
+  var r;
+  let i = null;
+  return (r = n.field(U, !1)) === null || r === void 0 || r.between(e, t, (s, o) => {
+    (!i || i.from > s) && (i = { from: s, to: o });
+  }), i;
+}
+function Je(n, e, t) {
+  let r = !1;
+  return n.between(e, e, (i, s) => {
+    i == e && s == t && (r = !0);
+  }), r;
+}
+function Ge(n, e) {
+  return n.field(U, !1) ? e : e.concat(O.appendConfig.of(Xe()));
+}
+const St = (n) => {
+  for (let e of ze(n)) {
+    let t = je(n.state, e.from, e.to);
+    if (t)
+      return n.dispatch({ effects: Ge(n.state, [he.of(t), Ke(n, t)]) }), !0;
+  }
+  return !1;
+};
+function Ke(n, e, t = !0) {
+  let r = n.state.doc.lineAt(e.from).number, i = n.state.doc.lineAt(e.to).number;
+  return y.announce.of(`${n.state.phrase(t ? "Folded lines" : "Unfolded lines")} ${r} ${n.state.phrase("to")} ${i}.`);
+}
+const Qe = {
+  placeholderDOM: null,
+  preparePlaceholder: null,
+  placeholderText: "…"
+}, ce = /* @__PURE__ */ w.define({
+  combine(n) {
+    return ve(n, Qe);
+  }
+});
+function Xe(n) {
+  return [U, Ze];
+}
+function de(n, e) {
+  let { state: t } = n, r = t.facet(ce), i = (o) => {
+    let a = n.lineBlockAt(n.posAtDOM(o.target)), l = qe(n.state, a.from, a.to);
+    l && n.dispatch({ effects: fe.of(l) }), o.preventDefault();
+  };
+  if (r.placeholderDOM)
+    return r.placeholderDOM(n, i, e);
+  let s = document.createElement("span");
+  return s.textContent = r.placeholderText, s.setAttribute("aria-label", t.phrase("folded code")), s.title = t.phrase("unfold"), s.className = "cm-foldPlaceholder", s.onclick = i, s;
+}
+const Q = /* @__PURE__ */ g.replace({ widget: /* @__PURE__ */ new class extends re {
+  toDOM(n) {
+    return de(n, null);
+  }
+}() });
+class Ye extends re {
+  constructor(e) {
+    super(), this.value = e;
+  }
+  eq(e) {
+    return this.value == e.value;
+  }
+  toDOM(e) {
+    return de(e, this.value);
+  }
+}
+const Ze = /* @__PURE__ */ y.baseTheme({
+  ".cm-foldPlaceholder": {
+    backgroundColor: "#eee",
+    border: "1px solid #ddd",
+    color: "#888",
+    borderRadius: ".2em",
+    margin: "0 1px",
+    padding: "0 1px",
+    cursor: "pointer"
+  },
+  ".cm-foldGutter span": {
+    padding: "0 1px",
+    cursor: "pointer"
+  }
+});
+class j {
+  constructor(e, t) {
+    this.specs = e;
+    let r;
+    function i(a) {
+      let l = q.newName();
+      return (r || (r = /* @__PURE__ */ Object.create(null)))["." + l] = a, l;
+    }
+    const s = typeof t.all == "string" ? t.all : t.all ? i(t.all) : void 0, o = t.scope;
+    this.scope = o instanceof c ? (a) => a.prop(T) == o.data : o ? (a) => a == o : void 0, this.style = xe(e.map((a) => ({
+      tag: a.tag,
+      class: a.class || i(Object.assign({}, a, { tag: null }))
+    })), {
+      all: s
+    }).style, this.module = r ? new q(r) : null, this.themeType = t.themeType;
+  }
+  /**
+  Create a highlighter style that associates the given styles to
+  the given tags. The specs must be objects that hold a style tag
+  or array of tags in their `tag` property, and either a single
+  `class` property providing a static CSS class (for highlighter
+  that rely on external styling), or a
+  [`style-mod`](https://github.com/marijnh/style-mod#documentation)-style
+  set of CSS properties (which define the styling for those tags).
+  
+  The CSS rules created for a highlighter will be emitted in the
+  order of the spec's properties. That means that for elements that
+  have multiple tags associated with them, styles defined further
+  down in the list will have a higher CSS precedence than styles
+  defined earlier.
+  */
+  static define(e, t) {
+    return new j(e, t || {});
+  }
+}
+const W = /* @__PURE__ */ w.define(), _e = /* @__PURE__ */ w.define({
+  combine(n) {
+    return n.length ? [n[0]] : null;
+  }
+});
+function E(n) {
+  let e = n.facet(W);
+  return e.length ? e : n.facet(_e);
+}
+function Ct(n, e) {
+  let t = [tt], r;
+  return n instanceof j && (n.module && t.push(y.styleModule.of(n.module)), r = n.themeType), r ? t.push(W.computeN([y.darkTheme], (i) => i.facet(y.darkTheme) == (r == "dark") ? [n] : [])) : t.push(W.of(n)), t;
+}
+class et {
+  constructor(e) {
+    this.markCache = /* @__PURE__ */ Object.create(null), this.tree = k(e.state), this.decorations = this.buildDeco(e, E(e.state)), this.decoratedTo = e.viewport.to;
+  }
+  update(e) {
+    let t = k(e.state), r = E(e.state), i = r != E(e.startState), { viewport: s } = e.view, o = e.changes.mapPos(this.decoratedTo, 1);
+    t.length < s.to && !i && t.type == this.tree.type && o >= s.to ? (this.decorations = this.decorations.map(e.changes), this.decoratedTo = o) : (t != this.tree || e.viewportChanged || i) && (this.tree = t, this.decorations = this.buildDeco(e.view, r), this.decoratedTo = s.to);
+  }
+  buildDeco(e, t) {
+    if (!t || !this.tree.length)
+      return g.none;
+    let r = new ye();
+    for (let { from: i, to: s } of e.visibleRanges)
+      Te(this.tree, t, (o, a, l) => {
+        r.add(o, a, this.markCache[l] || (this.markCache[l] = g.mark({ class: l })));
+      }, i, s);
+    return r.finish();
+  }
+}
+const tt = /* @__PURE__ */ ke.high(/* @__PURE__ */ te.fromClass(et, {
+  decorations: (n) => n.decorations
+})), rt = 1e4, nt = "()[]{}", it = /* @__PURE__ */ new p();
+function R(n, e, t) {
+  let r = n.prop(e < 0 ? p.openedBy : p.closedBy);
+  if (r)
+    return r;
+  if (n.name.length == 1) {
+    let i = t.indexOf(n.name);
+    if (i > -1 && i % 2 == (e < 0 ? 1 : 0))
+      return [t[i + e]];
+  }
+  return null;
+}
+function H(n) {
+  let e = n.type.prop(it);
+  return e ? e(n.node) : n;
+}
+function At(n, e, t, r = {}) {
+  let i = r.maxScanDistance || rt, s = r.brackets || nt, o = k(n), a = o.resolveInner(e, t);
+  for (let l = a; l; l = l.parent) {
+    let u = R(l.type, t, s);
+    if (u && l.from < l.to) {
+      let h = H(l);
+      if (h && (t > 0 ? e >= h.from && e < h.to : e > h.from && e <= h.to))
+        return st(n, e, t, l, h, u, s);
+    }
+  }
+  return ot(n, e, t, o, a.type, i, s);
+}
+function st(n, e, t, r, i, s, o) {
+  let a = r.parent, l = { from: i.from, to: i.to }, u = 0, h = a == null ? void 0 : a.cursor();
+  if (h && (t < 0 ? h.childBefore(r.from) : h.childAfter(r.to)))
+    do
+      if (t < 0 ? h.to <= r.from : h.from >= r.to) {
+        if (u == 0 && s.indexOf(h.type.name) > -1 && h.from < h.to) {
+          let f = H(h);
+          return { start: l, end: f ? { from: f.from, to: f.to } : void 0, matched: !0 };
+        } else if (R(h.type, t, o))
+          u++;
+        else if (R(h.type, -t, o)) {
+          if (u == 0) {
+            let f = H(h);
+            return {
+              start: l,
+              end: f && f.from < f.to ? { from: f.from, to: f.to } : void 0,
+              matched: !1
+            };
+          }
+          u--;
+        }
+      }
+    while (t < 0 ? h.prevSibling() : h.nextSibling());
+  return { start: l, matched: !1 };
+}
+function ot(n, e, t, r, i, s, o) {
+  let a = t < 0 ? n.sliceDoc(e - 1, e) : n.sliceDoc(e, e + 1), l = o.indexOf(a);
+  if (l < 0 || l % 2 == 0 != t > 0)
+    return null;
+  let u = { from: t < 0 ? e - 1 : e, to: t > 0 ? e + 1 : e }, h = n.doc.iterRange(e, t > 0 ? n.doc.length : 0), f = 0;
+  for (let m = 0; !h.next().done && m <= s; ) {
+    let d = h.value;
+    t < 0 && (m += d.length);
+    let v = e + m * t;
+    for (let b = t > 0 ? 0 : d.length - 1, pe = t > 0 ? d.length : -1; b != pe; b += t) {
+      let B = o.indexOf(d[b]);
+      if (!(B < 0 || r.resolveInner(v + b, 1).type != i))
+        if (B % 2 == 0 == t > 0)
+          f++;
+        else {
+          if (f == 1)
+            return { start: u, end: { from: v + b, to: v + b + 1 }, matched: B >> 1 == l >> 1 };
+          f--;
+        }
+    }
+    t > 0 && (m += d.length);
+  }
+  return h.done ? { start: u, matched: !1 } : null;
+}
+function X(n, e, t, r = 0, i = 0) {
+  e == null && (e = n.search(/[^\s\u00a0]/), e == -1 && (e = n.length));
+  let s = i;
+  for (let o = r; o < e; o++)
+    n.charCodeAt(o) == 9 ? s += t - s % t : s++;
+  return s;
+}
+class Pt {
+  /**
+  Create a stream.
+  */
+  constructor(e, t, r, i) {
+    this.string = e, this.tabSize = t, this.indentUnit = r, this.overrideIndent = i, this.pos = 0, this.start = 0, this.lastColumnPos = 0, this.lastColumnValue = 0;
+  }
+  /**
+  True if we are at the end of the line.
+  */
+  eol() {
+    return this.pos >= this.string.length;
+  }
+  /**
+  True if we are at the start of the line.
+  */
+  sol() {
+    return this.pos == 0;
+  }
+  /**
+  Get the next code unit after the current position, or undefined
+  if we're at the end of the line.
+  */
+  peek() {
+    return this.string.charAt(this.pos) || void 0;
+  }
+  /**
+  Read the next code unit and advance `this.pos`.
+  */
+  next() {
+    if (this.pos < this.string.length)
+      return this.string.charAt(this.pos++);
+  }
+  /**
+  Match the next character against the given string, regular
+  expression, or predicate. Consume and return it if it matches.
+  */
+  eat(e) {
+    let t = this.string.charAt(this.pos), r;
+    if (typeof e == "string" ? r = t == e : r = t && (e instanceof RegExp ? e.test(t) : e(t)), r)
+      return ++this.pos, t;
+  }
+  /**
+  Continue matching characters that match the given string,
+  regular expression, or predicate function. Return true if any
+  characters were consumed.
+  */
+  eatWhile(e) {
+    let t = this.pos;
+    for (; this.eat(e); )
+      ;
+    return this.pos > t;
+  }
+  /**
+  Consume whitespace ahead of `this.pos`. Return true if any was
+  found.
+  */
+  eatSpace() {
+    let e = this.pos;
+    for (; /[\s\u00a0]/.test(this.string.charAt(this.pos)); )
+      ++this.pos;
+    return this.pos > e;
+  }
+  /**
+  Move to the end of the line.
+  */
+  skipToEnd() {
+    this.pos = this.string.length;
+  }
+  /**
+  Move to directly before the given character, if found on the
+  current line.
+  */
+  skipTo(e) {
+    let t = this.string.indexOf(e, this.pos);
+    if (t > -1)
+      return this.pos = t, !0;
+  }
+  /**
+  Move back `n` characters.
+  */
+  backUp(e) {
+    this.pos -= e;
+  }
+  /**
+  Get the column position at `this.pos`.
+  */
+  column() {
+    return this.lastColumnPos < this.start && (this.lastColumnValue = X(this.string, this.start, this.tabSize, this.lastColumnPos, this.lastColumnValue), this.lastColumnPos = this.start), this.lastColumnValue;
+  }
+  /**
+  Get the indentation column of the current line.
+  */
+  indentation() {
+    var e;
+    return (e = this.overrideIndent) !== null && e !== void 0 ? e : X(this.string, null, this.tabSize);
+  }
+  /**
+  Match the input against the given string or regular expression
+  (which should start with a `^`). Return true or the regexp match
+  if it matches.
+  
+  Unless `consume` is set to `false`, this will move `this.pos`
+  past the matched text.
+  
+  When matching a string `caseInsensitive` can be set to true to
+  make the match case-insensitive.
+  */
+  match(e, t, r) {
+    if (typeof e == "string") {
+      let i = (o) => r ? o.toLowerCase() : o, s = this.string.substr(this.pos, e.length);
+      return i(s) == i(e) ? (t !== !1 && (this.pos += e.length), !0) : null;
+    } else {
+      let i = this.string.slice(this.pos).match(e);
+      return i && i.index > 0 ? null : (i && t !== !1 && (this.pos += i[0].length), i);
+    }
+  }
+  /**
+  Get the current token.
+  */
+  current() {
+    return this.string.slice(this.start, this.pos);
+  }
+}
+const lt = /* @__PURE__ */ Object.create(null), Y = [V.none], Z = [], _ = /* @__PURE__ */ Object.create(null), at = /* @__PURE__ */ Object.create(null);
+for (let [n, e] of [
+  ["variable", "variableName"],
+  ["variable-2", "variableName.special"],
+  ["string-2", "string.special"],
+  ["def", "variableName.definition"],
+  ["tag", "tagName"],
+  ["attribute", "attributeName"],
+  ["type", "typeName"],
+  ["builtin", "variableName.standard"],
+  ["qualifier", "modifier"],
+  ["error", "invalid"],
+  ["header", "heading"],
+  ["property", "propertyName"]
+])
+  at[n] = /* @__PURE__ */ ut(lt, e);
+function L(n, e) {
+  Z.indexOf(n) > -1 || (Z.push(n), console.warn(e));
+}
+function ut(n, e) {
+  let t = [];
+  for (let a of e.split(" ")) {
+    let l = [];
+    for (let u of a.split(".")) {
+      let h = n[u] || Se[u];
+      h ? typeof h == "function" ? l.length ? l = l.map(h) : L(u, `Modifier ${u} used at start of tag`) : l.length ? L(u, `Tag ${u} used as modifier`) : l = Array.isArray(h) ? h : [h] : L(u, `Unknown highlighting tag ${u}`);
+    }
+    for (let u of l)
+      t.push(u);
+  }
+  if (!t.length)
+    return 0;
+  let r = e.replace(/ /g, "_"), i = r + " " + t.map((a) => a.id), s = _[i];
+  if (s)
+    return s.id;
+  let o = _[i] = V.define({
+    id: Y.length,
+    name: r,
+    props: [Ce({ [r]: t })]
+  });
+  return Y.push(o), o.id;
+}
+z.RTL, z.LTR;
 export {
-  U as Annotation,
-  We as AnnotationType,
-  M as ChangeDesc,
-  y as ChangeSet,
-  T as CharCategory,
-  te as Compartment,
-  g as EditorSelection,
-  w as EditorState,
-  A as Facet,
-  Ne as Line,
-  b as MapMode,
-  nt as Prec,
-  z as Range,
-  S as RangeSet,
-  ee as RangeSetBuilder,
-  _ as RangeValue,
-  C as SelectionRange,
-  I as StateEffect,
-  Ue as StateEffectType,
-  L as StateField,
-  x as Text,
-  P as Transaction,
-  et as codePointAt,
-  tt as codePointSize,
-  it as combineConfig,
-  st as countColumn,
-  Y as findClusterBreak,
-  rt as findColumn
+  Ie as DocInput,
+  j as HighlightStyle,
+  oe as IndentContext,
+  M as LRLanguage,
+  c as Language,
+  ie as LanguageDescription,
+  kt as LanguageSupport,
+  D as ParseContext,
+  Pt as StringStream,
+  $ as TreeIndentContext,
+  it as bracketMatchingHandle,
+  Xe as codeFolding,
+  xt as continuedIndent,
+  Ae as defineLanguageFacet,
+  vt as delimitedIndent,
+  mt as ensureSyntaxTree,
+  bt as flatIndent,
+  St as foldCode,
+  he as foldEffect,
+  Tt as foldInside,
+  Ve as foldNodeProp,
+  He as foldService,
+  U as foldState,
+  je as foldable,
+  Be as getIndentUnit,
+  yt as getIndentation,
+  Ne as indentNodeProp,
+  Oe as indentService,
+  wt as indentString,
+  se as indentUnit,
+  C as language,
+  T as languageDataProp,
+  At as matchBrackets,
+  Pe as sublanguageProp,
+  Ct as syntaxHighlighting,
+  k as syntaxTree,
+  fe as unfoldEffect
 };

@@ -1,62 +1,239 @@
-import * as o from "react";
-import { composeRefs as S } from "./index82.js";
-import { jsx as y } from "react/jsx-runtime";
-var E = Symbol.for("react.lazy"), p = o[" use ".trim().toString()];
-function g(t) {
-  return typeof t == "object" && t !== null && "then" in t;
-}
-function d(t) {
-  return t != null && typeof t == "object" && "$$typeof" in t && t.$$typeof === E && "_payload" in t && g(t._payload);
-}
-// @__NO_SIDE_EFFECTS__
-function C(t) {
-  const n = /* @__PURE__ */ R(t), i = o.forwardRef((e, r) => {
-    let { children: l, ...a } = e;
-    d(l) && typeof p == "function" && (l = p(l._payload));
-    const s = o.Children.toArray(l), f = s.find(b);
-    if (f) {
-      const c = f.props.children, m = s.map((u) => u === f ? o.Children.count(c) > 1 ? o.Children.only(null) : o.isValidElement(c) ? c.props.children : null : u);
-      return /* @__PURE__ */ y(n, { ...a, ref: r, children: o.isValidElement(c) ? o.cloneElement(c, void 0, m) : null });
-    }
-    return /* @__PURE__ */ y(n, { ...a, ref: r, children: l });
-  });
-  return i.displayName = `${t}.Slot`, i;
-}
-var V = /* @__PURE__ */ C("Slot");
-// @__NO_SIDE_EFFECTS__
-function R(t) {
-  const n = o.forwardRef((i, e) => {
-    let { children: r, ...l } = i;
-    if (d(r) && typeof p == "function" && (r = p(r._payload)), o.isValidElement(r)) {
-      const a = P(r), s = h(l, r.props);
-      return r.type !== o.Fragment && (s.ref = e ? S(e, a) : a), o.cloneElement(r, s);
-    }
-    return o.Children.count(r) > 1 ? o.Children.only(null) : null;
-  });
-  return n.displayName = `${t}.SlotClone`, n;
-}
-var _ = Symbol("radix.slottable");
-function b(t) {
-  return o.isValidElement(t) && typeof t.type == "function" && "__radixId" in t.type && t.type.__radixId === _;
-}
-function h(t, n) {
-  const i = { ...n };
-  for (const e in n) {
-    const r = t[e], l = n[e];
-    /^on[A-Z]/.test(e) ? r && l ? i[e] = (...s) => {
-      const f = l(...s);
-      return r(...s), f;
-    } : r && (i[e] = r) : e === "style" ? i[e] = { ...r, ...l } : e === "className" && (i[e] = [r, l].filter(Boolean).join(" "));
+import s from "react";
+import { createContextScope as X } from "./index87.js";
+import { createCollection as Z } from "./index96.js";
+import { useComposedRefs as $ } from "./index88.js";
+import { composeEventHandlers as ee } from "./index89.js";
+import { useControllableState as M } from "./index91.js";
+import { Primitive as V } from "./index95.js";
+import { createCollapsibleScope as H, Root as oe, Trigger as re, Content as te } from "./index80.js";
+import { useId as ne } from "./index97.js";
+import { useDirection as ce } from "./index98.js";
+import { jsx as n } from "react/jsx-runtime";
+var d = "Accordion", ie = ["Home", "End", "ArrowDown", "ArrowUp", "ArrowLeft", "ArrowRight"], [E, ae, le] = Z(d), [b] = X(d, [
+  le,
+  H
+]), S = H(), K = s.forwardRef(
+  (o, c) => {
+    const { type: e, ...t } = o, i = t, r = t;
+    return /* @__PURE__ */ n(E.Provider, { scope: o.__scopeAccordion, children: e === "multiple" ? /* @__PURE__ */ n(fe, { ...r, ref: c }) : /* @__PURE__ */ n(pe, { ...i, ref: c }) });
   }
-  return { ...t, ...i };
+);
+K.displayName = d;
+var [L, se] = b(d), [z, de] = b(
+  d,
+  { collapsible: !1 }
+), pe = s.forwardRef(
+  (o, c) => {
+    const {
+      value: e,
+      defaultValue: t,
+      onValueChange: i = () => {
+      },
+      collapsible: r = !1,
+      ...l
+    } = o, [a, p] = M({
+      prop: e,
+      defaultProp: t ?? "",
+      onChange: i,
+      caller: d
+    });
+    return /* @__PURE__ */ n(
+      L,
+      {
+        scope: o.__scopeAccordion,
+        value: s.useMemo(() => a ? [a] : [], [a]),
+        onItemOpen: p,
+        onItemClose: s.useCallback(() => r && p(""), [r, p]),
+        children: /* @__PURE__ */ n(z, { scope: o.__scopeAccordion, collapsible: r, children: /* @__PURE__ */ n(G, { ...l, ref: c }) })
+      }
+    );
+  }
+), fe = s.forwardRef((o, c) => {
+  const {
+    value: e,
+    defaultValue: t,
+    onValueChange: i = () => {
+    },
+    ...r
+  } = o, [l, a] = M({
+    prop: e,
+    defaultProp: t ?? [],
+    onChange: i,
+    caller: d
+  }), p = s.useCallback(
+    (v) => a((u = []) => [...u, v]),
+    [a]
+  ), m = s.useCallback(
+    (v) => a((u = []) => u.filter((h) => h !== v)),
+    [a]
+  );
+  return /* @__PURE__ */ n(
+    L,
+    {
+      scope: o.__scopeAccordion,
+      value: l,
+      onItemOpen: p,
+      onItemClose: m,
+      children: /* @__PURE__ */ n(z, { scope: o.__scopeAccordion, collapsible: !0, children: /* @__PURE__ */ n(G, { ...r, ref: c }) })
+    }
+  );
+}), [ue, I] = b(d), G = s.forwardRef(
+  (o, c) => {
+    const { __scopeAccordion: e, disabled: t, dir: i, orientation: r = "vertical", ...l } = o, a = s.useRef(null), p = $(a, c), m = ae(e), u = ce(i) === "ltr", h = ee(o.onKeyDown, (C) => {
+      var O;
+      if (!ie.includes(C.key)) return;
+      const Q = C.target, x = m().filter((N) => {
+        var T;
+        return !((T = N.ref.current) != null && T.disabled);
+      }), A = x.findIndex((N) => N.ref.current === Q), D = x.length;
+      if (A === -1) return;
+      C.preventDefault();
+      let f = A;
+      const _ = 0, w = D - 1, R = () => {
+        f = A + 1, f > w && (f = _);
+      }, P = () => {
+        f = A - 1, f < _ && (f = w);
+      };
+      switch (C.key) {
+        case "Home":
+          f = _;
+          break;
+        case "End":
+          f = w;
+          break;
+        case "ArrowRight":
+          r === "horizontal" && (u ? R() : P());
+          break;
+        case "ArrowDown":
+          r === "vertical" && R();
+          break;
+        case "ArrowLeft":
+          r === "horizontal" && (u ? P() : R());
+          break;
+        case "ArrowUp":
+          r === "vertical" && P();
+          break;
+      }
+      const W = f % D;
+      (O = x[W].ref.current) == null || O.focus();
+    });
+    return /* @__PURE__ */ n(
+      ue,
+      {
+        scope: e,
+        disabled: t,
+        direction: i,
+        orientation: r,
+        children: /* @__PURE__ */ n(E.Slot, { scope: e, children: /* @__PURE__ */ n(
+          V.div,
+          {
+            ...l,
+            "data-orientation": r,
+            ref: p,
+            onKeyDown: t ? void 0 : h
+          }
+        ) })
+      }
+    );
+  }
+), g = "AccordionItem", [me, k] = b(g), U = s.forwardRef(
+  (o, c) => {
+    const { __scopeAccordion: e, value: t, ...i } = o, r = I(g, e), l = se(g, e), a = S(e), p = ne(), m = t && l.value.includes(t) || !1, v = r.disabled || o.disabled;
+    return /* @__PURE__ */ n(
+      me,
+      {
+        scope: e,
+        open: m,
+        disabled: v,
+        triggerId: p,
+        children: /* @__PURE__ */ n(
+          oe,
+          {
+            "data-orientation": r.orientation,
+            "data-state": J(m),
+            ...a,
+            ...i,
+            ref: c,
+            disabled: v,
+            open: m,
+            onOpenChange: (u) => {
+              u ? l.onItemOpen(t) : l.onItemClose(t);
+            }
+          }
+        )
+      }
+    );
+  }
+);
+U.displayName = g;
+var j = "AccordionHeader", Y = s.forwardRef(
+  (o, c) => {
+    const { __scopeAccordion: e, ...t } = o, i = I(d, e), r = k(j, e);
+    return /* @__PURE__ */ n(
+      V.h3,
+      {
+        "data-orientation": i.orientation,
+        "data-state": J(r.open),
+        "data-disabled": r.disabled ? "" : void 0,
+        ...t,
+        ref: c
+      }
+    );
+  }
+);
+Y.displayName = j;
+var y = "AccordionTrigger", q = s.forwardRef(
+  (o, c) => {
+    const { __scopeAccordion: e, ...t } = o, i = I(d, e), r = k(y, e), l = de(y, e), a = S(e);
+    return /* @__PURE__ */ n(E.ItemSlot, { scope: e, children: /* @__PURE__ */ n(
+      re,
+      {
+        "aria-disabled": r.open && !l.collapsible || void 0,
+        "data-orientation": i.orientation,
+        id: r.triggerId,
+        ...a,
+        ...t,
+        ref: c
+      }
+    ) });
+  }
+);
+q.displayName = y;
+var B = "AccordionContent", F = s.forwardRef(
+  (o, c) => {
+    const { __scopeAccordion: e, ...t } = o, i = I(d, e), r = k(B, e), l = S(e);
+    return /* @__PURE__ */ n(
+      te,
+      {
+        role: "region",
+        "aria-labelledby": r.triggerId,
+        "data-orientation": i.orientation,
+        ...l,
+        ...t,
+        ref: c,
+        style: {
+          "--radix-accordion-content-height": "var(--radix-collapsible-content-height)",
+          "--radix-accordion-content-width": "var(--radix-collapsible-content-width)",
+          ...o.style
+        }
+      }
+    );
+  }
+);
+F.displayName = B;
+function J(o) {
+  return o ? "open" : "closed";
 }
-function P(t) {
-  var e, r;
-  let n = (e = Object.getOwnPropertyDescriptor(t.props, "ref")) == null ? void 0 : e.get, i = n && "isReactWarning" in n && n.isReactWarning;
-  return i ? t.ref : (n = (r = Object.getOwnPropertyDescriptor(t, "ref")) == null ? void 0 : r.get, i = n && "isReactWarning" in n && n.isReactWarning, i ? t.props.ref : t.props.ref || t.ref);
-}
+var Pe = K, Ne = U, ye = Y, Ee = q, Se = F;
 export {
-  V as Root,
-  V as Slot,
-  C as createSlot
+  K as Accordion,
+  F as AccordionContent,
+  Y as AccordionHeader,
+  U as AccordionItem,
+  q as AccordionTrigger,
+  Se as Content,
+  ye as Header,
+  Ne as Item,
+  Pe as Root,
+  Ee as Trigger
 };

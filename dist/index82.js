@@ -1,29 +1,14 @@
-import * as f from "react";
-function l(n, o) {
-  if (typeof n == "function")
-    return n(o);
-  n != null && (n.current = o);
-}
-function i(...n) {
-  return (o) => {
-    let u = !1;
-    const c = n.map((t) => {
-      const e = l(t, o);
-      return !u && typeof e == "function" && (u = !0), e;
-    });
-    if (u)
-      return () => {
-        for (let t = 0; t < c.length; t++) {
-          const e = c[t];
-          typeof e == "function" ? e() : l(n[t], null);
-        }
-      };
-  };
-}
-function s(...n) {
-  return f.useCallback(i(...n), n);
-}
+import e from "./index132.js";
+/**
+ * @license lucide-react v0.460.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const r = e("Search", [
+  ["circle", { cx: "11", cy: "11", r: "8", key: "4ej97u" }],
+  ["path", { d: "m21 21-4.3-4.3", key: "1qie3q" }]
+]);
 export {
-  i as composeRefs,
-  s as useComposedRefs
+  r as default
 };

@@ -1,24 +1,94 @@
-import { jsx as o } from "react/jsx-runtime";
-import * as i from "react";
-import { Root as s, Trigger as m, Anchor as l, Portal as p, Content as t } from "./index51.js";
-import { cn as c } from "./index2.js";
-const u = s, P = m, v = l, f = i.forwardRef(({ className: e, align: a = "center", sideOffset: r = 4, ...n }, d) => /* @__PURE__ */ o(p, { children: /* @__PURE__ */ o(
-  t,
-  {
-    ref: d,
-    align: a,
-    sideOffset: r,
-    className: c(
-      "z-50 w-72 rounded-md border border-terminal-green bg-black p-4 text-terminal-green shadow-md outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
-      e
-    ),
-    ...n
-  }
-) }));
-f.displayName = t.displayName;
+import { jsx as i } from "react/jsx-runtime";
+import * as s from "react";
+import { Root as F } from "./index67.js";
+import { FormProvider as u, useFormContext as p, Controller as x } from "./index68.js";
+import { cn as a } from "./index2.js";
+import { Label as I } from "./index20.js";
+const D = u, f = s.createContext(
+  {}
+), M = ({
+  ...e
+}) => /* @__PURE__ */ i(f.Provider, { value: { name: e.name }, children: /* @__PURE__ */ i(x, { ...e }) }), d = () => {
+  const e = s.useContext(f), o = s.useContext(l), { getFieldState: r, formState: t } = p(), m = r(e.name, t);
+  if (!e)
+    throw new Error("useFormField should be used within <FormField>");
+  const { id: n } = o;
+  return {
+    id: n,
+    name: e.name,
+    formItemId: `${n}-form-item`,
+    formDescriptionId: `${n}-form-item-description`,
+    formMessageId: `${n}-form-item-message`,
+    ...m
+  };
+}, l = s.createContext(
+  {}
+), C = s.forwardRef(({ className: e, ...o }, r) => {
+  const t = s.useId();
+  return /* @__PURE__ */ i(l.Provider, { value: { id: t }, children: /* @__PURE__ */ i("div", { ref: r, className: a("space-y-2", e), ...o }) });
+});
+C.displayName = "FormItem";
+const g = s.forwardRef(({ className: e, ...o }, r) => {
+  const { error: t, formItemId: m } = d();
+  return /* @__PURE__ */ i(
+    I,
+    {
+      ref: r,
+      className: a(t && "text-destructive", e),
+      htmlFor: m,
+      ...o
+    }
+  );
+});
+g.displayName = "FormLabel";
+const v = s.forwardRef(({ ...e }, o) => {
+  const { error: r, formItemId: t, formDescriptionId: m, formMessageId: n } = d();
+  return /* @__PURE__ */ i(
+    F,
+    {
+      ref: o,
+      id: t,
+      "aria-describedby": r ? `${m} ${n}` : `${m}`,
+      "aria-invalid": !!r,
+      ...e
+    }
+  );
+});
+v.displayName = "FormControl";
+const N = s.forwardRef(({ className: e, ...o }, r) => {
+  const { formDescriptionId: t } = d();
+  return /* @__PURE__ */ i(
+    "p",
+    {
+      ref: r,
+      id: t,
+      className: a("text-[0.8rem] text-muted-foreground", e),
+      ...o
+    }
+  );
+});
+N.displayName = "FormDescription";
+const w = s.forwardRef(({ className: e, children: o, ...r }, t) => {
+  const { error: m, formMessageId: n } = d(), c = m ? String(m == null ? void 0 : m.message) : o;
+  return c ? /* @__PURE__ */ i(
+    "p",
+    {
+      ref: t,
+      id: n,
+      className: a("text-[0.8rem] font-medium text-destructive", e),
+      ...r,
+      children: c
+    }
+  ) : null;
+});
+w.displayName = "FormMessage";
 export {
-  u as Popover,
-  v as PopoverAnchor,
-  f as PopoverContent,
-  P as PopoverTrigger
+  D as Form,
+  v as FormControl,
+  N as FormDescription,
+  M as FormField,
+  C as FormItem,
+  g as FormLabel,
+  w as FormMessage,
+  d as useFormField
 };

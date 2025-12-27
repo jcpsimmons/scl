@@ -1,42 +1,42 @@
 import { jsx as l } from "react/jsx-runtime";
-import * as f from "react";
-import { Root as s, Image as t, Fallback as m } from "./index46.js";
-import { cn as o } from "./index2.js";
-const d = f.forwardRef(({ className: a, ...e }, r) => /* @__PURE__ */ l(
+import * as o from "react";
+import { Root as s, Image as t, Fallback as d } from "./index69.js";
+import { cn as m } from "./index2.js";
+const f = o.forwardRef(({ className: a, ...r }, e) => /* @__PURE__ */ l(
   s,
   {
-    ref: r,
-    className: o(
-      "relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full border border-[#00ff00]",
+    ref: e,
+    className: m(
+      "relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full border border-primary",
       a
     ),
-    ...e
+    ...r
   }
 ));
-d.displayName = s.displayName;
-const i = f.forwardRef(({ className: a, ...e }, r) => /* @__PURE__ */ l(
+f.displayName = s.displayName;
+const i = o.forwardRef(({ className: a, ...r }, e) => /* @__PURE__ */ l(
   t,
   {
-    ref: r,
-    className: o("aspect-square h-full w-full", a),
-    ...e
+    ref: e,
+    className: m("aspect-square h-full w-full", a),
+    ...r
   }
 ));
 i.displayName = t.displayName;
-const c = f.forwardRef(({ className: a, ...e }, r) => /* @__PURE__ */ l(
-  m,
+const p = o.forwardRef(({ className: a, ...r }, e) => /* @__PURE__ */ l(
+  d,
   {
-    ref: r,
-    className: o(
-      "flex h-full w-full items-center justify-center rounded-full bg-black border border-[#00ff00] text-[#00ff00]",
+    ref: e,
+    className: m(
+      "flex h-full w-full items-center justify-center rounded-full bg-background border border-primary text-primary",
       a
     ),
-    ...e
+    ...r
   }
 ));
-c.displayName = m.displayName;
+p.displayName = d.displayName;
 export {
-  d as Avatar,
-  c as AvatarFallback,
+  f as Avatar,
+  p as AvatarFallback,
   i as AvatarImage
 };

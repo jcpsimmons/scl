@@ -1,262 +1,832 @@
-import * as s from "react";
-import { composeEventHandlers as p } from "./index83.js";
-import { useComposedRefs as _ } from "./index82.js";
-import { createContextScope as V, createContext as q } from "./index80.js";
-import { useId as R } from "./index86.js";
-import { useControllableState as K } from "./index84.js";
-import { DismissableLayer as U } from "./index96.js";
-import { FocusScope as Y } from "./index102.js";
-import { Portal as Z } from "./index98.js";
-import { Presence as h } from "./index95.js";
-import { Primitive as m } from "./index85.js";
-import { useFocusGuards as z } from "./index101.js";
-import J from "./index104.js";
-import { hideOthers as Q } from "./index103.js";
-import { createSlot as X } from "./index99.js";
-import { jsx as i, jsxs as P, Fragment as O } from "react/jsx-runtime";
-var v = "Dialog", [I, Ne] = V(v), [ee, u] = I(v), x = (e) => {
-  const {
-    __scopeDialog: o,
-    children: n,
-    open: a,
-    defaultOpen: r,
-    onOpenChange: t,
-    modal: c = !0
-  } = e, l = s.useRef(null), d = s.useRef(null), [g, C] = K({
-    prop: a,
-    defaultProp: r ?? !1,
-    onChange: t,
-    caller: v
-  });
-  return /* @__PURE__ */ i(
-    ee,
-    {
-      scope: o,
-      triggerRef: l,
-      contentRef: d,
-      contentId: R(),
-      titleId: R(),
-      descriptionId: R(),
-      open: g,
-      onOpenChange: C,
-      onOpenToggle: s.useCallback(() => C((H) => !H), [C]),
-      modal: c,
-      children: n
-    }
-  );
-};
-x.displayName = v;
-var A = "DialogTrigger", T = s.forwardRef(
-  (e, o) => {
-    const { __scopeDialog: n, ...a } = e, r = u(A, n), t = _(o, r.triggerRef);
-    return /* @__PURE__ */ i(
-      m.button,
-      {
-        type: "button",
-        "aria-haspopup": "dialog",
-        "aria-expanded": r.open,
-        "aria-controls": r.contentId,
-        "data-state": N(r.open),
-        ...a,
-        ref: t,
-        onClick: p(e.onClick, r.onOpenToggle)
-      }
-    );
+import { parser as b } from "./index121.js";
+import { LanguageSupport as w, LRLanguage as v, indentNodeProp as y, foldNodeProp as k, continuedIndent as x, foldInside as z, syntaxTree as S } from "./index64.js";
+import { NodeWeakMap as q, IterMode as C } from "./index119.js";
+let c = null;
+function u() {
+  if (!c && typeof document == "object" && document.body) {
+    let { style: t } = document.body, a = [], o = /* @__PURE__ */ new Set();
+    for (let r in t)
+      r != "cssText" && r != "cssFloat" && typeof t[r] == "string" && (/[A-Z]/.test(r) && (r = r.replace(/[A-Z]/g, (e) => "-" + e.toLowerCase())), o.has(r) || (a.push(r), o.add(r)));
+    c = a.sort().map((r) => ({ type: "property", label: r, apply: r + ": " }));
   }
-);
-T.displayName = A;
-var E = "DialogPortal", [te, b] = I(E, {
-  forceMount: void 0
-}), M = (e) => {
-  const { __scopeDialog: o, forceMount: n, children: a, container: r } = e, t = u(E, o);
-  return /* @__PURE__ */ i(te, { scope: o, forceMount: n, children: s.Children.map(a, (c) => /* @__PURE__ */ i(h, { present: n || t.open, children: /* @__PURE__ */ i(Z, { asChild: !0, container: r, children: c }) })) });
-};
-M.displayName = E;
-var D = "DialogOverlay", w = s.forwardRef(
-  (e, o) => {
-    const n = b(D, e.__scopeDialog), { forceMount: a = n.forceMount, ...r } = e, t = u(D, e.__scopeDialog);
-    return t.modal ? /* @__PURE__ */ i(h, { present: a || t.open, children: /* @__PURE__ */ i(re, { ...r, ref: o }) }) : null;
-  }
-);
-w.displayName = D;
-var oe = X("DialogOverlay.RemoveScroll"), re = s.forwardRef(
-  (e, o) => {
-    const { __scopeDialog: n, ...a } = e, r = u(D, n);
-    return (
-      // Make sure `Content` is scrollable even when it doesn't live inside `RemoveScroll`
-      // ie. when `Overlay` and `Content` are siblings
-      /* @__PURE__ */ i(J, { as: oe, allowPinchZoom: !0, shards: [r.contentRef], children: /* @__PURE__ */ i(
-        m.div,
-        {
-          "data-state": N(r.open),
-          ...a,
-          ref: o,
-          style: { pointerEvents: "auto", ...a.style }
-        }
-      ) })
-    );
-  }
-), f = "DialogContent", S = s.forwardRef(
-  (e, o) => {
-    const n = b(f, e.__scopeDialog), { forceMount: a = n.forceMount, ...r } = e, t = u(f, e.__scopeDialog);
-    return /* @__PURE__ */ i(h, { present: a || t.open, children: t.modal ? /* @__PURE__ */ i(ne, { ...r, ref: o }) : /* @__PURE__ */ i(ae, { ...r, ref: o }) });
-  }
-);
-S.displayName = f;
-var ne = s.forwardRef(
-  (e, o) => {
-    const n = u(f, e.__scopeDialog), a = s.useRef(null), r = _(o, n.contentRef, a);
-    return s.useEffect(() => {
-      const t = a.current;
-      if (t) return Q(t);
-    }, []), /* @__PURE__ */ i(
-      F,
-      {
-        ...e,
-        ref: r,
-        trapFocus: n.open,
-        disableOutsidePointerEvents: !0,
-        onCloseAutoFocus: p(e.onCloseAutoFocus, (t) => {
-          var c;
-          t.preventDefault(), (c = n.triggerRef.current) == null || c.focus();
-        }),
-        onPointerDownOutside: p(e.onPointerDownOutside, (t) => {
-          const c = t.detail.originalEvent, l = c.button === 0 && c.ctrlKey === !0;
-          (c.button === 2 || l) && t.preventDefault();
-        }),
-        onFocusOutside: p(
-          e.onFocusOutside,
-          (t) => t.preventDefault()
-        )
-      }
-    );
-  }
-), ae = s.forwardRef(
-  (e, o) => {
-    const n = u(f, e.__scopeDialog), a = s.useRef(!1), r = s.useRef(!1);
-    return /* @__PURE__ */ i(
-      F,
-      {
-        ...e,
-        ref: o,
-        trapFocus: !1,
-        disableOutsidePointerEvents: !1,
-        onCloseAutoFocus: (t) => {
-          var c, l;
-          (c = e.onCloseAutoFocus) == null || c.call(e, t), t.defaultPrevented || (a.current || (l = n.triggerRef.current) == null || l.focus(), t.preventDefault()), a.current = !1, r.current = !1;
-        },
-        onInteractOutside: (t) => {
-          var d, g;
-          (d = e.onInteractOutside) == null || d.call(e, t), t.defaultPrevented || (a.current = !0, t.detail.originalEvent.type === "pointerdown" && (r.current = !0));
-          const c = t.target;
-          ((g = n.triggerRef.current) == null ? void 0 : g.contains(c)) && t.preventDefault(), t.detail.originalEvent.type === "focusin" && r.current && t.preventDefault();
-        }
-      }
-    );
-  }
-), F = s.forwardRef(
-  (e, o) => {
-    const { __scopeDialog: n, trapFocus: a, onOpenAutoFocus: r, onCloseAutoFocus: t, ...c } = e, l = u(f, n), d = s.useRef(null), g = _(o, d);
-    return z(), /* @__PURE__ */ P(O, { children: [
-      /* @__PURE__ */ i(
-        Y,
-        {
-          asChild: !0,
-          loop: !0,
-          trapped: a,
-          onMountAutoFocus: r,
-          onUnmountAutoFocus: t,
-          children: /* @__PURE__ */ i(
-            U,
-            {
-              role: "dialog",
-              id: l.contentId,
-              "aria-describedby": l.descriptionId,
-              "aria-labelledby": l.titleId,
-              "data-state": N(l.open),
-              ...c,
-              ref: g,
-              onDismiss: () => l.onOpenChange(!1)
-            }
-          )
-        }
-      ),
-      /* @__PURE__ */ P(O, { children: [
-        /* @__PURE__ */ i(ie, { titleId: l.titleId }),
-        /* @__PURE__ */ i(ce, { contentRef: d, descriptionId: l.descriptionId })
-      ] })
-    ] });
-  }
-), y = "DialogTitle", W = s.forwardRef(
-  (e, o) => {
-    const { __scopeDialog: n, ...a } = e, r = u(y, n);
-    return /* @__PURE__ */ i(m.h2, { id: r.titleId, ...a, ref: o });
-  }
-);
-W.displayName = y;
-var k = "DialogDescription", G = s.forwardRef(
-  (e, o) => {
-    const { __scopeDialog: n, ...a } = e, r = u(k, n);
-    return /* @__PURE__ */ i(m.p, { id: r.descriptionId, ...a, ref: o });
-  }
-);
-G.displayName = k;
-var L = "DialogClose", $ = s.forwardRef(
-  (e, o) => {
-    const { __scopeDialog: n, ...a } = e, r = u(L, n);
-    return /* @__PURE__ */ i(
-      m.button,
-      {
-        type: "button",
-        ...a,
-        ref: o,
-        onClick: p(e.onClick, () => r.onOpenChange(!1))
-      }
-    );
-  }
-);
-$.displayName = L;
-function N(e) {
-  return e ? "open" : "closed";
+  return c || [];
 }
-var B = "DialogTitleWarning", [Pe, j] = q(B, {
-  contentName: f,
-  titleName: y,
-  docsSlug: "dialog"
-}), ie = ({ titleId: e }) => {
-  const o = j(B), n = `\`${o.contentName}\` requires a \`${o.titleName}\` for the component to be accessible for screen reader users.
-
-If you want to hide the \`${o.titleName}\`, you can wrap it with our VisuallyHidden component.
-
-For more information, see https://radix-ui.com/primitives/docs/components/${o.docsSlug}`;
-  return s.useEffect(() => {
-    e && (document.getElementById(e) || console.error(n));
-  }, [n, e]), null;
-}, se = "DialogDescriptionWarning", ce = ({ contentRef: e, descriptionId: o }) => {
-  const a = `Warning: Missing \`Description\` or \`aria-describedby={undefined}\` for {${j(se).contentName}}.`;
-  return s.useEffect(() => {
-    var t;
-    const r = (t = e.current) == null ? void 0 : t.getAttribute("aria-describedby");
-    o && r && (document.getElementById(o) || console.warn(a));
-  }, [a, e, o]), null;
-}, Oe = x, Ie = T, xe = M, Ae = w, Te = S, be = W, Me = G, we = $;
+const p = /* @__PURE__ */ [
+  "active",
+  "after",
+  "any-link",
+  "autofill",
+  "backdrop",
+  "before",
+  "checked",
+  "cue",
+  "default",
+  "defined",
+  "disabled",
+  "empty",
+  "enabled",
+  "file-selector-button",
+  "first",
+  "first-child",
+  "first-letter",
+  "first-line",
+  "first-of-type",
+  "focus",
+  "focus-visible",
+  "focus-within",
+  "fullscreen",
+  "has",
+  "host",
+  "host-context",
+  "hover",
+  "in-range",
+  "indeterminate",
+  "invalid",
+  "is",
+  "lang",
+  "last-child",
+  "last-of-type",
+  "left",
+  "link",
+  "marker",
+  "modal",
+  "not",
+  "nth-child",
+  "nth-last-child",
+  "nth-last-of-type",
+  "nth-of-type",
+  "only-child",
+  "only-of-type",
+  "optional",
+  "out-of-range",
+  "part",
+  "placeholder",
+  "placeholder-shown",
+  "read-only",
+  "read-write",
+  "required",
+  "right",
+  "root",
+  "scope",
+  "selection",
+  "slotted",
+  "target",
+  "target-text",
+  "valid",
+  "visited",
+  "where"
+].map((t) => ({ type: "class", label: t })), m = /* @__PURE__ */ [
+  "above",
+  "absolute",
+  "activeborder",
+  "additive",
+  "activecaption",
+  "after-white-space",
+  "ahead",
+  "alias",
+  "all",
+  "all-scroll",
+  "alphabetic",
+  "alternate",
+  "always",
+  "antialiased",
+  "appworkspace",
+  "asterisks",
+  "attr",
+  "auto",
+  "auto-flow",
+  "avoid",
+  "avoid-column",
+  "avoid-page",
+  "avoid-region",
+  "axis-pan",
+  "background",
+  "backwards",
+  "baseline",
+  "below",
+  "bidi-override",
+  "blink",
+  "block",
+  "block-axis",
+  "bold",
+  "bolder",
+  "border",
+  "border-box",
+  "both",
+  "bottom",
+  "break",
+  "break-all",
+  "break-word",
+  "bullets",
+  "button",
+  "button-bevel",
+  "buttonface",
+  "buttonhighlight",
+  "buttonshadow",
+  "buttontext",
+  "calc",
+  "capitalize",
+  "caps-lock-indicator",
+  "caption",
+  "captiontext",
+  "caret",
+  "cell",
+  "center",
+  "checkbox",
+  "circle",
+  "cjk-decimal",
+  "clear",
+  "clip",
+  "close-quote",
+  "col-resize",
+  "collapse",
+  "color",
+  "color-burn",
+  "color-dodge",
+  "column",
+  "column-reverse",
+  "compact",
+  "condensed",
+  "contain",
+  "content",
+  "contents",
+  "content-box",
+  "context-menu",
+  "continuous",
+  "copy",
+  "counter",
+  "counters",
+  "cover",
+  "crop",
+  "cross",
+  "crosshair",
+  "currentcolor",
+  "cursive",
+  "cyclic",
+  "darken",
+  "dashed",
+  "decimal",
+  "decimal-leading-zero",
+  "default",
+  "default-button",
+  "dense",
+  "destination-atop",
+  "destination-in",
+  "destination-out",
+  "destination-over",
+  "difference",
+  "disc",
+  "discard",
+  "disclosure-closed",
+  "disclosure-open",
+  "document",
+  "dot-dash",
+  "dot-dot-dash",
+  "dotted",
+  "double",
+  "down",
+  "e-resize",
+  "ease",
+  "ease-in",
+  "ease-in-out",
+  "ease-out",
+  "element",
+  "ellipse",
+  "ellipsis",
+  "embed",
+  "end",
+  "ethiopic-abegede-gez",
+  "ethiopic-halehame-aa-er",
+  "ethiopic-halehame-gez",
+  "ew-resize",
+  "exclusion",
+  "expanded",
+  "extends",
+  "extra-condensed",
+  "extra-expanded",
+  "fantasy",
+  "fast",
+  "fill",
+  "fill-box",
+  "fixed",
+  "flat",
+  "flex",
+  "flex-end",
+  "flex-start",
+  "footnotes",
+  "forwards",
+  "from",
+  "geometricPrecision",
+  "graytext",
+  "grid",
+  "groove",
+  "hand",
+  "hard-light",
+  "help",
+  "hidden",
+  "hide",
+  "higher",
+  "highlight",
+  "highlighttext",
+  "horizontal",
+  "hsl",
+  "hsla",
+  "hue",
+  "icon",
+  "ignore",
+  "inactiveborder",
+  "inactivecaption",
+  "inactivecaptiontext",
+  "infinite",
+  "infobackground",
+  "infotext",
+  "inherit",
+  "initial",
+  "inline",
+  "inline-axis",
+  "inline-block",
+  "inline-flex",
+  "inline-grid",
+  "inline-table",
+  "inset",
+  "inside",
+  "intrinsic",
+  "invert",
+  "italic",
+  "justify",
+  "keep-all",
+  "landscape",
+  "large",
+  "larger",
+  "left",
+  "level",
+  "lighter",
+  "lighten",
+  "line-through",
+  "linear",
+  "linear-gradient",
+  "lines",
+  "list-item",
+  "listbox",
+  "listitem",
+  "local",
+  "logical",
+  "loud",
+  "lower",
+  "lower-hexadecimal",
+  "lower-latin",
+  "lower-norwegian",
+  "lowercase",
+  "ltr",
+  "luminosity",
+  "manipulation",
+  "match",
+  "matrix",
+  "matrix3d",
+  "medium",
+  "menu",
+  "menutext",
+  "message-box",
+  "middle",
+  "min-intrinsic",
+  "mix",
+  "monospace",
+  "move",
+  "multiple",
+  "multiple_mask_images",
+  "multiply",
+  "n-resize",
+  "narrower",
+  "ne-resize",
+  "nesw-resize",
+  "no-close-quote",
+  "no-drop",
+  "no-open-quote",
+  "no-repeat",
+  "none",
+  "normal",
+  "not-allowed",
+  "nowrap",
+  "ns-resize",
+  "numbers",
+  "numeric",
+  "nw-resize",
+  "nwse-resize",
+  "oblique",
+  "opacity",
+  "open-quote",
+  "optimizeLegibility",
+  "optimizeSpeed",
+  "outset",
+  "outside",
+  "outside-shape",
+  "overlay",
+  "overline",
+  "padding",
+  "padding-box",
+  "painted",
+  "page",
+  "paused",
+  "perspective",
+  "pinch-zoom",
+  "plus-darker",
+  "plus-lighter",
+  "pointer",
+  "polygon",
+  "portrait",
+  "pre",
+  "pre-line",
+  "pre-wrap",
+  "preserve-3d",
+  "progress",
+  "push-button",
+  "radial-gradient",
+  "radio",
+  "read-only",
+  "read-write",
+  "read-write-plaintext-only",
+  "rectangle",
+  "region",
+  "relative",
+  "repeat",
+  "repeating-linear-gradient",
+  "repeating-radial-gradient",
+  "repeat-x",
+  "repeat-y",
+  "reset",
+  "reverse",
+  "rgb",
+  "rgba",
+  "ridge",
+  "right",
+  "rotate",
+  "rotate3d",
+  "rotateX",
+  "rotateY",
+  "rotateZ",
+  "round",
+  "row",
+  "row-resize",
+  "row-reverse",
+  "rtl",
+  "run-in",
+  "running",
+  "s-resize",
+  "sans-serif",
+  "saturation",
+  "scale",
+  "scale3d",
+  "scaleX",
+  "scaleY",
+  "scaleZ",
+  "screen",
+  "scroll",
+  "scrollbar",
+  "scroll-position",
+  "se-resize",
+  "self-start",
+  "self-end",
+  "semi-condensed",
+  "semi-expanded",
+  "separate",
+  "serif",
+  "show",
+  "single",
+  "skew",
+  "skewX",
+  "skewY",
+  "skip-white-space",
+  "slide",
+  "slider-horizontal",
+  "slider-vertical",
+  "sliderthumb-horizontal",
+  "sliderthumb-vertical",
+  "slow",
+  "small",
+  "small-caps",
+  "small-caption",
+  "smaller",
+  "soft-light",
+  "solid",
+  "source-atop",
+  "source-in",
+  "source-out",
+  "source-over",
+  "space",
+  "space-around",
+  "space-between",
+  "space-evenly",
+  "spell-out",
+  "square",
+  "start",
+  "static",
+  "status-bar",
+  "stretch",
+  "stroke",
+  "stroke-box",
+  "sub",
+  "subpixel-antialiased",
+  "svg_masks",
+  "super",
+  "sw-resize",
+  "symbolic",
+  "symbols",
+  "system-ui",
+  "table",
+  "table-caption",
+  "table-cell",
+  "table-column",
+  "table-column-group",
+  "table-footer-group",
+  "table-header-group",
+  "table-row",
+  "table-row-group",
+  "text",
+  "text-bottom",
+  "text-top",
+  "textarea",
+  "textfield",
+  "thick",
+  "thin",
+  "threeddarkshadow",
+  "threedface",
+  "threedhighlight",
+  "threedlightshadow",
+  "threedshadow",
+  "to",
+  "top",
+  "transform",
+  "translate",
+  "translate3d",
+  "translateX",
+  "translateY",
+  "translateZ",
+  "transparent",
+  "ultra-condensed",
+  "ultra-expanded",
+  "underline",
+  "unidirectional-pan",
+  "unset",
+  "up",
+  "upper-latin",
+  "uppercase",
+  "url",
+  "var",
+  "vertical",
+  "vertical-text",
+  "view-box",
+  "visible",
+  "visibleFill",
+  "visiblePainted",
+  "visibleStroke",
+  "visual",
+  "w-resize",
+  "wait",
+  "wave",
+  "wider",
+  "window",
+  "windowframe",
+  "windowtext",
+  "words",
+  "wrap",
+  "wrap-reverse",
+  "x-large",
+  "x-small",
+  "xor",
+  "xx-large",
+  "xx-small"
+].map((t) => ({ type: "keyword", label: t })).concat(/* @__PURE__ */ [
+  "aliceblue",
+  "antiquewhite",
+  "aqua",
+  "aquamarine",
+  "azure",
+  "beige",
+  "bisque",
+  "black",
+  "blanchedalmond",
+  "blue",
+  "blueviolet",
+  "brown",
+  "burlywood",
+  "cadetblue",
+  "chartreuse",
+  "chocolate",
+  "coral",
+  "cornflowerblue",
+  "cornsilk",
+  "crimson",
+  "cyan",
+  "darkblue",
+  "darkcyan",
+  "darkgoldenrod",
+  "darkgray",
+  "darkgreen",
+  "darkkhaki",
+  "darkmagenta",
+  "darkolivegreen",
+  "darkorange",
+  "darkorchid",
+  "darkred",
+  "darksalmon",
+  "darkseagreen",
+  "darkslateblue",
+  "darkslategray",
+  "darkturquoise",
+  "darkviolet",
+  "deeppink",
+  "deepskyblue",
+  "dimgray",
+  "dodgerblue",
+  "firebrick",
+  "floralwhite",
+  "forestgreen",
+  "fuchsia",
+  "gainsboro",
+  "ghostwhite",
+  "gold",
+  "goldenrod",
+  "gray",
+  "grey",
+  "green",
+  "greenyellow",
+  "honeydew",
+  "hotpink",
+  "indianred",
+  "indigo",
+  "ivory",
+  "khaki",
+  "lavender",
+  "lavenderblush",
+  "lawngreen",
+  "lemonchiffon",
+  "lightblue",
+  "lightcoral",
+  "lightcyan",
+  "lightgoldenrodyellow",
+  "lightgray",
+  "lightgreen",
+  "lightpink",
+  "lightsalmon",
+  "lightseagreen",
+  "lightskyblue",
+  "lightslategray",
+  "lightsteelblue",
+  "lightyellow",
+  "lime",
+  "limegreen",
+  "linen",
+  "magenta",
+  "maroon",
+  "mediumaquamarine",
+  "mediumblue",
+  "mediumorchid",
+  "mediumpurple",
+  "mediumseagreen",
+  "mediumslateblue",
+  "mediumspringgreen",
+  "mediumturquoise",
+  "mediumvioletred",
+  "midnightblue",
+  "mintcream",
+  "mistyrose",
+  "moccasin",
+  "navajowhite",
+  "navy",
+  "oldlace",
+  "olive",
+  "olivedrab",
+  "orange",
+  "orangered",
+  "orchid",
+  "palegoldenrod",
+  "palegreen",
+  "paleturquoise",
+  "palevioletred",
+  "papayawhip",
+  "peachpuff",
+  "peru",
+  "pink",
+  "plum",
+  "powderblue",
+  "purple",
+  "rebeccapurple",
+  "red",
+  "rosybrown",
+  "royalblue",
+  "saddlebrown",
+  "salmon",
+  "sandybrown",
+  "seagreen",
+  "seashell",
+  "sienna",
+  "silver",
+  "skyblue",
+  "slateblue",
+  "slategray",
+  "snow",
+  "springgreen",
+  "steelblue",
+  "tan",
+  "teal",
+  "thistle",
+  "tomato",
+  "turquoise",
+  "violet",
+  "wheat",
+  "white",
+  "whitesmoke",
+  "yellow",
+  "yellowgreen"
+].map((t) => ({ type: "constant", label: t }))), F = /* @__PURE__ */ [
+  "a",
+  "abbr",
+  "address",
+  "article",
+  "aside",
+  "b",
+  "bdi",
+  "bdo",
+  "blockquote",
+  "body",
+  "br",
+  "button",
+  "canvas",
+  "caption",
+  "cite",
+  "code",
+  "col",
+  "colgroup",
+  "dd",
+  "del",
+  "details",
+  "dfn",
+  "dialog",
+  "div",
+  "dl",
+  "dt",
+  "em",
+  "figcaption",
+  "figure",
+  "footer",
+  "form",
+  "header",
+  "hgroup",
+  "h1",
+  "h2",
+  "h3",
+  "h4",
+  "h5",
+  "h6",
+  "hr",
+  "html",
+  "i",
+  "iframe",
+  "img",
+  "input",
+  "ins",
+  "kbd",
+  "label",
+  "legend",
+  "li",
+  "main",
+  "meter",
+  "nav",
+  "ol",
+  "output",
+  "p",
+  "pre",
+  "ruby",
+  "section",
+  "select",
+  "small",
+  "source",
+  "span",
+  "strong",
+  "sub",
+  "summary",
+  "sup",
+  "table",
+  "tbody",
+  "td",
+  "template",
+  "textarea",
+  "tfoot",
+  "th",
+  "thead",
+  "tr",
+  "u",
+  "ul"
+].map((t) => ({ type: "type", label: t })), N = /* @__PURE__ */ [
+  "@charset",
+  "@color-profile",
+  "@container",
+  "@counter-style",
+  "@font-face",
+  "@font-feature-values",
+  "@font-palette-values",
+  "@import",
+  "@keyframes",
+  "@layer",
+  "@media",
+  "@namespace",
+  "@page",
+  "@position-try",
+  "@property",
+  "@scope",
+  "@starting-style",
+  "@supports",
+  "@view-transition"
+].map((t) => ({ type: "keyword", label: t })), s = /^(\w[\w-]*|-\w[\w-]*|)$/, L = /^-(-[\w-]*)?$/;
+function A(t, a) {
+  var o;
+  if ((t.name == "(" || t.type.isError) && (t = t.parent || t), t.name != "ArgList")
+    return !1;
+  let r = (o = t.parent) === null || o === void 0 ? void 0 : o.firstChild;
+  return (r == null ? void 0 : r.name) != "Callee" ? !1 : a.sliceString(r.from, r.to) == "var";
+}
+const f = /* @__PURE__ */ new q(), P = ["Declaration"];
+function T(t) {
+  for (let a = t; ; ) {
+    if (a.type.isTop)
+      return a;
+    if (!(a = a.parent))
+      return t;
+  }
+}
+function h(t, a, o) {
+  if (a.to - a.from > 4096) {
+    let r = f.get(a);
+    if (r)
+      return r;
+    let e = [], l = /* @__PURE__ */ new Set(), i = a.cursor(C.IncludeAnonymous);
+    if (i.firstChild())
+      do
+        for (let n of h(t, i.node, o))
+          l.has(n.label) || (l.add(n.label), e.push(n));
+      while (i.nextSibling());
+    return f.set(a, e), e;
+  } else {
+    let r = [], e = /* @__PURE__ */ new Set();
+    return a.cursor().iterate((l) => {
+      var i;
+      if (o(l) && l.matchContext(P) && ((i = l.node.nextSibling) === null || i === void 0 ? void 0 : i.name) == ":") {
+        let n = t.sliceString(l.from, l.to);
+        e.has(n) || (e.add(n), r.push({ label: n, type: "variable" }));
+      }
+    }), r;
+  }
+}
+const B = (t) => (a) => {
+  let { state: o, pos: r } = a, e = S(o).resolveInner(r, -1), l = e.type.isError && e.from == e.to - 1 && o.doc.sliceString(e.from, e.to) == "-";
+  if (e.name == "PropertyName" || (l || e.name == "TagName") && /^(Block|Styles)$/.test(e.resolve(e.to).name))
+    return { from: e.from, options: u(), validFor: s };
+  if (e.name == "ValueName")
+    return { from: e.from, options: m, validFor: s };
+  if (e.name == "PseudoClassName")
+    return { from: e.from, options: p, validFor: s };
+  if (t(e) || (a.explicit || l) && A(e, o.doc))
+    return {
+      from: t(e) || l ? e.from : r,
+      options: h(o.doc, T(e), t),
+      validFor: L
+    };
+  if (e.name == "TagName") {
+    for (let { parent: d } = e; d; d = d.parent)
+      if (d.name == "Block")
+        return { from: e.from, options: u(), validFor: s };
+    return { from: e.from, options: F, validFor: s };
+  }
+  if (e.name == "AtKeyword")
+    return { from: e.from, options: N, validFor: s };
+  if (!a.explicit)
+    return null;
+  let i = e.resolve(r), n = i.childBefore(r);
+  return n && n.name == ":" && i.name == "PseudoClassSelector" ? { from: r, options: p, validFor: s } : n && n.name == ":" && i.name == "Declaration" || i.name == "ArgList" ? { from: r, options: m, validFor: s } : i.name == "Block" || i.name == "Styles" ? { from: r, options: u(), validFor: s } : null;
+}, I = /* @__PURE__ */ B((t) => t.name == "VariableName"), g = /* @__PURE__ */ v.define({
+  name: "css",
+  parser: /* @__PURE__ */ b.configure({
+    props: [
+      /* @__PURE__ */ y.add({
+        Declaration: /* @__PURE__ */ x()
+      }),
+      /* @__PURE__ */ k.add({
+        "Block KeyframeList": z
+      })
+    ]
+  }),
+  languageData: {
+    commentTokens: { block: { open: "/*", close: "*/" } },
+    indentOnInput: /^\s*\}$/,
+    wordChars: "-"
+  }
+});
+function j() {
+  return new w(g, g.data.of({ autocomplete: I }));
+}
 export {
-  we as Close,
-  Te as Content,
-  Me as Description,
-  x as Dialog,
-  $ as DialogClose,
-  S as DialogContent,
-  G as DialogDescription,
-  w as DialogOverlay,
-  M as DialogPortal,
-  W as DialogTitle,
-  T as DialogTrigger,
-  Ae as Overlay,
-  xe as Portal,
-  Oe as Root,
-  be as Title,
-  Ie as Trigger,
-  Pe as WarningProvider,
-  Ne as createDialogScope
+  j as css,
+  I as cssCompletionSource,
+  g as cssLanguage,
+  B as defineCSSCompletionSource
 };

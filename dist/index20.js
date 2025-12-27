@@ -1,31 +1,19 @@
-import { jsx as e } from "react/jsx-runtime";
-import * as i from "react";
-import { Root as t, Item as s, Indicator as c } from "./index58.js";
-import { cn as l } from "./index2.js";
-import f from "./index56.js";
-const d = i.forwardRef(({ className: r, ...a }, o) => /* @__PURE__ */ e(
-  t,
+import { jsx as m } from "react/jsx-runtime";
+import * as t from "react";
+import { Root as o } from "./index66.js";
+import { cva as i } from "./index54.js";
+import { cn as s } from "./index2.js";
+const l = i(
+  "text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+), p = t.forwardRef(({ className: a, ...e }, r) => /* @__PURE__ */ m(
+  o,
   {
-    className: l("grid gap-2", r),
-    ...a,
-    ref: o
+    ref: r,
+    className: s(l(), a),
+    ...e
   }
 ));
-d.displayName = t.displayName;
-const m = i.forwardRef(({ className: r, ...a }, o) => /* @__PURE__ */ e(
-  s,
-  {
-    ref: o,
-    className: l(
-      "h-6 w-6 rounded-full border-2 border-[#00ff00] bg-black focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#00ff00] disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-[#00ff00] flex items-center justify-center",
-      r
-    ),
-    ...a,
-    children: /* @__PURE__ */ e(c, { className: "flex items-center justify-center", children: /* @__PURE__ */ e(f, { className: "h-3 w-3 fill-black text-black" }) })
-  }
-));
-m.displayName = s.displayName;
+p.displayName = o.displayName;
 export {
-  d as RadioGroup,
-  m as RadioGroupItem
+  p as Label
 };

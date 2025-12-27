@@ -1,61 +1,61 @@
 import { jsx as d } from "react/jsx-runtime";
 import * as o from "react";
 import { cn as t } from "./index2.js";
-const s = o.forwardRef(({ className: a, ...e }, r) => /* @__PURE__ */ d(
+const s = o.forwardRef(({ className: a, ...r }, e) => /* @__PURE__ */ d(
   "div",
   {
-    ref: r,
+    ref: e,
     className: t(
       "rounded-xl border bg-card text-card-foreground shadow",
       a
     ),
-    ...e
+    ...r
   }
 ));
 s.displayName = "Card";
-const i = o.forwardRef(({ className: a, ...e }, r) => /* @__PURE__ */ d(
+const i = o.forwardRef(({ className: a, ...r }, e) => /* @__PURE__ */ d(
   "div",
   {
-    ref: r,
+    ref: e,
     className: t("flex flex-col space-y-1.5", a),
-    ...e
+    ...r
   }
 ));
 i.displayName = "CardHeader";
-const f = o.forwardRef(({ className: a, ...e }, r) => /* @__PURE__ */ d(
+const m = o.forwardRef(({ className: a, ...r }, e) => /* @__PURE__ */ d(
   "div",
   {
-    ref: r,
-    className: t("bg-[#00ff00] text-black px-4 py-2 font-semibold leading-none tracking-tight w-full", a),
-    ...e
+    ref: e,
+    className: t("bg-primary text-primary-foreground px-4 py-2 font-semibold leading-none tracking-tight w-full", a),
+    ...r
   }
 ));
-f.displayName = "CardTitle";
-const l = o.forwardRef(({ className: a, ...e }, r) => /* @__PURE__ */ d(
+m.displayName = "CardTitle";
+const f = o.forwardRef(({ className: a, ...r }, e) => /* @__PURE__ */ d(
   "div",
   {
-    ref: r,
+    ref: e,
     className: t("text-sm text-muted-foreground", a),
-    ...e
+    ...r
   }
 ));
-l.displayName = "CardDescription";
-const c = o.forwardRef(({ className: a, ...e }, r) => /* @__PURE__ */ d("div", { ref: r, className: t("p-6", a), ...e }));
-c.displayName = "CardContent";
-const m = o.forwardRef(({ className: a, ...e }, r) => /* @__PURE__ */ d(
+f.displayName = "CardDescription";
+const l = o.forwardRef(({ className: a, ...r }, e) => /* @__PURE__ */ d("div", { ref: e, className: t("p-6", a), ...r }));
+l.displayName = "CardContent";
+const n = o.forwardRef(({ className: a, ...r }, e) => /* @__PURE__ */ d(
   "div",
   {
-    ref: r,
+    ref: e,
     className: t("flex items-center p-6 pt-0", a),
-    ...e
+    ...r
   }
 ));
-m.displayName = "CardFooter";
+n.displayName = "CardFooter";
 export {
   s as Card,
-  c as CardContent,
-  l as CardDescription,
-  m as CardFooter,
+  l as CardContent,
+  f as CardDescription,
+  n as CardFooter,
   i as CardHeader,
-  f as CardTitle
+  m as CardTitle
 };

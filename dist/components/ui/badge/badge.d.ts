@@ -1,7 +1,7 @@
 import { VariantProps } from 'class-variance-authority';
 import * as React from 'react';
 declare const badgeVariants: (props?: ({
-    variant?: "default" | "destructive" | "secondary" | "outline" | "green" | "white" | "yellow" | "hotpink" | "blue" | null | undefined;
+    variant?: "default" | "secondary" | "destructive" | "outline" | null | undefined;
 } & import('class-variance-authority/types').ClassProp) | undefined) => string;
 export interface BadgeProps extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof badgeVariants> {
 }

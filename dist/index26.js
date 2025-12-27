@@ -1,34 +1,24 @@
-import { jsxs as l, jsx as e } from "react/jsx-runtime";
-import * as b from "react";
-import { Root as n, Track as f, Range as a, Thumb as h } from "./index77.js";
-import { cn as d } from "./index2.js";
-const p = b.forwardRef(({ className: s, defaultValue: o, value: r, ...t }, i) => {
-  const c = (r == null ? void 0 : r.length) ?? (o == null ? void 0 : o.length) ?? 1;
-  return /* @__PURE__ */ l(
-    n,
+import { jsx as l } from "react/jsx-runtime";
+import * as f from "react";
+import { Root as o } from "./index77.js";
+import { cn as i } from "./index2.js";
+const s = f.forwardRef(
+  ({ className: a, orientation: r = "horizontal", decorative: m = !0, ...p }, t) => /* @__PURE__ */ l(
+    o,
     {
-      ref: i,
-      defaultValue: o,
-      value: r,
-      className: d(
-        "relative flex w-full touch-none select-none items-center",
-        s
+      ref: t,
+      decorative: m,
+      orientation: r,
+      className: i(
+        "shrink-0 bg-primary",
+        r === "horizontal" ? "h-[2px] w-full" : "h-full w-[3px]",
+        a
       ),
-      ...t,
-      children: [
-        /* @__PURE__ */ e(f, { className: "relative h-2 w-full grow overflow-hidden border border-[#00ff00] bg-black", children: /* @__PURE__ */ e(a, { className: "absolute h-full bg-[#00ff00]" }) }),
-        Array.from({ length: c }).map((g, m) => /* @__PURE__ */ e(
-          h,
-          {
-            className: "block h-5 w-3 border-2 border-[#00ff00] bg-[#00ff00] transition-all focus-visible:outline-none hover:bg-black disabled:pointer-events-none disabled:opacity-50"
-          },
-          m
-        ))
-      ]
+      ...p
     }
-  );
-});
-p.displayName = n.displayName;
+  )
+);
+s.displayName = o.displayName;
 export {
-  p as Slider
+  s as Separator
 };

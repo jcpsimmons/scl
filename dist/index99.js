@@ -1,56 +1,183 @@
-import * as l from "react";
-import { composeRefs as y } from "./index82.js";
-import { jsx as p, Fragment as S } from "react/jsx-runtime";
-// @__NO_SIDE_EFFECTS__
-function _(e) {
-  const r = /* @__PURE__ */ g(e), o = l.forwardRef((n, t) => {
-    const { children: i, ...a } = n, s = l.Children.toArray(i), c = s.find(E);
-    if (c) {
-      const f = c.props.children, m = s.map((u) => u === c ? l.Children.count(f) > 1 ? l.Children.only(null) : l.isValidElement(f) ? f.props.children : null : u);
-      return /* @__PURE__ */ p(r, { ...a, ref: t, children: l.isValidElement(f) ? l.cloneElement(f, void 0, m) : null });
+import * as c from "react";
+import { composeEventHandlers as p } from "./index89.js";
+import { createCollection as V } from "./index96.js";
+import { useComposedRefs as j } from "./index88.js";
+import { createContextScope as z } from "./index87.js";
+import { useId as q } from "./index97.js";
+import { Primitive as G } from "./index95.js";
+import { useCallbackRef as J } from "./index106.js";
+import { useControllableState as Q } from "./index91.js";
+import { useDirection as W } from "./index98.js";
+import { jsx as d } from "react/jsx-runtime";
+var y = "rovingFocusGroup.onEntryFocus", X = { bubbles: !1, cancelable: !0 }, I = "RovingFocusGroup", [D, N, Z] = V(I), [$, Fe] = z(
+  I,
+  [Z]
+), [ee, oe] = $(I), O = c.forwardRef(
+  (e, r) => /* @__PURE__ */ d(D.Provider, { scope: e.__scopeRovingFocusGroup, children: /* @__PURE__ */ d(D.Slot, { scope: e.__scopeRovingFocusGroup, children: /* @__PURE__ */ d(te, { ...e, ref: r }) }) })
+);
+O.displayName = I;
+var te = c.forwardRef((e, r) => {
+  const {
+    __scopeRovingFocusGroup: s,
+    orientation: o,
+    loop: T = !1,
+    dir: w,
+    currentTabStopId: v,
+    defaultCurrentTabStopId: C,
+    onCurrentTabStopIdChange: S,
+    onEntryFocus: m,
+    preventScrollOnEntryFocus: u = !1,
+    ...b
+  } = e, F = c.useRef(null), g = j(r, F), R = W(w), [E, t] = Q({
+    prop: v,
+    defaultProp: C ?? null,
+    onChange: S,
+    caller: I
+  }), [i, h] = c.useState(!1), a = J(m), l = N(s), A = c.useRef(!1), [L, P] = c.useState(0);
+  return c.useEffect(() => {
+    const n = F.current;
+    if (n)
+      return n.addEventListener(y, a), () => n.removeEventListener(y, a);
+  }, [a]), /* @__PURE__ */ d(
+    ee,
+    {
+      scope: s,
+      orientation: o,
+      dir: R,
+      loop: T,
+      currentTabStopId: E,
+      onItemFocus: c.useCallback(
+        (n) => t(n),
+        [t]
+      ),
+      onItemShiftTab: c.useCallback(() => h(!0), []),
+      onFocusableItemAdd: c.useCallback(
+        () => P((n) => n + 1),
+        []
+      ),
+      onFocusableItemRemove: c.useCallback(
+        () => P((n) => n - 1),
+        []
+      ),
+      children: /* @__PURE__ */ d(
+        G.div,
+        {
+          tabIndex: i || L === 0 ? -1 : 0,
+          "data-orientation": o,
+          ...b,
+          ref: g,
+          style: { outline: "none", ...e.style },
+          onMouseDown: p(e.onMouseDown, () => {
+            A.current = !0;
+          }),
+          onFocus: p(e.onFocus, (n) => {
+            const U = !A.current;
+            if (n.target === n.currentTarget && U && !i) {
+              const x = new CustomEvent(y, X);
+              if (n.currentTarget.dispatchEvent(x), !x.defaultPrevented) {
+                const _ = l().filter((f) => f.focusable), B = _.find((f) => f.active), Y = _.find((f) => f.id === E), H = [B, Y, ..._].filter(
+                  Boolean
+                ).map((f) => f.ref.current);
+                k(H, u);
+              }
+            }
+            A.current = !1;
+          }),
+          onBlur: p(e.onBlur, () => h(!1))
+        }
+      )
     }
-    return /* @__PURE__ */ p(r, { ...a, ref: t, children: i });
-  });
-  return o.displayName = `${e}.Slot`, o;
-}
-// @__NO_SIDE_EFFECTS__
-function g(e) {
-  const r = l.forwardRef((o, n) => {
-    const { children: t, ...i } = o;
-    if (l.isValidElement(t)) {
-      const a = b(t), s = C(i, t.props);
-      return t.type !== l.Fragment && (s.ref = n ? y(n, a) : a), l.cloneElement(t, s);
-    }
-    return l.Children.count(t) > 1 ? l.Children.only(null) : null;
-  });
-  return r.displayName = `${e}.SlotClone`, r;
-}
-var d = Symbol("radix.slottable");
-// @__NO_SIDE_EFFECTS__
-function x(e) {
-  const r = ({ children: o }) => /* @__PURE__ */ p(S, { children: o });
-  return r.displayName = `${e}.Slottable`, r.__radixId = d, r;
-}
-function E(e) {
-  return l.isValidElement(e) && typeof e.type == "function" && "__radixId" in e.type && e.type.__radixId === d;
-}
-function C(e, r) {
-  const o = { ...r };
-  for (const n in r) {
-    const t = e[n], i = r[n];
-    /^on[A-Z]/.test(n) ? t && i ? o[n] = (...s) => {
-      const c = i(...s);
-      return t(...s), c;
-    } : t && (o[n] = t) : n === "style" ? o[n] = { ...t, ...i } : n === "className" && (o[n] = [t, i].filter(Boolean).join(" "));
+  );
+}), K = "RovingFocusGroupItem", M = c.forwardRef(
+  (e, r) => {
+    const {
+      __scopeRovingFocusGroup: s,
+      focusable: o = !0,
+      active: T = !1,
+      tabStopId: w,
+      children: v,
+      ...C
+    } = e, S = q(), m = w || S, u = oe(K, s), b = u.currentTabStopId === m, F = N(s), { onFocusableItemAdd: g, onFocusableItemRemove: R, currentTabStopId: E } = u;
+    return c.useEffect(() => {
+      if (o)
+        return g(), () => R();
+    }, [o, g, R]), /* @__PURE__ */ d(
+      D.ItemSlot,
+      {
+        scope: s,
+        id: m,
+        focusable: o,
+        active: T,
+        children: /* @__PURE__ */ d(
+          G.span,
+          {
+            tabIndex: b ? 0 : -1,
+            "data-orientation": u.orientation,
+            ...C,
+            ref: r,
+            onMouseDown: p(e.onMouseDown, (t) => {
+              o ? u.onItemFocus(m) : t.preventDefault();
+            }),
+            onFocus: p(e.onFocus, () => u.onItemFocus(m)),
+            onKeyDown: p(e.onKeyDown, (t) => {
+              if (t.key === "Tab" && t.shiftKey) {
+                u.onItemShiftTab();
+                return;
+              }
+              if (t.target !== t.currentTarget) return;
+              const i = ce(t, u.orientation, u.dir);
+              if (i !== void 0) {
+                if (t.metaKey || t.ctrlKey || t.altKey || t.shiftKey) return;
+                t.preventDefault();
+                let a = F().filter((l) => l.focusable).map((l) => l.ref.current);
+                if (i === "last") a.reverse();
+                else if (i === "prev" || i === "next") {
+                  i === "prev" && a.reverse();
+                  const l = a.indexOf(t.currentTarget);
+                  a = u.loop ? se(a, l + 1) : a.slice(l + 1);
+                }
+                setTimeout(() => k(a));
+              }
+            }),
+            children: typeof v == "function" ? v({ isCurrentTabStop: b, hasTabStop: E != null }) : v
+          }
+        )
+      }
+    );
   }
-  return { ...e, ...o };
+);
+M.displayName = K;
+var re = {
+  ArrowLeft: "prev",
+  ArrowUp: "prev",
+  ArrowRight: "next",
+  ArrowDown: "next",
+  PageUp: "first",
+  Home: "first",
+  PageDown: "last",
+  End: "last"
+};
+function ne(e, r) {
+  return r !== "rtl" ? e : e === "ArrowLeft" ? "ArrowRight" : e === "ArrowRight" ? "ArrowLeft" : e;
 }
-function b(e) {
-  var n, t;
-  let r = (n = Object.getOwnPropertyDescriptor(e.props, "ref")) == null ? void 0 : n.get, o = r && "isReactWarning" in r && r.isReactWarning;
-  return o ? e.ref : (r = (t = Object.getOwnPropertyDescriptor(e, "ref")) == null ? void 0 : t.get, o = r && "isReactWarning" in r && r.isReactWarning, o ? e.props.ref : e.props.ref || e.ref);
+function ce(e, r, s) {
+  const o = ne(e.key, s);
+  if (!(r === "vertical" && ["ArrowLeft", "ArrowRight"].includes(o)) && !(r === "horizontal" && ["ArrowUp", "ArrowDown"].includes(o)))
+    return re[o];
 }
+function k(e, r = !1) {
+  const s = document.activeElement;
+  for (const o of e)
+    if (o === s || (o.focus({ preventScroll: r }), document.activeElement !== s)) return;
+}
+function se(e, r) {
+  return e.map((s, o) => e[(r + o) % e.length]);
+}
+var ge = O, Re = M;
 export {
-  _ as createSlot,
-  x as createSlottable
+  Re as Item,
+  ge as Root,
+  O as RovingFocusGroup,
+  M as RovingFocusGroupItem,
+  Fe as createRovingFocusGroupScope
 };

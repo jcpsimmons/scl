@@ -1,51 +1,25 @@
-const r = {
-  px: "1px",
-  0: "0px",
-  0.5: "0.125rem",
-  1: "0.25rem",
-  1.5: "0.375rem",
-  2: "0.5rem",
-  2.5: "0.625rem",
-  3: "0.75rem",
-  3.5: "0.875rem",
-  4: "1rem",
-  5: "1.25rem",
-  6: "1.5rem",
-  7: "1.75rem",
-  8: "2rem",
-  9: "2.25rem",
-  10: "2.5rem",
-  11: "2.75rem",
-  12: "3rem",
-  14: "3.5rem",
-  16: "4rem",
-  20: "5rem",
-  24: "6rem",
-  28: "7rem",
-  32: "8rem",
-  36: "9rem",
-  40: "10rem",
-  44: "11rem",
-  48: "12rem",
-  52: "13rem",
-  56: "14rem",
-  60: "15rem",
-  64: "16rem",
-  72: "18rem",
-  80: "20rem",
-  96: "24rem"
-}, e = {
-  none: "0px",
-  sm: "calc(var(--radius) - 4px)",
-  md: "calc(var(--radius) - 2px)",
-  DEFAULT: "var(--radius)",
-  lg: "var(--radius)",
-  xl: "calc(var(--radius) + 4px)",
-  "2xl": "calc(var(--radius) + 8px)",
-  "3xl": "calc(var(--radius) + 16px)",
-  full: "9999px"
-};
+import { jsx as e } from "react/jsx-runtime";
+import * as d from "react";
+import { Root as s, Trigger as n, Portal as m, Content as a, Provider as l } from "./index52.js";
+import { cn as p } from "./index2.js";
+const f = ({ children: o, ...t }) => /* @__PURE__ */ e(l, { delayDuration: 100, skipDelayDuration: 300, ...t, children: o });
+f.displayName = "TooltipProvider";
+const T = s, x = n, c = d.forwardRef(({ className: o, sideOffset: t = 4, ...i }, r) => /* @__PURE__ */ e(m, { children: /* @__PURE__ */ e(
+  a,
+  {
+    ref: r,
+    sideOffset: t,
+    className: p(
+      "z-50 overflow-hidden rounded-md bg-primary px-3 py-1.5 text-xs text-primary-foreground animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
+      o
+    ),
+    ...i
+  }
+) }));
+c.displayName = a.displayName;
 export {
-  e as borderRadius,
-  r as spacing
+  T as Tooltip,
+  c as TooltipContent,
+  f as TooltipProvider,
+  x as TooltipTrigger
 };

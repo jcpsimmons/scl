@@ -1,165 +1,188 @@
 import { cn as r } from "./index2.js";
-import { theme as l } from "./index3.js";
-import { Accordion as n, AccordionContent as p, AccordionItem as i, AccordionTrigger as g } from "./index4.js";
-import { Alert as d, AlertDescription as D, AlertTitle as x } from "./index5.js";
-import { AlertDialog as f, AlertDialogAction as T, AlertDialogCancel as S, AlertDialogContent as u, AlertDialogDescription as C, AlertDialogFooter as b, AlertDialogHeader as s, AlertDialogOverlay as A, AlertDialogPortal as h, AlertDialogTitle as w, AlertDialogTrigger as M } from "./index6.js";
-import { Avatar as P, AvatarFallback as I, AvatarImage as y } from "./index7.js";
-import { Badge as F, badgeVariants as H } from "./index8.js";
-import { Button as G, buttonVariants as k } from "./index9.js";
-import { Card as V, CardContent as O, CardDescription as U, CardFooter as j, CardHeader as q, CardTitle as z } from "./index10.js";
+import { theme as a } from "./index3.js";
+import { Accordion as n, AccordionContent as p, AccordionItem as i, AccordionTrigger as m } from "./index4.js";
+import { Alert as d, AlertDescription as x, AlertTitle as D } from "./index5.js";
+import { AlertDialog as c, AlertDialogAction as C, AlertDialogCancel as u, AlertDialogContent as S, AlertDialogDescription as T, AlertDialogFooter as b, AlertDialogHeader as s, AlertDialogOverlay as A, AlertDialogPortal as h, AlertDialogTitle as w, AlertDialogTrigger as M } from "./index6.js";
+import { Avatar as I, AvatarFallback as v, AvatarImage as P } from "./index7.js";
+import { Badge as B, badgeVariants as G } from "./index8.js";
+import { Button as L, buttonVariants as R } from "./index9.js";
+import { Card as V, CardContent as O, CardDescription as E, CardFooter as U, CardHeader as j, CardTitle as q } from "./index10.js";
 import { Checkbox as J } from "./index11.js";
 import { Collapsible as N, CollapsibleContent as Q, CollapsibleTrigger as W } from "./index12.js";
-import { Dialog as Y, DialogClose as Z, DialogContent as _, DialogDescription as $, DialogFooter as oo, DialogHeader as eo, DialogOverlay as ro, DialogPortal as to, DialogTitle as lo, DialogTrigger as ao } from "./index13.js";
-import { DitheredImage as po } from "./index14.js";
-import { DropdownMenu as go, DropdownMenuCheckboxItem as mo, DropdownMenuContent as Do, DropdownMenuGroup as xo, DropdownMenuItem as co, DropdownMenuLabel as fo, DropdownMenuPortal as To, DropdownMenuRadioGroup as So, DropdownMenuRadioItem as uo, DropdownMenuSeparator as Co, DropdownMenuShortcut as bo, DropdownMenuSub as so, DropdownMenuSubContent as Ao, DropdownMenuSubTrigger as ho, DropdownMenuTrigger as wo } from "./index15.js";
-import { Input as vo } from "./index16.js";
-import { Label as Io } from "./index17.js";
-import { Popover as Bo, PopoverAnchor as Fo, PopoverContent as Ho, PopoverTrigger as Ro } from "./index18.js";
-import { Progress as ko } from "./index19.js";
-import { RadioGroup as Vo, RadioGroupItem as Oo } from "./index20.js";
-import { ScrollArea as jo, ScrollBar as qo } from "./index21.js";
-import { Select as Eo, SelectContent as Jo, SelectGroup as Ko, SelectItem as No, SelectLabel as Qo, SelectScrollDownButton as Wo, SelectScrollUpButton as Xo, SelectSeparator as Yo, SelectTrigger as Zo, SelectValue as _o } from "./index22.js";
-import { Separator as oe } from "./index23.js";
-import { Sheet as re, SheetClose as te, SheetContent as le, SheetDescription as ae, SheetFooter as ne, SheetHeader as pe, SheetOverlay as ie, SheetPortal as ge, SheetTitle as me, SheetTrigger as de } from "./index24.js";
-import { Skeleton as xe } from "./index25.js";
-import { Slider as fe } from "./index26.js";
-import { Statusline as Se } from "./index27.js";
-import { Switch as Ce } from "./index28.js";
-import { Table as se, TableBody as Ae, TableCaption as he, TableCell as we, TableFooter as Me, TableHead as ve, TableHeader as Pe, TableRow as Ie } from "./index29.js";
-import { Tabs as Be, TabsContent as Fe, TabsList as He, TabsTrigger as Re } from "./index30.js";
-import { TerminalTextarea as ke } from "./index31.js";
-import { Textarea as Ve } from "./index32.js";
-import { Toggle as Ue, toggleVariants as je } from "./index33.js";
-import { Tooltip as ze, TooltipContent as Ee, TooltipProvider as Je, TooltipTrigger as Ke } from "./index34.js";
-import { colors as Qe } from "./index35.js";
-import { typography as Xe } from "./index36.js";
-import { borderRadius as Ze, spacing as _e } from "./index37.js";
-import { animations as or } from "./index38.js";
-import { shadows as rr } from "./index39.js";
+import { Combobox as Y, ComboboxMulti as Z } from "./index13.js";
+import { Command as $, CommandDialog as oo, CommandEmpty as eo, CommandGroup as ro, CommandInput as to, CommandItem as ao, CommandList as lo, CommandSeparator as no, CommandShortcut as po } from "./index14.js";
+import { Dialog as mo, DialogClose as go, DialogContent as xo, DialogDescription as Do, DialogFooter as fo, DialogHeader as co, DialogOverlay as Co, DialogPortal as uo, DialogTitle as So, DialogTrigger as To } from "./index15.js";
+import { DitheredImage as so } from "./index16.js";
+import { DropdownMenu as ho, DropdownMenuCheckboxItem as wo, DropdownMenuContent as Mo, DropdownMenuGroup as Fo, DropdownMenuItem as Io, DropdownMenuLabel as vo, DropdownMenuPortal as Po, DropdownMenuRadioGroup as yo, DropdownMenuRadioItem as Bo, DropdownMenuSeparator as Go, DropdownMenuShortcut as Ho, DropdownMenuSub as Lo, DropdownMenuSubContent as Ro, DropdownMenuSubTrigger as ko, DropdownMenuTrigger as Vo } from "./index17.js";
+import { Form as Eo, FormControl as Uo, FormDescription as jo, FormField as qo, FormItem as zo, FormLabel as Jo, FormMessage as Ko, useFormField as No } from "./index18.js";
+import { Input as Wo } from "./index19.js";
+import { Label as Yo } from "./index20.js";
+import { Popover as _o, PopoverAnchor as $o, PopoverContent as oe, PopoverTrigger as ee } from "./index21.js";
+import { Progress as te } from "./index22.js";
+import { RadioGroup as le, RadioGroupItem as ne } from "./index23.js";
+import { ScrollArea as ie, ScrollBar as me } from "./index24.js";
+import { Select as de, SelectContent as xe, SelectGroup as De, SelectItem as fe, SelectLabel as ce, SelectScrollDownButton as Ce, SelectScrollUpButton as ue, SelectSeparator as Se, SelectTrigger as Te, SelectValue as be } from "./index25.js";
+import { Separator as Ae } from "./index26.js";
+import { Sheet as we, SheetClose as Me, SheetContent as Fe, SheetDescription as Ie, SheetFooter as ve, SheetHeader as Pe, SheetOverlay as ye, SheetPortal as Be, SheetTitle as Ge, SheetTrigger as He } from "./index27.js";
+import { Skeleton as Re } from "./index28.js";
+import { Slider as Ve } from "./index29.js";
+import { Statusline as Ee } from "./index30.js";
+import { Switch as je } from "./index31.js";
+import { Table as ze, TableBody as Je, TableCaption as Ke, TableCell as Ne, TableFooter as Qe, TableHead as We, TableHeader as Xe, TableRow as Ye } from "./index32.js";
+import { Tabs as _e, TabsContent as $e, TabsList as or, TabsTrigger as er } from "./index33.js";
+import { TerminalTextarea as tr } from "./index34.js";
+import { Textarea as lr } from "./index35.js";
+import { Toggle as pr, toggleVariants as ir } from "./index36.js";
+import { Tooltip as gr, TooltipContent as dr, TooltipProvider as xr, TooltipTrigger as Dr } from "./index37.js";
+import { colors as cr, palette as Cr } from "./index38.js";
+import { typography as Sr } from "./index39.js";
+import { borderRadius as br, spacing as sr } from "./index40.js";
+import { animations as hr } from "./index41.js";
+import { shadows as Mr } from "./index42.js";
 export {
   n as Accordion,
   p as AccordionContent,
   i as AccordionItem,
-  g as AccordionTrigger,
+  m as AccordionTrigger,
   d as Alert,
-  D as AlertDescription,
-  f as AlertDialog,
-  T as AlertDialogAction,
-  S as AlertDialogCancel,
-  u as AlertDialogContent,
-  C as AlertDialogDescription,
+  x as AlertDescription,
+  c as AlertDialog,
+  C as AlertDialogAction,
+  u as AlertDialogCancel,
+  S as AlertDialogContent,
+  T as AlertDialogDescription,
   b as AlertDialogFooter,
   s as AlertDialogHeader,
   A as AlertDialogOverlay,
   h as AlertDialogPortal,
   w as AlertDialogTitle,
   M as AlertDialogTrigger,
-  x as AlertTitle,
-  P as Avatar,
-  I as AvatarFallback,
-  y as AvatarImage,
-  F as Badge,
-  G as Button,
+  D as AlertTitle,
+  I as Avatar,
+  v as AvatarFallback,
+  P as AvatarImage,
+  B as Badge,
+  L as Button,
   V as Card,
   O as CardContent,
-  U as CardDescription,
-  j as CardFooter,
-  q as CardHeader,
-  z as CardTitle,
+  E as CardDescription,
+  U as CardFooter,
+  j as CardHeader,
+  q as CardTitle,
   J as Checkbox,
   N as Collapsible,
   Q as CollapsibleContent,
   W as CollapsibleTrigger,
-  Y as Dialog,
-  Z as DialogClose,
-  _ as DialogContent,
-  $ as DialogDescription,
-  oo as DialogFooter,
-  eo as DialogHeader,
-  ro as DialogOverlay,
-  to as DialogPortal,
-  lo as DialogTitle,
-  ao as DialogTrigger,
-  po as DitheredImage,
-  go as DropdownMenu,
-  mo as DropdownMenuCheckboxItem,
-  Do as DropdownMenuContent,
-  xo as DropdownMenuGroup,
-  co as DropdownMenuItem,
-  fo as DropdownMenuLabel,
-  To as DropdownMenuPortal,
-  So as DropdownMenuRadioGroup,
-  uo as DropdownMenuRadioItem,
-  Co as DropdownMenuSeparator,
-  bo as DropdownMenuShortcut,
-  so as DropdownMenuSub,
-  Ao as DropdownMenuSubContent,
-  ho as DropdownMenuSubTrigger,
-  wo as DropdownMenuTrigger,
-  vo as Input,
-  Io as Label,
-  Bo as Popover,
-  Fo as PopoverAnchor,
-  Ho as PopoverContent,
-  Ro as PopoverTrigger,
-  ko as Progress,
-  Vo as RadioGroup,
-  Oo as RadioGroupItem,
-  jo as ScrollArea,
-  qo as ScrollBar,
-  Eo as Select,
-  Jo as SelectContent,
-  Ko as SelectGroup,
-  No as SelectItem,
-  Qo as SelectLabel,
-  Wo as SelectScrollDownButton,
-  Xo as SelectScrollUpButton,
-  Yo as SelectSeparator,
-  Zo as SelectTrigger,
-  _o as SelectValue,
-  oe as Separator,
-  re as Sheet,
-  te as SheetClose,
-  le as SheetContent,
-  ae as SheetDescription,
-  ne as SheetFooter,
-  pe as SheetHeader,
-  ie as SheetOverlay,
-  ge as SheetPortal,
-  me as SheetTitle,
-  de as SheetTrigger,
-  xe as Skeleton,
-  fe as Slider,
-  Se as Statusline,
-  Ce as Switch,
-  se as Table,
-  Ae as TableBody,
-  he as TableCaption,
-  we as TableCell,
-  Me as TableFooter,
-  ve as TableHead,
-  Pe as TableHeader,
-  Ie as TableRow,
-  Be as Tabs,
-  Fe as TabsContent,
-  He as TabsList,
-  Re as TabsTrigger,
-  ke as TerminalTextarea,
-  Ve as Textarea,
-  Ue as Toggle,
-  ze as Tooltip,
-  Ee as TooltipContent,
-  Je as TooltipProvider,
-  Ke as TooltipTrigger,
-  or as animations,
-  H as badgeVariants,
-  Ze as borderRadius,
-  k as buttonVariants,
+  Y as Combobox,
+  Z as ComboboxMulti,
+  $ as Command,
+  oo as CommandDialog,
+  eo as CommandEmpty,
+  ro as CommandGroup,
+  to as CommandInput,
+  ao as CommandItem,
+  lo as CommandList,
+  no as CommandSeparator,
+  po as CommandShortcut,
+  mo as Dialog,
+  go as DialogClose,
+  xo as DialogContent,
+  Do as DialogDescription,
+  fo as DialogFooter,
+  co as DialogHeader,
+  Co as DialogOverlay,
+  uo as DialogPortal,
+  So as DialogTitle,
+  To as DialogTrigger,
+  so as DitheredImage,
+  ho as DropdownMenu,
+  wo as DropdownMenuCheckboxItem,
+  Mo as DropdownMenuContent,
+  Fo as DropdownMenuGroup,
+  Io as DropdownMenuItem,
+  vo as DropdownMenuLabel,
+  Po as DropdownMenuPortal,
+  yo as DropdownMenuRadioGroup,
+  Bo as DropdownMenuRadioItem,
+  Go as DropdownMenuSeparator,
+  Ho as DropdownMenuShortcut,
+  Lo as DropdownMenuSub,
+  Ro as DropdownMenuSubContent,
+  ko as DropdownMenuSubTrigger,
+  Vo as DropdownMenuTrigger,
+  Eo as Form,
+  Uo as FormControl,
+  jo as FormDescription,
+  qo as FormField,
+  zo as FormItem,
+  Jo as FormLabel,
+  Ko as FormMessage,
+  Wo as Input,
+  Yo as Label,
+  _o as Popover,
+  $o as PopoverAnchor,
+  oe as PopoverContent,
+  ee as PopoverTrigger,
+  te as Progress,
+  le as RadioGroup,
+  ne as RadioGroupItem,
+  ie as ScrollArea,
+  me as ScrollBar,
+  de as Select,
+  xe as SelectContent,
+  De as SelectGroup,
+  fe as SelectItem,
+  ce as SelectLabel,
+  Ce as SelectScrollDownButton,
+  ue as SelectScrollUpButton,
+  Se as SelectSeparator,
+  Te as SelectTrigger,
+  be as SelectValue,
+  Ae as Separator,
+  we as Sheet,
+  Me as SheetClose,
+  Fe as SheetContent,
+  Ie as SheetDescription,
+  ve as SheetFooter,
+  Pe as SheetHeader,
+  ye as SheetOverlay,
+  Be as SheetPortal,
+  Ge as SheetTitle,
+  He as SheetTrigger,
+  Re as Skeleton,
+  Ve as Slider,
+  Ee as Statusline,
+  je as Switch,
+  ze as Table,
+  Je as TableBody,
+  Ke as TableCaption,
+  Ne as TableCell,
+  Qe as TableFooter,
+  We as TableHead,
+  Xe as TableHeader,
+  Ye as TableRow,
+  _e as Tabs,
+  $e as TabsContent,
+  or as TabsList,
+  er as TabsTrigger,
+  tr as TerminalTextarea,
+  lr as Textarea,
+  pr as Toggle,
+  gr as Tooltip,
+  dr as TooltipContent,
+  xr as TooltipProvider,
+  Dr as TooltipTrigger,
+  hr as animations,
+  G as badgeVariants,
+  br as borderRadius,
+  R as buttonVariants,
   r as cn,
-  Qe as colors,
-  rr as shadows,
-  _e as spacing,
-  l as theme,
-  je as toggleVariants,
-  Xe as typography
+  cr as colors,
+  Cr as palette,
+  Mr as shadows,
+  sr as spacing,
+  a as theme,
+  ir as toggleVariants,
+  Sr as typography,
+  No as useFormField
 };

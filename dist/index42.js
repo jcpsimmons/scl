@@ -1,35 +1,13 @@
-import { clsx as O } from "./index40.js";
-const m = (e) => typeof e == "boolean" ? `${e}` : e === 0 ? "0" : e, y = O, j = (e, l) => (n) => {
-  var s;
-  if ((l == null ? void 0 : l.variants) == null) return y(e, n == null ? void 0 : n.class, n == null ? void 0 : n.className);
-  const { variants: r, defaultVariants: d } = l, V = Object.keys(r).map((t) => {
-    const a = n == null ? void 0 : n[t], u = d == null ? void 0 : d[t];
-    if (a === null) return null;
-    const i = m(a) || m(u);
-    return r[t][i];
-  }), v = n && Object.entries(n).reduce((t, a) => {
-    let [u, i] = a;
-    return i === void 0 || (t[u] = i), t;
-  }, {}), N = l == null || (s = l.compoundVariants) === null || s === void 0 ? void 0 : s.reduce((t, a) => {
-    let { class: u, className: i, ...f } = a;
-    return Object.entries(f).every((C) => {
-      let [c, o] = C;
-      return Array.isArray(o) ? o.includes({
-        ...d,
-        ...v
-      }[c]) : {
-        ...d,
-        ...v
-      }[c] === o;
-    }) ? [
-      ...t,
-      u,
-      i
-    ] : t;
-  }, []);
-  return y(e, V, N, n == null ? void 0 : n.class, n == null ? void 0 : n.className);
+const x = {
+  none: "none",
+  sm: "0 1px 2px 0 rgb(0 0 0 / 0.05)",
+  DEFAULT: "0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)",
+  md: "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)",
+  lg: "0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)",
+  xl: "0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)",
+  "2xl": "0 25px 50px -12px rgb(0 0 0 / 0.25)",
+  inner: "inset 0 2px 4px 0 rgb(0 0 0 / 0.05)"
 };
 export {
-  j as cva,
-  y as cx
+  x as shadows
 };

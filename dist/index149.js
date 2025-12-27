@@ -1,71 +1,115 @@
-import * as d from "react";
-import { styleSingleton as f } from "./index150.js";
-import { noScrollbarsClassName as p, zeroRightClassName as g, fullWidthClassName as l, removedBarSizeVariable as v } from "./index140.js";
-import { getGapWidth as m } from "./index155.js";
-var b = f(), e = "data-scroll-locked", h = function(n, a, o, t) {
-  var r = n.left, i = n.top, s = n.right, c = n.gap;
-  return o === void 0 && (o = "margin"), `
-  .`.concat(p, ` {
-   overflow: hidden `).concat(t, `;
-   padding-right: `).concat(c, "px ").concat(t, `;
-  }
-  body[`).concat(e, `] {
-    overflow: hidden `).concat(t, `;
-    overscroll-behavior: contain;
-    `).concat([
-    a && "position: relative ".concat(t, ";"),
-    o === "margin" && `
-    padding-left: `.concat(r, `px;
-    padding-top: `).concat(i, `px;
-    padding-right: `).concat(s, `px;
-    margin-left:0;
-    margin-top:0;
-    margin-right: `).concat(c, "px ").concat(t, `;
-    `),
-    o === "padding" && "padding-right: ".concat(c, "px ").concat(t, ";")
-  ].filter(Boolean).join(""), `
-  }
-  
-  .`).concat(g, ` {
-    right: `).concat(c, "px ").concat(t, `;
-  }
-  
-  .`).concat(l, ` {
-    margin-right: `).concat(c, "px ").concat(t, `;
-  }
-  
-  .`).concat(g, " .").concat(g, ` {
-    right: 0 `).concat(t, `;
-  }
-  
-  .`).concat(l, " .").concat(l, ` {
-    margin-right: 0 `).concat(t, `;
-  }
-  
-  body[`).concat(e, `] {
-    `).concat(v, ": ").concat(c, `px;
-  }
+import { __spreadArray as N } from "./index141.js";
+import * as n from "react";
+import { RemoveScrollBar as W } from "./index155.js";
+import { styleSingleton as F } from "./index156.js";
+import { nonPassive as s } from "./index157.js";
+import { locationCouldBeScrolled as B, handleScroll as K } from "./index158.js";
+var k = function(e) {
+  return "changedTouches" in e ? [e.changedTouches[0].clientX, e.changedTouches[0].clientY] : [0, 0];
+}, M = function(e) {
+  return [e.deltaX, e.deltaY];
+}, X = function(e) {
+  return e && "current" in e ? e.current : e;
+}, O = function(e, c) {
+  return e[0] === c[0] && e[1] === c[1];
+}, Q = function(e) {
+  return `
+  .block-interactivity-`.concat(e, ` {pointer-events: none;}
+  .allow-interactivity-`).concat(e, ` {pointer-events: all;}
 `);
-}, u = function() {
-  var n = parseInt(document.body.getAttribute(e) || "0", 10);
-  return isFinite(n) ? n : 0;
-}, x = function() {
-  d.useEffect(function() {
-    return document.body.setAttribute(e, (u() + 1).toString()), function() {
-      var n = u() - 1;
-      n <= 0 ? document.body.removeAttribute(e) : document.body.setAttribute(e, n.toString());
+}, Z = 0, f = [];
+function J(e) {
+  var c = n.useRef([]), R = n.useRef([0, 0]), m = n.useRef(), h = n.useState(Z++)[0], g = n.useState(F)[0], S = n.useRef(e);
+  n.useEffect(function() {
+    S.current = e;
+  }, [e]), n.useEffect(function() {
+    if (e.inert) {
+      document.body.classList.add("block-interactivity-".concat(h));
+      var t = N([e.lockRef.current], (e.shards || []).map(X), !0).filter(Boolean);
+      return t.forEach(function(r) {
+        return r.classList.add("allow-interactivity-".concat(h));
+      }), function() {
+        document.body.classList.remove("block-interactivity-".concat(h)), t.forEach(function(r) {
+          return r.classList.remove("allow-interactivity-".concat(h));
+        });
+      };
+    }
+  }, [e.inert, e.lockRef.current, e.shards]);
+  var C = n.useCallback(function(t, r) {
+    if ("touches" in t && t.touches.length === 2 || t.type === "wheel" && t.ctrlKey)
+      return !S.current.allowPinchZoom;
+    var l = k(t), u = R.current, o = "deltaX" in t ? t.deltaX : u[0] - l[0], i = "deltaY" in t ? t.deltaY : u[1] - l[1], a, v = t.target, d = Math.abs(o) > Math.abs(i) ? "h" : "v";
+    if ("touches" in t && d === "h" && v.type === "range")
+      return !1;
+    var P = window.getSelection(), E = P && P.anchorNode, I = E ? E === v || E.contains(v) : !1;
+    if (I)
+      return !1;
+    var b = B(d, v);
+    if (!b)
+      return !0;
+    if (b ? a = d : (a = d === "v" ? "h" : "v", b = B(d, v)), !b)
+      return !1;
+    if (!m.current && "changedTouches" in t && (o || i) && (m.current = a), !a)
+      return !0;
+    var Y = m.current || a;
+    return K(Y, r, t, Y === "h" ? o : i);
+  }, []), y = n.useCallback(function(t) {
+    var r = t;
+    if (!(!f.length || f[f.length - 1] !== g)) {
+      var l = "deltaY" in r ? M(r) : k(r), u = c.current.filter(function(a) {
+        return a.name === r.type && (a.target === r.target || r.target === a.shadowParent) && O(a.delta, l);
+      })[0];
+      if (u && u.should) {
+        r.cancelable && r.preventDefault();
+        return;
+      }
+      if (!u) {
+        var o = (S.current.shards || []).map(X).filter(Boolean).filter(function(a) {
+          return a.contains(r.target);
+        }), i = o.length > 0 ? C(r, o[0]) : !S.current.noIsolation;
+        i && r.cancelable && r.preventDefault();
+      }
+    }
+  }, []), w = n.useCallback(function(t, r, l, u) {
+    var o = { name: t, delta: r, target: l, should: u, shadowParent: _(l) };
+    c.current.push(o), setTimeout(function() {
+      c.current = c.current.filter(function(i) {
+        return i !== o;
+      });
+    }, 1);
+  }, []), L = n.useCallback(function(t) {
+    R.current = k(t), m.current = void 0;
+  }, []), T = n.useCallback(function(t) {
+    w(t.type, M(t), t.target, C(t, e.lockRef.current));
+  }, []), D = n.useCallback(function(t) {
+    w(t.type, k(t), t.target, C(t, e.lockRef.current));
+  }, []);
+  n.useEffect(function() {
+    return f.push(g), e.setCallbacks({
+      onScrollCapture: T,
+      onWheelCapture: T,
+      onTouchMoveCapture: D
+    }), document.addEventListener("wheel", y, s), document.addEventListener("touchmove", y, s), document.addEventListener("touchstart", L, s), function() {
+      f = f.filter(function(t) {
+        return t !== g;
+      }), document.removeEventListener("wheel", y, s), document.removeEventListener("touchmove", y, s), document.removeEventListener("touchstart", L, s);
     };
   }, []);
-}, C = function(n) {
-  var a = n.noRelative, o = n.noImportant, t = n.gapMode, r = t === void 0 ? "margin" : t;
-  x();
-  var i = d.useMemo(function() {
-    return m(r);
-  }, [r]);
-  return d.createElement(b, { styles: h(i, !a, r, o ? "" : "!important") });
-};
+  var x = e.removeScrollBar, A = e.inert;
+  return n.createElement(
+    n.Fragment,
+    null,
+    A ? n.createElement(g, { styles: Q(h) }) : null,
+    x ? n.createElement(W, { noRelative: e.noRelative, gapMode: e.gapMode }) : null
+  );
+}
+function _(e) {
+  for (var c = null; e !== null; )
+    e instanceof ShadowRoot && (c = e.host, e = e.host), e = e.parentNode;
+  return c;
+}
 export {
-  C as RemoveScrollBar,
-  e as lockAttribute,
-  x as useLockAttribute
+  J as RemoveScrollSideCar,
+  M as getDeltaXY,
+  k as getTouchXY
 };

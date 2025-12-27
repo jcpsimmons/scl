@@ -1,132 +1,163 @@
-import * as r from "react";
-import { composeEventHandlers as T } from "./index83.js";
-import { useComposedRefs as P } from "./index82.js";
-import { createContextScope as I } from "./index80.js";
-import { useControllableState as M } from "./index84.js";
-import { usePrevious as H } from "./index93.js";
-import { useSize as j } from "./index94.js";
-import { Primitive as y } from "./index85.js";
-import { jsxs as A, jsx as m } from "react/jsx-runtime";
-var h = "Switch", [U] = I(h), [q, z] = U(h), R = r.forwardRef(
-  (t, a) => {
+import * as v from "react";
+import { composeEventHandlers as g } from "./index89.js";
+import { createContextScope as x } from "./index87.js";
+import { createRovingFocusGroupScope as C, Root as E, Item as F } from "./index99.js";
+import { Presence as w } from "./index94.js";
+import { Primitive as b } from "./index95.js";
+import { useDirection as D } from "./index98.js";
+import { useControllableState as V } from "./index91.js";
+import { useId as G } from "./index97.js";
+import { jsx as l } from "react/jsx-runtime";
+var p = "Tabs", [L] = x(p, [
+  C
+]), h = C(), [$, T] = L(p), I = v.forwardRef(
+  (e, r) => {
     const {
-      __scopeSwitch: e,
-      name: c,
-      checked: o,
-      defaultChecked: v,
-      required: i,
-      disabled: n,
-      value: p = "on",
-      onCheckedChange: w,
-      form: s,
-      ...S
-    } = t, [d, u] = r.useState(null), b = P(a, (f) => u(f)), C = r.useRef(!1), k = d ? s || !!d.closest("form") : !0, [l, B] = M({
-      prop: o,
-      defaultProp: v ?? !1,
-      onChange: w,
-      caller: h
+      __scopeTabs: s,
+      value: t,
+      onValueChange: n,
+      defaultValue: c,
+      orientation: o = "horizontal",
+      dir: d,
+      activationMode: f = "automatic",
+      ...m
+    } = e, i = D(d), [a, u] = V({
+      prop: t,
+      onChange: n,
+      defaultProp: c ?? "",
+      caller: p
     });
-    return /* @__PURE__ */ A(q, { scope: e, checked: l, disabled: n, children: [
-      /* @__PURE__ */ m(
-        y.button,
-        {
-          type: "button",
-          role: "switch",
-          "aria-checked": l,
-          "aria-required": i,
-          "data-state": g(l),
-          "data-disabled": n ? "" : void 0,
-          disabled: n,
-          value: p,
-          ...S,
-          ref: b,
-          onClick: T(t.onClick, (f) => {
-            B((N) => !N), k && (C.current = f.isPropagationStopped(), C.current || f.stopPropagation());
-          })
-        }
-      ),
-      k && /* @__PURE__ */ m(
-        x,
-        {
-          control: d,
-          bubbles: !C.current,
-          name: c,
-          value: p,
-          checked: l,
-          required: i,
-          disabled: n,
-          form: s,
-          style: { transform: "translateX(-100%)" }
-        }
-      )
-    ] });
-  }
-);
-R.displayName = h;
-var E = "SwitchThumb", _ = r.forwardRef(
-  (t, a) => {
-    const { __scopeSwitch: e, ...c } = t, o = z(E, e);
-    return /* @__PURE__ */ m(
-      y.span,
+    return /* @__PURE__ */ l(
+      $,
       {
-        "data-state": g(o.checked),
-        "data-disabled": o.disabled ? "" : void 0,
-        ...c,
-        ref: a
+        scope: s,
+        baseId: G(),
+        value: a,
+        onValueChange: u,
+        orientation: o,
+        dir: i,
+        activationMode: f,
+        children: /* @__PURE__ */ l(
+          b.div,
+          {
+            dir: i,
+            "data-orientation": o,
+            ...m,
+            ref: r
+          }
+        )
       }
     );
   }
 );
-_.displayName = E;
-var L = "SwitchBubbleInput", x = r.forwardRef(
-  ({
-    __scopeSwitch: t,
-    control: a,
-    checked: e,
-    bubbles: c = !0,
-    ...o
-  }, v) => {
-    const i = r.useRef(null), n = P(i, v), p = H(e), w = j(a);
-    return r.useEffect(() => {
-      const s = i.current;
-      if (!s) return;
-      const S = window.HTMLInputElement.prototype, u = Object.getOwnPropertyDescriptor(
-        S,
-        "checked"
-      ).set;
-      if (p !== e && u) {
-        const b = new Event("click", { bubbles: c });
-        u.call(s, e), s.dispatchEvent(b);
-      }
-    }, [p, e, c]), /* @__PURE__ */ m(
-      "input",
+I.displayName = p;
+var R = "TabsList", _ = v.forwardRef(
+  (e, r) => {
+    const { __scopeTabs: s, loop: t = !0, ...n } = e, c = T(R, s), o = h(s);
+    return /* @__PURE__ */ l(
+      E,
       {
-        type: "checkbox",
-        "aria-hidden": !0,
-        defaultChecked: e,
+        asChild: !0,
         ...o,
-        tabIndex: -1,
-        ref: n,
-        style: {
-          ...o.style,
-          ...w,
-          position: "absolute",
-          pointerEvents: "none",
-          opacity: 0,
-          margin: 0
-        }
+        orientation: c.orientation,
+        dir: c.dir,
+        loop: t,
+        children: /* @__PURE__ */ l(
+          b.div,
+          {
+            role: "tablist",
+            "aria-orientation": c.orientation,
+            ...n,
+            ref: r
+          }
+        )
       }
     );
   }
 );
-x.displayName = L;
-function g(t) {
-  return t ? "checked" : "unchecked";
+_.displayName = R;
+var y = "TabsTrigger", A = v.forwardRef(
+  (e, r) => {
+    const { __scopeTabs: s, value: t, disabled: n = !1, ...c } = e, o = T(y, s), d = h(s), f = P(o.baseId, t), m = S(o.baseId, t), i = t === o.value;
+    return /* @__PURE__ */ l(
+      F,
+      {
+        asChild: !0,
+        ...d,
+        focusable: !n,
+        active: i,
+        children: /* @__PURE__ */ l(
+          b.button,
+          {
+            type: "button",
+            role: "tab",
+            "aria-selected": i,
+            "aria-controls": m,
+            "data-state": i ? "active" : "inactive",
+            "data-disabled": n ? "" : void 0,
+            disabled: n,
+            id: f,
+            ...c,
+            ref: r,
+            onMouseDown: g(e.onMouseDown, (a) => {
+              !n && a.button === 0 && a.ctrlKey === !1 ? o.onValueChange(t) : a.preventDefault();
+            }),
+            onKeyDown: g(e.onKeyDown, (a) => {
+              [" ", "Enter"].includes(a.key) && o.onValueChange(t);
+            }),
+            onFocus: g(e.onFocus, () => {
+              const a = o.activationMode !== "manual";
+              !i && !n && a && o.onValueChange(t);
+            })
+          }
+        )
+      }
+    );
+  }
+);
+A.displayName = y;
+var M = "TabsContent", N = v.forwardRef(
+  (e, r) => {
+    const { __scopeTabs: s, value: t, forceMount: n, children: c, ...o } = e, d = T(M, s), f = P(d.baseId, t), m = S(d.baseId, t), i = t === d.value, a = v.useRef(i);
+    return v.useEffect(() => {
+      const u = requestAnimationFrame(() => a.current = !1);
+      return () => cancelAnimationFrame(u);
+    }, []), /* @__PURE__ */ l(w, { present: n || i, children: ({ present: u }) => /* @__PURE__ */ l(
+      b.div,
+      {
+        "data-state": i ? "active" : "inactive",
+        "data-orientation": d.orientation,
+        role: "tabpanel",
+        "aria-labelledby": f,
+        hidden: !u,
+        id: m,
+        tabIndex: 0,
+        ...o,
+        ref: r,
+        style: {
+          ...e.style,
+          animationDuration: a.current ? "0s" : void 0
+        },
+        children: u && c
+      }
+    ) });
+  }
+);
+N.displayName = M;
+function P(e, r) {
+  return `${e}-trigger-${r}`;
 }
-var Q = R, V = _;
+function S(e, r) {
+  return `${e}-content-${r}`;
+}
+var Q = I, U = _, W = A, X = N;
 export {
+  X as Content,
+  U as List,
   Q as Root,
-  R as Switch,
-  _ as SwitchThumb,
-  V as Thumb
+  I as Tabs,
+  N as TabsContent,
+  _ as TabsList,
+  A as TabsTrigger,
+  W as Trigger
 };

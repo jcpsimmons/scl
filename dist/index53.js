@@ -1,11 +1,33 @@
-import e from "./index121.js";
-/**
- * @license lucide-react v0.460.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const r = e("ChevronUp", [["path", { d: "m18 15-6-6-6 6", key: "153udz" }]]);
+import * as f from "react";
+import { composeEventHandlers as m } from "./index89.js";
+import { useControllableState as p } from "./index91.js";
+import { Primitive as b } from "./index95.js";
+import { jsx as c } from "react/jsx-runtime";
+var r = "Toggle", t = f.forwardRef((e, a) => {
+  const { pressed: s, defaultPressed: d, onPressedChange: i, ...l } = e, [o, n] = p({
+    prop: s,
+    onChange: i,
+    defaultProp: d ?? !1,
+    caller: r
+  });
+  return /* @__PURE__ */ c(
+    b.button,
+    {
+      type: "button",
+      "aria-pressed": o,
+      "data-state": o ? "on" : "off",
+      "data-disabled": e.disabled ? "" : void 0,
+      ...l,
+      ref: a,
+      onClick: m(e.onClick, () => {
+        e.disabled || n(!o);
+      })
+    }
+  );
+});
+t.displayName = r;
+var C = t;
 export {
-  r as default
+  C as Root,
+  t as Toggle
 };

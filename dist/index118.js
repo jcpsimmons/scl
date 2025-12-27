@@ -1,300 +1,399 @@
-import { StateEffect as L, codePointAt as y, codePointSize as b, fromCodePoint as w } from "./index131.js";
-const p = typeof String.prototype.normalize == "function" ? (n) => n.normalize("NFKD") : (n) => n;
-class x {
+import { Annotation as T, Transaction as L, Text as A, StateEffect as x, StateField as D, Prec as O, EditorSelection as k, Facet as P, MapMode as v, RangeValue as M } from "./index56.js";
+import { EditorView as w, Decoration as g, keymap as B, WidgetType as R } from "./index55.js";
+import { syntaxTree as $, indentUnit as j } from "./index64.js";
+class oe {
   /**
-  Create a text cursor. The query is the search string, `from` to
-  `to` provides the region to search.
-  
-  When `normalize` is given, it will be called, on both the query
-  string and the content it is matched against, before comparing.
-  You can, for example, create a case-insensitive search by
-  passing `s => s.toLowerCase()`.
-  
-  Text is always normalized with
-  [`.normalize("NFKD")`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/normalize)
-  (when supported).
+  Create a new completion context. (Mostly useful for testing
+  completion sources—in the editor, the extension will create
+  these for you.)
   */
-  constructor(t, e, i = 0, s = t.length, r) {
-    this.value = { from: 0, to: 0 }, this.done = !1, this.matches = [], this.buffer = "", this.bufferPos = 0, this.iter = t.iterRange(i, s), this.bufferStart = i, this.normalize = r ? (h) => r(p(h)) : p, this.query = this.normalize(e);
+  constructor(t, e, n, i) {
+    this.state = t, this.pos = e, this.explicit = n, this.view = i, this.abortListeners = [], this.abortOnDocChange = !1;
   }
-  peek() {
-    if (this.bufferPos == this.buffer.length) {
-      if (this.bufferStart += this.buffer.length, this.iter.next(), this.iter.done)
-        return -1;
-      this.bufferPos = 0, this.buffer = this.iter.value;
+  /**
+  Get the extent, content, and (if there is a token) type of the
+  token before `this.pos`.
+  */
+  tokenBefore(t) {
+    let e = $(this.state).resolveInner(this.pos, -1);
+    for (; e && t.indexOf(e.name) < 0; )
+      e = e.parent;
+    return e ? {
+      from: e.from,
+      to: this.pos,
+      text: this.state.sliceDoc(e.from, this.pos),
+      type: e.type
+    } : null;
+  }
+  /**
+  Get the match of the given expression directly before the
+  cursor.
+  */
+  matchBefore(t) {
+    let e = this.state.doc.lineAt(this.pos), n = Math.max(e.from, this.pos - 250), i = e.text.slice(n - e.from, this.pos - e.from), l = i.search(W(t));
+    return l < 0 ? null : { from: n + l, to: this.pos, text: i.slice(l) };
+  }
+  /**
+  Yields true when the query has been aborted. Can be useful in
+  asynchronous queries to avoid doing work that will be ignored.
+  */
+  get aborted() {
+    return this.abortListeners == null;
+  }
+  /**
+  Allows you to register abort handlers, which will be called when
+  the query is
+  [aborted](https://codemirror.net/6/docs/ref/#autocomplete.CompletionContext.aborted).
+  
+  By default, running queries will not be aborted for regular
+  typing or backspacing, on the assumption that they are likely to
+  return a result with a
+  [`validFor`](https://codemirror.net/6/docs/ref/#autocomplete.CompletionResult.validFor) field that
+  allows the result to be used after all. Passing `onDocChange:
+  true` will cause this query to be aborted for any document
+  change.
+  */
+  addEventListener(t, e, n) {
+    t == "abort" && this.abortListeners && (this.abortListeners.push(e), n && n.onDocChange && (this.abortOnDocChange = !0));
+  }
+}
+function S(o) {
+  let t = Object.keys(o).join(""), e = /\w/.test(t);
+  return e && (t = t.replace(/\w/g, "")), `[${e ? "\\w" : ""}${t.replace(/[^\w\s]/g, "\\$&")}]`;
+}
+function V(o) {
+  let t = /* @__PURE__ */ Object.create(null), e = /* @__PURE__ */ Object.create(null);
+  for (let { label: i } of o) {
+    t[i[0]] = !0;
+    for (let l = 1; l < i.length; l++)
+      e[i[l]] = !0;
+  }
+  let n = S(t) + S(e) + "*$";
+  return [new RegExp("^" + n), new RegExp(n)];
+}
+function ie(o) {
+  let t = o.map((i) => typeof i == "string" ? { label: i } : i), [e, n] = t.every((i) => /^\w+$/.test(i.label)) ? [/\w*$/, /\w+$/] : V(t);
+  return (i) => {
+    let l = i.matchBefore(n);
+    return l || i.explicit ? { from: l ? l.from : i.pos, options: t, validFor: e } : null;
+  };
+}
+function le(o, t) {
+  return (e) => {
+    for (let n = $(e.state).resolveInner(e.pos, -1); n; n = n.parent) {
+      if (o.indexOf(n.name) > -1)
+        return null;
+      if (n.type.isTop)
+        break;
     }
-    return y(this.buffer, this.bufferPos);
-  }
-  /**
-  Look for the next match. Updates the iterator's
-  [`value`](https://codemirror.net/6/docs/ref/#search.SearchCursor.value) and
-  [`done`](https://codemirror.net/6/docs/ref/#search.SearchCursor.done) properties. Should be called
-  at least once before using the cursor.
-  */
-  next() {
-    for (; this.matches.length; )
-      this.matches.pop();
-    return this.nextOverlapping();
-  }
-  /**
-  The `next` method will ignore matches that partially overlap a
-  previous match. This method behaves like `next`, but includes
-  such matches.
-  */
-  nextOverlapping() {
-    for (; ; ) {
-      let t = this.peek();
-      if (t < 0)
-        return this.done = !0, this;
-      let e = w(t), i = this.bufferStart + this.bufferPos;
-      this.bufferPos += b(t);
-      let s = this.normalize(e);
-      for (let r = 0, h = i; ; r++) {
-        let l = s.charCodeAt(r), g = this.match(l, h);
-        if (g)
-          return this.value = g, this;
-        if (r == s.length - 1)
-          break;
-        h == i && r < e.length && e.charCodeAt(r) == l && h++;
+    return t(e);
+  };
+}
+function W(o, t) {
+  var e;
+  let { source: n } = o, i = n[n.length - 1] != "$";
+  return i ? new RegExp(`(?:${n})${i ? "$" : ""}`, (e = o.flags) !== null && e !== void 0 ? e : o.ignoreCase ? "i" : "") : o;
+}
+const q = /* @__PURE__ */ T.define(), z = /* @__PURE__ */ w.baseTheme({
+  ".cm-tooltip.cm-tooltip-autocomplete": {
+    "& > ul": {
+      fontFamily: "monospace",
+      whiteSpace: "nowrap",
+      overflow: "hidden auto",
+      maxWidth_fallback: "700px",
+      maxWidth: "min(700px, 95vw)",
+      minWidth: "250px",
+      maxHeight: "10em",
+      height: "100%",
+      listStyle: "none",
+      margin: 0,
+      padding: 0,
+      "& > li, & > completion-section": {
+        padding: "1px 3px",
+        lineHeight: 1.2
+      },
+      "& > li": {
+        overflowX: "hidden",
+        textOverflow: "ellipsis",
+        cursor: "pointer"
+      },
+      "& > completion-section": {
+        display: "list-item",
+        borderBottom: "1px solid silver",
+        paddingLeft: "0.5em",
+        opacity: 0.7
       }
     }
+  },
+  "&light .cm-tooltip-autocomplete ul li[aria-selected]": {
+    background: "#17c",
+    color: "white"
+  },
+  "&light .cm-tooltip-autocomplete-disabled ul li[aria-selected]": {
+    background: "#777"
+  },
+  "&dark .cm-tooltip-autocomplete ul li[aria-selected]": {
+    background: "#347",
+    color: "white"
+  },
+  "&dark .cm-tooltip-autocomplete-disabled ul li[aria-selected]": {
+    background: "#444"
+  },
+  ".cm-completionListIncompleteTop:before, .cm-completionListIncompleteBottom:after": {
+    content: '"···"',
+    opacity: 0.5,
+    display: "block",
+    textAlign: "center"
+  },
+  ".cm-tooltip.cm-completionInfo": {
+    position: "absolute",
+    padding: "3px 9px",
+    width: "max-content",
+    maxWidth: "400px",
+    boxSizing: "border-box",
+    whiteSpace: "pre-line"
+  },
+  ".cm-completionInfo.cm-completionInfo-left": { right: "100%" },
+  ".cm-completionInfo.cm-completionInfo-right": { left: "100%" },
+  ".cm-completionInfo.cm-completionInfo-left-narrow": { right: "30px" },
+  ".cm-completionInfo.cm-completionInfo-right-narrow": { left: "30px" },
+  "&light .cm-snippetField": { backgroundColor: "#00000022" },
+  "&dark .cm-snippetField": { backgroundColor: "#ffffff22" },
+  ".cm-snippetFieldPosition": {
+    verticalAlign: "text-top",
+    width: 0,
+    height: "1.15em",
+    display: "inline-block",
+    margin: "0 -0.7px -.7em",
+    borderLeft: "1.4px dotted #888"
+  },
+  ".cm-completionMatchedText": {
+    textDecoration: "underline"
+  },
+  ".cm-completionDetail": {
+    marginLeft: "0.5em",
+    fontStyle: "italic"
+  },
+  ".cm-completionIcon": {
+    fontSize: "90%",
+    width: ".8em",
+    display: "inline-block",
+    textAlign: "center",
+    paddingRight: ".6em",
+    opacity: "0.6",
+    boxSizing: "content-box"
+  },
+  ".cm-completionIcon-function, .cm-completionIcon-method": {
+    "&:after": { content: "'ƒ'" }
+  },
+  ".cm-completionIcon-class": {
+    "&:after": { content: "'○'" }
+  },
+  ".cm-completionIcon-interface": {
+    "&:after": { content: "'◌'" }
+  },
+  ".cm-completionIcon-variable": {
+    "&:after": { content: "'𝑥'" }
+  },
+  ".cm-completionIcon-constant": {
+    "&:after": { content: "'𝐶'" }
+  },
+  ".cm-completionIcon-type": {
+    "&:after": { content: "'𝑡'" }
+  },
+  ".cm-completionIcon-enum": {
+    "&:after": { content: "'∪'" }
+  },
+  ".cm-completionIcon-property": {
+    "&:after": { content: "'□'" }
+  },
+  ".cm-completionIcon-keyword": {
+    "&:after": { content: "'🔑︎'" }
+    // Disable emoji rendering
+  },
+  ".cm-completionIcon-namespace": {
+    "&:after": { content: "'▢'" }
+  },
+  ".cm-completionIcon-text": {
+    "&:after": { content: "'abc'", fontSize: "50%", verticalAlign: "middle" }
   }
-  match(t, e) {
-    let i = null;
-    for (let s = 0; s < this.matches.length; s += 2) {
-      let r = this.matches[s], h = !1;
-      this.query.charCodeAt(r) == t && (r == this.query.length - 1 ? i = { from: this.matches[s + 1], to: e + 1 } : (this.matches[s]++, h = !0)), h || (this.matches.splice(s, 2), s -= 2);
-    }
-    return this.query.charCodeAt(0) == t && (this.query.length == 1 ? i = { from: e, to: e + 1 } : this.matches.push(1, e)), i;
-  }
-}
-typeof Symbol < "u" && (x.prototype[Symbol.iterator] = function() {
-  return this;
 });
-const m = { from: -1, to: -1, match: /* @__PURE__ */ /.*/.exec("") }, f = "gm" + (/x/.unicode == null ? "" : "u");
-class v {
-  /**
-  Create a cursor that will search the given range in the given
-  document. `query` should be the raw pattern (as you'd pass it to
-  `new RegExp`).
-  */
-  constructor(t, e, i, s = 0, r = t.length) {
-    if (this.to = r, this.curLine = "", this.done = !1, this.value = m, /\\[sWDnr]|\n|\r|\[\^/.test(e))
-      return new d(t, e, i, s, r);
-    this.re = new RegExp(e, f + (i != null && i.ignoreCase ? "i" : "")), this.iter = t.iter();
-    let h = t.lineAt(s);
-    this.curLineStart = h.from, this.matchPos = s, this.getLine(this.curLineStart);
-  }
-  getLine(t) {
-    this.iter.next(t), this.iter.lineBreak ? this.curLine = "" : (this.curLine = this.iter.value, this.curLineStart + this.curLine.length > this.to && (this.curLine = this.curLine.slice(0, this.to - this.curLineStart)), this.iter.next());
-  }
-  nextLine() {
-    this.curLineStart = this.curLineStart + this.curLine.length + 1, this.curLineStart > this.to ? this.curLine = "" : this.getLine(0);
-  }
-  /**
-  Move to the next match, if there is one.
-  */
-  next() {
-    for (let t = this.matchPos - this.curLineStart; ; ) {
-      this.re.lastIndex = t;
-      let e = this.matchPos <= this.to && this.re.exec(this.curLine);
-      if (e) {
-        let i = this.curLineStart + e.index, s = i + e[0].length;
-        if (this.matchPos = s + (i == s ? 1 : 0), i == this.curLine.length && this.nextLine(), i < s || i > this.value.to)
-          return this.value = { from: i, to: s, match: e }, this;
-        t = this.matchPos - this.curLineStart;
-      } else if (this.curLineStart + this.curLine.length < this.to)
-        this.nextLine(), t = 0;
-      else
-        return this.done = !0, this;
-    }
+class H {
+  constructor(t, e, n, i) {
+    this.field = t, this.line = e, this.from = n, this.to = i;
   }
 }
-const o = /* @__PURE__ */ new WeakMap();
-class c {
+class b {
+  constructor(t, e, n) {
+    this.field = t, this.from = e, this.to = n;
+  }
+  map(t) {
+    let e = t.mapPos(this.from, -1, v.TrackDel), n = t.mapPos(this.to, 1, v.TrackDel);
+    return e == null || n == null ? null : new b(this.field, e, n);
+  }
+}
+class I {
   constructor(t, e) {
-    this.from = t, this.text = e;
+    this.lines = t, this.fieldPositions = e;
   }
-  get to() {
-    return this.from + this.text.length;
-  }
-  static get(t, e, i) {
-    let s = o.get(t);
-    if (!s || s.from >= i || s.to <= e) {
-      let l = new c(e, t.sliceString(e, i));
-      return o.set(t, l), l;
-    }
-    if (s.from == e && s.to == i)
-      return s;
-    let { text: r, from: h } = s;
-    return h > e && (r = t.sliceString(e, h) + r, h = e), s.to < i && (r += t.sliceString(s.to, i)), o.set(t, new c(h, r)), new c(e, r.slice(e - h, i - h));
-  }
-}
-class d {
-  constructor(t, e, i, s, r) {
-    this.text = t, this.to = r, this.done = !1, this.value = m, this.matchPos = s, this.re = new RegExp(e, f + (i != null && i.ignoreCase ? "i" : "")), this.flat = c.get(t, s, this.chunkEnd(
-      s + 5e3
-      /* Base */
-    ));
-  }
-  chunkEnd(t) {
-    return t >= this.to ? this.to : this.text.lineAt(t).to;
-  }
-  next() {
-    for (; ; ) {
-      let t = this.re.lastIndex = this.matchPos - this.flat.from, e = this.re.exec(this.flat.text);
-      if (e && !e[0] && e.index == t && (this.re.lastIndex = t + 1, e = this.re.exec(this.flat.text)), e && this.flat.to < this.to && e.index + e[0].length > this.flat.text.length - 10 && (e = null), e) {
-        let i = this.flat.from + e.index, s = i + e[0].length;
-        return this.value = { from: i, to: s, match: e }, this.matchPos = s + (i == s ? 1 : 0), this;
-      } else {
-        if (this.flat.to == this.to)
-          return this.done = !0, this;
-        this.flat = c.get(this.text, this.flat.from, this.chunkEnd(this.flat.from + this.flat.text.length * 2));
+  instantiate(t, e) {
+    let n = [], i = [e], l = t.doc.lineAt(e), f = /^\s*/.exec(l.text)[0];
+    for (let s of this.lines) {
+      if (n.length) {
+        let a = f, c = /^\t*/.exec(s)[0].length;
+        for (let r = 0; r < c; r++)
+          a += t.facet(j);
+        i.push(e + a.length - c), s = a + s.slice(c);
       }
+      n.push(s), e += s.length + 1;
     }
+    let p = this.fieldPositions.map((s) => new b(s.field, i[s.line] + s.from, i[s.line] + s.to));
+    return { text: n, ranges: p };
+  }
+  static parse(t) {
+    let e = [], n = [], i = [], l;
+    for (let f of t.split(/\r\n?|\n/)) {
+      for (; l = /[#$]\{(?:(\d+)(?::([^{}]*))?|((?:\\[{}]|[^{}])*))\}/.exec(f); ) {
+        let p = l[1] ? +l[1] : null, s = l[2] || l[3] || "", a = -1, c = s.replace(/\\[{}]/g, (r) => r[1]);
+        for (let r = 0; r < e.length; r++)
+          (p != null ? e[r].seq == p : c && e[r].name == c) && (a = r);
+        if (a < 0) {
+          let r = 0;
+          for (; r < e.length && (p == null || e[r].seq != null && e[r].seq < p); )
+            r++;
+          e.splice(r, 0, { seq: p, name: c }), a = r;
+          for (let d of i)
+            d.field >= a && d.field++;
+        }
+        for (let r of i)
+          if (r.line == n.length && r.from > l.index) {
+            let d = l[2] ? 3 + (l[1] || "").length : 2;
+            r.from -= d, r.to -= d;
+          }
+        i.push(new H(a, n.length, l.index, l.index + c.length)), f = f.slice(0, l.index) + s + f.slice(l.index + l[0].length);
+      }
+      f = f.replace(/\\([{}])/g, (p, s, a) => {
+        for (let c of i)
+          c.line == n.length && c.from > a && (c.from--, c.to--);
+        return s;
+      }), n.push(f);
+    }
+    return new I(n, i);
   }
 }
-typeof Symbol < "u" && (v.prototype[Symbol.iterator] = d.prototype[Symbol.iterator] = function() {
-  return this;
-});
-function M(n) {
-  try {
-    return new RegExp(n, f), !0;
-  } catch {
+let K = /* @__PURE__ */ g.widget({ widget: /* @__PURE__ */ new class extends R {
+  toDOM() {
+    let o = document.createElement("span");
+    return o.className = "cm-snippetFieldPosition", o;
+  }
+  ignoreEvent() {
     return !1;
   }
+}() }), N = /* @__PURE__ */ g.mark({ class: "cm-snippetField" });
+class m {
+  constructor(t, e) {
+    this.ranges = t, this.active = e, this.deco = g.set(t.map((n) => (n.from == n.to ? K : N).range(n.from, n.to)), !0);
+  }
+  map(t) {
+    let e = [];
+    for (let n of this.ranges) {
+      let i = n.map(t);
+      if (!i)
+        return null;
+      e.push(i);
+    }
+    return new m(e, this.active);
+  }
+  selectionInsideField(t) {
+    return t.ranges.every((e) => this.ranges.some((n) => n.field == this.active && n.from <= e.from && n.to >= e.to));
+  }
 }
-class E {
-  /**
-  Create a query object.
-  */
-  constructor(t) {
-    this.search = t.search, this.caseSensitive = !!t.caseSensitive, this.regexp = !!t.regexp, this.replace = t.replace || "", this.valid = !!this.search && (!this.regexp || M(this.search)), this.unquoted = t.literal ? this.search : this.search.replace(/\\([nrt\\])/g, (e, i) => i == "n" ? `
-` : i == "r" ? "\r" : i == "t" ? "	" : "\\");
+const h = /* @__PURE__ */ x.define({
+  map(o, t) {
+    return o && o.map(t);
   }
-  /**
-  Compare this query to another query.
-  */
-  eq(t) {
-    return this.search == t.search && this.replace == t.replace && this.caseSensitive == t.caseSensitive && this.regexp == t.regexp;
-  }
-  /**
-  @internal
-  */
+}), X = /* @__PURE__ */ x.define(), u = /* @__PURE__ */ D.define({
   create() {
-    return this.regexp ? new R(this) : new P(this);
-  }
-  /**
-  Get a search cursor for this query, searching through the given
-  range in the given document.
-  */
-  getCursor(t, e = 0, i = t.length) {
-    return this.regexp ? u(this, t, e, i) : a(this, t, e, i);
-  }
-}
-class S {
-  constructor(t) {
-    this.spec = t;
-  }
-}
-function a(n, t, e, i) {
-  return new x(t, n.unquoted, e, i, n.caseSensitive ? void 0 : (s) => s.toLowerCase());
-}
-class P extends S {
-  constructor(t) {
-    super(t);
-  }
-  nextMatch(t, e, i) {
-    let s = a(this.spec, t, i, t.length).nextOverlapping();
-    return s.done && (s = a(this.spec, t, 0, e).nextOverlapping()), s.done ? null : s.value;
-  }
-  // Searching in reverse is, rather than implementing inverted search
-  // cursor, done by scanning chunk after chunk forward.
-  prevMatchInRange(t, e, i) {
-    for (let s = i; ; ) {
-      let r = Math.max(e, s - 1e4 - this.spec.unquoted.length), h = a(this.spec, t, r, s), l = null;
-      for (; !h.nextOverlapping().done; )
-        l = h.value;
-      if (l)
-        return l;
-      if (r == e)
-        return null;
-      s -= 1e4;
+    return null;
+  },
+  update(o, t) {
+    for (let e of t.effects) {
+      if (e.is(h))
+        return e.value;
+      if (e.is(X) && o)
+        return new m(o.ranges, e.value);
     }
-  }
-  prevMatch(t, e, i) {
-    return this.prevMatchInRange(t, 0, e) || this.prevMatchInRange(t, i, t.length);
-  }
-  getReplacement(t) {
-    return this.spec.replace;
-  }
-  matchAll(t, e) {
-    let i = a(this.spec, t, 0, t.length), s = [];
-    for (; !i.next().done; ) {
-      if (s.length >= e)
-        return null;
-      s.push(i.value);
-    }
-    return s;
-  }
-  highlight(t, e, i, s) {
-    let r = a(this.spec, t, Math.max(0, e - this.spec.unquoted.length), Math.min(i + this.spec.unquoted.length, t.length));
-    for (; !r.next().done; )
-      s(r.value.from, r.value.to);
-  }
+    return o && t.docChanged && (o = o.map(t.changes)), o && t.selection && !o.selectionInsideField(t.selection) && (o = null), o;
+  },
+  provide: (o) => w.decorations.from(o, (t) => t ? t.deco : g.none)
+});
+function y(o, t) {
+  return k.create(o.filter((e) => e.field == t).map((e) => k.range(e.from, e.to)));
 }
-function u(n, t, e, i) {
-  return new v(t, n.search, n.caseSensitive ? void 0 : { ignoreCase: !0 }, e, i);
-}
-class R extends S {
-  nextMatch(t, e, i) {
-    let s = u(this.spec, t, i, t.length).next();
-    return s.done && (s = u(this.spec, t, 0, e).next()), s.done ? null : s.value;
-  }
-  prevMatchInRange(t, e, i) {
-    for (let s = 1; ; s++) {
-      let r = Math.max(
-        e,
-        i - s * 1e4
-        /* ChunkSize */
-      ), h = u(this.spec, t, r, i), l = null;
-      for (; !h.next().done; )
-        l = h.value;
-      if (l && (r == e || l.from > r + 10))
-        return l;
-      if (r == e)
-        return null;
+function U(o) {
+  let t = I.parse(o);
+  return (e, n, i, l) => {
+    let { text: f, ranges: p } = t.instantiate(e.state, i), { main: s } = e.state.selection, a = {
+      changes: { from: i, to: l == s.from ? s.to : l, insert: A.of(f) },
+      scrollIntoView: !0,
+      annotations: n ? [q.of(n), L.userEvent.of("input.complete")] : void 0
+    };
+    if (p.length && (a.selection = y(p, 0)), p.some((c) => c.field > 0)) {
+      let c = new m(p, 0), r = a.effects = [h.of(c)];
+      e.state.field(u, !1) === void 0 && r.push(x.appendConfig.of([u, Z, _, z]));
     }
-  }
-  prevMatch(t, e, i) {
-    return this.prevMatchInRange(t, 0, e) || this.prevMatchInRange(t, i, t.length);
-  }
-  getReplacement(t) {
-    return this.spec.replace.replace(/\$([$&\d+])/g, (e, i) => i == "$" ? "$" : i == "&" ? t.match[0] : i != "0" && +i < t.match.length ? t.match[i] : e);
-  }
-  matchAll(t, e) {
-    let i = u(this.spec, t, 0, t.length), s = [];
-    for (; !i.next().done; ) {
-      if (s.length >= e)
-        return null;
-      s.push(i.value);
-    }
-    return s;
-  }
-  highlight(t, e, i, s) {
-    let r = u(this.spec, t, Math.max(
-      0,
-      e - 250
-      /* HighlightMargin */
-    ), Math.min(i + 250, t.length));
-    for (; !r.next().done; )
-      s(r.value.from, r.value.to);
-  }
+    e.dispatch(e.state.update(a));
+  };
 }
-const k = /* @__PURE__ */ L.define();
+function E(o) {
+  return ({ state: t, dispatch: e }) => {
+    let n = t.field(u, !1);
+    if (!n || o < 0 && n.active == 0)
+      return !1;
+    let i = n.active + o, l = o > 0 && !n.ranges.some((f) => f.field == i + o);
+    return e(t.update({
+      selection: y(n.ranges, i),
+      effects: h.of(l ? null : new m(n.ranges, i)),
+      scrollIntoView: !0
+    })), !0;
+  };
+}
+const Y = ({ state: o, dispatch: t }) => o.field(u, !1) ? (t(o.update({ effects: h.of(null) })), !0) : !1, G = /* @__PURE__ */ E(1), J = /* @__PURE__ */ E(-1), Q = [
+  { key: "Tab", run: G, shift: J },
+  { key: "Escape", run: Y }
+], F = /* @__PURE__ */ P.define({
+  combine(o) {
+    return o.length ? o[0] : Q;
+  }
+}), Z = /* @__PURE__ */ O.highest(/* @__PURE__ */ B.compute([F], (o) => o.facet(F)));
+function re(o, t) {
+  return { ...t, apply: U(o) };
+}
+const _ = /* @__PURE__ */ w.domEventHandlers({
+  mousedown(o, t) {
+    let e = t.state.field(u, !1), n;
+    if (!e || (n = t.posAtCoords({ x: o.clientX, y: o.clientY })) == null)
+      return !1;
+    let i = e.ranges.find((l) => l.from <= n && l.to >= n);
+    return !i || i.field == e.active ? !1 : (t.dispatch({
+      selection: y(e.ranges, i.field),
+      effects: h.of(e.ranges.some((l) => l.field > i.field) ? new m(e.ranges, i.field) : null),
+      scrollIntoView: !0
+    }), !0);
+  }
+}), C = /* @__PURE__ */ new class extends M {
+}();
+C.startSide = 1;
+C.endSide = -1;
 export {
-  v as RegExpCursor,
-  x as SearchCursor,
-  E as SearchQuery,
-  k as setSearchQuery
+  oe as CompletionContext,
+  Y as clearSnippet,
+  ie as completeFromList,
+  le as ifNotIn,
+  G as nextSnippetField,
+  q as pickedCompletion,
+  J as prevSnippetField,
+  U as snippet,
+  re as snippetCompletion,
+  F as snippetKeymap
 };

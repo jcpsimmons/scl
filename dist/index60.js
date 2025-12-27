@@ -1,14 +1,27 @@
-import e from "./index121.js";
-/**
- * @license lucide-react v0.460.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const a = e("X", [
-  ["path", { d: "M18 6 6 18", key: "1bl5f8" }],
-  ["path", { d: "m6 6 12 12", key: "d8bk6v" }]
-]);
+import { parser as n } from "./index122.js";
+import { LanguageSupport as r, LRLanguage as o, indentNodeProp as a, foldNodeProp as t, continuedIndent as e, foldInside as d } from "./index64.js";
+const p = /* @__PURE__ */ o.define({
+  name: "json",
+  parser: /* @__PURE__ */ n.configure({
+    props: [
+      /* @__PURE__ */ a.add({
+        Object: /* @__PURE__ */ e({ except: /^\s*\}/ }),
+        Array: /* @__PURE__ */ e({ except: /^\s*\]/ })
+      }),
+      /* @__PURE__ */ t.add({
+        "Object Array": d
+      })
+    ]
+  }),
+  languageData: {
+    closeBrackets: { brackets: ["[", "{", '"'] },
+    indentOnInput: /^\s*[\}\]]$/
+  }
+});
+function u() {
+  return new r(p);
+}
 export {
-  a as default
+  u as json,
+  p as jsonLanguage
 };

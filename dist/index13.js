@@ -1,100 +1,139 @@
-import { jsx as t, jsxs as i } from "react/jsx-runtime";
-import * as l from "react";
-import { Root as g, Portal as u, Trigger as x, Close as n, Overlay as d, Content as r, Title as c, Description as m } from "./index59.js";
-import { cn as s } from "./index2.js";
-import y from "./index60.js";
-const T = g, j = x, N = u, F = n, f = l.forwardRef(({ className: a, ...e }, o) => /* @__PURE__ */ t(
-  d,
-  {
-    ref: o,
-    className: s(
-      "fixed inset-0 z-50 bg-black/80 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
-      a
-    ),
-    ...e
-  }
-));
-f.displayName = d.displayName;
-const D = l.forwardRef(({ className: a, children: e, ...o }, p) => /* @__PURE__ */ i(N, { children: [
-  /* @__PURE__ */ t(f, {}),
-  /* @__PURE__ */ i(
-    r,
-    {
-      ref: p,
-      className: s(
-        "fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg",
-        a
-      ),
-      ...o,
-      children: [
-        e,
-        /* @__PURE__ */ i(n, { className: "absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground", children: [
-          /* @__PURE__ */ t(y, { className: "h-4 w-4" }),
-          /* @__PURE__ */ t("span", { className: "sr-only", children: "Close" })
+import { jsxs as o, jsx as e } from "react/jsx-runtime";
+import * as h from "react";
+import { cn as f } from "./index2.js";
+import { Popover as v, PopoverTrigger as C, PopoverContent as S } from "./index21.js";
+import { Button as O } from "./index9.js";
+import j from "./index86.js";
+import { Command as k, CommandInput as P, CommandList as R, CommandEmpty as B, CommandGroup as I, CommandItem as L } from "./index14.js";
+import M from "./index47.js";
+const D = h.forwardRef(
+  ({
+    options: s,
+    value: l,
+    onValueChange: c,
+    placeholder: b = "Select option...",
+    searchPlaceholder: w = "Search...",
+    emptyText: x = "No option found.",
+    className: N,
+    disabled: u = !1
+  }, t) => {
+    const [m, i] = h.useState(!1), d = s.find((a) => a.value === l);
+    return /* @__PURE__ */ o(v, { open: m, onOpenChange: i, children: [
+      /* @__PURE__ */ e(C, { asChild: !0, children: /* @__PURE__ */ o(
+        O,
+        {
+          ref: t,
+          variant: "outline",
+          role: "combobox",
+          "aria-expanded": m,
+          className: f("w-[200px] justify-between", N),
+          disabled: u,
+          children: [
+            d ? d.label : b,
+            /* @__PURE__ */ e(j, { className: "ml-2 h-4 w-4 shrink-0 opacity-50" })
+          ]
+        }
+      ) }),
+      /* @__PURE__ */ e(S, { className: "w-[200px] p-0", children: /* @__PURE__ */ o(k, { children: [
+        /* @__PURE__ */ e(P, { placeholder: w }),
+        /* @__PURE__ */ o(R, { children: [
+          /* @__PURE__ */ e(B, { children: x }),
+          /* @__PURE__ */ e(I, { children: s.map((a) => /* @__PURE__ */ o(
+            L,
+            {
+              value: a.value,
+              onSelect: (n) => {
+                c == null || c(n === l ? "" : n), i(!1);
+              },
+              disabled: a.disabled,
+              children: [
+                /* @__PURE__ */ e(
+                  M,
+                  {
+                    className: f(
+                      "mr-2 h-4 w-4",
+                      l === a.value ? "opacity-100" : "opacity-0"
+                    )
+                  }
+                ),
+                a.label
+              ]
+            },
+            a.value
+          )) })
         ] })
-      ]
-    }
-  )
-] }));
-D.displayName = r.displayName;
-const b = ({
-  className: a,
-  ...e
-}) => /* @__PURE__ */ t(
-  "div",
-  {
-    className: s(
-      "flex flex-col space-y-1.5 text-center sm:text-left",
-      a
-    ),
-    ...e
+      ] }) })
+    ] });
   }
 );
-b.displayName = "DialogHeader";
-const h = ({
-  className: a,
-  ...e
-}) => /* @__PURE__ */ t(
-  "div",
-  {
-    className: s(
-      "flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2",
-      a
-    ),
-    ...e
+D.displayName = "Combobox";
+const E = h.forwardRef(
+  ({
+    options: s,
+    value: l = [],
+    onValueChange: c,
+    placeholder: b = "Select options...",
+    searchPlaceholder: w = "Search...",
+    emptyText: x = "No option found.",
+    className: N,
+    disabled: u = !1,
+    maxSelected: t
+  }, m) => {
+    const [i, d] = h.useState(!1), a = l.map((r) => {
+      var p;
+      return (p = s.find((y) => y.value === r)) == null ? void 0 : p.label;
+    }).filter(Boolean).join(", "), n = (r) => {
+      const p = l.includes(r) ? l.filter((y) => y !== r) : t && l.length >= t ? l : [...l, r];
+      c == null || c(p);
+    };
+    return /* @__PURE__ */ o(v, { open: i, onOpenChange: d, children: [
+      /* @__PURE__ */ e(C, { asChild: !0, children: /* @__PURE__ */ o(
+        O,
+        {
+          ref: m,
+          variant: "outline",
+          role: "combobox",
+          "aria-expanded": i,
+          className: f("w-[200px] justify-between", N),
+          disabled: u,
+          children: [
+            /* @__PURE__ */ e("span", { className: "truncate", children: a || b }),
+            /* @__PURE__ */ e(j, { className: "ml-2 h-4 w-4 shrink-0 opacity-50" })
+          ]
+        }
+      ) }),
+      /* @__PURE__ */ e(S, { className: "w-[200px] p-0", children: /* @__PURE__ */ o(k, { children: [
+        /* @__PURE__ */ e(P, { placeholder: w }),
+        /* @__PURE__ */ o(R, { children: [
+          /* @__PURE__ */ e(B, { children: x }),
+          /* @__PURE__ */ e(I, { children: s.map((r) => /* @__PURE__ */ o(
+            L,
+            {
+              value: r.value,
+              onSelect: () => n(r.value),
+              disabled: r.disabled,
+              children: [
+                /* @__PURE__ */ e(
+                  M,
+                  {
+                    className: f(
+                      "mr-2 h-4 w-4",
+                      l.includes(r.value) ? "opacity-100" : "opacity-0"
+                    )
+                  }
+                ),
+                r.label
+              ]
+            },
+            r.value
+          )) })
+        ] })
+      ] }) })
+    ] });
   }
 );
-h.displayName = "DialogFooter";
-const w = l.forwardRef(({ className: a, ...e }, o) => /* @__PURE__ */ t(
-  c,
-  {
-    ref: o,
-    className: s(
-      "text-lg font-semibold leading-none tracking-tight",
-      a
-    ),
-    ...e
-  }
-));
-w.displayName = c.displayName;
-const v = l.forwardRef(({ className: a, ...e }, o) => /* @__PURE__ */ t(
-  m,
-  {
-    ref: o,
-    className: s("text-sm text-muted-foreground", a),
-    ...e
-  }
-));
-v.displayName = m.displayName;
+E.displayName = "ComboboxMulti";
 export {
-  T as Dialog,
-  F as DialogClose,
-  D as DialogContent,
-  v as DialogDescription,
-  h as DialogFooter,
-  b as DialogHeader,
-  f as DialogOverlay,
-  N as DialogPortal,
-  w as DialogTitle,
-  j as DialogTrigger
+  D as Combobox,
+  E as ComboboxMulti
 };

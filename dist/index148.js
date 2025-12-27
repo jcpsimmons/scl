@@ -1,67 +1,26 @@
-import { __assign as d } from "./index135.js";
-function l(r) {
-  return r;
-}
-function h(r, t) {
-  t === void 0 && (t = l);
-  var e = [], o = !1, c = {
-    read: function() {
-      if (o)
-        throw new Error("Sidecar: could not `read` from an `assigned` medium. `read` could be used only with `useMedium`.");
-      return e.length ? e[e.length - 1] : r;
-    },
-    useMedium: function(u) {
-      var n = t(u, o);
-      return e.push(n), function() {
-        e = e.filter(function(i) {
-          return i !== n;
-        });
-      };
-    },
-    assignSyncMedium: function(u) {
-      for (o = !0; e.length; ) {
-        var n = e;
-        e = [], n.forEach(u);
-      }
-      e = {
-        push: function(i) {
-          return u(i);
-        },
-        filter: function() {
-          return e;
-        }
-      };
-    },
-    assignMedium: function(u) {
-      o = !0;
-      var n = [];
-      if (e.length) {
-        var i = e;
-        e = [], i.forEach(u), n = e;
-      }
-      var s = function() {
-        var f = n;
-        n = [], f.forEach(u);
-      }, a = function() {
-        return Promise.resolve().then(s);
-      };
-      a(), e = {
-        push: function(f) {
-          n.push(f), a();
-        },
-        filter: function(f) {
-          return n = n.filter(f), e;
-        }
-      };
+import * as f from "react";
+import { assignRef as o } from "./index159.js";
+import { useCallbackRef as l } from "./index160.js";
+var s = typeof window < "u" ? f.useLayoutEffect : f.useEffect, c = /* @__PURE__ */ new WeakMap();
+function v(e, m) {
+  var t = l(null, function(n) {
+    return e.forEach(function(u) {
+      return o(u, n);
+    });
+  });
+  return s(function() {
+    var n = c.get(t);
+    if (n) {
+      var u = new Set(n), r = new Set(e), i = t.current;
+      u.forEach(function(a) {
+        r.has(a) || o(a, null);
+      }), r.forEach(function(a) {
+        u.has(a) || o(a, i);
+      });
     }
-  };
-  return c;
-}
-function v(r) {
-  r === void 0 && (r = {});
-  var t = h(null);
-  return t.options = d({ async: !0, ssr: !1 }, r), t;
+    c.set(t, e);
+  }, [e]), t;
 }
 export {
-  v as createSidecarMedium
+  v as useMergeRefs
 };

@@ -1,38 +1,24 @@
-import { jsxs as n, jsx as e } from "react/jsx-runtime";
-import * as t from "react";
-import { Root as s, Viewport as d, Corner as p, ScrollAreaScrollbar as c, ScrollAreaThumb as f } from "./index62.js";
-import { cn as i } from "./index2.js";
-const h = t.forwardRef(({ className: l, children: r, ...a }, o) => /* @__PURE__ */ n(
-  s,
+import { jsx as o } from "react/jsx-runtime";
+import * as i from "react";
+import { Root as s, Trigger as m, Anchor as p, Portal as c, Content as t } from "./index74.js";
+import { cn as l } from "./index2.js";
+const u = s, P = m, v = p, f = i.forwardRef(({ className: e, align: a = "center", sideOffset: r = 4, ...d }, n) => /* @__PURE__ */ o(c, { children: /* @__PURE__ */ o(
+  t,
   {
-    ref: o,
-    className: i("relative overflow-hidden", l),
-    ...a,
-    children: [
-      /* @__PURE__ */ e(d, { className: "h-full w-full rounded-[inherit]", children: r }),
-      /* @__PURE__ */ e(m, {}),
-      /* @__PURE__ */ e(p, {})
-    ]
-  }
-));
-h.displayName = s.displayName;
-const m = t.forwardRef(({ className: l, orientation: r = "vertical", ...a }, o) => /* @__PURE__ */ e(
-  c,
-  {
-    ref: o,
-    orientation: r,
-    className: i(
-      "flex touch-none select-none transition-colors",
-      r === "vertical" && "h-full w-2.5 border-l border-l-transparent p-[1px]",
-      r === "horizontal" && "h-2.5 flex-col border-t border-t-transparent p-[1px]",
-      l
+    ref: n,
+    align: a,
+    sideOffset: r,
+    className: l(
+      "z-50 w-72 rounded-md border border-primary bg-background p-4 text-primary shadow-md outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
+      e
     ),
-    ...a,
-    children: /* @__PURE__ */ e(f, { className: "relative flex-1 bg-terminal-green terminal-glow" })
+    ...d
   }
-));
-m.displayName = c.displayName;
+) }));
+f.displayName = t.displayName;
 export {
-  h as ScrollArea,
-  m as ScrollBar
+  u as Popover,
+  v as PopoverAnchor,
+  f as PopoverContent,
+  P as PopoverTrigger
 };
