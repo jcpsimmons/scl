@@ -4,7 +4,8 @@
   "type": "module",
   "pnpm": {
     "overrides": {
-      "lru-cache": "^10.0.0"
+      "lru-cache": "^10.0.0",
+      "semver": "^7.6.0"
     }
   },
   "main": "./dist/index.js",
