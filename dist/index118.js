@@ -1,399 +1,183 @@
-import { Annotation as T, Transaction as L, Text as A, StateEffect as x, StateField as D, Prec as O, EditorSelection as k, Facet as P, MapMode as v, RangeValue as M } from "./index56.js";
-import { EditorView as w, Decoration as g, keymap as B, WidgetType as R } from "./index55.js";
-import { syntaxTree as $, indentUnit as j } from "./index64.js";
-class oe {
-  /**
-  Create a new completion context. (Mostly useful for testing
-  completion sources—in the editor, the extension will create
-  these for you.)
-  */
-  constructor(t, e, n, i) {
-    this.state = t, this.pos = e, this.explicit = n, this.view = i, this.abortListeners = [], this.abortOnDocChange = !1;
-  }
-  /**
-  Get the extent, content, and (if there is a token) type of the
-  token before `this.pos`.
-  */
-  tokenBefore(t) {
-    let e = $(this.state).resolveInner(this.pos, -1);
-    for (; e && t.indexOf(e.name) < 0; )
-      e = e.parent;
-    return e ? {
-      from: e.from,
-      to: this.pos,
-      text: this.state.sliceDoc(e.from, this.pos),
-      type: e.type
-    } : null;
-  }
-  /**
-  Get the match of the given expression directly before the
-  cursor.
-  */
-  matchBefore(t) {
-    let e = this.state.doc.lineAt(this.pos), n = Math.max(e.from, this.pos - 250), i = e.text.slice(n - e.from, this.pos - e.from), l = i.search(W(t));
-    return l < 0 ? null : { from: n + l, to: this.pos, text: i.slice(l) };
-  }
-  /**
-  Yields true when the query has been aborted. Can be useful in
-  asynchronous queries to avoid doing work that will be ignored.
-  */
-  get aborted() {
-    return this.abortListeners == null;
-  }
-  /**
-  Allows you to register abort handlers, which will be called when
-  the query is
-  [aborted](https://codemirror.net/6/docs/ref/#autocomplete.CompletionContext.aborted).
-  
-  By default, running queries will not be aborted for regular
-  typing or backspacing, on the assumption that they are likely to
-  return a result with a
-  [`validFor`](https://codemirror.net/6/docs/ref/#autocomplete.CompletionResult.validFor) field that
-  allows the result to be used after all. Passing `onDocChange:
-  true` will cause this query to be aborted for any document
-  change.
-  */
-  addEventListener(t, e, n) {
-    t == "abort" && this.abortListeners && (this.abortListeners.push(e), n && n.onDocChange && (this.abortOnDocChange = !0));
-  }
-}
-function S(o) {
-  let t = Object.keys(o).join(""), e = /\w/.test(t);
-  return e && (t = t.replace(/\w/g, "")), `[${e ? "\\w" : ""}${t.replace(/[^\w\s]/g, "\\$&")}]`;
-}
-function V(o) {
-  let t = /* @__PURE__ */ Object.create(null), e = /* @__PURE__ */ Object.create(null);
-  for (let { label: i } of o) {
-    t[i[0]] = !0;
-    for (let l = 1; l < i.length; l++)
-      e[i[l]] = !0;
-  }
-  let n = S(t) + S(e) + "*$";
-  return [new RegExp("^" + n), new RegExp(n)];
-}
-function ie(o) {
-  let t = o.map((i) => typeof i == "string" ? { label: i } : i), [e, n] = t.every((i) => /^\w+$/.test(i.label)) ? [/\w*$/, /\w+$/] : V(t);
-  return (i) => {
-    let l = i.matchBefore(n);
-    return l || i.explicit ? { from: l ? l.from : i.pos, options: t, validFor: e } : null;
-  };
-}
-function le(o, t) {
-  return (e) => {
-    for (let n = $(e.state).resolveInner(e.pos, -1); n; n = n.parent) {
-      if (o.indexOf(n.name) > -1)
-        return null;
-      if (n.type.isTop)
-        break;
-    }
-    return t(e);
-  };
-}
-function W(o, t) {
-  var e;
-  let { source: n } = o, i = n[n.length - 1] != "$";
-  return i ? new RegExp(`(?:${n})${i ? "$" : ""}`, (e = o.flags) !== null && e !== void 0 ? e : o.ignoreCase ? "i" : "") : o;
-}
-const q = /* @__PURE__ */ T.define(), z = /* @__PURE__ */ w.baseTheme({
-  ".cm-tooltip.cm-tooltip-autocomplete": {
-    "& > ul": {
-      fontFamily: "monospace",
-      whiteSpace: "nowrap",
-      overflow: "hidden auto",
-      maxWidth_fallback: "700px",
-      maxWidth: "min(700px, 95vw)",
-      minWidth: "250px",
-      maxHeight: "10em",
-      height: "100%",
-      listStyle: "none",
-      margin: 0,
-      padding: 0,
-      "& > li, & > completion-section": {
-        padding: "1px 3px",
-        lineHeight: 1.2
-      },
-      "& > li": {
-        overflowX: "hidden",
-        textOverflow: "ellipsis",
-        cursor: "pointer"
-      },
-      "& > completion-section": {
-        display: "list-item",
-        borderBottom: "1px solid silver",
-        paddingLeft: "0.5em",
-        opacity: 0.7
-      }
-    }
-  },
-  "&light .cm-tooltip-autocomplete ul li[aria-selected]": {
-    background: "#17c",
-    color: "white"
-  },
-  "&light .cm-tooltip-autocomplete-disabled ul li[aria-selected]": {
-    background: "#777"
-  },
-  "&dark .cm-tooltip-autocomplete ul li[aria-selected]": {
-    background: "#347",
-    color: "white"
-  },
-  "&dark .cm-tooltip-autocomplete-disabled ul li[aria-selected]": {
-    background: "#444"
-  },
-  ".cm-completionListIncompleteTop:before, .cm-completionListIncompleteBottom:after": {
-    content: '"···"',
-    opacity: 0.5,
-    display: "block",
-    textAlign: "center"
-  },
-  ".cm-tooltip.cm-completionInfo": {
-    position: "absolute",
-    padding: "3px 9px",
-    width: "max-content",
-    maxWidth: "400px",
-    boxSizing: "border-box",
-    whiteSpace: "pre-line"
-  },
-  ".cm-completionInfo.cm-completionInfo-left": { right: "100%" },
-  ".cm-completionInfo.cm-completionInfo-right": { left: "100%" },
-  ".cm-completionInfo.cm-completionInfo-left-narrow": { right: "30px" },
-  ".cm-completionInfo.cm-completionInfo-right-narrow": { left: "30px" },
-  "&light .cm-snippetField": { backgroundColor: "#00000022" },
-  "&dark .cm-snippetField": { backgroundColor: "#ffffff22" },
-  ".cm-snippetFieldPosition": {
-    verticalAlign: "text-top",
-    width: 0,
-    height: "1.15em",
-    display: "inline-block",
-    margin: "0 -0.7px -.7em",
-    borderLeft: "1.4px dotted #888"
-  },
-  ".cm-completionMatchedText": {
-    textDecoration: "underline"
-  },
-  ".cm-completionDetail": {
-    marginLeft: "0.5em",
-    fontStyle: "italic"
-  },
-  ".cm-completionIcon": {
-    fontSize: "90%",
-    width: ".8em",
-    display: "inline-block",
-    textAlign: "center",
-    paddingRight: ".6em",
-    opacity: "0.6",
-    boxSizing: "content-box"
-  },
-  ".cm-completionIcon-function, .cm-completionIcon-method": {
-    "&:after": { content: "'ƒ'" }
-  },
-  ".cm-completionIcon-class": {
-    "&:after": { content: "'○'" }
-  },
-  ".cm-completionIcon-interface": {
-    "&:after": { content: "'◌'" }
-  },
-  ".cm-completionIcon-variable": {
-    "&:after": { content: "'𝑥'" }
-  },
-  ".cm-completionIcon-constant": {
-    "&:after": { content: "'𝐶'" }
-  },
-  ".cm-completionIcon-type": {
-    "&:after": { content: "'𝑡'" }
-  },
-  ".cm-completionIcon-enum": {
-    "&:after": { content: "'∪'" }
-  },
-  ".cm-completionIcon-property": {
-    "&:after": { content: "'□'" }
-  },
-  ".cm-completionIcon-keyword": {
-    "&:after": { content: "'🔑︎'" }
-    // Disable emoji rendering
-  },
-  ".cm-completionIcon-namespace": {
-    "&:after": { content: "'▢'" }
-  },
-  ".cm-completionIcon-text": {
-    "&:after": { content: "'abc'", fontSize: "50%", verticalAlign: "middle" }
-  }
-});
-class H {
-  constructor(t, e, n, i) {
-    this.field = t, this.line = e, this.from = n, this.to = i;
-  }
-}
-class b {
-  constructor(t, e, n) {
-    this.field = t, this.from = e, this.to = n;
-  }
-  map(t) {
-    let e = t.mapPos(this.from, -1, v.TrackDel), n = t.mapPos(this.to, 1, v.TrackDel);
-    return e == null || n == null ? null : new b(this.field, e, n);
-  }
-}
-class I {
-  constructor(t, e) {
-    this.lines = t, this.fieldPositions = e;
-  }
-  instantiate(t, e) {
-    let n = [], i = [e], l = t.doc.lineAt(e), f = /^\s*/.exec(l.text)[0];
-    for (let s of this.lines) {
-      if (n.length) {
-        let a = f, c = /^\t*/.exec(s)[0].length;
-        for (let r = 0; r < c; r++)
-          a += t.facet(j);
-        i.push(e + a.length - c), s = a + s.slice(c);
-      }
-      n.push(s), e += s.length + 1;
-    }
-    let p = this.fieldPositions.map((s) => new b(s.field, i[s.line] + s.from, i[s.line] + s.to));
-    return { text: n, ranges: p };
-  }
-  static parse(t) {
-    let e = [], n = [], i = [], l;
-    for (let f of t.split(/\r\n?|\n/)) {
-      for (; l = /[#$]\{(?:(\d+)(?::([^{}]*))?|((?:\\[{}]|[^{}])*))\}/.exec(f); ) {
-        let p = l[1] ? +l[1] : null, s = l[2] || l[3] || "", a = -1, c = s.replace(/\\[{}]/g, (r) => r[1]);
-        for (let r = 0; r < e.length; r++)
-          (p != null ? e[r].seq == p : c && e[r].name == c) && (a = r);
-        if (a < 0) {
-          let r = 0;
-          for (; r < e.length && (p == null || e[r].seq != null && e[r].seq < p); )
-            r++;
-          e.splice(r, 0, { seq: p, name: c }), a = r;
-          for (let d of i)
-            d.field >= a && d.field++;
+import * as c from "react";
+import { composeEventHandlers as p } from "./index166.js";
+import { createCollection as V } from "./index88.js";
+import { useComposedRefs as j } from "./index89.js";
+import { createContextScope as z } from "./index87.js";
+import { useId as q } from "./index93.js";
+import { Primitive as G } from "./index92.js";
+import { useCallbackRef as J } from "./index108.js";
+import { useControllableState as Q } from "./index91.js";
+import { useDirection as W } from "./index94.js";
+import { jsx as d } from "react/jsx-runtime";
+var y = "rovingFocusGroup.onEntryFocus", X = { bubbles: !1, cancelable: !0 }, I = "RovingFocusGroup", [D, N, Z] = V(I), [$, Fe] = z(
+  I,
+  [Z]
+), [ee, oe] = $(I), O = c.forwardRef(
+  (e, r) => /* @__PURE__ */ d(D.Provider, { scope: e.__scopeRovingFocusGroup, children: /* @__PURE__ */ d(D.Slot, { scope: e.__scopeRovingFocusGroup, children: /* @__PURE__ */ d(te, { ...e, ref: r }) }) })
+);
+O.displayName = I;
+var te = c.forwardRef((e, r) => {
+  const {
+    __scopeRovingFocusGroup: s,
+    orientation: o,
+    loop: T = !1,
+    dir: w,
+    currentTabStopId: v,
+    defaultCurrentTabStopId: C,
+    onCurrentTabStopIdChange: S,
+    onEntryFocus: m,
+    preventScrollOnEntryFocus: u = !1,
+    ...b
+  } = e, F = c.useRef(null), g = j(r, F), R = W(w), [E, t] = Q({
+    prop: v,
+    defaultProp: C ?? null,
+    onChange: S,
+    caller: I
+  }), [i, h] = c.useState(!1), a = J(m), l = N(s), A = c.useRef(!1), [L, P] = c.useState(0);
+  return c.useEffect(() => {
+    const n = F.current;
+    if (n)
+      return n.addEventListener(y, a), () => n.removeEventListener(y, a);
+  }, [a]), /* @__PURE__ */ d(
+    ee,
+    {
+      scope: s,
+      orientation: o,
+      dir: R,
+      loop: T,
+      currentTabStopId: E,
+      onItemFocus: c.useCallback(
+        (n) => t(n),
+        [t]
+      ),
+      onItemShiftTab: c.useCallback(() => h(!0), []),
+      onFocusableItemAdd: c.useCallback(
+        () => P((n) => n + 1),
+        []
+      ),
+      onFocusableItemRemove: c.useCallback(
+        () => P((n) => n - 1),
+        []
+      ),
+      children: /* @__PURE__ */ d(
+        G.div,
+        {
+          tabIndex: i || L === 0 ? -1 : 0,
+          "data-orientation": o,
+          ...b,
+          ref: g,
+          style: { outline: "none", ...e.style },
+          onMouseDown: p(e.onMouseDown, () => {
+            A.current = !0;
+          }),
+          onFocus: p(e.onFocus, (n) => {
+            const U = !A.current;
+            if (n.target === n.currentTarget && U && !i) {
+              const x = new CustomEvent(y, X);
+              if (n.currentTarget.dispatchEvent(x), !x.defaultPrevented) {
+                const _ = l().filter((f) => f.focusable), B = _.find((f) => f.active), Y = _.find((f) => f.id === E), H = [B, Y, ..._].filter(
+                  Boolean
+                ).map((f) => f.ref.current);
+                k(H, u);
+              }
+            }
+            A.current = !1;
+          }),
+          onBlur: p(e.onBlur, () => h(!1))
         }
-        for (let r of i)
-          if (r.line == n.length && r.from > l.index) {
-            let d = l[2] ? 3 + (l[1] || "").length : 2;
-            r.from -= d, r.to -= d;
+      )
+    }
+  );
+}), K = "RovingFocusGroupItem", M = c.forwardRef(
+  (e, r) => {
+    const {
+      __scopeRovingFocusGroup: s,
+      focusable: o = !0,
+      active: T = !1,
+      tabStopId: w,
+      children: v,
+      ...C
+    } = e, S = q(), m = w || S, u = oe(K, s), b = u.currentTabStopId === m, F = N(s), { onFocusableItemAdd: g, onFocusableItemRemove: R, currentTabStopId: E } = u;
+    return c.useEffect(() => {
+      if (o)
+        return g(), () => R();
+    }, [o, g, R]), /* @__PURE__ */ d(
+      D.ItemSlot,
+      {
+        scope: s,
+        id: m,
+        focusable: o,
+        active: T,
+        children: /* @__PURE__ */ d(
+          G.span,
+          {
+            tabIndex: b ? 0 : -1,
+            "data-orientation": u.orientation,
+            ...C,
+            ref: r,
+            onMouseDown: p(e.onMouseDown, (t) => {
+              o ? u.onItemFocus(m) : t.preventDefault();
+            }),
+            onFocus: p(e.onFocus, () => u.onItemFocus(m)),
+            onKeyDown: p(e.onKeyDown, (t) => {
+              if (t.key === "Tab" && t.shiftKey) {
+                u.onItemShiftTab();
+                return;
+              }
+              if (t.target !== t.currentTarget) return;
+              const i = ce(t, u.orientation, u.dir);
+              if (i !== void 0) {
+                if (t.metaKey || t.ctrlKey || t.altKey || t.shiftKey) return;
+                t.preventDefault();
+                let a = F().filter((l) => l.focusable).map((l) => l.ref.current);
+                if (i === "last") a.reverse();
+                else if (i === "prev" || i === "next") {
+                  i === "prev" && a.reverse();
+                  const l = a.indexOf(t.currentTarget);
+                  a = u.loop ? se(a, l + 1) : a.slice(l + 1);
+                }
+                setTimeout(() => k(a));
+              }
+            }),
+            children: typeof v == "function" ? v({ isCurrentTabStop: b, hasTabStop: E != null }) : v
           }
-        i.push(new H(a, n.length, l.index, l.index + c.length)), f = f.slice(0, l.index) + s + f.slice(l.index + l[0].length);
+        )
       }
-      f = f.replace(/\\([{}])/g, (p, s, a) => {
-        for (let c of i)
-          c.line == n.length && c.from > a && (c.from--, c.to--);
-        return s;
-      }), n.push(f);
-    }
-    return new I(n, i);
+    );
   }
+);
+M.displayName = K;
+var re = {
+  ArrowLeft: "prev",
+  ArrowUp: "prev",
+  ArrowRight: "next",
+  ArrowDown: "next",
+  PageUp: "first",
+  Home: "first",
+  PageDown: "last",
+  End: "last"
+};
+function ne(e, r) {
+  return r !== "rtl" ? e : e === "ArrowLeft" ? "ArrowRight" : e === "ArrowRight" ? "ArrowLeft" : e;
 }
-let K = /* @__PURE__ */ g.widget({ widget: /* @__PURE__ */ new class extends R {
-  toDOM() {
-    let o = document.createElement("span");
-    return o.className = "cm-snippetFieldPosition", o;
-  }
-  ignoreEvent() {
-    return !1;
-  }
-}() }), N = /* @__PURE__ */ g.mark({ class: "cm-snippetField" });
-class m {
-  constructor(t, e) {
-    this.ranges = t, this.active = e, this.deco = g.set(t.map((n) => (n.from == n.to ? K : N).range(n.from, n.to)), !0);
-  }
-  map(t) {
-    let e = [];
-    for (let n of this.ranges) {
-      let i = n.map(t);
-      if (!i)
-        return null;
-      e.push(i);
-    }
-    return new m(e, this.active);
-  }
-  selectionInsideField(t) {
-    return t.ranges.every((e) => this.ranges.some((n) => n.field == this.active && n.from <= e.from && n.to >= e.to));
-  }
+function ce(e, r, s) {
+  const o = ne(e.key, s);
+  if (!(r === "vertical" && ["ArrowLeft", "ArrowRight"].includes(o)) && !(r === "horizontal" && ["ArrowUp", "ArrowDown"].includes(o)))
+    return re[o];
 }
-const h = /* @__PURE__ */ x.define({
-  map(o, t) {
-    return o && o.map(t);
-  }
-}), X = /* @__PURE__ */ x.define(), u = /* @__PURE__ */ D.define({
-  create() {
-    return null;
-  },
-  update(o, t) {
-    for (let e of t.effects) {
-      if (e.is(h))
-        return e.value;
-      if (e.is(X) && o)
-        return new m(o.ranges, e.value);
-    }
-    return o && t.docChanged && (o = o.map(t.changes)), o && t.selection && !o.selectionInsideField(t.selection) && (o = null), o;
-  },
-  provide: (o) => w.decorations.from(o, (t) => t ? t.deco : g.none)
-});
-function y(o, t) {
-  return k.create(o.filter((e) => e.field == t).map((e) => k.range(e.from, e.to)));
+function k(e, r = !1) {
+  const s = document.activeElement;
+  for (const o of e)
+    if (o === s || (o.focus({ preventScroll: r }), document.activeElement !== s)) return;
 }
-function U(o) {
-  let t = I.parse(o);
-  return (e, n, i, l) => {
-    let { text: f, ranges: p } = t.instantiate(e.state, i), { main: s } = e.state.selection, a = {
-      changes: { from: i, to: l == s.from ? s.to : l, insert: A.of(f) },
-      scrollIntoView: !0,
-      annotations: n ? [q.of(n), L.userEvent.of("input.complete")] : void 0
-    };
-    if (p.length && (a.selection = y(p, 0)), p.some((c) => c.field > 0)) {
-      let c = new m(p, 0), r = a.effects = [h.of(c)];
-      e.state.field(u, !1) === void 0 && r.push(x.appendConfig.of([u, Z, _, z]));
-    }
-    e.dispatch(e.state.update(a));
-  };
+function se(e, r) {
+  return e.map((s, o) => e[(r + o) % e.length]);
 }
-function E(o) {
-  return ({ state: t, dispatch: e }) => {
-    let n = t.field(u, !1);
-    if (!n || o < 0 && n.active == 0)
-      return !1;
-    let i = n.active + o, l = o > 0 && !n.ranges.some((f) => f.field == i + o);
-    return e(t.update({
-      selection: y(n.ranges, i),
-      effects: h.of(l ? null : new m(n.ranges, i)),
-      scrollIntoView: !0
-    })), !0;
-  };
-}
-const Y = ({ state: o, dispatch: t }) => o.field(u, !1) ? (t(o.update({ effects: h.of(null) })), !0) : !1, G = /* @__PURE__ */ E(1), J = /* @__PURE__ */ E(-1), Q = [
-  { key: "Tab", run: G, shift: J },
-  { key: "Escape", run: Y }
-], F = /* @__PURE__ */ P.define({
-  combine(o) {
-    return o.length ? o[0] : Q;
-  }
-}), Z = /* @__PURE__ */ O.highest(/* @__PURE__ */ B.compute([F], (o) => o.facet(F)));
-function re(o, t) {
-  return { ...t, apply: U(o) };
-}
-const _ = /* @__PURE__ */ w.domEventHandlers({
-  mousedown(o, t) {
-    let e = t.state.field(u, !1), n;
-    if (!e || (n = t.posAtCoords({ x: o.clientX, y: o.clientY })) == null)
-      return !1;
-    let i = e.ranges.find((l) => l.from <= n && l.to >= n);
-    return !i || i.field == e.active ? !1 : (t.dispatch({
-      selection: y(e.ranges, i.field),
-      effects: h.of(e.ranges.some((l) => l.field > i.field) ? new m(e.ranges, i.field) : null),
-      scrollIntoView: !0
-    }), !0);
-  }
-}), C = /* @__PURE__ */ new class extends M {
-}();
-C.startSide = 1;
-C.endSide = -1;
+var ge = O, Re = M;
 export {
-  oe as CompletionContext,
-  Y as clearSnippet,
-  ie as completeFromList,
-  le as ifNotIn,
-  G as nextSnippetField,
-  q as pickedCompletion,
-  J as prevSnippetField,
-  U as snippet,
-  re as snippetCompletion,
-  F as snippetKeymap
+  Re as Item,
+  ge as Root,
+  O as RovingFocusGroup,
+  M as RovingFocusGroupItem,
+  Fe as createRovingFocusGroupScope
 };

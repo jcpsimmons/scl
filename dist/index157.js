@@ -1,16 +1,23 @@
-var r = !1;
-if (typeof window < "u")
-  try {
-    var e = Object.defineProperty({}, "passive", {
-      get: function() {
-        return r = !0, !0;
-      }
-    });
-    window.addEventListener("test", e, e), window.removeEventListener("test", e, e);
-  } catch {
-    r = !1;
-  }
-var a = r ? { passive: !1 } : !1;
+import { forwardRef as s, createElement as c } from "react";
+import { mergeClasses as n, toKebabCase as f } from "./index158.js";
+import l from "./index159.js";
+/**
+ * @license lucide-react v0.460.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const u = (e, r) => {
+  const o = s(
+    ({ className: t, ...a }, m) => c(l, {
+      ref: m,
+      iconNode: r,
+      className: n(`lucide-${f(e)}`, t),
+      ...a
+    })
+  );
+  return o.displayName = `${e}`, o;
+};
 export {
-  a as nonPassive
+  u as default
 };

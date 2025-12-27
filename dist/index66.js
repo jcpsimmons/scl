@@ -1,20 +1,27 @@
-import * as i from "react";
-import { Primitive as f } from "./index100.js";
-import { jsx as l } from "react/jsx-runtime";
-var m = "Label", r = i.forwardRef((e, o) => /* @__PURE__ */ l(
-  f.label,
-  {
-    ...e,
-    ref: o,
-    onMouseDown: (t) => {
-      var a;
-      t.target.closest("button, input, select, textarea") || ((a = e.onMouseDown) == null || a.call(e, t), !t.defaultPrevented && t.detail > 1 && t.preventDefault());
-    }
+import { parser as n } from "./index132.js";
+import { LanguageSupport as r, LRLanguage as o, indentNodeProp as a, foldNodeProp as t, continuedIndent as e, foldInside as d } from "./index70.js";
+const p = /* @__PURE__ */ o.define({
+  name: "json",
+  parser: /* @__PURE__ */ n.configure({
+    props: [
+      /* @__PURE__ */ a.add({
+        Object: /* @__PURE__ */ e({ except: /^\s*\}/ }),
+        Array: /* @__PURE__ */ e({ except: /^\s*\]/ })
+      }),
+      /* @__PURE__ */ t.add({
+        "Object Array": d
+      })
+    ]
+  }),
+  languageData: {
+    closeBrackets: { brackets: ["[", "{", '"'] },
+    indentOnInput: /^\s*[\}\]]$/
   }
-));
-r.displayName = m;
-var b = r;
+});
+function u() {
+  return new r(p);
+}
 export {
-  r as Label,
-  b as Root
+  u as json,
+  p as jsonLanguage
 };

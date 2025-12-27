@@ -1,93 +1,71 @@
-var t = {
-  8: "Backspace",
-  9: "Tab",
-  10: "Enter",
-  12: "NumLock",
-  13: "Enter",
-  16: "Shift",
-  17: "Control",
-  18: "Alt",
-  20: "CapsLock",
-  27: "Escape",
-  32: " ",
-  33: "PageUp",
-  34: "PageDown",
-  35: "End",
-  36: "Home",
-  37: "ArrowLeft",
-  38: "ArrowUp",
-  39: "ArrowRight",
-  40: "ArrowDown",
-  44: "PrintScreen",
-  45: "Insert",
-  46: "Delete",
-  59: ";",
-  61: "=",
-  91: "Meta",
-  92: "Meta",
-  106: "*",
-  107: "+",
-  108: ",",
-  109: "-",
-  110: ".",
-  111: "/",
-  144: "NumLock",
-  145: "ScrollLock",
-  160: "Shift",
-  161: "Shift",
-  162: "Control",
-  163: "Control",
-  164: "Alt",
-  165: "Alt",
-  173: "-",
-  186: ";",
-  187: "=",
-  188: ",",
-  189: "-",
-  190: ".",
-  191: "/",
-  192: "`",
-  219: "[",
-  220: "\\",
-  221: "]",
-  222: "'"
-}, a = {
-  48: ")",
-  49: "!",
-  50: "@",
-  51: "#",
-  52: "$",
-  53: "%",
-  54: "^",
-  55: "&",
-  56: "*",
-  57: "(",
-  59: ":",
-  61: "+",
-  173: "_",
-  186: ":",
-  187: "+",
-  188: "<",
-  189: "_",
-  190: ">",
-  191: "?",
-  192: "~",
-  219: "{",
-  220: "|",
-  221: "}",
-  222: '"'
-}, n = typeof navigator < "u" && /Mac/.test(navigator.platform), y = typeof navigator < "u" && /MSIE \d|Trident\/(?:[7-9]|\d{2,})\..*rv:(\d+)/.exec(navigator.userAgent);
-for (var r = 0; r < 10; r++) t[48 + r] = t[96 + r] = String(r);
-for (var r = 1; r <= 24; r++) t[r + 111] = "F" + r;
-for (var r = 65; r <= 90; r++)
-  t[r] = String.fromCharCode(r + 32), a[r] = String.fromCharCode(r);
-for (var i in t) a.hasOwnProperty(i) || (a[i] = t[i]);
-function g(o) {
-  var f = n && o.metaKey && o.shiftKey && !o.ctrlKey && !o.altKey || y && o.shiftKey && o.key && o.key.length == 1 || o.key == "Unidentified", e = !f && o.key || (o.shiftKey ? a : t)[o.keyCode] || o.key || "Unidentified";
-  return e == "Esc" && (e = "Escape"), e == "Del" && (e = "Delete"), e == "Left" && (e = "ArrowLeft"), e == "Up" && (e = "ArrowUp"), e == "Right" && (e = "ArrowRight"), e == "Down" && (e = "ArrowDown"), e;
+import * as a from "react";
+import { useComposedRefs as E } from "./index89.js";
+import { useLayoutEffect as A } from "./index109.js";
+function T(n, e) {
+  return a.useReducer((r, t) => e[r][t] ?? r, n);
+}
+var R = (n) => {
+  const { present: e, children: r } = n, t = v(e), i = typeof r == "function" ? r({ present: t.isPresent }) : a.Children.only(r), c = E(t.ref, P(i));
+  return typeof r == "function" || t.isPresent ? a.cloneElement(i, { ref: c }) : null;
+};
+R.displayName = "Presence";
+function v(n) {
+  const [e, r] = a.useState(), t = a.useRef(null), i = a.useRef(n), c = a.useRef("none"), p = n ? "mounted" : "unmounted", [N, s] = T(p, {
+    mounted: {
+      UNMOUNT: "unmounted",
+      ANIMATION_OUT: "unmountSuspended"
+    },
+    unmountSuspended: {
+      MOUNT: "mounted",
+      ANIMATION_END: "unmounted"
+    },
+    unmounted: {
+      MOUNT: "mounted"
+    }
+  });
+  return a.useEffect(() => {
+    const o = l(t.current);
+    c.current = N === "mounted" ? o : "none";
+  }, [N]), A(() => {
+    const o = t.current, m = i.current;
+    if (m !== n) {
+      const f = c.current, u = l(o);
+      n ? s("MOUNT") : u === "none" || (o == null ? void 0 : o.display) === "none" ? s("UNMOUNT") : s(m && f !== u ? "ANIMATION_OUT" : "UNMOUNT"), i.current = n;
+    }
+  }, [n, s]), A(() => {
+    if (e) {
+      let o;
+      const m = e.ownerDocument.defaultView ?? window, d = (u) => {
+        const g = l(t.current).includes(CSS.escape(u.animationName));
+        if (u.target === e && g && (s("ANIMATION_END"), !i.current)) {
+          const O = e.style.animationFillMode;
+          e.style.animationFillMode = "forwards", o = m.setTimeout(() => {
+            e.style.animationFillMode === "forwards" && (e.style.animationFillMode = O);
+          });
+        }
+      }, f = (u) => {
+        u.target === e && (c.current = l(t.current));
+      };
+      return e.addEventListener("animationstart", f), e.addEventListener("animationcancel", d), e.addEventListener("animationend", d), () => {
+        m.clearTimeout(o), e.removeEventListener("animationstart", f), e.removeEventListener("animationcancel", d), e.removeEventListener("animationend", d);
+      };
+    } else
+      s("ANIMATION_END");
+  }, [e, s]), {
+    isPresent: ["mounted", "unmountSuspended"].includes(N),
+    ref: a.useCallback((o) => {
+      t.current = o ? getComputedStyle(o) : null, r(o);
+    }, [])
+  };
+}
+function l(n) {
+  return (n == null ? void 0 : n.animationName) || "none";
+}
+function P(n) {
+  var t, i;
+  let e = (t = Object.getOwnPropertyDescriptor(n.props, "ref")) == null ? void 0 : t.get, r = e && "isReactWarning" in e && e.isReactWarning;
+  return r ? n.ref : (e = (i = Object.getOwnPropertyDescriptor(n, "ref")) == null ? void 0 : i.get, r = e && "isReactWarning" in e && e.isReactWarning, r ? n.props.ref : n.props.ref || n.ref);
 }
 export {
-  t as base,
-  g as keyName,
-  a as shift
+  R as Presence
 };

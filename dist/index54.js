@@ -1,35 +1,11 @@
-import { clsx as O } from "./index43.js";
-const m = (e) => typeof e == "boolean" ? `${e}` : e === 0 ? "0" : e, y = O, j = (e, l) => (n) => {
-  var s;
-  if ((l == null ? void 0 : l.variants) == null) return y(e, n == null ? void 0 : n.class, n == null ? void 0 : n.className);
-  const { variants: r, defaultVariants: d } = l, V = Object.keys(r).map((t) => {
-    const a = n == null ? void 0 : n[t], u = d == null ? void 0 : d[t];
-    if (a === null) return null;
-    const i = m(a) || m(u);
-    return r[t][i];
-  }), v = n && Object.entries(n).reduce((t, a) => {
-    let [u, i] = a;
-    return i === void 0 || (t[u] = i), t;
-  }, {}), N = l == null || (s = l.compoundVariants) === null || s === void 0 ? void 0 : s.reduce((t, a) => {
-    let { class: u, className: i, ...f } = a;
-    return Object.entries(f).every((C) => {
-      let [c, o] = C;
-      return Array.isArray(o) ? o.includes({
-        ...d,
-        ...v
-      }[c]) : {
-        ...d,
-        ...v
-      }[c] === o;
-    }) ? [
-      ...t,
-      u,
-      i
-    ] : t;
-  }, []);
-  return y(e, V, N, n == null ? void 0 : n.class, n == null ? void 0 : n.className);
-};
+import e from "./index157.js";
+/**
+ * @license lucide-react v0.460.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const t = e("Check", [["path", { d: "M20 6 9 17l-5-5", key: "1gmf2c" }]]);
 export {
-  j as cva,
-  y as cx
+  t as default
 };

@@ -1,48 +1,17 @@
-import r from "react";
-import { createContextScope as y } from "./index87.js";
-import { useComposedRefs as M } from "./index88.js";
-import { createSlot as x } from "./index90.js";
-import { jsx as u } from "react/jsx-runtime";
-function g(s) {
-  const m = s + "CollectionProvider", [A, N] = y(m), [_, f] = A(
-    m,
-    { collectionRef: { current: null }, itemMap: /* @__PURE__ */ new Map() }
-  ), p = (c) => {
-    const { scope: e, children: l } = c, o = r.useRef(null), t = r.useRef(/* @__PURE__ */ new Map()).current;
-    return /* @__PURE__ */ u(_, { scope: e, itemMap: t, collectionRef: o, children: l });
-  };
-  p.displayName = m;
-  const a = s + "CollectionSlot", E = x(a), C = r.forwardRef(
-    (c, e) => {
-      const { scope: l, children: o } = c, t = f(a, l), n = M(e, t.collectionRef);
-      return /* @__PURE__ */ u(E, { ref: n, children: o });
-    }
-  );
-  C.displayName = a;
-  const d = s + "CollectionItemSlot", R = "data-radix-collection-item", T = x(d), I = r.forwardRef(
-    (c, e) => {
-      const { scope: l, children: o, ...t } = c, n = r.useRef(null), S = M(e, n), i = f(d, l);
-      return r.useEffect(() => (i.itemMap.set(n, { ref: n, ...t }), () => void i.itemMap.delete(n))), /* @__PURE__ */ u(T, { [R]: "", ref: S, children: o });
-    }
-  );
-  I.displayName = d;
-  function O(c) {
-    const e = f(s + "CollectionConsumer", c);
-    return r.useCallback(() => {
-      const o = e.collectionRef.current;
-      if (!o) return [];
-      const t = Array.from(o.querySelectorAll(`[${R}]`));
-      return Array.from(e.itemMap.values()).sort(
-        (i, v) => t.indexOf(i.ref.current) - t.indexOf(v.ref.current)
-      );
-    }, [e.collectionRef, e.itemMap]);
-  }
-  return [
-    { Provider: p, Slot: C, ItemSlot: I },
-    O,
-    N
-  ];
+var m = 1, j = 0.9, k = 0.8, B = 0.17, v = 0.1, w = 0.999, D = 0.9999, G = 0.99, H = /[\\\/_+.#"@\[\(\{&]/, J = /[\\\/_+.#"@\[\(\{&]/g, K = /[\s-]/, A = /[\s-]/g;
+function $(t, o, e, i, n, h, u) {
+  if (h === o.length) return n === t.length ? m : G;
+  var s = `${n},${h}`;
+  if (u[s] !== void 0) return u[s];
+  for (var d = i.charAt(h), a = e.indexOf(d, n), l = 0, r, g, c, p; a >= 0; ) r = $(t, o, e, i, a + 1, h + 1, u), r > l && (a === n ? r *= m : H.test(t.charAt(a - 1)) ? (r *= k, c = t.slice(n, a - 1).match(J), c && n > 0 && (r *= Math.pow(w, c.length))) : K.test(t.charAt(a - 1)) ? (r *= j, p = t.slice(n, a - 1).match(A), p && n > 0 && (r *= Math.pow(w, p.length))) : (r *= B, n > 0 && (r *= Math.pow(w, a - n))), t.charAt(a) !== o.charAt(h) && (r *= D)), (r < v && e.charAt(a - 1) === i.charAt(h + 1) || i.charAt(h + 1) === i.charAt(h) && e.charAt(a - 1) !== i.charAt(h)) && (g = $(t, o, e, i, a + 1, h + 2, u), g * v > r && (r = g * v)), r > l && (l = r), a = e.indexOf(d, a + 1);
+  return u[s] = l, l;
+}
+function x(t) {
+  return t.toLowerCase().replace(A, " ");
+}
+function M(t, o, e) {
+  return t = e && e.length > 0 ? `${t + " " + e.join(" ")}` : t, $(t, o, x(t), x(o), 0, 0, {});
 }
 export {
-  g as createCollection
+  M as a
 };

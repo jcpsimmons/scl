@@ -1,27 +1,24 @@
-import { parser as n } from "./index122.js";
-import { LanguageSupport as r, LRLanguage as o, indentNodeProp as a, foldNodeProp as t, continuedIndent as e, foldInside as d } from "./index64.js";
-const p = /* @__PURE__ */ o.define({
-  name: "json",
-  parser: /* @__PURE__ */ n.configure({
-    props: [
-      /* @__PURE__ */ a.add({
-        Object: /* @__PURE__ */ e({ except: /^\s*\}/ }),
-        Array: /* @__PURE__ */ e({ except: /^\s*\]/ })
-      }),
-      /* @__PURE__ */ t.add({
-        "Object Array": d
-      })
-    ]
-  }),
-  languageData: {
-    closeBrackets: { brackets: ["[", "{", '"'] },
-    indentOnInput: /^\s*[\}\]]$/
-  }
+import * as p from "react";
+import { Primitive as v } from "./index122.js";
+import { jsx as m } from "react/jsx-runtime";
+var d = "Separator", a = "horizontal", l = ["horizontal", "vertical"], i = p.forwardRef((r, n) => {
+  const { decorative: e, orientation: t = a, ...s } = r, o = f(t) ? t : a, c = e ? { role: "none" } : { "aria-orientation": o === "vertical" ? o : void 0, role: "separator" };
+  return /* @__PURE__ */ m(
+    v.div,
+    {
+      "data-orientation": o,
+      ...c,
+      ...s,
+      ref: n
+    }
+  );
 });
-function u() {
-  return new r(p);
+i.displayName = d;
+function f(r) {
+  return l.includes(r);
 }
+var T = i;
 export {
-  u as json,
-  p as jsonLanguage
+  T as Root,
+  i as Separator
 };

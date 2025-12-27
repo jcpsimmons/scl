@@ -1,7 +1,7 @@
 import * as f from "react";
-import * as p from "react-dom";
-import { createSlot as c } from "./index90.js";
-import { jsx as l } from "react/jsx-runtime";
+import "react-dom";
+import { createSlot as l } from "./index72.js";
+import { jsx as n } from "react/jsx-runtime";
 var u = [
   "a",
   "button",
@@ -20,17 +20,13 @@ var u = [
   "span",
   "svg",
   "ul"
-], h = u.reduce((t, i) => {
-  const o = c(`Primitive.${i}`), r = f.forwardRef((e, m) => {
-    const { asChild: s, ...a } = e, n = s ? o : i;
-    return typeof window < "u" && (window[Symbol.for("radix-ui")] = !0), /* @__PURE__ */ l(n, { ...a, ref: m });
+], w = u.reduce((t, i) => {
+  const o = l(`Primitive.${i}`), r = f.forwardRef((e, m) => {
+    const { asChild: a, ...p } = e, s = a ? o : i;
+    return typeof window < "u" && (window[Symbol.for("radix-ui")] = !0), /* @__PURE__ */ n(s, { ...p, ref: m });
   });
   return r.displayName = `Primitive.${i}`, { ...t, [i]: r };
 }, {});
-function w(t, i) {
-  t && p.flushSync(() => t.dispatchEvent(i));
-}
 export {
-  h as Primitive,
-  w as dispatchDiscreteCustomEvent
+  w as Primitive
 };

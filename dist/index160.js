@@ -1,25 +1,20 @@
-import { useState as u } from "react";
-function n(c, r) {
-  var e = u(function() {
-    return {
-      // value
-      value: c,
-      // last callback
-      callback: r,
-      // "memoized" public interface
-      facade: {
-        get current() {
-          return e.value;
-        },
-        set current(a) {
-          var t = e.value;
-          t !== a && (e.value = a, e.callback(a, t));
-        }
-      }
-    };
-  })[0];
-  return e.callback = r, e.facade;
-}
+/**
+ * @license lucide-react v0.460.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+var t = {
+  xmlns: "http://www.w3.org/2000/svg",
+  width: 24,
+  height: 24,
+  viewBox: "0 0 24 24",
+  fill: "none",
+  stroke: "currentColor",
+  strokeWidth: 2,
+  strokeLinecap: "round",
+  strokeLinejoin: "round"
+};
 export {
-  n as useCallbackRef
+  t as default
 };

@@ -1,15 +1,13 @@
-import { s as r } from "./index127.js";
-function s() {
-  return r.useSyncExternalStore(
-    e,
-    () => !0,
-    () => !1
-  );
-}
-function e() {
-  return () => {
-  };
+import * as r from "react";
+function o(t) {
+  const e = r.useRef(t);
+  return r.useEffect(() => {
+    e.current = t;
+  }), r.useMemo(() => (...n) => {
+    var u;
+    return (u = e.current) == null ? void 0 : u.call(e, ...n);
+  }, []);
 }
 export {
-  s as useIsHydrated
+  o as useCallbackRef
 };

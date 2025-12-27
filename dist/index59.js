@@ -1,832 +1,338 @@
-import { parser as b } from "./index121.js";
-import { LanguageSupport as w, LRLanguage as v, indentNodeProp as y, foldNodeProp as k, continuedIndent as x, foldInside as z, syntaxTree as S } from "./index64.js";
-import { NodeWeakMap as q, IterMode as C } from "./index119.js";
-let c = null;
-function u() {
-  if (!c && typeof document == "object" && document.body) {
-    let { style: t } = document.body, a = [], o = /* @__PURE__ */ new Set();
-    for (let r in t)
-      r != "cssText" && r != "cssFloat" && typeof t[r] == "string" && (/[A-Z]/.test(r) && (r = r.replace(/[A-Z]/g, (e) => "-" + e.toLowerCase())), o.has(r) || (a.push(r), o.add(r)));
-    c = a.sort().map((r) => ({ type: "property", label: r, apply: r + ": " }));
-  }
-  return c || [];
-}
-const p = /* @__PURE__ */ [
-  "active",
-  "after",
-  "any-link",
-  "autofill",
-  "backdrop",
-  "before",
-  "checked",
-  "cue",
-  "default",
-  "defined",
-  "disabled",
-  "empty",
-  "enabled",
-  "file-selector-button",
-  "first",
-  "first-child",
-  "first-letter",
-  "first-line",
-  "first-of-type",
-  "focus",
-  "focus-visible",
-  "focus-within",
-  "fullscreen",
-  "has",
-  "host",
-  "host-context",
-  "hover",
-  "in-range",
-  "indeterminate",
-  "invalid",
-  "is",
-  "lang",
-  "last-child",
-  "last-of-type",
-  "left",
-  "link",
-  "marker",
-  "modal",
-  "not",
-  "nth-child",
-  "nth-last-child",
-  "nth-last-of-type",
-  "nth-of-type",
-  "only-child",
-  "only-of-type",
-  "optional",
-  "out-of-range",
-  "part",
-  "placeholder",
-  "placeholder-shown",
-  "read-only",
-  "read-write",
-  "required",
-  "right",
-  "root",
-  "scope",
-  "selection",
-  "slotted",
-  "target",
-  "target-text",
-  "valid",
-  "visited",
-  "where"
-].map((t) => ({ type: "class", label: t })), m = /* @__PURE__ */ [
-  "above",
-  "absolute",
-  "activeborder",
-  "additive",
-  "activecaption",
-  "after-white-space",
-  "ahead",
-  "alias",
-  "all",
-  "all-scroll",
-  "alphabetic",
-  "alternate",
-  "always",
-  "antialiased",
-  "appworkspace",
-  "asterisks",
-  "attr",
-  "auto",
-  "auto-flow",
-  "avoid",
-  "avoid-column",
-  "avoid-page",
-  "avoid-region",
-  "axis-pan",
-  "background",
-  "backwards",
-  "baseline",
-  "below",
-  "bidi-override",
-  "blink",
-  "block",
-  "block-axis",
-  "bold",
-  "bolder",
-  "border",
-  "border-box",
-  "both",
-  "bottom",
-  "break",
-  "break-all",
-  "break-word",
-  "bullets",
-  "button",
-  "button-bevel",
-  "buttonface",
-  "buttonhighlight",
-  "buttonshadow",
-  "buttontext",
-  "calc",
-  "capitalize",
-  "caps-lock-indicator",
-  "caption",
-  "captiontext",
-  "caret",
-  "cell",
-  "center",
-  "checkbox",
-  "circle",
-  "cjk-decimal",
-  "clear",
-  "clip",
-  "close-quote",
-  "col-resize",
-  "collapse",
-  "color",
-  "color-burn",
-  "color-dodge",
-  "column",
-  "column-reverse",
-  "compact",
-  "condensed",
-  "contain",
-  "content",
-  "contents",
-  "content-box",
-  "context-menu",
-  "continuous",
-  "copy",
-  "counter",
-  "counters",
-  "cover",
-  "crop",
-  "cross",
-  "crosshair",
-  "currentcolor",
-  "cursive",
-  "cyclic",
-  "darken",
-  "dashed",
-  "decimal",
-  "decimal-leading-zero",
-  "default",
-  "default-button",
-  "dense",
-  "destination-atop",
-  "destination-in",
-  "destination-out",
-  "destination-over",
-  "difference",
-  "disc",
-  "discard",
-  "disclosure-closed",
-  "disclosure-open",
-  "document",
-  "dot-dash",
-  "dot-dot-dash",
-  "dotted",
-  "double",
-  "down",
-  "e-resize",
-  "ease",
-  "ease-in",
-  "ease-in-out",
-  "ease-out",
-  "element",
-  "ellipse",
-  "ellipsis",
-  "embed",
-  "end",
-  "ethiopic-abegede-gez",
-  "ethiopic-halehame-aa-er",
-  "ethiopic-halehame-gez",
-  "ew-resize",
-  "exclusion",
-  "expanded",
-  "extends",
-  "extra-condensed",
-  "extra-expanded",
-  "fantasy",
-  "fast",
-  "fill",
-  "fill-box",
-  "fixed",
-  "flat",
-  "flex",
-  "flex-end",
-  "flex-start",
-  "footnotes",
-  "forwards",
-  "from",
-  "geometricPrecision",
-  "graytext",
-  "grid",
-  "groove",
-  "hand",
-  "hard-light",
-  "help",
-  "hidden",
-  "hide",
-  "higher",
-  "highlight",
-  "highlighttext",
-  "horizontal",
-  "hsl",
-  "hsla",
-  "hue",
-  "icon",
-  "ignore",
-  "inactiveborder",
-  "inactivecaption",
-  "inactivecaptiontext",
-  "infinite",
-  "infobackground",
-  "infotext",
-  "inherit",
-  "initial",
-  "inline",
-  "inline-axis",
-  "inline-block",
-  "inline-flex",
-  "inline-grid",
-  "inline-table",
-  "inset",
-  "inside",
-  "intrinsic",
-  "invert",
-  "italic",
-  "justify",
-  "keep-all",
-  "landscape",
-  "large",
-  "larger",
-  "left",
-  "level",
-  "lighter",
-  "lighten",
-  "line-through",
-  "linear",
-  "linear-gradient",
-  "lines",
-  "list-item",
-  "listbox",
-  "listitem",
-  "local",
-  "logical",
-  "loud",
-  "lower",
-  "lower-hexadecimal",
-  "lower-latin",
-  "lower-norwegian",
-  "lowercase",
-  "ltr",
-  "luminosity",
-  "manipulation",
-  "match",
-  "matrix",
-  "matrix3d",
-  "medium",
-  "menu",
-  "menutext",
-  "message-box",
-  "middle",
-  "min-intrinsic",
-  "mix",
-  "monospace",
-  "move",
-  "multiple",
-  "multiple_mask_images",
-  "multiply",
-  "n-resize",
-  "narrower",
-  "ne-resize",
-  "nesw-resize",
-  "no-close-quote",
-  "no-drop",
-  "no-open-quote",
-  "no-repeat",
-  "none",
-  "normal",
-  "not-allowed",
-  "nowrap",
-  "ns-resize",
-  "numbers",
-  "numeric",
-  "nw-resize",
-  "nwse-resize",
-  "oblique",
-  "opacity",
-  "open-quote",
-  "optimizeLegibility",
-  "optimizeSpeed",
-  "outset",
-  "outside",
-  "outside-shape",
-  "overlay",
-  "overline",
-  "padding",
-  "padding-box",
-  "painted",
-  "page",
-  "paused",
-  "perspective",
-  "pinch-zoom",
-  "plus-darker",
-  "plus-lighter",
-  "pointer",
-  "polygon",
-  "portrait",
-  "pre",
-  "pre-line",
-  "pre-wrap",
-  "preserve-3d",
-  "progress",
-  "push-button",
-  "radial-gradient",
-  "radio",
-  "read-only",
-  "read-write",
-  "read-write-plaintext-only",
-  "rectangle",
-  "region",
-  "relative",
-  "repeat",
-  "repeating-linear-gradient",
-  "repeating-radial-gradient",
-  "repeat-x",
-  "repeat-y",
-  "reset",
-  "reverse",
-  "rgb",
-  "rgba",
-  "ridge",
-  "right",
-  "rotate",
-  "rotate3d",
-  "rotateX",
-  "rotateY",
-  "rotateZ",
-  "round",
-  "row",
-  "row-resize",
-  "row-reverse",
-  "rtl",
-  "run-in",
-  "running",
-  "s-resize",
-  "sans-serif",
-  "saturation",
-  "scale",
-  "scale3d",
-  "scaleX",
-  "scaleY",
-  "scaleZ",
-  "screen",
-  "scroll",
-  "scrollbar",
-  "scroll-position",
-  "se-resize",
-  "self-start",
-  "self-end",
-  "semi-condensed",
-  "semi-expanded",
-  "separate",
-  "serif",
-  "show",
-  "single",
-  "skew",
-  "skewX",
-  "skewY",
-  "skip-white-space",
-  "slide",
-  "slider-horizontal",
-  "slider-vertical",
-  "sliderthumb-horizontal",
-  "sliderthumb-vertical",
-  "slow",
-  "small",
-  "small-caps",
-  "small-caption",
-  "smaller",
-  "soft-light",
-  "solid",
-  "source-atop",
-  "source-in",
-  "source-out",
-  "source-over",
-  "space",
-  "space-around",
-  "space-between",
-  "space-evenly",
-  "spell-out",
-  "square",
-  "start",
-  "static",
-  "status-bar",
-  "stretch",
-  "stroke",
-  "stroke-box",
-  "sub",
-  "subpixel-antialiased",
-  "svg_masks",
-  "super",
-  "sw-resize",
-  "symbolic",
-  "symbols",
-  "system-ui",
-  "table",
-  "table-caption",
-  "table-cell",
-  "table-column",
-  "table-column-group",
-  "table-footer-group",
-  "table-header-group",
-  "table-row",
-  "table-row-group",
-  "text",
-  "text-bottom",
-  "text-top",
-  "textarea",
-  "textfield",
-  "thick",
-  "thin",
-  "threeddarkshadow",
-  "threedface",
-  "threedhighlight",
-  "threedlightshadow",
-  "threedshadow",
-  "to",
-  "top",
-  "transform",
-  "translate",
-  "translate3d",
-  "translateX",
-  "translateY",
-  "translateZ",
-  "transparent",
-  "ultra-condensed",
-  "ultra-expanded",
-  "underline",
-  "unidirectional-pan",
-  "unset",
-  "up",
-  "upper-latin",
-  "uppercase",
-  "url",
-  "var",
-  "vertical",
-  "vertical-text",
-  "view-box",
-  "visible",
-  "visibleFill",
-  "visiblePainted",
-  "visibleStroke",
-  "visual",
-  "w-resize",
-  "wait",
-  "wave",
-  "wider",
-  "window",
-  "windowframe",
-  "windowtext",
-  "words",
-  "wrap",
-  "wrap-reverse",
-  "x-large",
-  "x-small",
-  "xor",
-  "xx-large",
-  "xx-small"
-].map((t) => ({ type: "keyword", label: t })).concat(/* @__PURE__ */ [
-  "aliceblue",
-  "antiquewhite",
-  "aqua",
-  "aquamarine",
-  "azure",
-  "beige",
-  "bisque",
-  "black",
-  "blanchedalmond",
-  "blue",
-  "blueviolet",
-  "brown",
-  "burlywood",
-  "cadetblue",
-  "chartreuse",
-  "chocolate",
-  "coral",
-  "cornflowerblue",
-  "cornsilk",
-  "crimson",
-  "cyan",
-  "darkblue",
-  "darkcyan",
-  "darkgoldenrod",
-  "darkgray",
-  "darkgreen",
-  "darkkhaki",
-  "darkmagenta",
-  "darkolivegreen",
-  "darkorange",
-  "darkorchid",
-  "darkred",
-  "darksalmon",
-  "darkseagreen",
-  "darkslateblue",
-  "darkslategray",
-  "darkturquoise",
-  "darkviolet",
-  "deeppink",
-  "deepskyblue",
-  "dimgray",
-  "dodgerblue",
-  "firebrick",
-  "floralwhite",
-  "forestgreen",
-  "fuchsia",
-  "gainsboro",
-  "ghostwhite",
-  "gold",
-  "goldenrod",
-  "gray",
-  "grey",
-  "green",
-  "greenyellow",
-  "honeydew",
-  "hotpink",
-  "indianred",
-  "indigo",
-  "ivory",
-  "khaki",
-  "lavender",
-  "lavenderblush",
-  "lawngreen",
-  "lemonchiffon",
-  "lightblue",
-  "lightcoral",
-  "lightcyan",
-  "lightgoldenrodyellow",
-  "lightgray",
-  "lightgreen",
-  "lightpink",
-  "lightsalmon",
-  "lightseagreen",
-  "lightskyblue",
-  "lightslategray",
-  "lightsteelblue",
-  "lightyellow",
-  "lime",
-  "limegreen",
-  "linen",
-  "magenta",
-  "maroon",
-  "mediumaquamarine",
-  "mediumblue",
-  "mediumorchid",
-  "mediumpurple",
-  "mediumseagreen",
-  "mediumslateblue",
-  "mediumspringgreen",
-  "mediumturquoise",
-  "mediumvioletred",
-  "midnightblue",
-  "mintcream",
-  "mistyrose",
-  "moccasin",
-  "navajowhite",
-  "navy",
-  "oldlace",
-  "olive",
-  "olivedrab",
-  "orange",
-  "orangered",
-  "orchid",
-  "palegoldenrod",
-  "palegreen",
-  "paleturquoise",
-  "palevioletred",
-  "papayawhip",
-  "peachpuff",
-  "peru",
-  "pink",
-  "plum",
-  "powderblue",
-  "purple",
-  "rebeccapurple",
-  "red",
-  "rosybrown",
-  "royalblue",
-  "saddlebrown",
-  "salmon",
-  "sandybrown",
-  "seagreen",
-  "seashell",
-  "sienna",
-  "silver",
-  "skyblue",
-  "slateblue",
-  "slategray",
-  "snow",
-  "springgreen",
-  "steelblue",
-  "tan",
-  "teal",
-  "thistle",
-  "tomato",
-  "turquoise",
-  "violet",
-  "wheat",
-  "white",
-  "whitesmoke",
-  "yellow",
-  "yellowgreen"
-].map((t) => ({ type: "constant", label: t }))), F = /* @__PURE__ */ [
-  "a",
-  "abbr",
-  "address",
-  "article",
-  "aside",
-  "b",
-  "bdi",
-  "bdo",
-  "blockquote",
-  "body",
-  "br",
-  "button",
-  "canvas",
-  "caption",
-  "cite",
-  "code",
-  "col",
-  "colgroup",
-  "dd",
-  "del",
-  "details",
-  "dfn",
-  "dialog",
-  "div",
-  "dl",
-  "dt",
-  "em",
-  "figcaption",
-  "figure",
-  "footer",
-  "form",
-  "header",
-  "hgroup",
-  "h1",
-  "h2",
-  "h3",
-  "h4",
-  "h5",
-  "h6",
-  "hr",
-  "html",
-  "i",
-  "iframe",
-  "img",
-  "input",
-  "ins",
-  "kbd",
-  "label",
-  "legend",
-  "li",
-  "main",
-  "meter",
-  "nav",
-  "ol",
-  "output",
-  "p",
-  "pre",
-  "ruby",
-  "section",
-  "select",
-  "small",
-  "source",
-  "span",
-  "strong",
-  "sub",
-  "summary",
-  "sup",
-  "table",
-  "tbody",
-  "td",
-  "template",
-  "textarea",
-  "tfoot",
-  "th",
-  "thead",
-  "tr",
-  "u",
-  "ul"
-].map((t) => ({ type: "type", label: t })), N = /* @__PURE__ */ [
-  "@charset",
-  "@color-profile",
-  "@container",
-  "@counter-style",
-  "@font-face",
-  "@font-feature-values",
-  "@font-palette-values",
-  "@import",
-  "@keyframes",
-  "@layer",
-  "@media",
-  "@namespace",
-  "@page",
-  "@position-try",
-  "@property",
-  "@scope",
-  "@starting-style",
-  "@supports",
-  "@view-transition"
-].map((t) => ({ type: "keyword", label: t })), s = /^(\w[\w-]*|-\w[\w-]*|)$/, L = /^-(-[\w-]*)?$/;
-function A(t, a) {
-  var o;
-  if ((t.name == "(" || t.type.isError) && (t = t.parent || t), t.name != "ArgList")
-    return !1;
-  let r = (o = t.parent) === null || o === void 0 ? void 0 : o.firstChild;
-  return (r == null ? void 0 : r.name) != "Callee" ? !1 : a.sliceString(r.from, r.to) == "var";
-}
-const f = /* @__PURE__ */ new q(), P = ["Declaration"];
-function T(t) {
-  for (let a = t; ; ) {
-    if (a.type.isTop)
-      return a;
-    if (!(a = a.parent))
-      return t;
-  }
-}
-function h(t, a, o) {
-  if (a.to - a.from > 4096) {
-    let r = f.get(a);
-    if (r)
-      return r;
-    let e = [], l = /* @__PURE__ */ new Set(), i = a.cursor(C.IncludeAnonymous);
-    if (i.firstChild())
-      do
-        for (let n of h(t, i.node, o))
-          l.has(n.label) || (l.add(n.label), e.push(n));
-      while (i.nextSibling());
-    return f.set(a, e), e;
-  } else {
-    let r = [], e = /* @__PURE__ */ new Set();
-    return a.cursor().iterate((l) => {
-      var i;
-      if (o(l) && l.matchContext(P) && ((i = l.node.nextSibling) === null || i === void 0 ? void 0 : i.name) == ":") {
-        let n = t.sliceString(l.from, l.to);
-        e.has(n) || (e.add(n), r.push({ label: n, type: "variable" }));
+import * as s from "react";
+import { composeEventHandlers as g } from "./index120.js";
+import { useComposedRefs as N } from "./index89.js";
+import { createContextScope as K } from "./index87.js";
+import { DismissableLayer as W } from "./index102.js";
+import { useId as $ } from "./index93.js";
+import { createPopperScope as S, Root as z, Anchor as J, Content as Q, Arrow as Z } from "./index105.js";
+import { Portal as ee } from "./index106.js";
+import { Presence as G } from "./index115.js";
+import { Primitive as te } from "./index92.js";
+import { createSlottable as oe } from "./index121.js";
+import { useControllableState as re } from "./index91.js";
+import { Root as ne } from "./index111.js";
+import { jsx as f, jsxs as se } from "react/jsx-runtime";
+var [D] = K("Tooltip", [
+  S
+]), O = S(), j = "TooltipProvider", ie = 700, L = "tooltip.open", [ae, k] = D(j), F = (t) => {
+  const {
+    __scopeTooltip: o,
+    delayDuration: e = ie,
+    skipDelayDuration: r = 300,
+    disableHoverableContent: n = !1,
+    children: a
+  } = t, l = s.useRef(!0), v = s.useRef(!1), i = s.useRef(0);
+  return s.useEffect(() => {
+    const p = i.current;
+    return () => window.clearTimeout(p);
+  }, []), /* @__PURE__ */ f(
+    ae,
+    {
+      scope: o,
+      isOpenDelayedRef: l,
+      delayDuration: e,
+      onOpen: s.useCallback(() => {
+        window.clearTimeout(i.current), l.current = !1;
+      }, []),
+      onClose: s.useCallback(() => {
+        window.clearTimeout(i.current), i.current = window.setTimeout(
+          () => l.current = !0,
+          r
+        );
+      }, [r]),
+      isPointerInTransitRef: v,
+      onPointerInTransitChange: s.useCallback((p) => {
+        v.current = p;
+      }, []),
+      disableHoverableContent: n,
+      children: a
+    }
+  );
+};
+F.displayName = j;
+var R = "Tooltip", [le, _] = D(R), B = (t) => {
+  const {
+    __scopeTooltip: o,
+    children: e,
+    open: r,
+    defaultOpen: n,
+    onOpenChange: a,
+    disableHoverableContent: l,
+    delayDuration: v
+  } = t, i = k(R, t.__scopeTooltip), p = O(o), [c, d] = s.useState(null), h = $(), u = s.useRef(0), m = l ?? i.disableHoverableContent, y = v ?? i.delayDuration, T = s.useRef(!1), [x, C] = re({
+    prop: r,
+    defaultProp: n ?? !1,
+    onChange: (H) => {
+      H ? (i.onOpen(), document.dispatchEvent(new CustomEvent(L))) : i.onClose(), a == null || a(H);
+    },
+    caller: R
+  }), w = s.useMemo(() => x ? T.current ? "delayed-open" : "instant-open" : "closed", [x]), P = s.useCallback(() => {
+    window.clearTimeout(u.current), u.current = 0, T.current = !1, C(!0);
+  }, [C]), E = s.useCallback(() => {
+    window.clearTimeout(u.current), u.current = 0, C(!1);
+  }, [C]), I = s.useCallback(() => {
+    window.clearTimeout(u.current), u.current = window.setTimeout(() => {
+      T.current = !0, C(!0), u.current = 0;
+    }, y);
+  }, [y, C]);
+  return s.useEffect(() => () => {
+    u.current && (window.clearTimeout(u.current), u.current = 0);
+  }, []), /* @__PURE__ */ f(z, { ...p, children: /* @__PURE__ */ f(
+    le,
+    {
+      scope: o,
+      contentId: h,
+      open: x,
+      stateAttribute: w,
+      trigger: c,
+      onTriggerChange: d,
+      onTriggerEnter: s.useCallback(() => {
+        i.isOpenDelayedRef.current ? I() : P();
+      }, [i.isOpenDelayedRef, I, P]),
+      onTriggerLeave: s.useCallback(() => {
+        m ? E() : (window.clearTimeout(u.current), u.current = 0);
+      }, [E, m]),
+      onOpen: P,
+      onClose: E,
+      disableHoverableContent: m,
+      children: e
+    }
+  ) });
+};
+B.displayName = R;
+var A = "TooltipTrigger", U = s.forwardRef(
+  (t, o) => {
+    const { __scopeTooltip: e, ...r } = t, n = _(A, e), a = k(A, e), l = O(e), v = s.useRef(null), i = N(o, v, n.onTriggerChange), p = s.useRef(!1), c = s.useRef(!1), d = s.useCallback(() => p.current = !1, []);
+    return s.useEffect(() => () => document.removeEventListener("pointerup", d), [d]), /* @__PURE__ */ f(J, { asChild: !0, ...l, children: /* @__PURE__ */ f(
+      te.button,
+      {
+        "aria-describedby": n.open ? n.contentId : void 0,
+        "data-state": n.stateAttribute,
+        ...r,
+        ref: i,
+        onPointerMove: g(t.onPointerMove, (h) => {
+          h.pointerType !== "touch" && !c.current && !a.isPointerInTransitRef.current && (n.onTriggerEnter(), c.current = !0);
+        }),
+        onPointerLeave: g(t.onPointerLeave, () => {
+          n.onTriggerLeave(), c.current = !1;
+        }),
+        onPointerDown: g(t.onPointerDown, () => {
+          n.open && n.onClose(), p.current = !0, document.addEventListener("pointerup", d, { once: !0 });
+        }),
+        onFocus: g(t.onFocus, () => {
+          p.current || n.onOpen();
+        }),
+        onBlur: g(t.onBlur, n.onClose),
+        onClick: g(t.onClick, n.onClose)
       }
-    }), r;
+    ) });
+  }
+);
+U.displayName = A;
+var M = "TooltipPortal", [ce, ue] = D(M, {
+  forceMount: void 0
+}), V = (t) => {
+  const { __scopeTooltip: o, forceMount: e, children: r, container: n } = t, a = _(M, o);
+  return /* @__PURE__ */ f(ce, { scope: o, forceMount: e, children: /* @__PURE__ */ f(G, { present: e || a.open, children: /* @__PURE__ */ f(ee, { asChild: !0, container: n, children: r }) }) });
+};
+V.displayName = M;
+var b = "TooltipContent", Y = s.forwardRef(
+  (t, o) => {
+    const e = ue(b, t.__scopeTooltip), { forceMount: r = e.forceMount, side: n = "top", ...a } = t, l = _(b, t.__scopeTooltip);
+    return /* @__PURE__ */ f(G, { present: r || l.open, children: l.disableHoverableContent ? /* @__PURE__ */ f(q, { side: n, ...a, ref: o }) : /* @__PURE__ */ f(pe, { side: n, ...a, ref: o }) });
+  }
+), pe = s.forwardRef((t, o) => {
+  const e = _(b, t.__scopeTooltip), r = k(b, t.__scopeTooltip), n = s.useRef(null), a = N(o, n), [l, v] = s.useState(null), { trigger: i, onClose: p } = e, c = n.current, { onPointerInTransitChange: d } = r, h = s.useCallback(() => {
+    v(null), d(!1);
+  }, [d]), u = s.useCallback(
+    (m, y) => {
+      const T = m.currentTarget, x = { x: m.clientX, y: m.clientY }, C = me(x, T.getBoundingClientRect()), w = Te(x, C), P = ye(y.getBoundingClientRect()), E = xe([...w, ...P]);
+      v(E), d(!0);
+    },
+    [d]
+  );
+  return s.useEffect(() => () => h(), [h]), s.useEffect(() => {
+    if (i && c) {
+      const m = (T) => u(T, c), y = (T) => u(T, i);
+      return i.addEventListener("pointerleave", m), c.addEventListener("pointerleave", y), () => {
+        i.removeEventListener("pointerleave", m), c.removeEventListener("pointerleave", y);
+      };
+    }
+  }, [i, c, u, h]), s.useEffect(() => {
+    if (l) {
+      const m = (y) => {
+        const T = y.target, x = { x: y.clientX, y: y.clientY }, C = (i == null ? void 0 : i.contains(T)) || (c == null ? void 0 : c.contains(T)), w = !Ce(x, l);
+        C ? h() : w && (h(), p());
+      };
+      return document.addEventListener("pointermove", m), () => document.removeEventListener("pointermove", m);
+    }
+  }, [i, c, l, p, h]), /* @__PURE__ */ f(q, { ...t, ref: a });
+}), [de, fe] = D(R, { isInside: !1 }), ve = oe("TooltipContent"), q = s.forwardRef(
+  (t, o) => {
+    const {
+      __scopeTooltip: e,
+      children: r,
+      "aria-label": n,
+      onEscapeKeyDown: a,
+      onPointerDownOutside: l,
+      ...v
+    } = t, i = _(b, e), p = O(e), { onClose: c } = i;
+    return s.useEffect(() => (document.addEventListener(L, c), () => document.removeEventListener(L, c)), [c]), s.useEffect(() => {
+      if (i.trigger) {
+        const d = (h) => {
+          const u = h.target;
+          u != null && u.contains(i.trigger) && c();
+        };
+        return window.addEventListener("scroll", d, { capture: !0 }), () => window.removeEventListener("scroll", d, { capture: !0 });
+      }
+    }, [i.trigger, c]), /* @__PURE__ */ f(
+      W,
+      {
+        asChild: !0,
+        disableOutsidePointerEvents: !1,
+        onEscapeKeyDown: a,
+        onPointerDownOutside: l,
+        onFocusOutside: (d) => d.preventDefault(),
+        onDismiss: c,
+        children: /* @__PURE__ */ se(
+          Q,
+          {
+            "data-state": i.stateAttribute,
+            ...p,
+            ...v,
+            ref: o,
+            style: {
+              ...v.style,
+              "--radix-tooltip-content-transform-origin": "var(--radix-popper-transform-origin)",
+              "--radix-tooltip-content-available-width": "var(--radix-popper-available-width)",
+              "--radix-tooltip-content-available-height": "var(--radix-popper-available-height)",
+              "--radix-tooltip-trigger-width": "var(--radix-popper-anchor-width)",
+              "--radix-tooltip-trigger-height": "var(--radix-popper-anchor-height)"
+            },
+            children: [
+              /* @__PURE__ */ f(ve, { children: r }),
+              /* @__PURE__ */ f(de, { scope: e, isInside: !0, children: /* @__PURE__ */ f(ne, { id: i.contentId, role: "tooltip", children: n || r }) })
+            ]
+          }
+        )
+      }
+    );
+  }
+);
+Y.displayName = b;
+var X = "TooltipArrow", he = s.forwardRef(
+  (t, o) => {
+    const { __scopeTooltip: e, ...r } = t, n = O(e);
+    return fe(
+      X,
+      e
+    ).isInside ? null : /* @__PURE__ */ f(Z, { ...n, ...r, ref: o });
+  }
+);
+he.displayName = X;
+function me(t, o) {
+  const e = Math.abs(o.top - t.y), r = Math.abs(o.bottom - t.y), n = Math.abs(o.right - t.x), a = Math.abs(o.left - t.x);
+  switch (Math.min(e, r, n, a)) {
+    case a:
+      return "left";
+    case n:
+      return "right";
+    case e:
+      return "top";
+    case r:
+      return "bottom";
+    default:
+      throw new Error("unreachable");
   }
 }
-const B = (t) => (a) => {
-  let { state: o, pos: r } = a, e = S(o).resolveInner(r, -1), l = e.type.isError && e.from == e.to - 1 && o.doc.sliceString(e.from, e.to) == "-";
-  if (e.name == "PropertyName" || (l || e.name == "TagName") && /^(Block|Styles)$/.test(e.resolve(e.to).name))
-    return { from: e.from, options: u(), validFor: s };
-  if (e.name == "ValueName")
-    return { from: e.from, options: m, validFor: s };
-  if (e.name == "PseudoClassName")
-    return { from: e.from, options: p, validFor: s };
-  if (t(e) || (a.explicit || l) && A(e, o.doc))
-    return {
-      from: t(e) || l ? e.from : r,
-      options: h(o.doc, T(e), t),
-      validFor: L
-    };
-  if (e.name == "TagName") {
-    for (let { parent: d } = e; d; d = d.parent)
-      if (d.name == "Block")
-        return { from: e.from, options: u(), validFor: s };
-    return { from: e.from, options: F, validFor: s };
+function Te(t, o, e = 5) {
+  const r = [];
+  switch (o) {
+    case "top":
+      r.push(
+        { x: t.x - e, y: t.y + e },
+        { x: t.x + e, y: t.y + e }
+      );
+      break;
+    case "bottom":
+      r.push(
+        { x: t.x - e, y: t.y - e },
+        { x: t.x + e, y: t.y - e }
+      );
+      break;
+    case "left":
+      r.push(
+        { x: t.x + e, y: t.y - e },
+        { x: t.x + e, y: t.y + e }
+      );
+      break;
+    case "right":
+      r.push(
+        { x: t.x - e, y: t.y - e },
+        { x: t.x - e, y: t.y + e }
+      );
+      break;
   }
-  if (e.name == "AtKeyword")
-    return { from: e.from, options: N, validFor: s };
-  if (!a.explicit)
-    return null;
-  let i = e.resolve(r), n = i.childBefore(r);
-  return n && n.name == ":" && i.name == "PseudoClassSelector" ? { from: r, options: p, validFor: s } : n && n.name == ":" && i.name == "Declaration" || i.name == "ArgList" ? { from: r, options: m, validFor: s } : i.name == "Block" || i.name == "Styles" ? { from: r, options: u(), validFor: s } : null;
-}, I = /* @__PURE__ */ B((t) => t.name == "VariableName"), g = /* @__PURE__ */ v.define({
-  name: "css",
-  parser: /* @__PURE__ */ b.configure({
-    props: [
-      /* @__PURE__ */ y.add({
-        Declaration: /* @__PURE__ */ x()
-      }),
-      /* @__PURE__ */ k.add({
-        "Block KeyframeList": z
-      })
-    ]
-  }),
-  languageData: {
-    commentTokens: { block: { open: "/*", close: "*/" } },
-    indentOnInput: /^\s*\}$/,
-    wordChars: "-"
-  }
-});
-function j() {
-  return new w(g, g.data.of({ autocomplete: I }));
+  return r;
 }
+function ye(t) {
+  const { top: o, right: e, bottom: r, left: n } = t;
+  return [
+    { x: n, y: o },
+    { x: e, y: o },
+    { x: e, y: r },
+    { x: n, y: r }
+  ];
+}
+function Ce(t, o) {
+  const { x: e, y: r } = t;
+  let n = !1;
+  for (let a = 0, l = o.length - 1; a < o.length; l = a++) {
+    const v = o[a], i = o[l], p = v.x, c = v.y, d = i.x, h = i.y;
+    c > r != h > r && e < (d - p) * (r - c) / (h - c) + p && (n = !n);
+  }
+  return n;
+}
+function xe(t) {
+  const o = t.slice();
+  return o.sort((e, r) => e.x < r.x ? -1 : e.x > r.x ? 1 : e.y < r.y ? -1 : e.y > r.y ? 1 : 0), ge(o);
+}
+function ge(t) {
+  if (t.length <= 1) return t.slice();
+  const o = [];
+  for (let r = 0; r < t.length; r++) {
+    const n = t[r];
+    for (; o.length >= 2; ) {
+      const a = o[o.length - 1], l = o[o.length - 2];
+      if ((a.x - l.x) * (n.y - l.y) >= (a.y - l.y) * (n.x - l.x)) o.pop();
+      else break;
+    }
+    o.push(n);
+  }
+  o.pop();
+  const e = [];
+  for (let r = t.length - 1; r >= 0; r--) {
+    const n = t[r];
+    for (; e.length >= 2; ) {
+      const a = e[e.length - 1], l = e[e.length - 2];
+      if ((a.x - l.x) * (n.y - l.y) >= (a.y - l.y) * (n.x - l.x)) e.pop();
+      else break;
+    }
+    e.push(n);
+  }
+  return e.pop(), o.length === 1 && e.length === 1 && o[0].x === e[0].x && o[0].y === e[0].y ? o : o.concat(e);
+}
+var He = F, Ne = B, Se = U, Ge = V, je = Y;
 export {
-  j as css,
-  I as cssCompletionSource,
-  g as cssLanguage,
-  B as defineCSSCompletionSource
+  je as Content,
+  Ge as Portal,
+  He as Provider,
+  Ne as Root,
+  B as Tooltip,
+  he as TooltipArrow,
+  Y as TooltipContent,
+  V as TooltipPortal,
+  F as TooltipProvider,
+  U as TooltipTrigger,
+  Se as Trigger
 };

@@ -1,71 +1,50 @@
-import * as d from "react";
-import { styleSingleton as f } from "./index156.js";
-import { noScrollbarsClassName as p, zeroRightClassName as g, fullWidthClassName as l, removedBarSizeVariable as v } from "./index146.js";
-import { getGapWidth as m } from "./index161.js";
-var b = f(), e = "data-scroll-locked", h = function(n, a, o, t) {
-  var r = n.left, i = n.top, s = n.right, c = n.gap;
-  return o === void 0 && (o = "margin"), `
-  .`.concat(p, ` {
-   overflow: hidden `).concat(t, `;
-   padding-right: `).concat(c, "px ").concat(t, `;
+import * as l from "react";
+import { composeRefs as m } from "./index89.js";
+import { jsx as u } from "react/jsx-runtime";
+// @__NO_SIDE_EFFECTS__
+function b(e) {
+  const n = /* @__PURE__ */ y(e), o = l.forwardRef((t, r) => {
+    const { children: i, ...c } = t, s = l.Children.toArray(i), a = s.find(E);
+    if (a) {
+      const f = a.props.children, d = s.map((p) => p === a ? l.Children.count(f) > 1 ? l.Children.only(null) : l.isValidElement(f) ? f.props.children : null : p);
+      return /* @__PURE__ */ u(n, { ...c, ref: r, children: l.isValidElement(f) ? l.cloneElement(f, void 0, d) : null });
+    }
+    return /* @__PURE__ */ u(n, { ...c, ref: r, children: i });
+  });
+  return o.displayName = `${e}.Slot`, o;
+}
+// @__NO_SIDE_EFFECTS__
+function y(e) {
+  const n = l.forwardRef((o, t) => {
+    const { children: r, ...i } = o;
+    if (l.isValidElement(r)) {
+      const c = S(r), s = C(i, r.props);
+      return r.type !== l.Fragment && (s.ref = t ? m(t, c) : c), l.cloneElement(r, s);
+    }
+    return l.Children.count(r) > 1 ? l.Children.only(null) : null;
+  });
+  return n.displayName = `${e}.SlotClone`, n;
+}
+var g = Symbol("radix.slottable");
+function E(e) {
+  return l.isValidElement(e) && typeof e.type == "function" && "__radixId" in e.type && e.type.__radixId === g;
+}
+function C(e, n) {
+  const o = { ...n };
+  for (const t in n) {
+    const r = e[t], i = n[t];
+    /^on[A-Z]/.test(t) ? r && i ? o[t] = (...s) => {
+      const a = i(...s);
+      return r(...s), a;
+    } : r && (o[t] = r) : t === "style" ? o[t] = { ...r, ...i } : t === "className" && (o[t] = [r, i].filter(Boolean).join(" "));
   }
-  body[`).concat(e, `] {
-    overflow: hidden `).concat(t, `;
-    overscroll-behavior: contain;
-    `).concat([
-    a && "position: relative ".concat(t, ";"),
-    o === "margin" && `
-    padding-left: `.concat(r, `px;
-    padding-top: `).concat(i, `px;
-    padding-right: `).concat(s, `px;
-    margin-left:0;
-    margin-top:0;
-    margin-right: `).concat(c, "px ").concat(t, `;
-    `),
-    o === "padding" && "padding-right: ".concat(c, "px ").concat(t, ";")
-  ].filter(Boolean).join(""), `
-  }
-  
-  .`).concat(g, ` {
-    right: `).concat(c, "px ").concat(t, `;
-  }
-  
-  .`).concat(l, ` {
-    margin-right: `).concat(c, "px ").concat(t, `;
-  }
-  
-  .`).concat(g, " .").concat(g, ` {
-    right: 0 `).concat(t, `;
-  }
-  
-  .`).concat(l, " .").concat(l, ` {
-    margin-right: 0 `).concat(t, `;
-  }
-  
-  body[`).concat(e, `] {
-    `).concat(v, ": ").concat(c, `px;
-  }
-`);
-}, u = function() {
-  var n = parseInt(document.body.getAttribute(e) || "0", 10);
-  return isFinite(n) ? n : 0;
-}, x = function() {
-  d.useEffect(function() {
-    return document.body.setAttribute(e, (u() + 1).toString()), function() {
-      var n = u() - 1;
-      n <= 0 ? document.body.removeAttribute(e) : document.body.setAttribute(e, n.toString());
-    };
-  }, []);
-}, C = function(n) {
-  var a = n.noRelative, o = n.noImportant, t = n.gapMode, r = t === void 0 ? "margin" : t;
-  x();
-  var i = d.useMemo(function() {
-    return m(r);
-  }, [r]);
-  return d.createElement(b, { styles: h(i, !a, r, o ? "" : "!important") });
-};
+  return { ...e, ...o };
+}
+function S(e) {
+  var t, r;
+  let n = (t = Object.getOwnPropertyDescriptor(e.props, "ref")) == null ? void 0 : t.get, o = n && "isReactWarning" in n && n.isReactWarning;
+  return o ? e.ref : (n = (r = Object.getOwnPropertyDescriptor(e, "ref")) == null ? void 0 : r.get, o = n && "isReactWarning" in n && n.isReactWarning, o ? e.props.ref : e.props.ref || e.ref);
+}
 export {
-  C as RemoveScrollBar,
-  e as lockAttribute,
-  x as useLockAttribute
+  b as createSlot
 };

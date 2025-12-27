@@ -1,13 +1,16 @@
 import * as r from "react";
-function o(t) {
-  const e = r.useRef(t);
-  return r.useEffect(() => {
-    e.current = t;
-  }), r.useMemo(() => (...n) => {
-    var u;
-    return (u = e.current) == null ? void 0 : u.call(e, ...n);
-  }, []);
-}
+import s from "react-dom";
+import { Primitive as c } from "./index92.js";
+import { useLayoutEffect as u } from "./index109.js";
+import { jsx as l } from "react/jsx-runtime";
+var p = "Portal", d = r.forwardRef((e, a) => {
+  var o;
+  const { container: f, ...i } = e, [m, n] = r.useState(!1);
+  u(() => n(!0), []);
+  const t = f || m && ((o = globalThis == null ? void 0 : globalThis.document) == null ? void 0 : o.body);
+  return t ? s.createPortal(/* @__PURE__ */ l(c.div, { ...i, ref: a }), t) : null;
+});
+d.displayName = p;
 export {
-  o as useCallbackRef
+  d as Portal
 };

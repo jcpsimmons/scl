@@ -1,31 +1,57 @@
-import { __rest as E, __assign as r } from "./index141.js";
-import * as a from "react";
-import { zeroRightClassName as I, fullWidthClassName as Z } from "./index146.js";
-import { effectCar as W } from "./index147.js";
-import { useMergeRefs as z } from "./index148.js";
-var l = function() {
-}, m = a.forwardRef(function(e, d) {
-  var o = a.useRef(null), n = a.useState({
-    onScrollCapture: l,
-    onWheelCapture: l,
-    onTouchMoveCapture: l
-  }), f = n[0], v = n[1], h = e.forwardProps, t = e.children, u = e.className, C = e.removeScrollBar, R = e.enabled, g = e.shards, P = e.sideCar, S = e.noRelative, b = e.noIsolation, w = e.inert, N = e.allowPinchZoom, i = e.as, M = i === void 0 ? "div" : i, _ = e.gapMode, B = E(e, ["forwardProps", "children", "className", "removeScrollBar", "enabled", "shards", "sideCar", "noRelative", "noIsolation", "inert", "allowPinchZoom", "as", "gapMode"]), k = P, s = z([o, d]), c = r(r({}, B), f);
-  return a.createElement(
-    a.Fragment,
-    null,
-    R && a.createElement(k, { sideCar: W, removeScrollBar: C, shards: g, noRelative: S, noIsolation: b, inert: w, setCallbacks: v, allowPinchZoom: !!N, lockRef: o, gapMode: _ }),
-    h ? a.cloneElement(a.Children.only(t), r(r({}, c), { ref: s })) : a.createElement(M, r({}, c, { className: u, ref: s }), t)
-  );
-});
-m.defaultProps = {
-  enabled: !0,
-  removeScrollBar: !0,
-  inert: !1
-};
-m.classNames = {
-  fullWidth: Z,
-  zeroRight: I
-};
+import * as i from "react";
+import { jsx as _ } from "react/jsx-runtime";
+function $(e, x = []) {
+  let o = [];
+  function f(r, n) {
+    const t = i.createContext(n);
+    t.displayName = r + "Context";
+    const c = o.length;
+    o = [...o, n];
+    const m = (a) => {
+      var l;
+      const { scope: s, children: C, ...p } = a, d = ((l = s == null ? void 0 : s[e]) == null ? void 0 : l[c]) || t, v = i.useMemo(() => p, Object.values(p));
+      return /* @__PURE__ */ _(d.Provider, { value: v, children: C });
+    };
+    m.displayName = r + "Provider";
+    function S(a, s) {
+      var d;
+      const C = ((d = s == null ? void 0 : s[e]) == null ? void 0 : d[c]) || t, p = i.useContext(C);
+      if (p) return p;
+      if (n !== void 0) return n;
+      throw new Error(`\`${a}\` must be used within \`${r}\``);
+    }
+    return [m, S];
+  }
+  const u = () => {
+    const r = o.map((n) => i.createContext(n));
+    return function(t) {
+      const c = (t == null ? void 0 : t[e]) || r;
+      return i.useMemo(
+        () => ({ [`__scope${e}`]: { ...t, [e]: c } }),
+        [t, c]
+      );
+    };
+  };
+  return u.scopeName = e, [f, h(u, ...x)];
+}
+function h(...e) {
+  const x = e[0];
+  if (e.length === 1) return x;
+  const o = () => {
+    const f = e.map((u) => ({
+      useScope: u(),
+      scopeName: u.scopeName
+    }));
+    return function(r) {
+      const n = f.reduce((t, { useScope: c, scopeName: m }) => {
+        const a = c(r)[`__scope${m}`];
+        return { ...t, ...a };
+      }, {});
+      return i.useMemo(() => ({ [`__scope${x.scopeName}`]: n }), [n]);
+    };
+  };
+  return o.scopeName = x.scopeName, o;
+}
 export {
-  m as RemoveScroll
+  $ as createContextScope
 };

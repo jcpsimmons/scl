@@ -1,9 +1,29 @@
-function h(f, c, { checkForDefaultPrevented: p = !0 } = {}) {
-  return function(s) {
-    if (f == null || f(s), p === !1 || !s.defaultPrevented)
-      return c == null ? void 0 : c(s);
+import * as f from "react";
+function l(n, o) {
+  if (typeof n == "function")
+    return n(o);
+  n != null && (n.current = o);
+}
+function i(...n) {
+  return (o) => {
+    let u = !1;
+    const c = n.map((t) => {
+      const e = l(t, o);
+      return !u && typeof e == "function" && (u = !0), e;
+    });
+    if (u)
+      return () => {
+        for (let t = 0; t < c.length; t++) {
+          const e = c[t];
+          typeof e == "function" ? e() : l(n[t], null);
+        }
+      };
   };
 }
+function s(...n) {
+  return f.useCallback(i(...n), n);
+}
 export {
-  h as composeEventHandlers
+  i as composeRefs,
+  s as useComposedRefs
 };

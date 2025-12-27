@@ -1,4901 +1,2639 @@
-import { Prec as cn, StateField as hn, StateEffect as dn, RangeSetBuilder as pn, EditorSelection as Ce, MapMode as rr } from "./index56.js";
-import { foldCode as vn, matchBrackets as Gt, indentUnit as Yt, ensureSyntaxTree as nr, StringStream as gn } from "./index64.js";
-import { EditorView as Ye, ViewPlugin as yn, showPanel as ir, Decoration as ht, getDrawSelectionConfig as mn, Direction as Cn, runScopeHandlers as He } from "./index55.js";
-import { setSearchQuery as dt, SearchQuery as kn, RegExpCursor as wn } from "./index124.js";
-import { indentMore as Sn, indentLess as xn, cursorLineBoundaryBackward as Mn, cursorLineBoundaryForward as Ln, cursorCharBackward as bn, indentSelection as Tn, insertNewlineAndIndent as An, cursorCharLeft as On, undo as En, redo as Rn } from "./index63.js";
-function In(f) {
-  var o = f.Pos;
-  function c(e, t, r) {
-    if (t.line === r.line && t.ch >= r.ch - 1) {
-      var n = e.getLine(t.line), i = n.charCodeAt(t.ch);
-      55296 <= i && i <= 55551 && (r.ch += 1);
-    }
-    return { start: t, end: r };
+import { findClusterBreak as Le } from "./index125.js";
+class x {
+  /**
+  Get the line description around the given position.
+  */
+  lineAt(e) {
+    if (e < 0 || e > this.length)
+      throw new RangeError(`Invalid position ${e} in document of length ${this.length}`);
+    return this.lineInner(e, !1, 1, 0);
   }
-  var p = [
-    // Key to key mapping. This goes first to make it possible to override
-    // existing mappings.
-    { keys: "<Left>", type: "keyToKey", toKeys: "h" },
-    { keys: "<Right>", type: "keyToKey", toKeys: "l" },
-    { keys: "<Up>", type: "keyToKey", toKeys: "k" },
-    { keys: "<Down>", type: "keyToKey", toKeys: "j" },
-    { keys: "g<Up>", type: "keyToKey", toKeys: "gk" },
-    { keys: "g<Down>", type: "keyToKey", toKeys: "gj" },
-    { keys: "<Space>", type: "keyToKey", toKeys: "l" },
-    { keys: "<BS>", type: "keyToKey", toKeys: "h" },
-    { keys: "<Del>", type: "keyToKey", toKeys: "x" },
-    { keys: "<C-Space>", type: "keyToKey", toKeys: "W" },
-    { keys: "<C-BS>", type: "keyToKey", toKeys: "B" },
-    { keys: "<S-Space>", type: "keyToKey", toKeys: "w" },
-    { keys: "<S-BS>", type: "keyToKey", toKeys: "b" },
-    { keys: "<C-n>", type: "keyToKey", toKeys: "j" },
-    { keys: "<C-p>", type: "keyToKey", toKeys: "k" },
-    { keys: "<C-[>", type: "keyToKey", toKeys: "<Esc>" },
-    { keys: "<C-c>", type: "keyToKey", toKeys: "<Esc>" },
-    { keys: "<C-[>", type: "keyToKey", toKeys: "<Esc>", context: "insert" },
-    { keys: "<C-c>", type: "keyToKey", toKeys: "<Esc>", context: "insert" },
-    { keys: "<C-Esc>", type: "keyToKey", toKeys: "<Esc>" },
-    // ipad keyboard sends C-Esc instead of C-[
-    { keys: "<C-Esc>", type: "keyToKey", toKeys: "<Esc>", context: "insert" },
-    { keys: "s", type: "keyToKey", toKeys: "cl", context: "normal" },
-    { keys: "s", type: "keyToKey", toKeys: "c", context: "visual" },
-    { keys: "S", type: "keyToKey", toKeys: "cc", context: "normal" },
-    { keys: "S", type: "keyToKey", toKeys: "VdO", context: "visual" },
-    { keys: "<Home>", type: "keyToKey", toKeys: "0" },
-    { keys: "<End>", type: "keyToKey", toKeys: "$" },
-    { keys: "<PageUp>", type: "keyToKey", toKeys: "<C-b>" },
-    { keys: "<PageDown>", type: "keyToKey", toKeys: "<C-f>" },
-    { keys: "<CR>", type: "keyToKey", toKeys: "j^", context: "normal" },
-    { keys: "<Ins>", type: "keyToKey", toKeys: "i", context: "normal" },
-    { keys: "<Ins>", type: "action", action: "toggleOverwrite", context: "insert" },
-    // Motions
-    { keys: "H", type: "motion", motion: "moveToTopLine", motionArgs: { linewise: !0, toJumplist: !0 } },
-    { keys: "M", type: "motion", motion: "moveToMiddleLine", motionArgs: { linewise: !0, toJumplist: !0 } },
-    { keys: "L", type: "motion", motion: "moveToBottomLine", motionArgs: { linewise: !0, toJumplist: !0 } },
-    { keys: "h", type: "motion", motion: "moveByCharacters", motionArgs: { forward: !1 } },
-    { keys: "l", type: "motion", motion: "moveByCharacters", motionArgs: { forward: !0 } },
-    { keys: "j", type: "motion", motion: "moveByLines", motionArgs: { forward: !0, linewise: !0 } },
-    { keys: "k", type: "motion", motion: "moveByLines", motionArgs: { forward: !1, linewise: !0 } },
-    { keys: "gj", type: "motion", motion: "moveByDisplayLines", motionArgs: { forward: !0 } },
-    { keys: "gk", type: "motion", motion: "moveByDisplayLines", motionArgs: { forward: !1 } },
-    { keys: "w", type: "motion", motion: "moveByWords", motionArgs: { forward: !0, wordEnd: !1 } },
-    { keys: "W", type: "motion", motion: "moveByWords", motionArgs: { forward: !0, wordEnd: !1, bigWord: !0 } },
-    { keys: "e", type: "motion", motion: "moveByWords", motionArgs: { forward: !0, wordEnd: !0, inclusive: !0 } },
-    { keys: "E", type: "motion", motion: "moveByWords", motionArgs: { forward: !0, wordEnd: !0, bigWord: !0, inclusive: !0 } },
-    { keys: "b", type: "motion", motion: "moveByWords", motionArgs: { forward: !1, wordEnd: !1 } },
-    { keys: "B", type: "motion", motion: "moveByWords", motionArgs: { forward: !1, wordEnd: !1, bigWord: !0 } },
-    { keys: "ge", type: "motion", motion: "moveByWords", motionArgs: { forward: !1, wordEnd: !0, inclusive: !0 } },
-    { keys: "gE", type: "motion", motion: "moveByWords", motionArgs: { forward: !1, wordEnd: !0, bigWord: !0, inclusive: !0 } },
-    { keys: "{", type: "motion", motion: "moveByParagraph", motionArgs: { forward: !1, toJumplist: !0 } },
-    { keys: "}", type: "motion", motion: "moveByParagraph", motionArgs: { forward: !0, toJumplist: !0 } },
-    { keys: "(", type: "motion", motion: "moveBySentence", motionArgs: { forward: !1 } },
-    { keys: ")", type: "motion", motion: "moveBySentence", motionArgs: { forward: !0 } },
-    { keys: "<C-f>", type: "motion", motion: "moveByPage", motionArgs: { forward: !0 } },
-    { keys: "<C-b>", type: "motion", motion: "moveByPage", motionArgs: { forward: !1 } },
-    { keys: "<C-d>", type: "motion", motion: "moveByScroll", motionArgs: { forward: !0, explicitRepeat: !0 } },
-    { keys: "<C-u>", type: "motion", motion: "moveByScroll", motionArgs: { forward: !1, explicitRepeat: !0 } },
-    { keys: "gg", type: "motion", motion: "moveToLineOrEdgeOfDocument", motionArgs: { forward: !1, explicitRepeat: !0, linewise: !0, toJumplist: !0 } },
-    { keys: "G", type: "motion", motion: "moveToLineOrEdgeOfDocument", motionArgs: { forward: !0, explicitRepeat: !0, linewise: !0, toJumplist: !0 } },
-    { keys: "g$", type: "motion", motion: "moveToEndOfDisplayLine" },
-    { keys: "g^", type: "motion", motion: "moveToStartOfDisplayLine" },
-    { keys: "g0", type: "motion", motion: "moveToStartOfDisplayLine" },
-    { keys: "0", type: "motion", motion: "moveToStartOfLine" },
-    { keys: "^", type: "motion", motion: "moveToFirstNonWhiteSpaceCharacter" },
-    { keys: "+", type: "motion", motion: "moveByLines", motionArgs: { forward: !0, toFirstChar: !0 } },
-    { keys: "-", type: "motion", motion: "moveByLines", motionArgs: { forward: !1, toFirstChar: !0 } },
-    { keys: "_", type: "motion", motion: "moveByLines", motionArgs: { forward: !0, toFirstChar: !0, repeatOffset: -1 } },
-    { keys: "$", type: "motion", motion: "moveToEol", motionArgs: { inclusive: !0 } },
-    { keys: "%", type: "motion", motion: "moveToMatchedSymbol", motionArgs: { inclusive: !0, toJumplist: !0 } },
-    { keys: "f<character>", type: "motion", motion: "moveToCharacter", motionArgs: { forward: !0, inclusive: !0 } },
-    { keys: "F<character>", type: "motion", motion: "moveToCharacter", motionArgs: { forward: !1 } },
-    { keys: "t<character>", type: "motion", motion: "moveTillCharacter", motionArgs: { forward: !0, inclusive: !0 } },
-    { keys: "T<character>", type: "motion", motion: "moveTillCharacter", motionArgs: { forward: !1 } },
-    { keys: ";", type: "motion", motion: "repeatLastCharacterSearch", motionArgs: { forward: !0 } },
-    { keys: ",", type: "motion", motion: "repeatLastCharacterSearch", motionArgs: { forward: !1 } },
-    { keys: "'<register>", type: "motion", motion: "goToMark", motionArgs: { toJumplist: !0, linewise: !0 } },
-    { keys: "`<register>", type: "motion", motion: "goToMark", motionArgs: { toJumplist: !0 } },
-    { keys: "]`", type: "motion", motion: "jumpToMark", motionArgs: { forward: !0 } },
-    { keys: "[`", type: "motion", motion: "jumpToMark", motionArgs: { forward: !1 } },
-    { keys: "]'", type: "motion", motion: "jumpToMark", motionArgs: { forward: !0, linewise: !0 } },
-    { keys: "['", type: "motion", motion: "jumpToMark", motionArgs: { forward: !1, linewise: !0 } },
-    // the next two aren't motions but must come before more general motion declarations
-    { keys: "]p", type: "action", action: "paste", isEdit: !0, actionArgs: { after: !0, isEdit: !0, matchIndent: !0 } },
-    { keys: "[p", type: "action", action: "paste", isEdit: !0, actionArgs: { after: !1, isEdit: !0, matchIndent: !0 } },
-    { keys: "]<character>", type: "motion", motion: "moveToSymbol", motionArgs: { forward: !0, toJumplist: !0 } },
-    { keys: "[<character>", type: "motion", motion: "moveToSymbol", motionArgs: { forward: !1, toJumplist: !0 } },
-    { keys: "|", type: "motion", motion: "moveToColumn" },
-    { keys: "o", type: "motion", motion: "moveToOtherHighlightedEnd", context: "visual" },
-    { keys: "O", type: "motion", motion: "moveToOtherHighlightedEnd", motionArgs: { sameLine: !0 }, context: "visual" },
-    // Operators
-    { keys: "d", type: "operator", operator: "delete" },
-    { keys: "y", type: "operator", operator: "yank" },
-    { keys: "c", type: "operator", operator: "change" },
-    { keys: "=", type: "operator", operator: "indentAuto" },
-    { keys: ">", type: "operator", operator: "indent", operatorArgs: { indentRight: !0 } },
-    { keys: "<", type: "operator", operator: "indent", operatorArgs: { indentRight: !1 } },
-    { keys: "g~", type: "operator", operator: "changeCase" },
-    { keys: "gu", type: "operator", operator: "changeCase", operatorArgs: { toLower: !0 }, isEdit: !0 },
-    { keys: "gU", type: "operator", operator: "changeCase", operatorArgs: { toLower: !1 }, isEdit: !0 },
-    { keys: "n", type: "motion", motion: "findNext", motionArgs: { forward: !0, toJumplist: !0 } },
-    { keys: "N", type: "motion", motion: "findNext", motionArgs: { forward: !1, toJumplist: !0 } },
-    { keys: "gn", type: "motion", motion: "findAndSelectNextInclusive", motionArgs: { forward: !0 } },
-    { keys: "gN", type: "motion", motion: "findAndSelectNextInclusive", motionArgs: { forward: !1 } },
-    { keys: "gq", type: "operator", operator: "hardWrap" },
-    { keys: "gw", type: "operator", operator: "hardWrap", operatorArgs: { keepCursor: !0 } },
-    { keys: "g?", type: "operator", operator: "rot13" },
-    // Operator-Motion dual commands
-    { keys: "x", type: "operatorMotion", operator: "delete", motion: "moveByCharacters", motionArgs: { forward: !0 }, operatorMotionArgs: { visualLine: !1 } },
-    { keys: "X", type: "operatorMotion", operator: "delete", motion: "moveByCharacters", motionArgs: { forward: !1 }, operatorMotionArgs: { visualLine: !0 } },
-    { keys: "D", type: "operatorMotion", operator: "delete", motion: "moveToEol", motionArgs: { inclusive: !0 }, context: "normal" },
-    { keys: "D", type: "operator", operator: "delete", operatorArgs: { linewise: !0 }, context: "visual" },
-    { keys: "Y", type: "operatorMotion", operator: "yank", motion: "expandToLine", motionArgs: { linewise: !0 }, context: "normal" },
-    { keys: "Y", type: "operator", operator: "yank", operatorArgs: { linewise: !0 }, context: "visual" },
-    { keys: "C", type: "operatorMotion", operator: "change", motion: "moveToEol", motionArgs: { inclusive: !0 }, context: "normal" },
-    { keys: "C", type: "operator", operator: "change", operatorArgs: { linewise: !0 }, context: "visual" },
-    { keys: "~", type: "operatorMotion", operator: "changeCase", motion: "moveByCharacters", motionArgs: { forward: !0 }, operatorArgs: { shouldMoveCursor: !0 }, context: "normal" },
-    { keys: "~", type: "operator", operator: "changeCase", context: "visual" },
-    { keys: "<C-u>", type: "operatorMotion", operator: "delete", motion: "moveToStartOfLine", context: "insert" },
-    { keys: "<C-w>", type: "operatorMotion", operator: "delete", motion: "moveByWords", motionArgs: { forward: !1, wordEnd: !1 }, context: "insert" },
-    //ignore C-w in normal mode
-    { keys: "<C-w>", type: "idle", context: "normal" },
-    // Actions
-    { keys: "<C-i>", type: "action", action: "jumpListWalk", actionArgs: { forward: !0 } },
-    { keys: "<C-o>", type: "action", action: "jumpListWalk", actionArgs: { forward: !1 } },
-    { keys: "<C-e>", type: "action", action: "scroll", actionArgs: { forward: !0, linewise: !0 } },
-    { keys: "<C-y>", type: "action", action: "scroll", actionArgs: { forward: !1, linewise: !0 } },
-    { keys: "a", type: "action", action: "enterInsertMode", isEdit: !0, actionArgs: { insertAt: "charAfter" }, context: "normal" },
-    { keys: "A", type: "action", action: "enterInsertMode", isEdit: !0, actionArgs: { insertAt: "eol" }, context: "normal" },
-    { keys: "A", type: "action", action: "enterInsertMode", isEdit: !0, actionArgs: { insertAt: "endOfSelectedArea" }, context: "visual" },
-    { keys: "i", type: "action", action: "enterInsertMode", isEdit: !0, actionArgs: { insertAt: "inplace" }, context: "normal" },
-    { keys: "gi", type: "action", action: "enterInsertMode", isEdit: !0, actionArgs: { insertAt: "lastEdit" }, context: "normal" },
-    { keys: "I", type: "action", action: "enterInsertMode", isEdit: !0, actionArgs: { insertAt: "firstNonBlank" }, context: "normal" },
-    { keys: "gI", type: "action", action: "enterInsertMode", isEdit: !0, actionArgs: { insertAt: "bol" }, context: "normal" },
-    { keys: "I", type: "action", action: "enterInsertMode", isEdit: !0, actionArgs: { insertAt: "startOfSelectedArea" }, context: "visual" },
-    { keys: "o", type: "action", action: "newLineAndEnterInsertMode", isEdit: !0, interlaceInsertRepeat: !0, actionArgs: { after: !0 }, context: "normal" },
-    { keys: "O", type: "action", action: "newLineAndEnterInsertMode", isEdit: !0, interlaceInsertRepeat: !0, actionArgs: { after: !1 }, context: "normal" },
-    { keys: "v", type: "action", action: "toggleVisualMode" },
-    { keys: "V", type: "action", action: "toggleVisualMode", actionArgs: { linewise: !0 } },
-    { keys: "<C-v>", type: "action", action: "toggleVisualMode", actionArgs: { blockwise: !0 } },
-    { keys: "<C-q>", type: "action", action: "toggleVisualMode", actionArgs: { blockwise: !0 } },
-    { keys: "gv", type: "action", action: "reselectLastSelection" },
-    { keys: "J", type: "action", action: "joinLines", isEdit: !0 },
-    { keys: "gJ", type: "action", action: "joinLines", actionArgs: { keepSpaces: !0 }, isEdit: !0 },
-    { keys: "p", type: "action", action: "paste", isEdit: !0, actionArgs: { after: !0, isEdit: !0 } },
-    { keys: "P", type: "action", action: "paste", isEdit: !0, actionArgs: { after: !1, isEdit: !0 } },
-    { keys: "r<character>", type: "action", action: "replace", isEdit: !0 },
-    { keys: "@<register>", type: "action", action: "replayMacro" },
-    { keys: "q<register>", type: "action", action: "enterMacroRecordMode" },
-    // Handle Replace-mode as a special case of insert mode.
-    { keys: "R", type: "action", action: "enterInsertMode", isEdit: !0, actionArgs: { replace: !0 }, context: "normal" },
-    { keys: "R", type: "operator", operator: "change", operatorArgs: { linewise: !0, fullLine: !0 }, context: "visual", exitVisualBlock: !0 },
-    { keys: "u", type: "action", action: "undo", context: "normal" },
-    { keys: "u", type: "operator", operator: "changeCase", operatorArgs: { toLower: !0 }, context: "visual", isEdit: !0 },
-    { keys: "U", type: "operator", operator: "changeCase", operatorArgs: { toLower: !1 }, context: "visual", isEdit: !0 },
-    { keys: "<C-r>", type: "action", action: "redo" },
-    { keys: "m<register>", type: "action", action: "setMark" },
-    { keys: '"<register>', type: "action", action: "setRegister" },
-    { keys: "<C-r><register>", type: "action", action: "insertRegister", context: "insert", isEdit: !0 },
-    { keys: "<C-o>", type: "action", action: "oneNormalCommand", context: "insert" },
-    { keys: "zz", type: "action", action: "scrollToCursor", actionArgs: { position: "center" } },
-    { keys: "z.", type: "action", action: "scrollToCursor", actionArgs: { position: "center" }, motion: "moveToFirstNonWhiteSpaceCharacter" },
-    { keys: "zt", type: "action", action: "scrollToCursor", actionArgs: { position: "top" } },
-    { keys: "z<CR>", type: "action", action: "scrollToCursor", actionArgs: { position: "top" }, motion: "moveToFirstNonWhiteSpaceCharacter" },
-    { keys: "zb", type: "action", action: "scrollToCursor", actionArgs: { position: "bottom" } },
-    { keys: "z-", type: "action", action: "scrollToCursor", actionArgs: { position: "bottom" }, motion: "moveToFirstNonWhiteSpaceCharacter" },
-    { keys: ".", type: "action", action: "repeatLastEdit" },
-    { keys: "<C-a>", type: "action", action: "incrementNumberToken", isEdit: !0, actionArgs: { increase: !0, backtrack: !1 } },
-    { keys: "<C-x>", type: "action", action: "incrementNumberToken", isEdit: !0, actionArgs: { increase: !1, backtrack: !1 } },
-    { keys: "<C-t>", type: "action", action: "indent", actionArgs: { indentRight: !0 }, context: "insert" },
-    { keys: "<C-d>", type: "action", action: "indent", actionArgs: { indentRight: !1 }, context: "insert" },
-    // Text object motions
-    { keys: "a<register>", type: "motion", motion: "textObjectManipulation" },
-    { keys: "i<register>", type: "motion", motion: "textObjectManipulation", motionArgs: { textObjectInner: !0 } },
-    // Search
-    { keys: "/", type: "search", searchArgs: { forward: !0, querySrc: "prompt", toJumplist: !0 } },
-    { keys: "?", type: "search", searchArgs: { forward: !1, querySrc: "prompt", toJumplist: !0 } },
-    { keys: "*", type: "search", searchArgs: { forward: !0, querySrc: "wordUnderCursor", wholeWordOnly: !0, toJumplist: !0 } },
-    { keys: "#", type: "search", searchArgs: { forward: !1, querySrc: "wordUnderCursor", wholeWordOnly: !0, toJumplist: !0 } },
-    { keys: "g*", type: "search", searchArgs: { forward: !0, querySrc: "wordUnderCursor", toJumplist: !0 } },
-    { keys: "g#", type: "search", searchArgs: { forward: !1, querySrc: "wordUnderCursor", toJumplist: !0 } },
-    // Ex command
-    { keys: ":", type: "ex" }
-  ], y = /* @__PURE__ */ Object.create(null), k = p.length, L = [
-    { name: "colorscheme", shortName: "colo" },
-    { name: "map" },
-    { name: "imap", shortName: "im" },
-    { name: "nmap", shortName: "nm" },
-    { name: "vmap", shortName: "vm" },
-    { name: "omap", shortName: "om" },
-    { name: "noremap", shortName: "no" },
-    { name: "nnoremap", shortName: "nn" },
-    { name: "vnoremap", shortName: "vn" },
-    { name: "inoremap", shortName: "ino" },
-    { name: "onoremap", shortName: "ono" },
-    { name: "unmap" },
-    { name: "mapclear", shortName: "mapc" },
-    { name: "nmapclear", shortName: "nmapc" },
-    { name: "vmapclear", shortName: "vmapc" },
-    { name: "imapclear", shortName: "imapc" },
-    { name: "omapclear", shortName: "omapc" },
-    { name: "write", shortName: "w" },
-    { name: "undo", shortName: "u" },
-    { name: "redo", shortName: "red" },
-    { name: "set", shortName: "se" },
-    { name: "setlocal", shortName: "setl" },
-    { name: "setglobal", shortName: "setg" },
-    { name: "sort", shortName: "sor" },
-    { name: "substitute", shortName: "s", possiblyAsync: !0 },
-    { name: "startinsert", shortName: "start" },
-    { name: "nohlsearch", shortName: "noh" },
-    { name: "yank", shortName: "y" },
-    { name: "delmarks", shortName: "delm" },
-    { name: "marks", excludeFromCommandHistory: !0 },
-    { name: "registers", shortName: "reg", excludeFromCommandHistory: !0 },
-    { name: "vglobal", shortName: "v" },
-    { name: "delete", shortName: "d" },
-    { name: "join", shortName: "j" },
-    { name: "normal", shortName: "norm" },
-    { name: "global", shortName: "g" }
-  ], x = Ct("");
-  function b(e) {
-    e.setOption("disableInput", !0), e.setOption("showCursorWhenSelecting", !1), f.signal(e, "vim-mode-change", { mode: "normal" }), e.on("cursorActivity", Ut), Ne(e), f.on(e.getInputField(), "paste", D(e));
+  /**
+  Get the description for the given (1-based) line number.
+  */
+  line(e) {
+    if (e < 1 || e > this.lines)
+      throw new RangeError(`Invalid line number ${e} in ${this.lines}-line document`);
+    return this.lineInner(e, !0, 1, 0);
   }
-  function F(e) {
-    e.setOption("disableInput", !1), e.off("cursorActivity", Ut), f.off(e.getInputField(), "paste", D(e)), e.state.vim = null, Ue && clearTimeout(Ue);
+  /**
+  Replace a range of the text with the given content.
+  */
+  replace(e, t, n) {
+    [e, t] = J(this, e, t);
+    let i = [];
+    return this.decompose(
+      0,
+      e,
+      i,
+      2
+      /* Open.To */
+    ), n.length && n.decompose(
+      0,
+      n.length,
+      i,
+      3
+      /* Open.To */
+    ), this.decompose(
+      t,
+      this.length,
+      i,
+      1
+      /* Open.From */
+    ), O.from(i, this.length - (t - e) + n.length);
   }
-  function D(e) {
-    var t = e.state.vim;
-    return t.onPasteFn || (t.onPasteFn = function() {
-      t.insertMode || (e.setCursor(G(e.getCursor(), 0, 1)), De.enterInsertMode(e, {}, t));
-    }), t.onPasteFn;
+  /**
+  Append another document to this one.
+  */
+  append(e) {
+    return this.replace(this.length, this.length, e);
   }
-  var H = /[\d]/, j = [f.isWordChar, function(e) {
-    return e && !f.isWordChar(e) && !/\s/.test(e);
-  }], B = [function(e) {
-    return /\S/.test(e);
-  }], _ = ["<", ">"], Q = ["-", '"', ".", ":", "_", "/", "+"], W = /^\w$/, z = /^[A-Z]$/;
-  try {
-    z = new RegExp("^[\\p{Lu}]$", "u");
-  } catch {
+  /**
+  Retrieve the text between the given points.
+  */
+  slice(e, t = this.length) {
+    [e, t] = J(this, e, t);
+    let n = [];
+    return this.decompose(e, t, n, 0), O.from(n, t - e);
   }
-  function ie(e, t) {
-    return t >= e.firstLine() && t <= e.lastLine();
-  }
-  function ae(e) {
-    return /^[a-z]$/.test(e);
-  }
-  function ce(e) {
-    return "()[]{}".indexOf(e) != -1;
-  }
-  function oe(e) {
-    return H.test(e);
-  }
-  function ge(e) {
-    return z.test(e);
-  }
-  function Z(e) {
-    return /^\s*$/.test(e);
-  }
-  function Ie(e) {
-    return ".?!".indexOf(e) != -1;
-  }
-  function Ze(e, t) {
-    for (var r = 0; r < t.length; r++)
-      if (t[r] == e)
+  /**
+  Test whether this text is equal to another instance.
+  */
+  eq(e) {
+    if (e == this)
+      return !0;
+    if (e.length != this.length || e.lines != this.lines)
+      return !1;
+    let t = this.scanIdentical(e, 1), n = this.length - this.scanIdentical(e, -1), i = new D(this), s = new D(e);
+    for (let r = t, h = t; ; ) {
+      if (i.next(r), s.next(r), r = 0, i.lineBreak != s.lineBreak || i.done != s.done || i.value != s.value)
+        return !1;
+      if (h += i.value.length, i.done || h >= n)
         return !0;
+    }
+  }
+  /**
+  Iterate over the text. When `dir` is `-1`, iteration happens
+  from end to start. This will return lines and the breaks between
+  them as separate strings.
+  */
+  iter(e = 1) {
+    return new D(this, e);
+  }
+  /**
+  Iterate over a range of the text. When `from` > `to`, the
+  iterator will run in reverse.
+  */
+  iterRange(e, t = this.length) {
+    return new Se(this, e, t);
+  }
+  /**
+  Return a cursor that iterates over the given range of lines,
+  _without_ returning the line breaks between, and yielding empty
+  strings for empty lines.
+  
+  When `from` and `to` are given, they should be 1-based line numbers.
+  */
+  iterLines(e, t) {
+    let n;
+    if (e == null)
+      n = this.iter();
+    else {
+      t == null && (t = this.lines + 1);
+      let i = this.line(e).from;
+      n = this.iterRange(i, Math.max(i, t == this.lines + 1 ? this.length : t <= 1 ? 0 : this.line(t - 1).to));
+    }
+    return new Ie(n);
+  }
+  /**
+  Return the document as a string, using newline characters to
+  separate lines.
+  */
+  toString() {
+    return this.sliceString(0);
+  }
+  /**
+  Convert the document to an array of lines (which can be
+  deserialized again via [`Text.of`](https://codemirror.net/6/docs/ref/#state.Text^of)).
+  */
+  toJSON() {
+    let e = [];
+    return this.flatten(e), e;
+  }
+  /**
+  @internal
+  */
+  constructor() {
+  }
+  /**
+  Create a `Text` instance for the given array of lines.
+  */
+  static of(e) {
+    if (e.length == 0)
+      throw new RangeError("A document must have at least one line");
+    return e.length == 1 && !e[0] ? x.empty : e.length <= 32 ? new m(e) : O.from(m.split(e, []));
+  }
+}
+class m extends x {
+  constructor(e, t = Ve(e)) {
+    super(), this.text = e, this.length = t;
+  }
+  get lines() {
+    return this.text.length;
+  }
+  get children() {
+    return null;
+  }
+  lineInner(e, t, n, i) {
+    for (let s = 0; ; s++) {
+      let r = this.text[s], h = i + r.length;
+      if ((t ? n : h) >= e)
+        return new Ne(i, h, n, r);
+      i = h + 1, n++;
+    }
+  }
+  decompose(e, t, n, i) {
+    let s = e <= 0 && t >= this.length ? this : new m(we(this.text, e, t), Math.min(t, this.length) - Math.max(0, e));
+    if (i & 1) {
+      let r = n.pop(), h = Q(s.text, r.text.slice(), 0, s.length);
+      if (h.length <= 32)
+        n.push(new m(h, r.length + s.length));
+      else {
+        let o = h.length >> 1;
+        n.push(new m(h.slice(0, o)), new m(h.slice(o)));
+      }
+    } else
+      n.push(s);
+  }
+  replace(e, t, n) {
+    if (!(n instanceof m))
+      return super.replace(e, t, n);
+    [e, t] = J(this, e, t);
+    let i = Q(this.text, Q(n.text, we(this.text, 0, e)), t), s = this.length + n.length - (t - e);
+    return i.length <= 32 ? new m(i, s) : O.from(m.split(i, []), s);
+  }
+  sliceString(e, t = this.length, n = `
+`) {
+    [e, t] = J(this, e, t);
+    let i = "";
+    for (let s = 0, r = 0; s <= t && r < this.text.length; r++) {
+      let h = this.text[r], o = s + h.length;
+      s > e && r && (i += n), e < o && t > s && (i += h.slice(Math.max(0, e - s), t - s)), s = o + 1;
+    }
+    return i;
+  }
+  flatten(e) {
+    for (let t of this.text)
+      e.push(t);
+  }
+  scanIdentical() {
+    return 0;
+  }
+  static split(e, t) {
+    let n = [], i = -1;
+    for (let s of e)
+      n.push(s), i += s.length + 1, n.length == 32 && (t.push(new m(n, i)), n = [], i = -1);
+    return i > -1 && t.push(new m(n, i)), t;
+  }
+}
+class O extends x {
+  constructor(e, t) {
+    super(), this.children = e, this.length = t, this.lines = 0;
+    for (let n of e)
+      this.lines += n.lines;
+  }
+  lineInner(e, t, n, i) {
+    for (let s = 0; ; s++) {
+      let r = this.children[s], h = i + r.length, o = n + r.lines - 1;
+      if ((t ? o : h) >= e)
+        return r.lineInner(e, t, n, i);
+      i = h + 1, n = o + 1;
+    }
+  }
+  decompose(e, t, n, i) {
+    for (let s = 0, r = 0; r <= t && s < this.children.length; s++) {
+      let h = this.children[s], o = r + h.length;
+      if (e <= o && t >= r) {
+        let a = i & ((r <= e ? 1 : 0) | (o >= t ? 2 : 0));
+        r >= e && o <= t && !a ? n.push(h) : h.decompose(e - r, t - r, n, a);
+      }
+      r = o + 1;
+    }
+  }
+  replace(e, t, n) {
+    if ([e, t] = J(this, e, t), n.lines < this.lines)
+      for (let i = 0, s = 0; i < this.children.length; i++) {
+        let r = this.children[i], h = s + r.length;
+        if (e >= s && t <= h) {
+          let o = r.replace(e - s, t - s, n), a = this.lines - r.lines + o.lines;
+          if (o.lines < a >> 4 && o.lines > a >> 6) {
+            let f = this.children.slice();
+            return f[i] = o, new O(f, this.length - (t - e) + n.length);
+          }
+          return super.replace(s, h, o);
+        }
+        s = h + 1;
+      }
+    return super.replace(e, t, n);
+  }
+  sliceString(e, t = this.length, n = `
+`) {
+    [e, t] = J(this, e, t);
+    let i = "";
+    for (let s = 0, r = 0; s < this.children.length && r <= t; s++) {
+      let h = this.children[s], o = r + h.length;
+      r > e && s && (i += n), e < o && t > r && (i += h.sliceString(e - r, t - r, n)), r = o + 1;
+    }
+    return i;
+  }
+  flatten(e) {
+    for (let t of this.children)
+      t.flatten(e);
+  }
+  scanIdentical(e, t) {
+    if (!(e instanceof O))
+      return 0;
+    let n = 0, [i, s, r, h] = t > 0 ? [0, 0, this.children.length, e.children.length] : [this.children.length - 1, e.children.length - 1, -1, -1];
+    for (; ; i += t, s += t) {
+      if (i == r || s == h)
+        return n;
+      let o = this.children[i], a = e.children[s];
+      if (o != a)
+        return n + o.scanIdentical(a, t);
+      n += o.length + 1;
+    }
+  }
+  static from(e, t = e.reduce((n, i) => n + i.length + 1, -1)) {
+    let n = 0;
+    for (let d of e)
+      n += d.lines;
+    if (n < 32) {
+      let d = [];
+      for (let p of e)
+        p.flatten(d);
+      return new m(d, t);
+    }
+    let i = Math.max(
+      32,
+      n >> 5
+      /* Tree.BranchShift */
+    ), s = i << 1, r = i >> 1, h = [], o = 0, a = -1, f = [];
+    function u(d) {
+      let p;
+      if (d.lines > s && d instanceof O)
+        for (let E of d.children)
+          u(E);
+      else d.lines > r && (o > r || !o) ? (c(), h.push(d)) : d instanceof m && o && (p = f[f.length - 1]) instanceof m && d.lines + p.lines <= 32 ? (o += d.lines, a += d.length + 1, f[f.length - 1] = new m(p.text.concat(d.text), p.length + 1 + d.length)) : (o + d.lines > i && c(), o += d.lines, a += d.length + 1, f.push(d));
+    }
+    function c() {
+      o != 0 && (h.push(f.length == 1 ? f[0] : O.from(f, a)), a = -1, o = f.length = 0);
+    }
+    for (let d of e)
+      u(d);
+    return c(), h.length == 1 ? h[0] : new O(h, t);
+  }
+}
+x.empty = /* @__PURE__ */ new m([""], 0);
+function Ve(l) {
+  let e = -1;
+  for (let t of l)
+    e += t.length + 1;
+  return e;
+}
+function Q(l, e, t = 0, n = 1e9) {
+  for (let i = 0, s = 0, r = !0; s < l.length && i <= n; s++) {
+    let h = l[s], o = i + h.length;
+    o >= t && (o > n && (h = h.slice(0, n - i)), i < t && (h = h.slice(t - i)), r ? (e[e.length - 1] += h, r = !1) : e.push(h)), i = o + 1;
+  }
+  return e;
+}
+function we(l, e, t) {
+  return Q(l, [""], e, t);
+}
+class D {
+  constructor(e, t = 1) {
+    this.dir = t, this.done = !1, this.lineBreak = !1, this.value = "", this.nodes = [e], this.offsets = [t > 0 ? 1 : (e instanceof m ? e.text.length : e.children.length) << 1];
+  }
+  nextInner(e, t) {
+    for (this.done = this.lineBreak = !1; ; ) {
+      let n = this.nodes.length - 1, i = this.nodes[n], s = this.offsets[n], r = s >> 1, h = i instanceof m ? i.text.length : i.children.length;
+      if (r == (t > 0 ? h : 0)) {
+        if (n == 0)
+          return this.done = !0, this.value = "", this;
+        t > 0 && this.offsets[n - 1]++, this.nodes.pop(), this.offsets.pop();
+      } else if ((s & 1) == (t > 0 ? 0 : 1)) {
+        if (this.offsets[n] += t, e == 0)
+          return this.lineBreak = !0, this.value = `
+`, this;
+        e--;
+      } else if (i instanceof m) {
+        let o = i.text[r + (t < 0 ? -1 : 0)];
+        if (this.offsets[n] += t, o.length > Math.max(0, e))
+          return this.value = e == 0 ? o : t > 0 ? o.slice(e) : o.slice(0, o.length - e), this;
+        e -= o.length;
+      } else {
+        let o = i.children[r + (t < 0 ? -1 : 0)];
+        e > o.length ? (e -= o.length, this.offsets[n] += t) : (t < 0 && this.offsets[n]--, this.nodes.push(o), this.offsets.push(t > 0 ? 1 : (o instanceof m ? o.text.length : o.children.length) << 1));
+      }
+    }
+  }
+  next(e = 0) {
+    return e < 0 && (this.nextInner(-e, -this.dir), e = this.value.length), this.nextInner(e, this.dir);
+  }
+}
+class Se {
+  constructor(e, t, n) {
+    this.value = "", this.done = !1, this.cursor = new D(e, t > n ? -1 : 1), this.pos = t > n ? e.length : 0, this.from = Math.min(t, n), this.to = Math.max(t, n);
+  }
+  nextInner(e, t) {
+    if (t < 0 ? this.pos <= this.from : this.pos >= this.to)
+      return this.value = "", this.done = !0, this;
+    e += Math.max(0, t < 0 ? this.pos - this.to : this.from - this.pos);
+    let n = t < 0 ? this.pos - this.from : this.to - this.pos;
+    e > n && (e = n), n -= e;
+    let { value: i } = this.cursor.next(e);
+    return this.pos += (i.length + e) * t, this.value = i.length <= n ? i : t < 0 ? i.slice(i.length - n) : i.slice(0, n), this.done = !this.value, this;
+  }
+  next(e = 0) {
+    return e < 0 ? e = Math.max(e, this.from - this.pos) : e > 0 && (e = Math.min(e, this.to - this.pos)), this.nextInner(e, this.cursor.dir);
+  }
+  get lineBreak() {
+    return this.cursor.lineBreak && this.value != "";
+  }
+}
+class Ie {
+  constructor(e) {
+    this.inner = e, this.afterBreak = !0, this.value = "", this.done = !1;
+  }
+  next(e = 0) {
+    let { done: t, lineBreak: n, value: i } = this.inner.next(e);
+    return t && this.afterBreak ? (this.value = "", this.afterBreak = !1) : t ? (this.done = !0, this.value = "") : n ? this.afterBreak ? this.value = "" : (this.afterBreak = !0, this.next()) : (this.value = i, this.afterBreak = !1), this;
+  }
+  get lineBreak() {
     return !1;
   }
-  var Le = {};
-  function Be(e, t, r, n, i) {
-    if (t === void 0 && !i)
-      throw Error("defaultValue is required unless callback is provided");
-    if (r || (r = "string"), Le[e] = {
-      type: r,
-      defaultValue: t,
-      callback: i
-    }, n)
-      for (var a = 0; a < n.length; a++)
-        Le[n[a]] = Le[e];
-    t && Je(e, t);
-  }
-  function Je(e, t, r, n) {
-    var i = Le[e];
-    n = n || {};
-    var a = n.scope;
-    if (!i)
-      return new Error("Unknown option: " + e);
-    if (i.type == "boolean") {
-      if (t && t !== !0)
-        return new Error("Invalid argument: " + e + "=" + t);
-      t !== !1 && (t = !0);
-    }
-    i.callback ? (a !== "local" && i.callback(t, void 0), a !== "global" && r && i.callback(t, r)) : (a !== "local" && (i.value = i.type == "boolean" ? !!t : t), a !== "global" && r && (r.state.vim.options[e] = { value: t }));
-  }
-  function le(e, t, r) {
-    var n = Le[e];
-    r = r || {};
-    var i = r.scope;
-    if (!n)
-      return new Error("Unknown option: " + e);
-    if (n.callback) {
-      let a = t && n.callback(void 0, t);
-      return i !== "global" && a !== void 0 ? a : i !== "local" ? n.callback() : void 0;
-    } else
-      return (i !== "global" && t && t.state.vim.options[e] || i !== "local" && n || {}).value;
-  }
-  Be("filetype", void 0, "string", ["ft"], function(e, t) {
-    if (t !== void 0)
-      if (e === void 0) {
-        let r = t.getOption("mode");
-        return r == "null" ? "" : r;
-      } else {
-        let r = e == "" ? "null" : e;
-        t.setOption("mode", r);
-      }
-  }), Be("textwidth", 80, "number", ["tw"], function(e, t) {
-    if (t !== void 0)
-      if (e === void 0) {
-        var r = t.getOption("textwidth");
-        return r;
-      } else {
-        var n = Math.round(e);
-        n > 1 && t.setOption("textwidth", n);
-      }
-  });
-  var dr = function() {
-    var e = 100, t = -1, r = 0, n = 0, i = (
-      /**@type {(Marker|undefined)[]} */
-      new Array(e)
-    );
-    function a(u, d, h) {
-      var g = t % e, C = i[g];
-      function m(w) {
-        var S = ++t % e, A = i[S];
-        A && A.clear(), i[S] = u.setBookmark(w);
-      }
-      if (C) {
-        var v = C.find();
-        v && !he(v, d) && m(d);
-      } else
-        m(d);
-      m(h), r = t, n = t - e + 1, n < 0 && (n = 0);
-    }
-    function s(u, d) {
-      t += d, t > r ? t = r : t < n && (t = n);
-      var h = i[(e + t) % e];
-      if (h && !h.find()) {
-        var g = d > 0 ? 1 : -1, C, m = u.getCursor();
-        do
-          if (t += g, h = i[(e + t) % e], h && (C = h.find()) && !he(m, C))
-            break;
-        while (t < r && t > n);
-      }
-      return h;
-    }
-    function l(u, d) {
-      var h = t, g = s(u, d);
-      return t = h, g && g.find();
-    }
-    return {
-      /**@type{Pos|undefined} */
-      cachedCursor: void 0,
-      //used for # and * jumps
-      add: a,
-      find: l,
-      move: s
-    };
-  }, gt = function(e) {
-    return e ? {
-      changes: e.changes,
-      expectCursorActivityForChange: e.expectCursorActivityForChange
-    } : {
-      // Change list
-      changes: [],
-      // Set to true on change, false on cursorActivity.
-      expectCursorActivityForChange: !1
-    };
-  };
-  class pr {
-    constructor() {
-      this.latestRegister = void 0, this.isPlaying = !1, this.isRecording = !1, this.replaySearchQueries = [], this.onRecordingDone = void 0, this.lastInsertModeChanges = gt();
-    }
-    exitMacroRecordMode() {
-      var t = T.macroModeState;
-      t.onRecordingDone && t.onRecordingDone(), t.onRecordingDone = void 0, t.isRecording = !1;
-    }
-    /**
-     * @arg {CodeMirror} cm
-     * @arg {string} registerName
-     */
-    enterMacroRecordMode(t, r) {
-      var n = T.registerController.getRegister(r);
-      if (n) {
-        if (n.clear(), this.latestRegister = r, t.openDialog) {
-          var i = me("span", { class: "cm-vim-message" }, "recording @" + r);
-          this.onRecordingDone = t.openDialog(i, function() {
-          }, { bottom: !0 });
-        }
-        this.isRecording = !0;
-      }
-    }
-  }
-  function Ne(e) {
-    return e.state.vim || (e.state.vim = {
-      inputState: new kt(),
-      // Vim's input state that triggered the last edit, used to repeat
-      // motions and operators with '.'.
-      lastEditInputState: void 0,
-      // Vim's action command before the last edit, used to repeat actions
-      // with '.' and insert mode repeat.
-      lastEditActionCommand: void 0,
-      // When using jk for navigation, if you move from a longer line to a
-      // shorter line, the cursor may clip to the end of the shorter line.
-      // If j is pressed again and cursor goes to the next line, the
-      // cursor should go back to its horizontal position on the longer
-      // line if it can. This is to keep track of the horizontal position.
-      lastHPos: -1,
-      // Doing the same with screen-position for gj/gk
-      lastHSPos: -1,
-      // The last motion command run. Cleared if a non-motion command gets
-      // executed in between.
-      lastMotion: null,
-      marks: {},
-      insertMode: !1,
-      insertModeReturn: !1,
-      // Repeat count for changes made in insert mode, triggered by key
-      // sequences like 3,i. Only exists when insertMode is true.
-      insertModeRepeat: void 0,
-      visualMode: !1,
-      // If we are in visual line mode. No effect if visualMode is false.
-      visualLine: !1,
-      visualBlock: !1,
-      lastSelection: (
-        /**@type{vimState["lastSelection"]}*/
-        /**@type{unknown}*/
-        null
-      ),
-      lastPastedText: void 0,
-      sel: { anchor: new o(0, 0), head: new o(0, 0) },
-      // Buffer-local/window-local values of vim options.
-      options: {},
-      // Whether the next character should be interpreted literally
-      // Necassary for correct implementation of f<character>, r<character> etc.
-      // in terms of langmaps.
-      expectLiteralNext: !1,
-      status: ""
-    }), e.state.vim;
-  }
-  var T;
-  function yt() {
-    T = {
-      // The current search query.
-      searchQuery: null,
-      // Whether we are searching backwards.
-      searchIsReversed: !1,
-      // Replace part of the last substituted pattern
-      lastSubstituteReplacePart: void 0,
-      jumpList: dr(),
-      macroModeState: new pr(),
-      // Recording latest f, t, F or T motion command.
-      lastCharacterSearch: { increment: 0, forward: !0, selectedCharacter: "" },
-      registerController: new Cr({}),
-      // search history buffer
-      searchHistoryController: new wt(),
-      // ex Command history buffer
-      exCommandHistoryController: new wt()
-    };
-    for (var e in Le) {
-      var t = Le[e];
-      t.value = t.defaultValue;
-    }
-  }
-  class et {
-    /**
-     * Wrapper for special keys pressed in insert mode
-     * @arg {string} keyName
-     * @arg {KeyboardEvent} e
-     * @returns
-     */
-    constructor(t, r) {
-      this.keyName = t, this.key = r.key, this.ctrlKey = r.ctrlKey, this.altKey = r.altKey, this.metaKey = r.metaKey, this.shiftKey = r.shiftKey;
-    }
-  }
-  var Ve, ue = {
-    enterVimMode: b,
-    leaveVimMode: F,
-    buildKeyMap: function() {
-    },
-    // Testing hook, though it might be useful to expose the register
-    // controller anyway.
-    getRegisterController: function() {
-      return T.registerController;
-    },
-    // Testing hook.
-    resetVimGlobalState_: yt,
-    // Testing hook.
-    getVimGlobalState_: function() {
-      return T;
-    },
-    // Testing hook.
-    maybeInitVimState_: Ne,
-    suppressErrorLogging: !1,
-    InsertModeKey: et,
-    /**@type {(lhs: string, rhs: string, ctx: string) => void} */
-    map: function(e, t, r) {
-      se.map(e, t, r);
-    },
-    /**@type {(lhs: string, ctx: string) => any} */
-    unmap: function(e, t) {
-      return se.unmap(e, t);
-    },
-    // Non-recursive map function.
-    // NOTE: This will not create mappings to key maps that aren't present
-    // in the default key map. See TODO at bottom of function.
-    /**@type {(lhs: string, rhs: string, ctx: string) => void} */
-    noremap: function(e, t, r) {
-      se.map(e, t, r, !0);
-    },
-    // Remove all user-defined mappings for the provided context.
-    /**@arg {string} [ctx]} */
-    mapclear: function(e) {
-      var t = p.length, r = k, n = p.slice(0, t - r);
-      if (p = p.slice(t - r), e)
-        for (var i = n.length - 1; i >= 0; i--) {
-          var a = n[i];
-          if (e !== a.context)
-            if (a.context)
-              this._mapCommand(a);
-            else {
-              var s = ["normal", "insert", "visual"];
-              for (var l in s)
-                if (s[l] !== e) {
-                  var u = Object.assign({}, a);
-                  u.context = s[l], this._mapCommand(u);
-                }
-            }
-        }
-    },
-    langmap: mt,
-    vimKeyFromEvent: We,
-    // TODO: Expose setOption and getOption as instance methods. Need to decide how to namespace
-    // them, or somehow make them work with the existing CodeMirror setOption/getOption API.
-    setOption: Je,
-    getOption: le,
-    defineOption: Be,
-    /**@type {(name: string, prefix: string|undefined, func: ExFn) => void} */
-    defineEx: function(e, t, r) {
-      if (!t)
-        t = e;
-      else if (e.indexOf(t) !== 0)
-        throw new Error('(Vim.defineEx) "' + t + '" is not a prefix of "' + e + '", command not registered');
-      Wt[e] = r, se.commandMap_[t] = { name: e, shortName: t, type: "api" };
-    },
-    /**@type {(cm: CodeMirror, key: string, origin: string) => undefined | boolean} */
-    handleKey: function(e, t, r) {
-      var n = this.findKey(e, t, r);
-      if (typeof n == "function")
-        return n();
-    },
-    multiSelectHandleKey: un,
-    /**
-     * This is the outermost function called by CodeMirror, after keys have
-     * been mapped to their Vim equivalents.
-     *
-     * Finds a command based on the key (and cached keys if there is a
-     * multi-key sequence). Returns `undefined` if no key is matched, a noop
-     * function if a partial match is found (multi-key), and a function to
-     * execute the bound command if a a key is matched. The function always
-     * returns true.
-     */
-    /**@type {(cm_: CodeMirror, key: string, origin?: string| undefined) => (() => boolean|undefined) | undefined} */
-    findKey: function(e, t, r) {
-      var n = Ne(e), i = (
-        /**@type {CodeMirrorV}*/
-        e
-      );
-      function a() {
-        var h = T.macroModeState;
-        if (h.isRecording) {
-          if (t == "q")
-            return h.exitMacroRecordMode(), Y(i), !0;
-          r != "mapping" && on(h, t);
-        }
-      }
-      function s() {
-        if (t == "<Esc>") {
-          if (n.visualMode)
-            Se(i);
-          else if (n.insertMode)
-            Ae(i);
-          else
-            return;
-          return Y(i), !0;
-        }
-      }
-      function l() {
-        if (s())
-          return !0;
-        n.inputState.keyBuffer.push(t);
-        var h = n.inputState.keyBuffer.join(""), g = t.length == 1, C = Oe.matchCommand(h, p, n.inputState, "insert"), m = n.inputState.changeQueue;
-        if (C.type == "none")
-          return Y(i), !1;
-        if (C.type == "partial") {
-          if (C.expectLiteralNext && (n.expectLiteralNext = !0), Ve && window.clearTimeout(Ve), Ve = g && window.setTimeout(
-            function() {
-              n.insertMode && n.inputState.keyBuffer.length && Y(i);
-            },
-            le("insertModeEscKeysTimeout")
-          ), g) {
-            var v = i.listSelections();
-            (!m || m.removed.length != v.length) && (m = n.inputState.changeQueue = new yr()), m.inserted += t;
-            for (var w = 0; w < v.length; w++) {
-              var S = ne(v[w].anchor, v[w].head), A = Te(v[w].anchor, v[w].head), M = i.getRange(S, i.state.overwrite ? G(A, 0, 1) : A);
-              m.removed[w] = (m.removed[w] || "") + M;
-            }
-          }
-          return !g;
-        } else C.type == "full" && (n.inputState.keyBuffer.length = 0);
-        if (n.expectLiteralNext = !1, Ve && window.clearTimeout(Ve), C.command && m) {
-          for (var v = i.listSelections(), w = 0; w < v.length; w++) {
-            var E = v[w].head;
-            i.replaceRange(
-              m.removed[w] || "",
-              G(E, 0, -m.inserted.length),
-              E,
-              "+input"
-            );
-          }
-          T.macroModeState.lastInsertModeChanges.changes.pop();
-        }
-        return C.command || Y(i), C.command;
-      }
-      function u() {
-        if (a() || s())
-          return !0;
-        n.inputState.keyBuffer.push(t);
-        var h = n.inputState.keyBuffer.join("");
-        if (/^[1-9]\d*$/.test(h))
-          return !0;
-        var g = /^(\d*)(.*)$/.exec(h);
-        if (!g)
-          return Y(i), !1;
-        var C = n.visualMode ? "visual" : "normal", m = g[2] || g[1];
-        n.inputState.operatorShortcut && n.inputState.operatorShortcut.slice(-1) == m && (m = n.inputState.operatorShortcut);
-        var v = Oe.matchCommand(m, p, n.inputState, C);
-        return v.type == "none" ? (Y(i), !1) : v.type == "partial" ? (v.expectLiteralNext && (n.expectLiteralNext = !0), !0) : v.type == "clear" ? (Y(i), !0) : (n.expectLiteralNext = !1, n.inputState.keyBuffer.length = 0, g = /^(\d*)(.*)$/.exec(h), g && g[1] && g[1] != "0" && n.inputState.pushRepeatDigit(g[1]), v.command);
-      }
-      var d = n.insertMode ? l() : u();
-      if (d === !1)
-        return !n.insertMode && (t.length === 1 || f.isMac && /<A-.>/.test(t)) ? function() {
-          return !0;
-        } : void 0;
-      if (d === !0)
-        return function() {
-          return !0;
-        };
-      if (d)
-        return function() {
-          return i.operation(function() {
-            i.curOp.isVimOp = !0;
-            try {
-              if (typeof d != "object") return;
-              d.type == "keyToKey" ? $e(i, d.toKeys, d) : Oe.processCommand(i, n, d);
-            } catch (h) {
-              throw i.state.vim = void 0, Ne(i), ue.suppressErrorLogging || console.log(h), h;
-            }
-            return !0;
-          });
-        };
-    },
-    /**@type {(cm: CodeMirrorV, input: string)=>void} */
-    handleEx: function(e, t) {
-      se.processCommand(e, t);
-    },
-    defineMotion: kr,
-    defineAction: Sr,
-    defineOperator: wr,
-    mapCommand: nn,
-    _mapCommand: ut,
-    defineRegister: mr,
-    exitVisualMode: Se,
-    exitInsertMode: Ae
-  }, Pe = [], ze = !1, X;
-  function vr(e) {
-    if (!X) throw new Error("No prompt to send key to");
-    if (e[0] == "<") {
-      var t = e.toLowerCase().slice(1, -1), r = t.split("-");
-      if (t = r.pop() || "", t == "lt") e = "<";
-      else if (t == "space") e = " ";
-      else if (t == "cr") e = `
-`;
-      else if (Ke[t]) {
-        var n = X.value || "", i = {
-          key: Ke[t],
-          target: {
-            value: n,
-            selectionEnd: n.length,
-            selectionStart: n.length
-          }
-        };
-        X.onKeyDown && X.onKeyDown(i, X.value, s), X && X.onKeyUp && X.onKeyUp(i, X.value, s);
-        return;
-      }
-    }
-    if (e == `
-`) {
-      var a = X;
-      X = null, a.onClose && a.onClose(a.value);
-    } else
-      X.value = (X.value || "") + e;
-    function s(l) {
-      X && (typeof l == "string" ? X.value = l : X = null);
-    }
-  }
-  function $e(e, t, r) {
-    var n = ze;
-    if (r) {
-      if (Pe.indexOf(r) != -1) return;
-      Pe.push(r), ze = r.noremap != !1;
-    }
-    try {
-      for (var i = Ne(e), a = /<(?:[CSMA]-)*\w+>|./gi, s; s = a.exec(t); ) {
-        var l = s[0], u = i.insertMode;
-        if (X) {
-          vr(l);
-          continue;
-        }
-        var d = ue.handleKey(e, l, "mapping");
-        if (!d && u && i.insertMode) {
-          if (l[0] == "<") {
-            var h = l.toLowerCase().slice(1, -1), g = h.split("-");
-            if (h = g.pop() || "", h == "lt") l = "<";
-            else if (h == "space") l = " ";
-            else if (h == "cr") l = `
-`;
-            else if (Ke.hasOwnProperty(h)) {
-              l = Ke[h], qt(e, l);
-              continue;
-            } else
-              l = l[0], a.lastIndex = s.index + 1;
-          }
-          e.replaceSelection(l);
-        }
-      }
-    } finally {
-      if (Pe.pop(), ze = Pe.length ? n : !1, !Pe.length && X) {
-        var C = X;
-        X = null, Xe(e, C);
-      }
-    }
-  }
-  var tt = {
-    Return: "CR",
-    Backspace: "BS",
-    Delete: "Del",
-    Escape: "Esc",
-    Insert: "Ins",
-    ArrowLeft: "Left",
-    ArrowRight: "Right",
-    ArrowUp: "Up",
-    ArrowDown: "Down",
-    Enter: "CR",
-    " ": "Space"
-  }, gr = {
-    Shift: 1,
-    Alt: 1,
-    Command: 1,
-    Control: 1,
-    CapsLock: 1,
-    AltGraph: 1,
-    Dead: 1,
-    Unidentified: 1
-  }, Ke = {};
-  "Left|Right|Up|Down|End|Home".split("|").concat(Object.keys(tt)).forEach(function(e) {
-    Ke[(tt[e] || "").toLowerCase()] = Ke[e.toLowerCase()] = e;
-  });
-  function We(e, t) {
-    var a;
-    var r = e.key;
-    if (!gr[r]) {
-      r.length > 1 && r[0] == "n" && (r = r.replace("Numpad", "")), r = tt[r] || r;
-      var n = "";
-      if (e.ctrlKey && (n += "C-"), e.altKey && (n += "A-"), e.metaKey && (n += "M-"), f.isMac && n == "A-" && r.length == 1 && (n = n.slice(2)), (n || r.length > 1) && e.shiftKey && (n += "S-"), t && !t.expectLiteralNext && r.length == 1) {
-        if (x.keymap && r in x.keymap)
-          (x.remapCtrl != !1 || !n) && (r = x.keymap[r]);
-        else if (r.charCodeAt(0) > 128 && !y[r]) {
-          var i = ((a = e.code) == null ? void 0 : a.slice(-1)) || "";
-          e.shiftKey || (i = i.toLowerCase()), i && (r = i, !n && e.altKey && (n = "A-"));
-        }
-      }
-      return n += r, n.length > 1 && (n = "<" + n + ">"), n;
-    }
-  }
-  function mt(e, t) {
-    x.string !== e && (x = Ct(e)), x.remapCtrl = t;
-  }
-  function Ct(e) {
-    let t = {};
-    if (!e) return { keymap: t, string: "" };
-    function r(n) {
-      return n.split(/\\?(.)/).filter(Boolean);
-    }
-    return e.split(/((?:[^\\,]|\\.)+),/).map((n) => {
-      if (!n) return;
-      const i = n.split(/((?:[^\\;]|\\.)+);/);
-      if (i.length == 3) {
-        const a = r(i[1]), s = r(i[2]);
-        if (a.length !== s.length) return;
-        for (let l = 0; l < a.length; ++l) t[a[l]] = s[l];
-      } else if (i.length == 1) {
-        const a = r(n);
-        if (a.length % 2 !== 0) return;
-        for (let s = 0; s < a.length; s += 2) t[a[s]] = a[s + 1];
-      }
-    }), { keymap: t, string: e };
-  }
-  Be("langmap", void 0, "string", ["lmap"], function(e, t) {
-    if (e === void 0)
-      return x.string;
-    mt(e);
-  });
-  class kt {
-    constructor() {
-      this.prefixRepeat = [], this.motionRepeat = [], this.operator = null, this.operatorArgs = null, this.motion = null, this.motionArgs = null, this.keyBuffer = [], this.registerName = void 0, this.changeQueue = null;
-    }
-    /** @param {string} n */
-    pushRepeatDigit(t) {
-      this.operator ? this.motionRepeat = this.motionRepeat.concat(t) : this.prefixRepeat = this.prefixRepeat.concat(t);
-    }
-    getRepeat() {
-      var t = 0;
-      return (this.prefixRepeat.length > 0 || this.motionRepeat.length > 0) && (t = 1, this.prefixRepeat.length > 0 && (t *= parseInt(this.prefixRepeat.join(""), 10)), this.motionRepeat.length > 0 && (t *= parseInt(this.motionRepeat.join(""), 10))), t;
-    }
-  }
-  function Y(e, t) {
-    e.state.vim.inputState = new kt(), e.state.vim.expectLiteralNext = !1, f.signal(e, "vim-command-done", t);
-  }
-  function yr() {
-    this.removed = [], this.inserted = "";
-  }
-  class ke {
-    /** @arg {string} [text] @arg {boolean} [linewise] @arg {boolean } [blockwise] */
-    constructor(t, r, n) {
-      this.clear(), this.keyBuffer = [t || ""], this.insertModeChanges = [], this.searchQueries = [], this.linewise = !!r, this.blockwise = !!n;
-    }
-    /** @arg {string} [text] @arg {boolean} [linewise] @arg {boolean } [blockwise] */
-    setText(t, r, n) {
-      this.keyBuffer = [t || ""], this.linewise = !!r, this.blockwise = !!n;
-    }
-    /** @arg {string} text @arg {boolean} [linewise] */
-    pushText(t, r) {
-      r && (this.linewise || this.keyBuffer.push(`
-`), this.linewise = !0), this.keyBuffer.push(t);
-    }
-    /** @arg {InsertModeChanges} changes */
-    pushInsertModeChanges(t) {
-      this.insertModeChanges.push(gt(t));
-    }
-    /** @arg {string} query */
-    pushSearchQuery(t) {
-      this.searchQueries.push(t);
-    }
-    clear() {
-      this.keyBuffer = [], this.insertModeChanges = [], this.searchQueries = [], this.linewise = !1;
-    }
-    toString() {
-      return this.keyBuffer.join("");
-    }
-  }
-  function mr(e, t) {
-    var r = T.registerController.registers;
-    if (!e || e.length != 1)
-      throw Error("Register name must be 1 character");
-    if (r[e])
-      throw Error("Register already defined " + e);
-    r[e] = t, Q.push(e);
-  }
-  class Cr {
-    /** @arg {Object<string, Register>} registers */
-    constructor(t) {
-      this.registers = t, this.unnamedRegister = t['"'] = new ke(), t["."] = new ke(), t[":"] = new ke(), t["/"] = new ke(), t["+"] = new ke();
-    }
-    /**
-     * @param {string | null | undefined} registerName
-     * @param {string} operator
-     * @param {string} text
-     * @param {boolean} [linewise]
-     * @param {boolean} [blockwise]
-     */
-    pushText(t, r, n, i, a) {
-      if (t !== "_") {
-        i && n.charAt(n.length - 1) !== `
-` && (n += `
-`);
-        var s = this.isValidRegister(t) ? this.getRegister(t) : null;
-        if (!s || !t) {
-          switch (r) {
-            case "yank":
-              this.registers[0] = new ke(n, i, a);
-              break;
-            case "delete":
-            case "change":
-              n.indexOf(`
-`) == -1 ? this.registers["-"] = new ke(n, i) : (this.shiftNumericRegisters_(), this.registers[1] = new ke(n, i));
-              break;
-          }
-          this.unnamedRegister.setText(n, i, a);
-          return;
-        }
-        var l = ge(t);
-        l ? s.pushText(n, i) : s.setText(n, i, a), t === "+" && navigator.clipboard.writeText(n), this.unnamedRegister.setText(s.toString(), i);
-      }
-    }
-    /**
-     * Gets the register named @name.  If one of @name doesn't already exist,
-     * create it.  If @name is invalid, return the unnamedRegister.
-     * @arg {string} [name]
-     */
-    getRegister(t) {
-      return this.isValidRegister(t) ? (t = t.toLowerCase(), this.registers[t] || (this.registers[t] = new ke()), this.registers[t]) : this.unnamedRegister;
-    }
-    /**@type {{(name: any): name is string}} */
-    isValidRegister(t) {
-      return t && (Ze(t, Q) || W.test(t));
-    }
-    shiftNumericRegisters_() {
-      for (var t = 9; t >= 2; t--)
-        this.registers[t] = this.getRegister("" + (t - 1));
-    }
-  }
-  class wt {
-    constructor() {
-      this.historyBuffer = [], this.iterator = 0, this.initialPrefix = null;
-    }
-    /**
-     * the input argument here acts a user entered prefix for a small time
-     * until we start autocompletion in which case it is the autocompleted.
-     * @arg {string} input
-     * @arg {boolean} up
-     */
-    nextMatch(t, r) {
-      var n = this.historyBuffer, i = r ? -1 : 1;
-      this.initialPrefix === null && (this.initialPrefix = t);
-      for (var a = this.iterator + i; r ? a >= 0 : a < n.length; a += i)
-        for (var s = n[a], l = 0; l <= s.length; l++)
-          if (this.initialPrefix == s.substring(0, l))
-            return this.iterator = a, s;
-      if (a >= n.length)
-        return this.iterator = n.length, this.initialPrefix;
-      if (a < 0) return t;
-    }
-    /** @arg {string} input */
-    pushInput(t) {
-      var r = this.historyBuffer.indexOf(t);
-      r > -1 && this.historyBuffer.splice(r, 1), t.length && this.historyBuffer.push(t);
-    }
-    reset() {
-      this.initialPrefix = null, this.iterator = this.historyBuffer.length;
-    }
-  }
-  var Oe = {
-    /**
-     * @param {string} keys
-     * @param {vimKey[]} keyMap
-     * @param {InputStateInterface} inputState
-     * @param {string} context
-     */
-    matchCommand: function(e, t, r, n) {
-      var i = xr(e, t, n, r), a = i.full[0];
-      if (!a)
-        return i.partial.length ? {
-          type: "partial",
-          expectLiteralNext: i.partial.length == 1 && i.partial[0].keys.slice(-11) == "<character>"
-          // langmap literal logic
-        } : { type: "none" };
-      if (a.keys.slice(-11) == "<character>" || a.keys.slice(-10) == "<register>") {
-        var s = Lr(e);
-        if (!s || s.length > 1) return { type: "clear" };
-        r.selectedCharacter = s;
-      }
-      return { type: "full", command: a };
-    },
-    /**
-     * @arg {CodeMirrorV} cm
-     * @arg {vimState} vim
-     * @arg {vimKey} command
-     */
-    processCommand: function(e, t, r) {
-      switch (t.inputState.repeatOverride = r.repeatOverride, r.type) {
-        case "motion":
-          this.processMotion(e, t, r);
-          break;
-        case "operator":
-          this.processOperator(e, t, r);
-          break;
-        case "operatorMotion":
-          this.processOperatorMotion(e, t, r);
-          break;
-        case "action":
-          this.processAction(e, t, r);
-          break;
-        case "search":
-          this.processSearch(e, t, r);
-          break;
-        case "ex":
-        case "keyToEx":
-          this.processEx(e, t, r);
-          break;
-      }
-    },
-    /**
-     * @arg {CodeMirrorV} cm
-     * @arg {vimState} vim
-     * @arg {import("./types").motionCommand|import("./types").operatorMotionCommand} command
-     */
-    processMotion: function(e, t, r) {
-      t.inputState.motion = r.motion, t.inputState.motionArgs = /**@type {MotionArgs}*/
-      qe(r.motionArgs), this.evalInput(e, t);
-    },
-    /**
-     * @arg {CodeMirrorV} cm
-     * @arg {vimState} vim
-     * @arg {import("./types").operatorCommand|import("./types").operatorMotionCommand} command
-     */
-    processOperator: function(e, t, r) {
-      var n = t.inputState;
-      if (n.operator)
-        if (n.operator == r.operator) {
-          n.motion = "expandToLine", n.motionArgs = { linewise: !0, repeat: 1 }, this.evalInput(e, t);
-          return;
-        } else
-          Y(e);
-      n.operator = r.operator, n.operatorArgs = qe(r.operatorArgs), r.keys.length > 1 && (n.operatorShortcut = r.keys), r.exitVisualBlock && (t.visualBlock = !1, _e(e)), t.visualMode && this.evalInput(e, t);
-    },
-    /**
-     * @arg {CodeMirrorV} cm
-     * @arg {vimState} vim
-     * @arg {import("./types").operatorMotionCommand} command
-     */
-    processOperatorMotion: function(e, t, r) {
-      var n = t.visualMode, i = qe(r.operatorMotionArgs);
-      i && n && i.visualLine && (t.visualLine = !0), this.processOperator(e, t, r), n || this.processMotion(e, t, r);
-    },
-    /**
-     * @arg {CodeMirrorV} cm
-     * @arg {vimState} vim
-     * @arg {import("./types").actionCommand} command
-     */
-    processAction: function(e, t, r) {
-      var n = t.inputState, i = n.getRepeat(), a = !!i, s = (
-        /**@type {ActionArgs}*/
-        qe(r.actionArgs) || { repeat: 1 }
-      );
-      n.selectedCharacter && (s.selectedCharacter = n.selectedCharacter), r.operator && this.processOperator(e, t, r), r.motion && this.processMotion(e, t, r), (r.motion || r.operator) && this.evalInput(e, t), s.repeat = i || 1, s.repeatIsExplicit = a, s.registerName = n.registerName, Y(e), t.lastMotion = null, r.isEdit && this.recordLastEdit(t, n, r), De[r.action](e, s, t);
-    },
-    /** @arg {CodeMirrorV} cm @arg {vimState} vim @arg {import("./types").searchCommand} command*/
-    processSearch: function(e, t, r) {
-      if (!e.getSearchCursor)
-        return;
-      var n = r.searchArgs.forward, i = r.searchArgs.wholeWordOnly;
-      ye(e).setReversed(!n);
-      var a = n ? "/" : "?", s = ye(e).getQuery(), l = e.getScrollInfo(), u = "";
-      function d(M, E, N) {
-        T.searchHistoryController.pushInput(M), T.searchHistoryController.reset();
-        try {
-          je(e, M, E, N);
-        } catch {
-          K(e, "Invalid regex: " + M), Y(e);
-          return;
-        }
-        Oe.processMotion(e, t, {
-          keys: "",
-          type: "motion",
-          motion: "findNext",
-          motionArgs: { forward: !0, toJumplist: r.searchArgs.toJumplist }
-        });
-      }
-      function h(M) {
-        e.scrollTo(l.left, l.top), d(
-          M,
-          !0,
-          !0
-          /** smartCase */
-        );
-        var E = T.macroModeState;
-        E.isRecording && ln(E, M);
-      }
-      function g() {
-        return le("pcre") ? "(JavaScript regexp: set pcre)" : "(Vim regexp: set nopcre)";
-      }
-      function C(M, E, N) {
-        var R = We(M), U, J;
-        R == "<Up>" || R == "<Down>" ? (U = R == "<Up>", J = M.target ? M.target.selectionEnd : 0, E = T.searchHistoryController.nextMatch(E, U) || "", N(E), J && M.target && (M.target.selectionEnd = M.target.selectionStart = Math.min(J, M.target.value.length))) : R && R != "<Left>" && R != "<Right>" && T.searchHistoryController.reset(), u = E, m();
-      }
-      function m() {
-        var M;
-        try {
-          M = je(
-            e,
-            u,
-            !0,
-            !0
-            /** smartCase */
-          );
-        } catch {
-        }
-        M ? e.scrollIntoView(Vt(e, !n, M), 30) : (Fe(e), e.scrollTo(l.left, l.top));
-      }
-      function v(M, E, N) {
-        var R = We(M);
-        R == "<Esc>" || R == "<C-c>" || R == "<C-[>" || R == "<BS>" && E == "" ? (T.searchHistoryController.pushInput(E), T.searchHistoryController.reset(), je(e, (s == null ? void 0 : s.source) || ""), Fe(e), e.scrollTo(l.left, l.top), f.e_stop(M), Y(e), N(), e.focus()) : R == "<Up>" || R == "<Down>" ? f.e_stop(M) : R == "<C-u>" && (f.e_stop(M), N(""));
-      }
-      switch (r.searchArgs.querySrc) {
-        case "prompt":
-          var w = T.macroModeState;
-          if (w.isPlaying) {
-            let E = w.replaySearchQueries.shift();
-            d(
-              E || "",
-              !0,
-              !1
-              /** smartCase */
-            );
-          } else
-            Xe(e, {
-              onClose: h,
-              prefix: a,
-              desc: me(
-                "span",
-                {
-                  $cursor: "pointer",
-                  onmousedown: function(E) {
-                    E.preventDefault(), Je("pcre", !le("pcre")), this.textContent = g(), m();
-                  }
-                },
-                g()
-              ),
-              onKeyUp: C,
-              onKeyDown: v
-            });
-          break;
-        case "wordUnderCursor":
-          var S = at(e, { noSymbol: !0 }), A = !0;
-          if (S || (S = at(e, { noSymbol: !1 }), A = !1), !S) {
-            K(e, "No word under cursor"), Y(e);
-            return;
-          }
-          let M = e.getLine(S.start.line).substring(
-            S.start.ch,
-            S.end.ch
-          );
-          A && i ? M = "\\b" + M + "\\b" : M = br(M), T.jumpList.cachedCursor = e.getCursor(), e.setCursor(S.start), d(
-            M,
-            !0,
-            !1
-            /** smartCase */
-          );
-          break;
-      }
-    },
-    /**
-     * @arg {CodeMirrorV} cm
-     * @arg {vimState} vim
-     * @arg {import("./types").exCommand | import("./types").keyToExCommand} command
-     */
-    processEx: function(e, t, r) {
-      function n(l) {
-        T.exCommandHistoryController.pushInput(l), T.exCommandHistoryController.reset(), se.processCommand(e, l), e.state.vim && Y(e), Fe(e);
-      }
-      function i(l, u, d) {
-        var h = We(l), g, C;
-        (h == "<Esc>" || h == "<C-c>" || h == "<C-[>" || h == "<BS>" && u == "") && (T.exCommandHistoryController.pushInput(u), T.exCommandHistoryController.reset(), f.e_stop(l), Y(e), Fe(e), d(), e.focus()), h == "<Up>" || h == "<Down>" ? (f.e_stop(l), g = h == "<Up>", C = l.target ? l.target.selectionEnd : 0, u = T.exCommandHistoryController.nextMatch(u, g) || "", d(u), C && l.target && (l.target.selectionEnd = l.target.selectionStart = Math.min(C, l.target.value.length))) : h == "<C-u>" ? (f.e_stop(l), d("")) : h && h != "<Left>" && h != "<Right>" && T.exCommandHistoryController.reset();
-      }
-      function a(l, u) {
-        var d = new f.StringStream(u), h = (
-          /**@type{import("./types").exCommandArgs}*/
-          {}
-        );
-        try {
-          if (se.parseInput_(e, d, h), h.commandName != "s") {
-            Fe(e);
-            return;
-          }
-          var g = se.matchCommand_(h.commandName);
-          if (!g || (se.parseCommandArgs_(d, h, g), !h.argString)) return;
-          var C = Ht(h.argString.slice(1), !0, !0);
-          C && st(e, C);
-        } catch {
-        }
-      }
-      if (r.type == "keyToEx")
-        se.processCommand(e, r.exArgs.input);
-      else {
-        var s = {
-          onClose: n,
-          onKeyDown: i,
-          onKeyUp: a,
-          prefix: ":"
-        };
-        t.visualMode && (s.value = "'<,'>", s.selectValueOnOpen = !1), Xe(e, s);
-      }
-    },
-    /**@arg {CodeMirrorV} cm   @arg {vimState} vim */
-    evalInput: function(e, t) {
-      var r = t.inputState, n = r.motion, i = r.motionArgs || { repeat: 1 }, a = r.operator, s = r.operatorArgs || {}, l = r.registerName, u = t.sel, d = V(t.visualMode ? re(e, u.head) : e.getCursor("head")), h = V(t.visualMode ? re(e, u.anchor) : e.getCursor("anchor")), g = V(d), C = V(h), m, v, w;
-      if (a && this.recordLastEdit(t, r), r.repeatOverride !== void 0 ? w = r.repeatOverride : w = r.getRepeat(), w > 0 && i.explicitRepeat ? i.repeatIsExplicit = !0 : (i.noRepeat || !i.explicitRepeat && w === 0) && (w = 1, i.repeatIsExplicit = !1), r.selectedCharacter && (i.selectedCharacter = s.selectedCharacter = r.selectedCharacter), i.repeat = w, Y(e), n) {
-        var S = we[n](e, d, i, t, r);
-        if (t.lastMotion = we[n], !S)
-          return;
-        if (i.toJumplist) {
-          var A = T.jumpList, M = A.cachedCursor;
-          M ? (At(e, M, S), delete A.cachedCursor) : At(e, d, S);
-        }
-        S instanceof Array ? (v = S[0], m = S[1]) : m = S, m || (m = V(d)), t.visualMode ? (t.visualBlock && m.ch === 1 / 0 || (m = re(e, m, g)), v && (v = re(e, v)), v = v || C, u.anchor = v, u.head = m, _e(e), be(
-          e,
-          t,
-          "<",
-          q(v, m) ? v : m
-        ), be(
-          e,
-          t,
-          ">",
-          q(v, m) ? m : v
-        )) : a || (m = re(e, m, g), e.setCursor(m.line, m.ch));
-      }
-      if (a) {
-        if (s.lastSel) {
-          v = C;
-          var E = s.lastSel, N = Math.abs(E.head.line - E.anchor.line), R = Math.abs(E.head.ch - E.anchor.ch);
-          E.visualLine ? m = new o(C.line + N, C.ch) : E.visualBlock ? m = new o(C.line + N, C.ch + R) : E.head.line == E.anchor.line ? m = new o(C.line, C.ch + R) : m = new o(C.line + N, C.ch), t.visualMode = !0, t.visualLine = E.visualLine, t.visualBlock = E.visualBlock, u = t.sel = {
-            anchor: v,
-            head: m
-          }, _e(e);
-        } else t.visualMode && (s.lastSel = {
-          anchor: V(u.anchor),
-          head: V(u.head),
-          visualBlock: t.visualBlock,
-          visualLine: t.visualLine
-        });
-        var U, J, P, O, $;
-        if (t.visualMode) {
-          U = ne(u.head, u.anchor), J = Te(u.head, u.anchor), P = t.visualLine || s.linewise, O = t.visualBlock ? "block" : P ? "line" : "char";
-          var de = c(e, U, J);
-          if ($ = it(e, {
-            anchor: de.start,
-            head: de.end
-          }, O), P) {
-            var ee = $.ranges;
-            if (O == "block")
-              for (var pe = 0; pe < ee.length; pe++)
-                ee[pe].head.ch = te(e, ee[pe].head.line);
-            else O == "line" && (ee[0].head = new o(ee[0].head.line + 1, 0));
-          }
-        } else {
-          if (U = V(v || C), J = V(m || g), q(J, U)) {
-            var Ee = U;
-            U = J, J = Ee;
-          }
-          P = i.linewise || s.linewise, P ? Br(e, U, J) : i.forward && Ir(e, U, J), O = "char";
-          var fn = !i.inclusive || P, de = c(e, U, J);
-          $ = it(e, {
-            anchor: de.start,
-            head: de.end
-          }, O, fn);
-        }
-        e.setSelections($.ranges, $.primary), t.lastMotion = null, s.repeat = w, s.registerName = l, s.linewise = P;
-        var ct = rt[a](
-          e,
-          s,
-          $.ranges,
-          C,
-          m
-        );
-        t.visualMode && Se(e, ct != null), ct && e.setCursor(ct);
-      }
-    },
-    /**@arg {vimState} vim  @arg {InputStateInterface} inputState, @arg {import("./types").actionCommand} [actionCommand] */
-    recordLastEdit: function(e, t, r) {
-      var n = T.macroModeState;
-      n.isPlaying || (e.lastEditInputState = t, e.lastEditActionCommand = r, n.lastInsertModeChanges.changes = [], n.lastInsertModeChanges.expectCursorActivityForChange = !1, n.lastInsertModeChanges.visualBlock = e.visualBlock ? e.sel.head.line - e.sel.anchor.line : 0);
-    }
-  }, we = {
-    moveToTopLine: function(e, t, r) {
-      var n = lt(e).top + r.repeat - 1;
-      return new o(n, xe(e.getLine(n)));
-    },
-    moveToMiddleLine: function(e) {
-      var t = lt(e), r = Math.floor((t.top + t.bottom) * 0.5);
-      return new o(r, xe(e.getLine(r)));
-    },
-    moveToBottomLine: function(e, t, r) {
-      var n = lt(e).bottom - r.repeat + 1;
-      return new o(n, xe(e.getLine(n)));
-    },
-    expandToLine: function(e, t, r) {
-      var n = t;
-      return new o(n.line + r.repeat - 1, 1 / 0);
-    },
-    findNext: function(e, t, r) {
-      var n = ye(e), i = n.getQuery();
-      if (i) {
-        var a = !r.forward;
-        a = n.isReversed() ? !a : a, st(e, i);
-        var s = Vt(e, a, i, r.repeat);
-        return s || K(e, "No match found " + i + (le("pcre") ? " (set nopcre to use Vim regexps)" : "")), s;
-      }
-    },
-    /**
-     * Find and select the next occurrence of the search query. If the cursor is currently
-     * within a match, then find and select the current match. Otherwise, find the next occurrence in the
-     * appropriate direction.
-     *
-     * This differs from `findNext` in the following ways:
-     *
-     * 1. Instead of only returning the "from", this returns a "from", "to" range.
-     * 2. If the cursor is currently inside a search match, this selects the current match
-     *    instead of the next match.
-     * 3. If there is no associated operator, this will turn on visual mode.
-     */
-    findAndSelectNextInclusive: function(e, t, r, n, i) {
-      var a = ye(e), s = a.getQuery();
-      if (s) {
-        var l = !r.forward;
-        l = a.isReversed() ? !l : l;
-        var u = Gr(e, l, s, r.repeat, n);
-        if (u) {
-          if (i.operator)
-            return u;
-          var d = u[0], h = new o(u[1].line, u[1].ch - 1);
-          if (n.visualMode) {
-            (n.visualLine || n.visualBlock) && (n.visualLine = !1, n.visualBlock = !1, f.signal(e, "vim-mode-change", { mode: "visual", subMode: "" }));
-            var g = n.sel.anchor;
-            if (g)
-              return a.isReversed() ? r.forward ? [g, d] : [g, h] : r.forward ? [g, h] : [g, d];
-          } else
-            n.visualMode = !0, n.visualLine = !1, n.visualBlock = !1, f.signal(e, "vim-mode-change", { mode: "visual", subMode: "" });
-          return l ? [h, d] : [d, h];
-        }
-      }
-    },
-    goToMark: function(e, t, r, n) {
-      var i = Ge(e, n, r.selectedCharacter || "");
-      return i ? r.linewise ? { line: i.line, ch: xe(e.getLine(i.line)) } : i : null;
-    },
-    moveToOtherHighlightedEnd: function(e, t, r, n) {
-      var i = n.sel;
-      return n.visualBlock && r.sameLine ? [
-        re(e, new o(i.anchor.line, i.head.ch)),
-        re(e, new o(i.head.line, i.anchor.ch))
-      ] : [i.head, i.anchor];
-    },
-    jumpToMark: function(e, t, r, n) {
-      for (var i = t, a = 0; a < r.repeat; a++) {
-        var s = i;
-        for (var l in n.marks)
-          if (ae(l)) {
-            var u = n.marks[l].find(), d = r.forward ? (
-              // @ts-ignore
-              q(u, s)
-            ) : q(s, u);
-            if (!d && !(r.linewise && u.line == s.line)) {
-              var h = he(s, i), g = r.forward ? (
-                // @ts-ignore
-                Mt(s, u, i)
-              ) : (
-                // @ts-ignore
-                Mt(i, u, s)
-              );
-              (h || g) && (i = u);
-            }
-          }
-      }
-      return r.linewise && (i = new o(i.line, xe(e.getLine(i.line)))), i;
-    },
-    moveByCharacters: function(e, t, r) {
-      var n = t, i = r.repeat, a = r.forward ? n.ch + i : n.ch - i;
-      return new o(n.line, a);
-    },
-    moveByLines: function(e, t, r, n) {
-      var i = t, a = i.ch;
-      switch (n.lastMotion) {
-        case this.moveByLines:
-        case this.moveByDisplayLines:
-        case this.moveByScroll:
-        case this.moveToColumn:
-        case this.moveToEol:
-          a = n.lastHPos;
-          break;
-        default:
-          n.lastHPos = a;
-      }
-      var s = r.repeat + (r.repeatOffset || 0), l = r.forward ? i.line + s : i.line - s, u = e.firstLine(), d = e.lastLine(), h = e.findPosV(i, r.forward ? s : -s, "line", n.lastHSPos), g = r.forward ? h.line > l : h.line < l;
-      return g && (l = h.line, a = h.ch), l < u && i.line == u ? this.moveToStartOfLine(e, t, r, n) : l > d && i.line == d ? It(e, t, r, n, !0) : (r.toFirstChar && (a = xe(e.getLine(l)), n.lastHPos = a), n.lastHSPos = e.charCoords(new o(l, a), "div").left, new o(l, a));
-    },
-    moveByDisplayLines: function(e, t, r, n) {
-      var i = t;
-      switch (n.lastMotion) {
-        case this.moveByDisplayLines:
-        case this.moveByScroll:
-        case this.moveByLines:
-        case this.moveToColumn:
-        case this.moveToEol:
-          break;
-        default:
-          n.lastHSPos = e.charCoords(i, "div").left;
-      }
-      var a = r.repeat, s = e.findPosV(i, r.forward ? a : -a, "line", n.lastHSPos);
-      if (s.hitSide)
-        if (r.forward) {
-          var l = e.charCoords(s, "div"), u = { top: l.top + 8, left: n.lastHSPos };
-          s = e.coordsChar(u, "div");
-        } else {
-          var d = e.charCoords(new o(e.firstLine(), 0), "div");
-          d.left = n.lastHSPos, s = e.coordsChar(d, "div");
-        }
-      return n.lastHPos = s.ch, s;
-    },
-    moveByPage: function(e, t, r) {
-      var n = t, i = r.repeat;
-      return e.findPosV(n, r.forward ? i : -i, "page");
-    },
-    moveByParagraph: function(e, t, r) {
-      var n = r.forward ? 1 : -1;
-      return Bt(e, t, r.repeat, n).start;
-    },
-    moveBySentence: function(e, t, r) {
-      var n = r.forward ? 1 : -1;
-      return Hr(e, t, r.repeat, n);
-    },
-    moveByScroll: function(e, t, r, n) {
-      var i = e.getScrollInfo(), a = null, s = r.repeat;
-      s || (s = i.clientHeight / (2 * e.defaultTextHeight()));
-      var l = e.charCoords(t, "local");
-      if (r.repeat = s, a = we.moveByDisplayLines(e, t, r, n), !a)
-        return null;
-      var u = e.charCoords(a, "local");
-      return e.scrollTo(null, i.top + u.top - l.top), a;
-    },
-    moveByWords: function(e, t, r) {
-      return Dr(
-        e,
-        t,
-        r.repeat,
-        !!r.forward,
-        !!r.wordEnd,
-        !!r.bigWord
-      );
-    },
-    moveTillCharacter: function(e, t, r) {
-      var n = r.repeat, i = ot(
-        e,
-        n,
-        r.forward,
-        r.selectedCharacter,
-        t
-      ), a = r.forward ? -1 : 1;
-      return Ot(a, r), i ? (i.ch += a, i) : null;
-    },
-    moveToCharacter: function(e, t, r) {
-      var n = r.repeat;
-      return Ot(0, r), ot(
-        e,
-        n,
-        r.forward,
-        r.selectedCharacter,
-        t
-      ) || t;
-    },
-    moveToSymbol: function(e, t, r) {
-      var n = r.repeat;
-      return r.selectedCharacter && Kr(
-        e,
-        n,
-        r.forward,
-        r.selectedCharacter
-      ) || t;
-    },
-    moveToColumn: function(e, t, r, n) {
-      var i = r.repeat;
-      return n.lastHPos = i - 1, n.lastHSPos = e.charCoords(t, "div").left, _r(e, i);
-    },
-    moveToEol: function(e, t, r, n) {
-      return It(e, t, r, n, !1);
-    },
-    moveToFirstNonWhiteSpaceCharacter: function(e, t) {
-      var r = t;
-      return new o(
-        r.line,
-        xe(e.getLine(r.line))
-      );
-    },
-    moveToMatchedSymbol: function(e, t) {
-      for (var r = t, n = r.line, i = r.ch, a = e.getLine(n), s; i < a.length; i++)
-        if (s = a.charAt(i), s && ce(s)) {
-          var l = e.getTokenTypeAt(new o(n, i + 1));
-          if (l !== "string" && l !== "comment")
-            break;
-        }
-      if (i < a.length) {
-        var u = s === "<" || s === ">" ? /[(){}[\]<>]/ : /[(){}[\]]/, d = e.findMatchingBracket(new o(n, i), { bracketRegex: u });
-        return d.to;
-      } else
-        return r;
-    },
-    moveToStartOfLine: function(e, t) {
-      return new o(t.line, 0);
-    },
-    moveToLineOrEdgeOfDocument: function(e, t, r) {
-      var n = r.forward ? e.lastLine() : e.firstLine();
-      return r.repeatIsExplicit && (n = r.repeat - e.getOption("firstLineNumber")), new o(
-        n,
-        xe(e.getLine(n))
-      );
-    },
-    moveToStartOfDisplayLine: function(e) {
-      return e.execCommand("goLineLeft"), e.getCursor();
-    },
-    moveToEndOfDisplayLine: function(e) {
-      e.execCommand("goLineRight");
-      var t = e.getCursor();
-      return t.sticky == "before" && t.ch--, t;
-    },
-    textObjectManipulation: function(e, t, r, n) {
-      var i = {
-        "(": ")",
-        ")": "(",
-        "{": "}",
-        "}": "{",
-        "[": "]",
-        "]": "[",
-        "<": ">",
-        ">": "<"
-      }, a = { "'": !0, '"': !0, "`": !0 }, s = r.selectedCharacter || "";
-      s == "b" ? s = "(" : s == "B" && (s = "{");
-      var l = !r.textObjectInner, u, d;
-      if (i[s]) {
-        if (d = !0, u = Pt(e, t, s, l), !u) {
-          var h = e.getSearchCursor(new RegExp("\\" + s, "g"), t);
-          h.find() && (u = Pt(e, h.from(), s, l));
-        }
-      } else if (a[s])
-        d = !0, u = Vr(e, t, s, l);
-      else if (s === "W" || s === "w")
-        for (var g = r.repeat || 1; g-- > 0; ) {
-          var C = at(e, {
-            inclusive: l,
-            innerWord: !l,
-            bigWord: s === "W",
-            noSymbol: s === "W",
-            multiline: !0
-          }, u && u.end);
-          C && (u || (u = C), u.end = C.end);
-        }
-      else if (s === "p")
-        if (u = Bt(e, t, r.repeat, 0, l), r.linewise = !0, n.visualMode)
-          n.visualLine || (n.visualLine = !0);
-        else {
-          var m = n.inputState.operatorArgs;
-          m && (m.linewise = !0), u.end.line--;
-        }
-      else if (s === "t")
-        u = Nr(e, t, l);
-      else if (s === "s") {
-        var v = e.getLine(t.line);
-        t.ch > 0 && Ie(v[t.ch]) && (t.ch -= 1);
-        var w = Nt(e, t, r.repeat, 1, l), S = Nt(e, t, r.repeat, -1, l);
-        Z(e.getLine(S.line)[S.ch]) && Z(e.getLine(w.line)[w.ch - 1]) && (S = { line: S.line, ch: S.ch + 1 }), u = { start: S, end: w };
-      }
-      return u ? e.state.vim.visualMode ? Er(e, u.start, u.end, d) : [u.start, u.end] : null;
-    },
-    repeatLastCharacterSearch: function(e, t, r) {
-      var n = T.lastCharacterSearch, i = r.repeat, a = r.forward === n.forward, s = (n.increment ? 1 : 0) * (a ? -1 : 1);
-      e.moveH(-s, "char"), r.inclusive = !!a;
-      var l = ot(e, i, a, n.selectedCharacter);
-      return l ? (l.ch += s, l) : (e.moveH(s, "char"), t);
-    }
-  };
-  function kr(e, t) {
-    we[e] = t;
-  }
-  function St(e, t) {
-    for (var r = [], n = 0; n < t; n++)
-      r.push(e);
-    return r;
-  }
-  var rt = {
-    change: function(e, t, r) {
-      var n, i, a = e.state.vim, s = r[0].anchor, l = r[0].head;
-      if (a.visualMode)
-        if (t.fullLine)
-          l.ch = Number.MAX_VALUE, l.line--, e.setSelection(s, l), i = e.getSelection(), e.replaceSelection(""), n = s;
-        else {
-          i = e.getSelection();
-          var h = St("", r.length);
-          e.replaceSelections(h), n = ne(r[0].head, r[0].anchor);
-        }
-      else {
-        i = e.getRange(s, l);
-        var u = a.lastEditInputState;
-        if ((u == null ? void 0 : u.motion) == "moveByWords" && !Z(i)) {
-          var d = /\s+$/.exec(i);
-          d && u.motionArgs && u.motionArgs.forward && (l = G(l, 0, -d[0].length), i = i.slice(0, -d[0].length));
-        }
-        t.linewise && (s = new o(s.line, xe(e.getLine(s.line))), l.line > s.line && (l = new o(l.line - 1, Number.MAX_VALUE))), e.replaceRange("", s, l), n = s;
-      }
-      T.registerController.pushText(
-        t.registerName,
-        "change",
-        i,
-        t.linewise,
-        r.length > 1
-      ), De.enterInsertMode(e, { head: n }, e.state.vim);
-    },
-    delete: function(e, t, r) {
-      var n, i, a = e.state.vim;
-      if (a.visualBlock) {
-        i = e.getSelection();
-        var u = St("", r.length);
-        e.replaceSelections(u), n = ne(r[0].head, r[0].anchor);
-      } else {
-        var s = r[0].anchor, l = r[0].head;
-        t.linewise && l.line != e.firstLine() && s.line == e.lastLine() && s.line == l.line - 1 && (s.line == e.firstLine() ? s.ch = 0 : s = new o(s.line - 1, te(e, s.line - 1))), i = e.getRange(s, l), e.replaceRange("", s, l), n = s, t.linewise && (n = we.moveToFirstNonWhiteSpaceCharacter(e, s));
-      }
-      return T.registerController.pushText(
-        t.registerName,
-        "delete",
-        i,
-        t.linewise,
-        a.visualBlock
-      ), re(e, n);
-    },
-    indent: function(e, t, r) {
-      var n = e.state.vim, i = n.visualMode && t.repeat || 1;
-      if (n.visualBlock) {
-        for (var a = e.getOption("tabSize"), s = e.getOption("indentWithTabs") ? "	" : " ".repeat(a), l, u = r.length - 1; u >= 0; u--)
-          if (l = ne(r[u].anchor, r[u].head), t.indentRight)
-            e.replaceRange(s.repeat(i), l, l);
-          else {
-            for (var d = e.getLine(l.line), h = 0, g = 0; g < i; g++) {
-              var C = d[l.ch + h];
-              if (C == "	")
-                h++;
-              else if (C == " ") {
-                h++;
-                for (var m = 1; m < s.length && (C = d[l.ch + h], C === " "); m++)
-                  h++;
-              } else
-                break;
-            }
-            e.replaceRange("", l, G(l, 0, h));
-          }
-        return l;
-      } else if (e.indentMore)
-        for (var g = 0; g < i; g++)
-          t.indentRight ? e.indentMore() : e.indentLess();
-      else {
-        var v = r[0].anchor.line, w = n.visualBlock ? r[r.length - 1].anchor.line : r[0].head.line;
-        t.linewise && w--;
-        for (var u = v; u <= w; u++)
-          for (var g = 0; g < i; g++)
-            e.indentLine(u, t.indentRight);
-      }
-      return we.moveToFirstNonWhiteSpaceCharacter(e, r[0].anchor);
-    },
-    indentAuto: function(e, t, r) {
-      return e.execCommand("indentAuto"), we.moveToFirstNonWhiteSpaceCharacter(e, r[0].anchor);
-    },
-    hardWrap: function(e, t, r, n) {
-      if (e.hardWrap) {
-        var i = r[0].anchor.line, a = r[0].head.line;
-        t.linewise && a--;
-        var s = e.hardWrap({ from: i, to: a });
-        return s > i && t.linewise && s--, t.keepCursor ? n : new o(s, 0);
-      }
-    },
-    changeCase: function(e, t, r, n, i) {
-      for (var a = e.getSelections(), s = [], l = t.toLower, u = 0; u < a.length; u++) {
-        var d = a[u], h = "";
-        if (l === !0)
-          h = d.toLowerCase();
-        else if (l === !1)
-          h = d.toUpperCase();
-        else
-          for (var g = 0; g < d.length; g++) {
-            var C = d.charAt(g);
-            h += ge(C) ? C.toLowerCase() : C.toUpperCase();
-          }
-        s.push(h);
-      }
-      return e.replaceSelections(s), t.shouldMoveCursor ? i : !e.state.vim.visualMode && t.linewise && r[0].anchor.line + 1 == r[0].head.line ? we.moveToFirstNonWhiteSpaceCharacter(e, n) : t.linewise ? n : ne(r[0].anchor, r[0].head);
-    },
-    yank: function(e, t, r, n) {
-      var i = e.state.vim, a = e.getSelection(), s = i.visualMode ? ne(i.sel.anchor, i.sel.head, r[0].head, r[0].anchor) : n;
-      return T.registerController.pushText(
-        t.registerName,
-        "yank",
-        a,
-        t.linewise,
-        i.visualBlock
-      ), s;
-    },
-    rot13: function(e, t, r, n, i) {
-      for (var a = e.getSelections(), s = [], l = 0; l < a.length; l++) {
-        const u = a[l].split("").map((d) => {
-          const h = d.charCodeAt(0);
-          return h >= 65 && h <= 90 ? String.fromCharCode(65 + (h - 65 + 13) % 26) : h >= 97 && h <= 122 ? String.fromCharCode(97 + (h - 97 + 13) % 26) : d;
-        }).join("");
-        s.push(u);
-      }
-      return e.replaceSelections(s), t.shouldMoveCursor ? i : !e.state.vim.visualMode && t.linewise && r[0].anchor.line + 1 == r[0].head.line ? we.moveToFirstNonWhiteSpaceCharacter(e, n) : t.linewise ? n : ne(r[0].anchor, r[0].head);
-    }
-  };
-  function wr(e, t) {
-    rt[e] = t;
-  }
-  var De = {
-    jumpListWalk: function(e, t, r) {
-      if (!r.visualMode) {
-        var n = t.repeat || 1, i = t.forward, a = T.jumpList, s = a.move(e, i ? n : -n), l = s ? s.find() : void 0;
-        l = l || e.getCursor(), e.setCursor(l);
-      }
-    },
-    scroll: function(e, t, r) {
-      if (!r.visualMode) {
-        var n = t.repeat || 1, i = e.defaultTextHeight(), a = e.getScrollInfo().top, s = i * n, l = t.forward ? a + s : a - s, u = V(e.getCursor()), d = e.charCoords(u, "local");
-        if (t.forward)
-          l > d.top ? (u.line += (l - d.top) / i, u.line = Math.ceil(u.line), e.setCursor(u), d = e.charCoords(u, "local"), e.scrollTo(null, d.top)) : e.scrollTo(null, l);
-        else {
-          var h = l + e.getScrollInfo().clientHeight;
-          h < d.bottom ? (u.line -= (d.bottom - h) / i, u.line = Math.floor(u.line), e.setCursor(u), d = e.charCoords(u, "local"), e.scrollTo(
-            null,
-            d.bottom - e.getScrollInfo().clientHeight
-          )) : e.scrollTo(null, l);
-        }
-      }
-    },
-    scrollToCursor: function(e, t) {
-      var r = e.getCursor().line, n = e.charCoords(new o(r, 0), "local"), i = e.getScrollInfo().clientHeight, a = n.top;
-      switch (t.position) {
-        case "center":
-          a = n.bottom - i / 2;
-          break;
-        case "bottom":
-          var s = new o(r, e.getLine(r).length - 1), l = e.charCoords(s, "local"), u = l.bottom - a;
-          a = a - i + u;
-          break;
-      }
-      e.scrollTo(null, a);
-    },
-    replayMacro: function(e, t, r) {
-      var n = t.selectedCharacter || "", i = t.repeat || 1, a = T.macroModeState;
-      for (n == "@" ? n = a.latestRegister || "" : a.latestRegister = n; i--; )
-        an(e, r, a, n);
-    },
-    enterMacroRecordMode: function(e, t) {
-      var r = T.macroModeState, n = t.selectedCharacter;
-      T.registerController.isValidRegister(n) && r.enterMacroRecordMode(e, n);
-    },
-    toggleOverwrite: function(e) {
-      e.state.overwrite ? (e.toggleOverwrite(!1), e.setOption("keyMap", "vim-insert"), f.signal(e, "vim-mode-change", { mode: "insert" })) : (e.toggleOverwrite(!0), e.setOption("keyMap", "vim-replace"), f.signal(e, "vim-mode-change", { mode: "replace" }));
-    },
-    enterInsertMode: function(e, t, r) {
-      if (!e.getOption("readOnly")) {
-        r.insertMode = !0, r.insertModeRepeat = t && t.repeat || 1;
-        var n = t ? t.insertAt : null, i = r.sel, a = t.head || e.getCursor("head"), s = e.listSelections().length;
-        if (n == "eol")
-          a = new o(a.line, te(e, a.line));
-        else if (n == "bol")
-          a = new o(a.line, 0);
-        else if (n == "charAfter") {
-          var l = c(e, a, G(a, 0, 1));
-          a = l.end;
-        } else if (n == "firstNonBlank") {
-          var l = c(e, a, we.moveToFirstNonWhiteSpaceCharacter(e, a));
-          a = l.end;
-        } else if (n == "startOfSelectedArea") {
-          if (!r.visualMode)
-            return;
-          r.visualBlock ? (a = new o(
-            Math.min(i.head.line, i.anchor.line),
-            Math.min(i.head.ch, i.anchor.ch)
-          ), s = Math.abs(i.head.line - i.anchor.line) + 1) : i.head.line < i.anchor.line ? a = i.head : a = new o(i.anchor.line, 0);
-        } else if (n == "endOfSelectedArea") {
-          if (!r.visualMode)
-            return;
-          r.visualBlock ? (a = new o(
-            Math.min(i.head.line, i.anchor.line),
-            Math.max(i.head.ch, i.anchor.ch) + 1
-          ), s = Math.abs(i.head.line - i.anchor.line) + 1) : i.head.line >= i.anchor.line ? a = G(i.head, 0, 1) : a = new o(i.anchor.line, 0);
-        } else if (n == "inplace") {
-          if (r.visualMode)
-            return;
-        } else n == "lastEdit" && (a = $t(e) || a);
-        e.setOption("disableInput", !1), t && t.replace ? (e.toggleOverwrite(!0), e.setOption("keyMap", "vim-replace"), f.signal(e, "vim-mode-change", { mode: "replace" })) : (e.toggleOverwrite(!1), e.setOption("keyMap", "vim-insert"), f.signal(e, "vim-mode-change", { mode: "insert" })), T.macroModeState.isPlaying || (e.on("change", jt), r.insertEnd && r.insertEnd.clear(), r.insertEnd = e.setBookmark(a, { insertLeft: !0 }), f.on(e.getInputField(), "keydown", Jt)), r.visualMode && Se(e), bt(e, a, s);
-      }
-    },
-    toggleVisualMode: function(e, t, r) {
-      var n = t.repeat, i = e.getCursor(), a;
-      if (r.visualMode)
-        r.visualLine != !!t.linewise || r.visualBlock != !!t.blockwise ? (r.visualLine = !!t.linewise, r.visualBlock = !!t.blockwise, f.signal(e, "vim-mode-change", { mode: "visual", subMode: r.visualLine ? "linewise" : r.visualBlock ? "blockwise" : "" }), _e(e)) : Se(e);
-      else {
-        r.visualMode = !0, r.visualLine = !!t.linewise, r.visualBlock = !!t.blockwise, a = re(
-          e,
-          new o(i.line, i.ch + n - 1)
-        );
-        var s = c(e, i, a);
-        r.sel = {
-          anchor: s.start,
-          head: s.end
-        }, f.signal(e, "vim-mode-change", { mode: "visual", subMode: r.visualLine ? "linewise" : r.visualBlock ? "blockwise" : "" }), _e(e), be(e, r, "<", ne(i, a)), be(e, r, ">", Te(i, a));
-      }
-    },
-    reselectLastSelection: function(e, t, r) {
-      var n = r.lastSelection;
-      if (r.visualMode && Tt(e, r), n) {
-        var i = n.anchorMark.find(), a = n.headMark.find();
-        if (!i || !a)
-          return;
-        r.sel = {
-          anchor: i,
-          head: a
-        }, r.visualMode = !0, r.visualLine = n.visualLine, r.visualBlock = n.visualBlock, _e(e), be(e, r, "<", ne(i, a)), be(e, r, ">", Te(i, a)), f.signal(e, "vim-mode-change", {
-          mode: "visual",
-          subMode: r.visualLine ? "linewise" : r.visualBlock ? "blockwise" : ""
-        });
-      }
-    },
-    joinLines: function(e, t, r) {
-      var n, i;
-      if (r.visualMode) {
-        if (n = e.getCursor("anchor"), i = e.getCursor("head"), q(i, n)) {
-          var a = i;
-          i = n, n = a;
-        }
-        i.ch = te(e, i.line) - 1;
-      } else {
-        var s = Math.max(t.repeat, 2);
-        n = e.getCursor(), i = re(e, new o(
-          n.line + s - 1,
-          1 / 0
-        ));
-      }
-      for (var l = 0, u = n.line; u < i.line; u++) {
-        l = te(e, n.line);
-        var d = "", h = 0;
-        if (!t.keepSpaces) {
-          var g = e.getLine(n.line + 1);
-          h = g.search(/\S/), h == -1 ? h = g.length : d = " ";
-        }
-        e.replaceRange(
-          d,
-          new o(n.line, l),
-          new o(n.line + 1, h)
-        );
-      }
-      var C = re(e, new o(n.line, l));
-      r.visualMode && Se(e, !1), e.setCursor(C);
-    },
-    newLineAndEnterInsertMode: function(e, t, r) {
-      r.insertMode = !0;
-      var n = V(e.getCursor());
-      if (n.line === e.firstLine() && !t.after)
-        e.replaceRange(`
-`, new o(e.firstLine(), 0)), e.setCursor(e.firstLine(), 0);
-      else {
-        n.line = t.after ? n.line : n.line - 1, n.ch = te(e, n.line), e.setCursor(n);
-        var i = f.commands.newlineAndIndentContinueComment || f.commands.newlineAndIndent;
-        i(e);
-      }
-      this.enterInsertMode(e, { repeat: t.repeat }, r);
-    },
-    paste: function(e, t, r) {
-      var n = T.registerController.getRegister(
-        t.registerName
-      );
-      if (t.registerName === "+")
-        navigator.clipboard.readText().then((a) => {
-          this.continuePaste(e, t, r, a, n);
-        });
-      else {
-        var i = n.toString();
-        this.continuePaste(e, t, r, i, n);
-      }
-    },
-    continuePaste: function(e, t, r, n, i) {
-      var a = V(e.getCursor());
-      if (n) {
-        if (t.matchIndent) {
-          var s = e.getOption("tabSize"), l = function(ee) {
-            var pe = ee.split("	").length - 1, Ee = ee.split(" ").length - 1;
-            return pe * s + Ee * 1;
-          }, u = e.getLine(e.getCursor().line), d = l(u.match(/^\s*/)[0]), h = n.replace(/\n$/, ""), g = n !== h, C = l(n.match(/^\s*/)[0]), n = h.replace(/^\s*/gm, function(ee) {
-            var pe = d + (l(ee) - C);
-            if (pe < 0)
-              return "";
-            if (e.getOption("indentWithTabs")) {
-              var Ee = Math.floor(pe / s);
-              return Array(Ee + 1).join("	");
-            } else
-              return Array(pe + 1).join(" ");
-          });
-          n += g ? `
-` : "";
-        }
-        t.repeat > 1 && (n = Array(t.repeat + 1).join(n));
-        var m = i.linewise, v = i.blockwise, w = v ? n.split(`
-`) : void 0;
-        if (w) {
-          m && w.pop();
-          for (var S = 0; S < w.length; S++)
-            w[S] = w[S] == "" ? " " : w[S];
-          a.ch += t.after ? 1 : 0, a.ch = Math.min(te(e, a.line), a.ch);
-        } else m ? r.visualMode ? n = r.visualLine ? n.slice(0, -1) : `
-` + n.slice(0, n.length - 1) + `
-` : t.after ? (n = `
-` + n.slice(0, n.length - 1), a.ch = te(e, a.line)) : a.ch = 0 : a.ch += t.after ? 1 : 0;
-        var A;
-        if (r.visualMode) {
-          r.lastPastedText = n;
-          var M, E = Or(e), N = E[0], R = E[1], U = e.getSelection(), J = e.listSelections(), P = new Array(J.length).join("1").split("1");
-          r.lastSelection && (M = r.lastSelection.headMark.find()), T.registerController.unnamedRegister.setText(U), v ? (e.replaceSelections(P), R = new o(N.line + n.length - 1, N.ch), e.setCursor(N), Lt(e, R), e.replaceSelections(n), A = N) : r.visualBlock ? (e.replaceSelections(P), e.setCursor(N), e.replaceRange(n, N, N), A = N) : (e.replaceRange(n, N, R), A = e.posFromIndex(e.indexFromPos(N) + n.length - 1)), M && (r.lastSelection.headMark = e.setBookmark(M)), m && (A.ch = 0);
-        } else if (v && w) {
-          e.setCursor(a);
-          for (var S = 0; S < w.length; S++) {
-            var O = a.line + S;
-            O > e.lastLine() && e.replaceRange(`
-`, new o(O, 0));
-            var $ = te(e, O);
-            $ < a.ch && Tr(e, O, a.ch);
-          }
-          e.setCursor(a), Lt(e, new o(a.line + w.length - 1, a.ch)), e.replaceSelections(w), A = a;
-        } else if (e.replaceRange(n, a), m) {
-          var O = t.after ? a.line + 1 : a.line;
-          A = new o(O, xe(e.getLine(O)));
-        } else
-          A = V(a), /\n/.test(n) || (A.ch += n.length - (t.after ? 1 : 0));
-        r.visualMode && Se(e, !1), e.setCursor(A);
-      }
-    },
-    undo: function(e, t) {
-      e.operation(function() {
-        xt(e, f.commands.undo, t.repeat)(), e.setCursor(re(e, e.getCursor("start")));
-      });
-    },
-    redo: function(e, t) {
-      xt(e, f.commands.redo, t.repeat)();
-    },
-    setRegister: function(e, t, r) {
-      r.inputState.registerName = t.selectedCharacter;
-    },
-    insertRegister: function(e, t, r) {
-      var n = t.selectedCharacter, i = T.registerController.getRegister(n), a = i && i.toString();
-      a && e.replaceSelection(a);
-    },
-    oneNormalCommand: function(e, t, r) {
-      Ae(e, !0), r.insertModeReturn = !0, f.on(e, "vim-command-done", function n() {
-        r.visualMode || (r.insertModeReturn && (r.insertModeReturn = !1, r.insertMode || De.enterInsertMode(e, {}, r)), f.off(e, "vim-command-done", n));
-      });
-    },
-    setMark: function(e, t, r) {
-      var n = t.selectedCharacter;
-      n && be(e, r, n, e.getCursor());
-    },
-    replace: function(e, t, r) {
-      var n = t.selectedCharacter || "", i = e.getCursor(), a, s, l = e.listSelections();
-      if (r.visualMode)
-        i = e.getCursor("start"), s = e.getCursor("end");
-      else {
-        var u = e.getLine(i.line);
-        a = i.ch + t.repeat, a > u.length && (a = u.length), s = new o(i.line, a);
-      }
-      var d = c(e, i, s);
-      if (i = d.start, s = d.end, n == `
-`)
-        r.visualMode || e.replaceRange("", i, s), (f.commands.newlineAndIndentContinueComment || f.commands.newlineAndIndent)(e);
-      else {
-        var h = e.getRange(i, s);
-        if (h = h.replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, n), h = h.replace(/[^\n]/g, n), r.visualBlock) {
-          var g = new Array(e.getOption("tabSize") + 1).join(" ");
-          h = e.getSelection(), h = h.replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, n);
-          var C = h.replace(/\t/g, g).replace(/[^\n]/g, n).split(`
-`);
-          e.replaceSelections(C);
-        } else
-          e.replaceRange(h, i, s);
-        r.visualMode ? (i = q(l[0].anchor, l[0].head) ? l[0].anchor : l[0].head, e.setCursor(i), Se(e, !1)) : e.setCursor(G(s, 0, -1));
-      }
-    },
-    incrementNumberToken: function(e, t) {
-      for (var r = e.getCursor(), n = e.getLine(r.line), i = /(-?)(?:(0x)([\da-f]+)|(0b|0|)(\d+))/gi, a, s, l, u; (a = i.exec(n)) !== null && (s = a.index, l = s + a[0].length, !(r.ch < l)); )
-        ;
-      if (!(!t.backtrack && l <= r.ch)) {
-        if (a) {
-          var d = a[2] || a[4], h = a[3] || a[5], g = t.increase ? 1 : -1, C = { "0b": 2, 0: 8, "": 10, "0x": 16 }[d.toLowerCase()], m = parseInt(a[1] + h, C) + g * t.repeat;
-          u = m.toString(C);
-          var v = d ? new Array(h.length - u.length + 1 + a[1].length).join("0") : "";
-          u.charAt(0) === "-" ? u = "-" + d + v + u.substr(1) : u = d + v + u;
-          var w = new o(r.line, s), S = new o(r.line, l);
-          e.replaceRange(u, w, S);
-        } else
-          return;
-        e.setCursor(new o(r.line, s + u.length - 1));
-      }
-    },
-    repeatLastEdit: function(e, t, r) {
-      var n = r.lastEditInputState;
-      if (n) {
-        var i = t.repeat;
-        i && t.repeatIsExplicit ? n.repeatOverride = i : i = n.repeatOverride || i, zt(
-          e,
-          r,
-          i,
-          !1
-          /** repeatForInsert */
-        );
-      }
-    },
-    indent: function(e, t) {
-      e.indentLine(e.getCursor().line, t.indentRight);
-    },
-    exitInsertMode: function(e, t) {
-      Ae(e);
-    }
-  };
-  function Sr(e, t) {
-    De[e] = t;
-  }
-  function re(e, t, r) {
-    var n = e.state.vim, i = n.insertMode || n.visualMode, a = Math.min(Math.max(e.firstLine(), t.line), e.lastLine()), s = e.getLine(a), l = s.length - 1 + +!!i, u = Math.min(Math.max(0, t.ch), l), d = s.charCodeAt(u);
-    if (56320 <= d && d <= 57343) {
-      var h = 1;
-      r && r.line == a && r.ch > u && (h = -1), u += h, u > l && (u -= 2);
-    }
-    return new o(a, u);
-  }
-  function qe(e) {
-    var t = (
-      /**@type{typeof args}*/
-      {}
-    );
-    for (var r in e)
-      Object.prototype.hasOwnProperty.call(e, r) && (t[r] = e[r]);
-    return (
-      /**@type{typeof args}*/
-      t
-    );
-  }
-  function G(e, t, r) {
-    return typeof t == "object" && (r = t.ch, t = t.line), new o(e.line + t, e.ch + r);
-  }
-  function xr(e, t, r, n) {
-    n.operator && (r = "operatorPending");
-    for (var i, a = [], s = [], l = ze ? t.length - k : 0, u = l; u < t.length; u++) {
-      var d = t[u];
-      r == "insert" && d.context != "insert" || d.context && d.context != r || n.operator && d.type == "action" || !(i = Mr(e, d.keys)) || (i == "partial" && a.push(d), i == "full" && s.push(d));
-    }
-    return {
-      partial: a,
-      full: s
-    };
-  }
-  function Mr(e, t) {
-    const r = t.slice(-11) == "<character>", n = t.slice(-10) == "<register>";
-    if (r || n) {
-      var i = t.length - (r ? 11 : 10), a = e.slice(0, i), s = t.slice(0, i);
-      return a == s && e.length > i ? "full" : s.indexOf(a) == 0 ? "partial" : !1;
-    } else
-      return e == t ? "full" : t.indexOf(e) == 0 ? "partial" : !1;
-  }
-  function Lr(e) {
-    var t = /^.*(<[^>]+>)$/.exec(e), r = t ? t[1] : e.slice(-1);
-    if (r.length > 1)
-      switch (r) {
-        case "<CR>":
-        case "<S-CR>":
-          r = `
-`;
-          break;
-        case "<Space>":
-        case "<S-Space>":
-          r = " ";
-          break;
-        default:
-          r = "";
-          break;
-      }
-    return r;
-  }
-  function xt(e, t, r) {
-    return function() {
-      for (var n = 0; n < r; n++)
-        t(e);
-    };
-  }
-  function V(e) {
-    return new o(e.line, e.ch);
-  }
-  function he(e, t) {
-    return e.ch == t.ch && e.line == t.line;
-  }
-  function q(e, t) {
-    return e.line < t.line || e.line == t.line && e.ch < t.ch;
-  }
-  function ne(e, t) {
-    return arguments.length > 2 && (t = ne.apply(void 0, Array.prototype.slice.call(arguments, 1))), q(e, t) ? e : t;
-  }
-  function Te(e, t) {
-    return arguments.length > 2 && (t = Te.apply(void 0, Array.prototype.slice.call(arguments, 1))), q(e, t) ? t : e;
-  }
-  function Mt(e, t, r) {
-    var n = q(e, t), i = q(t, r);
-    return n && i;
-  }
-  function te(e, t) {
-    return e.getLine(t).length;
-  }
-  function nt(e) {
-    return e.trim ? e.trim() : e.replace(/^\s+|\s+$/g, "");
-  }
-  function br(e) {
-    return e.replace(/([.?*+$\[\]\/\\(){}|\-])/g, "\\$1");
-  }
-  function Tr(e, t, r) {
-    var n = te(e, t), i = new Array(r - n + 1).join(" ");
-    e.setCursor(new o(t, n)), e.replaceRange(i, e.getCursor());
-  }
-  function Lt(e, t) {
-    var r = [], n = e.listSelections(), i = V(e.clipPos(t)), a = !he(t, i), s = e.getCursor("head"), l = Ar(n, s), u = he(n[l].head, n[l].anchor), d = n.length - 1, h = d - l > l ? d : 0, g = n[h].anchor, C = Math.min(g.line, i.line), m = Math.max(g.line, i.line), v = g.ch, w = i.ch, S = n[h].head.ch - v, A = w - v;
-    S > 0 && A <= 0 ? (v++, a || w--) : S < 0 && A >= 0 ? (v--, u || w++) : S < 0 && A == -1 && (v--, w++);
-    for (var M = C; M <= m; M++) {
-      var E = { anchor: new o(M, v), head: new o(M, w) };
-      r.push(E);
-    }
-    return e.setSelections(r), t.ch = w, g.ch = v, g;
-  }
-  function bt(e, t, r) {
-    for (var n = [], i = 0; i < r; i++) {
-      var a = G(t, i, 0);
-      n.push({ anchor: a, head: a });
-    }
-    e.setSelections(n, 0);
-  }
-  function Ar(e, t, r) {
-    for (var n = 0; n < e.length; n++) {
-      var i = he(e[n].anchor, t), a = he(e[n].head, t);
-      if (i || a)
-        return n;
-    }
-    return -1;
-  }
-  function Or(e, t) {
-    var r = e.listSelections(), n = r[0], i = r[r.length - 1], a = q(n.anchor, n.head) ? n.anchor : n.head, s = q(i.anchor, i.head) ? i.head : i.anchor;
-    return [a, s];
-  }
-  function Tt(e, t) {
-    var r = t.sel.anchor, n = t.sel.head;
-    t.lastPastedText && (n = e.posFromIndex(e.indexFromPos(r) + t.lastPastedText.length), t.lastPastedText = void 0), t.lastSelection = {
-      anchorMark: e.setBookmark(r),
-      headMark: e.setBookmark(n),
-      anchor: V(r),
-      head: V(n),
-      visualMode: t.visualMode,
-      visualLine: t.visualLine,
-      visualBlock: t.visualBlock
-    };
-  }
-  function Er(e, t, r, n) {
-    var i = e.state.vim.sel, a = n ? t : i.head, s = n ? t : i.anchor, l;
-    return q(r, t) && (l = r, r = t, t = l), q(a, s) ? (a = ne(t, a), s = Te(s, r)) : (s = ne(t, s), a = Te(a, r), a = G(a, 0, -1), a.ch == -1 && a.line != e.firstLine() && (a = new o(a.line - 1, te(e, a.line - 1)))), [s, a];
-  }
-  function _e(e, t, r) {
-    var n = e.state.vim;
-    t = t || n.sel, r || (r = n.visualLine ? "line" : n.visualBlock ? "block" : "char");
-    var i = it(e, t, r);
-    e.setSelections(i.ranges, i.primary);
-  }
-  function it(e, t, r, n) {
-    var i = V(t.head), a = V(t.anchor);
-    if (r == "char") {
-      var s = !n && !q(t.head, t.anchor) ? 1 : 0, l = q(t.head, t.anchor) ? 1 : 0;
-      return i = G(t.head, 0, s), a = G(t.anchor, 0, l), {
-        ranges: [{ anchor: a, head: i }],
-        primary: 0
-      };
-    } else if (r == "line") {
-      if (q(t.head, t.anchor))
-        i.ch = 0, a.ch = te(e, a.line);
-      else {
-        a.ch = 0;
-        var u = e.lastLine();
-        i.line > u && (i.line = u), i.ch = te(e, i.line);
-      }
-      return {
-        ranges: [{ anchor: a, head: i }],
-        primary: 0
-      };
-    } else if (r == "block") {
-      var d = Math.min(a.line, i.line), h = a.ch, g = Math.max(a.line, i.line), C = i.ch;
-      h < C ? C += 1 : h += 1;
-      for (var m = g - d + 1, v = i.line == d ? 0 : m - 1, w = [], S = 0; S < m; S++)
-        w.push({
-          anchor: new o(d + S, h),
-          head: new o(d + S, C)
-        });
-      return {
-        ranges: w,
-        primary: v
-      };
-    }
-    throw "never happens";
-  }
-  function Rr(e) {
-    var t = e.getCursor("head");
-    return e.getSelection().length == 1 && (t = ne(t, e.getCursor("anchor"))), t;
-  }
-  function Se(e, t) {
-    var r = e.state.vim;
-    t !== !1 && e.setCursor(re(e, r.sel.head)), Tt(e, r), r.visualMode = !1, r.visualLine = !1, r.visualBlock = !1, r.insertMode || f.signal(e, "vim-mode-change", { mode: "normal" });
-  }
-  function Ir(e, t, r) {
-    var n = e.getRange(t, r);
-    if (/\n\s*$/.test(n)) {
-      var i = n.split(`
-`);
-      i.pop();
-      for (var a = i.pop(); i.length > 0 && a && Z(a); a = i.pop())
-        r.line--, r.ch = 0;
-      a ? (r.line--, r.ch = te(e, r.line)) : r.ch = 0;
-    }
-  }
-  function Br(e, t, r) {
-    t.ch = 0, r.ch = 0, r.line++;
-  }
-  function xe(e) {
-    if (!e)
-      return 0;
-    var t = e.search(/\S/);
-    return t == -1 ? e.length : t;
-  }
-  function at(e, { inclusive: t, innerWord: r, bigWord: n, noSymbol: i, multiline: a }, s) {
-    var l = s || Rr(e), u = e.getLine(l.line), d = u, h = l.line, g = h, C = l.ch, m, v = i ? j[0] : B[0];
-    if (r && /\s/.test(u.charAt(C)))
-      v = function(N) {
-        return /\s/.test(N);
-      };
-    else {
-      for (; !v(u.charAt(C)); )
-        if (C++, C >= u.length) {
-          if (!a) return null;
-          C--, m = Rt(e, l, !0, n, !0);
-          break;
-        }
-      n ? v = B[0] : (v = j[0], v(u.charAt(C)) || (v = j[1]));
-    }
-    for (var w = C, S = C; v(u.charAt(S)) && S >= 0; )
-      S--;
-    if (S++, m)
-      w = m.to, g = m.line, d = e.getLine(g), !d && w == 0 && w++;
-    else
-      for (; v(u.charAt(w)) && w < u.length; )
-        w++;
-    if (t) {
-      var A = w, M = l.ch <= S && /\s/.test(u.charAt(l.ch));
-      if (!M)
-        for (; /\s/.test(d.charAt(w)) && w < d.length; )
-          w++;
-      if (A == w || M) {
-        for (var E = S; /\s/.test(u.charAt(S - 1)) && S > 0; )
-          S--;
-        !S && !M && (S = E);
-      }
-    }
-    return { start: new o(h, S), end: new o(g, w) };
-  }
-  function Nr(e, t, r) {
-    var n = t;
-    if (!f.findMatchingTag || !f.findEnclosingTag)
-      return { start: n, end: n };
-    var i = f.findMatchingTag(e, t) || f.findEnclosingTag(e, t);
-    return !i || !i.open || !i.close ? { start: n, end: n } : r ? { start: i.open.from, end: i.close.to } : { start: i.open.to, end: i.close.from };
-  }
-  function At(e, t, r) {
-    he(t, r) || T.jumpList.add(e, t, r);
-  }
-  function Ot(e, t) {
-    T.lastCharacterSearch.increment = e, T.lastCharacterSearch.forward = t.forward, T.lastCharacterSearch.selectedCharacter = t.selectedCharacter;
-  }
-  var Pr = {
-    "(": "bracket",
-    ")": "bracket",
-    "{": "bracket",
-    "}": "bracket",
-    "[": "section",
-    "]": "section",
-    "*": "comment",
-    "/": "comment",
-    m: "method",
-    M: "method",
-    "#": "preprocess"
-  }, Et = {
-    bracket: {
-      isComplete: function(e) {
-        if (e.nextCh === e.symb) {
-          if (e.depth++, e.depth >= 1) return !0;
-        } else e.nextCh === e.reverseSymb && e.depth--;
-        return !1;
-      }
-    },
-    section: {
-      init: function(e) {
-        e.curMoveThrough = !0, e.symb = (e.forward ? "]" : "[") === e.symb ? "{" : "}";
-      },
-      isComplete: function(e) {
-        return e.index === 0 && e.nextCh === e.symb;
-      }
-    },
-    comment: {
-      isComplete: function(e) {
-        var t = e.lastCh === "*" && e.nextCh === "/";
-        return e.lastCh = e.nextCh, t;
-      }
-    },
-    // TODO: The original Vim implementation only operates on level 1 and 2.
-    // The current implementation doesn't check for code block level and
-    // therefore it operates on any levels.
-    method: {
-      init: function(e) {
-        e.symb = e.symb === "m" ? "{" : "}", e.reverseSymb = e.symb === "{" ? "}" : "{";
-      },
-      isComplete: function(e) {
-        return e.nextCh === e.symb;
-      }
-    },
-    preprocess: {
-      init: function(e) {
-        e.index = 0;
-      },
-      isComplete: function(e) {
-        var r;
-        if (e.nextCh === "#") {
-          var t = (r = e.lineText.match(/^#(\w+)/)) == null ? void 0 : r[1];
-          if (t === "endif") {
-            if (e.forward && e.depth === 0)
-              return !0;
-            e.depth++;
-          } else if (t === "if") {
-            if (!e.forward && e.depth === 0)
-              return !0;
-            e.depth--;
-          }
-          if (t === "else" && e.depth === 0) return !0;
-        }
-        return !1;
-      }
-    }
-  };
-  function Kr(e, t, r, n) {
-    var i = V(e.getCursor()), a = r ? 1 : -1, s = r ? e.lineCount() : -1, l = i.ch, u = i.line, d = e.getLine(u), h = {
-      lineText: d,
-      nextCh: d.charAt(l),
-      lastCh: null,
-      index: l,
-      symb: n,
-      reverseSymb: (r ? { ")": "(", "}": "{" } : { "(": ")", "{": "}" })[n],
-      forward: r,
-      depth: 0,
-      curMoveThrough: !1
-    }, g = Pr[n];
-    if (!g) return i;
-    var C = Et[g].init, m = Et[g].isComplete;
-    for (C && C(h); u !== s && t; ) {
-      if (h.index += a, h.nextCh = h.lineText.charAt(h.index), !h.nextCh) {
-        if (u += a, h.lineText = e.getLine(u) || "", a > 0)
-          h.index = 0;
-        else {
-          var v = h.lineText.length;
-          h.index = v > 0 ? v - 1 : 0;
-        }
-        h.nextCh = h.lineText.charAt(h.index);
-      }
-      m(h) && (i.line = u, i.ch = h.index, t--);
-    }
-    return h.nextCh || h.curMoveThrough ? new o(u, h.index) : i;
-  }
-  function Rt(e, t, r, n, i) {
-    var a = t.line, s = t.ch, l = e.getLine(a), u = r ? 1 : -1, d = n ? B : j;
-    if (i && l == "") {
-      if (a += u, l = e.getLine(a), !ie(e, a))
-        return null;
-      s = r ? 0 : l.length;
-    }
-    for (; ; ) {
-      if (i && l == "")
-        return { from: 0, to: 0, line: a };
-      for (var h = u > 0 ? l.length : -1, g = h, C = h; s != h; ) {
-        for (var m = !1, v = 0; v < d.length && !m; ++v)
-          if (d[v](l.charAt(s))) {
-            for (g = s; s != h && d[v](l.charAt(s)); )
-              s += u;
-            if (C = s, m = g != C, g == t.ch && a == t.line && C == g + u)
-              continue;
-            return {
-              from: Math.min(g, C + 1),
-              to: Math.max(g, C),
-              line: a
-            };
-          }
-        m || (s += u);
-      }
-      if (a += u, !ie(e, a))
-        return null;
-      l = e.getLine(a), s = u > 0 ? 0 : l.length;
-    }
-  }
-  function Dr(e, t, r, n, i, a) {
-    var s = V(t), l = [];
-    (n && !i || !n && i) && r++;
-    for (var u = !(n && i), d = 0; d < r; d++) {
-      var h = Rt(e, t, n, a, u);
-      if (!h) {
-        var g = te(e, e.lastLine());
-        l.push(n ? { line: e.lastLine(), from: g, to: g } : { line: 0, from: 0, to: 0 });
-        break;
-      }
-      l.push(h), t = new o(h.line, n ? h.to - 1 : h.from);
-    }
-    var C = l.length != r, m = l[0], v = l.pop();
-    return n && !i ? (!C && (m.from != s.ch || m.line != s.line) && (v = l.pop()), v && new o(v.line, v.from)) : n && i ? v && new o(v.line, v.to - 1) : !n && i ? (!C && (m.to != s.ch || m.line != s.line) && (v = l.pop()), v && new o(v.line, v.to)) : v && new o(v.line, v.from);
-  }
-  function It(e, t, r, n, i) {
-    var a = t, s = new o(a.line + r.repeat - 1, 1 / 0), l = e.clipPos(s);
-    return l.ch--, i || (n.lastHPos = 1 / 0, n.lastHSPos = e.charCoords(l, "div").left), s;
-  }
-  function ot(e, t, r, n, i) {
-    if (n) {
-      for (var a = i || e.getCursor(), s = a.ch, l, u = 0; u < t; u++) {
-        var d = e.getLine(a.line);
-        if (l = Fr(s, d, n, r), l == -1)
-          return;
-        s = l;
-      }
-      if (l != null)
-        return new o(e.getCursor().line, l);
-    }
-  }
-  function _r(e, t) {
-    var r = e.getCursor().line;
-    return re(e, new o(r, t - 1));
-  }
-  function be(e, t, r, n) {
-    !Ze(r, _) && !W.test(r) || (t.marks[r] && t.marks[r].clear(), t.marks[r] = e.setBookmark(n));
-  }
-  function Fr(e, t, r, n, i) {
-    var a;
-    return n ? a = t.indexOf(r, e + 1) : a = t.lastIndexOf(r, e - 1), a;
-  }
-  function Bt(e, t, r, n, i) {
-    var a = t.line, s = e.firstLine(), l = e.lastLine(), u, d, h = a;
-    function g(S) {
-      return !e.getLine(S);
-    }
-    function C(S, A, M) {
-      return M ? g(S) != g(S + A) : !g(S) && g(S + A);
-    }
-    if (n) {
-      for (; s <= h && h <= l && r > 0; )
-        C(h, n) && r--, h += n;
-      return { start: new o(h, 0), end: t };
-    }
-    var m = e.state.vim;
-    if (m.visualLine && C(a, 1, !0)) {
-      var v = m.sel.anchor;
-      C(v.line, -1, !0) && (!i || v.line != a) && (a += 1);
-    }
-    var w = g(a);
-    for (h = a; h <= l && r; h++)
-      C(h, 1, !0) && (!i || g(h) != w) && r--;
-    for (d = new o(h, 0), h > l && !w ? w = !0 : i = !1, h = a; h > s && !((!i || g(h) == w || h == a) && C(h, -1, !0)); h--)
-      ;
-    return u = new o(h, 0), { start: u, end: d };
-  }
-  function Nt(e, t, r, n, i) {
-    function a(d) {
-      d.line !== null && (d.pos + d.dir < 0 || d.pos + d.dir >= d.line.length ? d.line = null : d.pos += d.dir);
-    }
-    function s(d, h, g, C) {
-      var m = d.getLine(h), v = {
-        line: m,
-        ln: h,
-        pos: g,
-        dir: C
-      };
-      if (v.line === "")
-        return { ln: v.ln, pos: v.pos };
-      var w = v.pos;
-      for (a(v); v.line !== null; ) {
-        if (w = v.pos, Ie(v.line[v.pos]))
-          if (i) {
-            for (a(v); v.line !== null && Z(v.line[v.pos]); )
-              w = v.pos, a(v);
-            return { ln: v.ln, pos: w + 1 };
-          } else
-            return { ln: v.ln, pos: v.pos + 1 };
-        a(v);
-      }
-      return { ln: v.ln, pos: w + 1 };
-    }
-    function l(d, h, g, C) {
-      var m = d.getLine(h), v = {
-        line: m,
-        ln: h,
-        pos: g,
-        dir: C
-      };
-      if (v.line === "")
-        return { ln: v.ln, pos: v.pos };
-      var w = v.pos;
-      for (a(v); v.line !== null; ) {
-        if (!Z(v.line[v.pos]) && !Ie(v.line[v.pos]))
-          w = v.pos;
-        else if (Ie(v.line[v.pos]))
-          return i ? Z(v.line[v.pos + 1]) ? { ln: v.ln, pos: v.pos + 1 } : { ln: v.ln, pos: w } : { ln: v.ln, pos: w };
-        a(v);
-      }
-      return v.line = m, i && Z(v.line[v.pos]) ? { ln: v.ln, pos: v.pos } : { ln: v.ln, pos: w };
-    }
-    for (var u = {
-      ln: t.line,
-      pos: t.ch
-    }; r > 0; )
-      n < 0 ? u = l(e, u.ln, u.pos, n) : u = s(e, u.ln, u.pos, n), r--;
-    return new o(u.ln, u.pos);
-  }
-  function Hr(e, t, r, n) {
-    function i(u, d) {
-      if (d.line !== null)
-        if (d.pos + d.dir < 0 || d.pos + d.dir >= d.line.length) {
-          if (d.ln += d.dir, !ie(u, d.ln)) {
-            d.line = null;
-            return;
-          }
-          d.line = u.getLine(d.ln), d.pos = d.dir > 0 ? 0 : d.line.length - 1;
-        } else
-          d.pos += d.dir;
-    }
-    function a(u, d, h, g) {
-      var S = u.getLine(d), C = S === "", m = {
-        line: S,
-        ln: d,
-        pos: h,
-        dir: g
-      }, v = {
-        ln: m.ln,
-        pos: m.pos
-      }, w = m.line === "";
-      for (i(u, m); m.line !== null; ) {
-        if (v.ln = m.ln, v.pos = m.pos, m.line === "" && !w)
-          return { ln: m.ln, pos: m.pos };
-        if (C && m.line !== "" && !Z(m.line[m.pos]))
-          return { ln: m.ln, pos: m.pos };
-        Ie(m.line[m.pos]) && !C && (m.pos === m.line.length - 1 || Z(m.line[m.pos + 1])) && (C = !0), i(u, m);
-      }
-      var S = u.getLine(v.ln);
-      v.pos = 0;
-      for (var A = S.length - 1; A >= 0; --A)
-        if (!Z(S[A])) {
-          v.pos = A;
-          break;
-        }
-      return v;
-    }
-    function s(u, d, h, g) {
-      var S = u.getLine(d), C = {
-        line: S,
-        ln: d,
-        pos: h,
-        dir: g
-      }, m = C.ln, v = null, w = C.line === "";
-      for (i(u, C); C.line !== null; ) {
-        if (C.line === "" && !w)
-          return v !== null ? { ln: m, pos: v } : { ln: C.ln, pos: C.pos };
-        if (Ie(C.line[C.pos]) && v !== null && !(C.ln === m && C.pos + 1 === v))
-          return { ln: m, pos: v };
-        C.line !== "" && !Z(C.line[C.pos]) && (w = !1, m = C.ln, v = C.pos), i(u, C);
-      }
-      var S = u.getLine(m);
-      v = 0;
-      for (var A = 0; A < S.length; ++A)
-        if (!Z(S[A])) {
-          v = A;
-          break;
-        }
-      return { ln: m, pos: v };
-    }
-    for (var l = {
-      ln: t.line,
-      pos: t.ch
-    }; r > 0; )
-      n < 0 ? l = s(e, l.ln, l.pos, n) : l = a(e, l.ln, l.pos, n), r--;
-    return new o(l.ln, l.pos);
-  }
-  function Pt(e, t, r, n) {
-    var i = t, a = {
-      "(": /[()]/,
-      ")": /[()]/,
-      "[": /[[\]]/,
-      "]": /[[\]]/,
-      "{": /[{}]/,
-      "}": /[{}]/,
-      "<": /[<>]/,
-      ">": /[<>]/
-    }[r], s = {
-      "(": "(",
-      ")": "(",
-      "[": "[",
-      "]": "[",
-      "{": "{",
-      "}": "{",
-      "<": "<",
-      ">": "<"
-    }[r], l = e.getLine(i.line).charAt(i.ch), u = l === s ? 1 : 0, d = e.scanForBracket(new o(i.line, i.ch + u), -1, void 0, { bracketRegex: a }), h = e.scanForBracket(new o(i.line, i.ch + u), 1, void 0, { bracketRegex: a });
-    if (!d || !h) return null;
-    var g = d.pos, C = h.pos;
-    if (g.line == C.line && g.ch > C.ch || g.line > C.line) {
-      var m = g;
-      g = C, C = m;
-    }
-    return n ? C.ch += 1 : g.ch += 1, { start: g, end: C };
-  }
-  function Vr(e, t, r, n) {
-    var i = V(t), a = e.getLine(i.line), s = a.split(""), l, u, d, h, g = s.indexOf(r);
-    if (i.ch < g)
-      i.ch = g;
-    else if (g < i.ch && s[i.ch] == r) {
-      var C = /string/.test(e.getTokenTypeAt(G(t, 0, 1))), m = /string/.test(e.getTokenTypeAt(t)), v = C && !m;
-      v || (u = i.ch, --i.ch);
-    }
-    if (s[i.ch] == r && !u)
-      l = i.ch + 1;
-    else
-      for (d = i.ch; d > -1 && !l; d--)
-        s[d] == r && (l = d + 1);
-    if (l && !u)
-      for (d = l, h = s.length; d < h && !u; d++)
-        s[d] == r && (u = d);
-    return !l || !u ? { start: i, end: i } : (n && (--l, ++u), {
-      start: new o(i.line, l),
-      end: new o(i.line, u)
-    });
-  }
-  Be("pcre", !0, "boolean");
-  class $r {
-    constructor() {
-      this.highlightTimeout;
-    }
-    getQuery() {
-      return T.query;
-    }
-    setQuery(t) {
-      T.query = t;
-    }
-    getOverlay() {
-      return this.searchOverlay;
-    }
-    setOverlay(t) {
-      this.searchOverlay = t;
-    }
-    isReversed() {
-      return T.isReversed;
-    }
-    setReversed(t) {
-      T.isReversed = t;
-    }
-    getScrollbarAnnotate() {
-      return this.annotate;
-    }
-    setScrollbarAnnotate(t) {
-      this.annotate = t;
-    }
-  }
-  function ye(e) {
-    var t = e.state.vim;
-    return t.searchState_ || (t.searchState_ = new $r());
-  }
-  function Wr(e) {
-    return Kt(e, "/");
-  }
-  function jr(e) {
-    return Dt(e, "/");
-  }
-  function Kt(e, t) {
-    var r = Dt(e, t) || [];
-    if (!r.length) return [];
-    var n = [];
-    if (r[0] === 0) {
-      for (var i = 0; i < r.length; i++)
-        typeof r[i] == "number" && n.push(e.substring(r[i] + 1, r[i + 1]));
-      return n;
-    }
-  }
-  function Dt(e, t) {
-    t || (t = "/");
-    for (var r = !1, n = [], i = 0; i < e.length; i++) {
-      var a = e.charAt(i);
-      !r && a == t && n.push(i), r = !r && a == "\\";
-    }
-    return n;
-  }
-  function Ur(e) {
-    var t = {
-      V: "|(){+?*.[$^",
-      // verynomagic
-      M: "|(){+?*.[",
-      // nomagic
-      m: "|(){+?",
-      // magic
-      v: "<>"
-      // verymagic
-    }, r = {
-      ">": "(?<=[\\w])(?=[^\\w]|$)",
-      "<": "(?<=[^\\w]|^)(?=[\\w])"
-    }, n = t.m, i = e.replace(/\\.|[\[|(){+*?.$^<>]/g, function(s) {
-      if (s[0] === "\\") {
-        var l = s[1];
-        return l === "}" || n.indexOf(l) != -1 ? l : l in t ? (n = t[l], "") : l in r ? r[l] : s;
-      } else
-        return n.indexOf(s) != -1 ? r[s] || "\\" + s : s;
-    }), a = i.indexOf("\\zs");
-    return a != -1 && (i = "(?<=" + i.slice(0, a) + ")" + i.slice(a + 3)), a = i.indexOf("\\ze"), a != -1 && (i = i.slice(0, a) + "(?=" + i.slice(a + 3) + ")"), i;
-  }
-  var _t = { "\\n": `
-`, "\\r": "\r", "\\t": "	" };
-  function Qr(e) {
-    for (var t = !1, r = [], n = -1; n < e.length; n++) {
-      var i = e.charAt(n) || "", a = e.charAt(n + 1) || "";
-      _t[i + a] ? (r.push(_t[i + a]), n++) : t ? (r.push(i), t = !1) : i === "\\" ? (t = !0, oe(a) || a === "$" ? r.push("$") : a !== "/" && a !== "\\" && r.push("\\")) : (i === "$" && r.push("$"), r.push(i), a === "/" && r.push("\\"));
-    }
-    return r.join("");
-  }
-  var Ft = { "\\/": "/", "\\\\": "\\", "\\n": `
-`, "\\r": "\r", "\\t": "	", "\\&": "&" };
-  function Jr(e) {
-    for (var t = new f.StringStream(e), r = []; !t.eol(); ) {
-      for (; t.peek() && t.peek() != "\\"; )
-        r.push(t.next());
-      var n = !1;
-      for (var i in Ft)
-        if (t.match(i, !0)) {
-          n = !0, r.push(Ft[i]);
-          break;
-        }
-      n || r.push(t.next());
-    }
-    return r.join("");
-  }
-  function Ht(e, t, r) {
-    var n = T.registerController.getRegister("/");
-    n.setText(e);
-    var i = jr(e), a, s;
-    if (!i.length)
-      a = e;
-    else {
-      a = e.substring(0, i[0]);
-      var l = e.substring(i[0]);
-      s = l.indexOf("i") != -1;
-    }
-    if (!a)
-      return null;
-    le("pcre") || (a = Ur(a)), r && (t = /^[^A-Z]*$/.test(a));
-    var u = new RegExp(
-      a,
-      t || s ? "im" : "m"
-    );
-    return u;
-  }
-  function me(e) {
-    typeof e == "string" && (e = document.createElement(e));
-    for (var t = 1; t < arguments.length; t++) {
-      var r = arguments[t];
-      if (r)
-        if (typeof r != "object" && (r = document.createTextNode(r)), r.nodeType) e.appendChild(r);
-        else for (var n in r)
-          Object.prototype.hasOwnProperty.call(r, n) && (n[0] === "$" ? e.style[n.slice(1)] = r[n] : typeof r[n] == "function" ? e[n] = r[n] : e.setAttribute(n, r[n]));
+}
+typeof Symbol < "u" && (x.prototype[Symbol.iterator] = function() {
+  return this.iter();
+}, D.prototype[Symbol.iterator] = Se.prototype[Symbol.iterator] = Ie.prototype[Symbol.iterator] = function() {
+  return this;
+});
+class Ne {
+  /**
+  @internal
+  */
+  constructor(e, t, n, i) {
+    this.from = e, this.to = t, this.number = n, this.text = i;
+  }
+  /**
+  The length of the line (not including any line break after it).
+  */
+  get length() {
+    return this.to - this.from;
+  }
+}
+function J(l, e, t) {
+  return e = Math.max(0, Math.min(l.length, e)), [e, Math.max(e, Math.min(l.length, t))];
+}
+function Y(l, e, t = !0, n = !0) {
+  return Le(l, e, t, n);
+}
+function De(l) {
+  return l >= 56320 && l < 57344;
+}
+function $e(l) {
+  return l >= 55296 && l < 56320;
+}
+function et(l, e) {
+  let t = l.charCodeAt(e);
+  if (!$e(t) || e + 1 == l.length)
+    return t;
+  let n = l.charCodeAt(e + 1);
+  return De(n) ? (t - 55296 << 10) + (n - 56320) + 65536 : t;
+}
+function tt(l) {
+  return l <= 65535 ? String.fromCharCode(l) : (l -= 65536, String.fromCharCode((l >> 10) + 55296, (l & 1023) + 56320));
+}
+function nt(l) {
+  return l < 65536 ? 1 : 2;
+}
+const se = /\r\n?|\n/;
+var M = /* @__PURE__ */ function(l) {
+  return l[l.Simple = 0] = "Simple", l[l.TrackDel = 1] = "TrackDel", l[l.TrackBefore = 2] = "TrackBefore", l[l.TrackAfter = 3] = "TrackAfter", l;
+}(M || (M = {}));
+class C {
+  // Sections are encoded as pairs of integers. The first is the
+  // length in the current document, and the second is -1 for
+  // unaffected sections, and the length of the replacement content
+  // otherwise. So an insertion would be (0, n>0), a deletion (n>0,
+  // 0), and a replacement two positive numbers.
+  /**
+  @internal
+  */
+  constructor(e) {
+    this.sections = e;
+  }
+  /**
+  The length of the document before the change.
+  */
+  get length() {
+    let e = 0;
+    for (let t = 0; t < this.sections.length; t += 2)
+      e += this.sections[t];
+    return e;
+  }
+  /**
+  The length of the document after the change.
+  */
+  get newLength() {
+    let e = 0;
+    for (let t = 0; t < this.sections.length; t += 2) {
+      let n = this.sections[t + 1];
+      e += n < 0 ? this.sections[t] : n;
     }
     return e;
   }
-  function K(e, t, r) {
-    var n = me("div", { $color: "red", $whiteSpace: "pre", class: "cm-vim-message" }, t);
-    e.openNotification ? r ? (n = me("div", {}, n, me("div", {}, "Press ENTER or type command to continue")), e.state.closeVimNotification && e.state.closeVimNotification(), e.state.closeVimNotification = e.openNotification(n, { bottom: !0, duration: 0 })) : e.openNotification(n, { bottom: !0, duration: 15e3 }) : alert(n.innerText);
+  /**
+  False when there are actual changes in this set.
+  */
+  get empty() {
+    return this.sections.length == 0 || this.sections.length == 2 && this.sections[1] < 0;
   }
-  function zr(e, t) {
-    return me(
-      "div",
-      { $display: "flex", $flex: 1 },
-      me(
-        "span",
-        { $fontFamily: "monospace", $whiteSpace: "pre", $flex: 1, $display: "flex" },
-        e,
-        me("input", {
-          type: "text",
-          autocorrect: "off",
-          autocapitalize: "off",
-          spellcheck: "false",
-          $flex: 1
-        })
-      ),
-      t && me("span", { $color: "#888" }, t)
-    );
-  }
-  function Xe(e, t) {
-    var i;
-    if (Pe.length) {
-      t.value || (t.value = ""), X = t;
-      return;
-    }
-    var r = zr(t.prefix, t.desc);
-    if (e.openDialog)
-      e.openDialog(r, t.onClose, {
-        onKeyDown: t.onKeyDown,
-        onKeyUp: t.onKeyUp,
-        bottom: !0,
-        selectValueOnOpen: !1,
-        value: t.value
-      });
-    else {
-      var n = "";
-      typeof t.prefix != "string" && t.prefix && (n += t.prefix.textContent), t.desc && (n += " " + t.desc), (i = t.onClose) == null || i.call(t, prompt(n, ""));
+  /**
+  Iterate over the unchanged parts left by these changes. `posA`
+  provides the position of the range in the old document, `posB`
+  the new position in the changed document.
+  */
+  iterGaps(e) {
+    for (let t = 0, n = 0, i = 0; t < this.sections.length; ) {
+      let s = this.sections[t++], r = this.sections[t++];
+      r < 0 ? (e(n, i, s), i += s) : i += r, n += s;
     }
   }
-  function qr(e, t) {
-    return e instanceof RegExp && t instanceof RegExp ? e.flags == t.flags && e.source == t.source : !1;
+  /**
+  Iterate over the ranges changed by these changes. (See
+  [`ChangeSet.iterChanges`](https://codemirror.net/6/docs/ref/#state.ChangeSet.iterChanges) for a
+  variant that also provides you with the inserted text.)
+  `fromA`/`toA` provides the extent of the change in the starting
+  document, `fromB`/`toB` the extent of the replacement in the
+  changed document.
+  
+  When `individual` is true, adjacent changes (which are kept
+  separate for [position mapping](https://codemirror.net/6/docs/ref/#state.ChangeDesc.mapPos)) are
+  reported separately.
+  */
+  iterChangedRanges(e, t = !1) {
+    re(this, e, t);
   }
-  function je(e, t, r, n) {
-    if (t) {
-      var i = ye(e), a = Ht(t, !!r, !!n);
-      if (a)
-        return st(e, a), qr(a, i.getQuery()) || i.setQuery(a), a;
+  /**
+  Get a description of the inverted form of these changes.
+  */
+  get invertedDesc() {
+    let e = [];
+    for (let t = 0; t < this.sections.length; ) {
+      let n = this.sections[t++], i = this.sections[t++];
+      i < 0 ? e.push(n, i) : e.push(i, n);
     }
+    return new C(e);
   }
-  function Xr(e) {
-    if (e.source.charAt(0) == "^")
-      var t = !0;
+  /**
+  Compute the combined effect of applying another set of changes
+  after this one. The length of the document after this set should
+  match the length before `other`.
+  */
+  composeDesc(e) {
+    return this.empty ? e : e.empty ? this : Pe(this, e);
+  }
+  /**
+  Map this description, which should start with the same document
+  as `other`, over another set of changes, so that it can be
+  applied after it. When `before` is true, map as if the changes
+  in `this` happened before the ones in `other`.
+  */
+  mapDesc(e, t = !1) {
+    return e.empty ? this : le(this, e, t);
+  }
+  mapPos(e, t = -1, n = M.Simple) {
+    let i = 0, s = 0;
+    for (let r = 0; r < this.sections.length; ) {
+      let h = this.sections[r++], o = this.sections[r++], a = i + h;
+      if (o < 0) {
+        if (a > e)
+          return s + (e - i);
+        s += h;
+      } else {
+        if (n != M.Simple && a >= e && (n == M.TrackDel && i < e && a > e || n == M.TrackBefore && i < e || n == M.TrackAfter && a > e))
+          return null;
+        if (a > e || a == e && t < 0 && !h)
+          return e == i || t < 0 ? s : s + o;
+        s += o;
+      }
+      i = a;
+    }
+    if (e > i)
+      throw new RangeError(`Position ${e} is out of range for changeset of length ${i}`);
+    return s;
+  }
+  /**
+  Check whether these changes touch a given range. When one of the
+  changes entirely covers the range, the string `"cover"` is
+  returned.
+  */
+  touchesRange(e, t = e) {
+    for (let n = 0, i = 0; n < this.sections.length && i <= t; ) {
+      let s = this.sections[n++], r = this.sections[n++], h = i + s;
+      if (r >= 0 && i <= t && h >= e)
+        return i < e && h > t ? "cover" : !0;
+      i = h;
+    }
+    return !1;
+  }
+  /**
+  @internal
+  */
+  toString() {
+    let e = "";
+    for (let t = 0; t < this.sections.length; ) {
+      let n = this.sections[t++], i = this.sections[t++];
+      e += (e ? " " : "") + n + (i >= 0 ? ":" + i : "");
+    }
+    return e;
+  }
+  /**
+  Serialize this change desc to a JSON-representable value.
+  */
+  toJSON() {
+    return this.sections;
+  }
+  /**
+  Create a change desc from its JSON representation (as produced
+  by [`toJSON`](https://codemirror.net/6/docs/ref/#state.ChangeDesc.toJSON).
+  */
+  static fromJSON(e) {
+    if (!Array.isArray(e) || e.length % 2 || e.some((t) => typeof t != "number"))
+      throw new RangeError("Invalid JSON representation of ChangeDesc");
+    return new C(e);
+  }
+  /**
+  @internal
+  */
+  static create(e) {
+    return new C(e);
+  }
+}
+class y extends C {
+  constructor(e, t) {
+    super(e), this.inserted = t;
+  }
+  /**
+  Apply the changes to a document, returning the modified
+  document.
+  */
+  apply(e) {
+    if (this.length != e.length)
+      throw new RangeError("Applying change set to a document with the wrong length");
+    return re(this, (t, n, i, s, r) => e = e.replace(i, i + (n - t), r), !1), e;
+  }
+  mapDesc(e, t = !1) {
+    return le(this, e, t, !0);
+  }
+  /**
+  Given the document as it existed _before_ the changes, return a
+  change set that represents the inverse of this set, which could
+  be used to go from the document created by the changes back to
+  the document as it existed before the changes.
+  */
+  invert(e) {
+    let t = this.sections.slice(), n = [];
+    for (let i = 0, s = 0; i < t.length; i += 2) {
+      let r = t[i], h = t[i + 1];
+      if (h >= 0) {
+        t[i] = h, t[i + 1] = r;
+        let o = i >> 1;
+        for (; n.length < o; )
+          n.push(x.empty);
+        n.push(r ? e.slice(s, s + r) : x.empty);
+      }
+      s += r;
+    }
+    return new y(t, n);
+  }
+  /**
+  Combine two subsequent change sets into a single set. `other`
+  must start in the document produced by `this`. If `this` goes
+  `docA` → `docB` and `other` represents `docB` → `docC`, the
+  returned value will represent the change `docA` → `docC`.
+  */
+  compose(e) {
+    return this.empty ? e : e.empty ? this : Pe(this, e, !0);
+  }
+  /**
+  Given another change set starting in the same document, maps this
+  change set over the other, producing a new change set that can be
+  applied to the document produced by applying `other`. When
+  `before` is `true`, order changes as if `this` comes before
+  `other`, otherwise (the default) treat `other` as coming first.
+  
+  Given two changes `A` and `B`, `A.compose(B.map(A))` and
+  `B.compose(A.map(B, true))` will produce the same document. This
+  provides a basic form of [operational
+  transformation](https://en.wikipedia.org/wiki/Operational_transformation),
+  and can be used for collaborative editing.
+  */
+  map(e, t = !1) {
+    return e.empty ? this : le(this, e, t, !0);
+  }
+  /**
+  Iterate over the changed ranges in the document, calling `f` for
+  each, with the range in the original document (`fromA`-`toA`)
+  and the range that replaces it in the new document
+  (`fromB`-`toB`).
+  
+  When `individual` is true, adjacent changes are reported
+  separately.
+  */
+  iterChanges(e, t = !1) {
+    re(this, e, t);
+  }
+  /**
+  Get a [change description](https://codemirror.net/6/docs/ref/#state.ChangeDesc) for this change
+  set.
+  */
+  get desc() {
+    return C.create(this.sections);
+  }
+  /**
+  @internal
+  */
+  filter(e) {
+    let t = [], n = [], i = [], s = new q(this);
+    e: for (let r = 0, h = 0; ; ) {
+      let o = r == e.length ? 1e9 : e[r++];
+      for (; h < o || h == o && s.len == 0; ) {
+        if (s.done)
+          break e;
+        let f = Math.min(s.len, o - h);
+        k(i, f, -1);
+        let u = s.ins == -1 ? -1 : s.off == 0 ? s.ins : 0;
+        k(t, f, u), u > 0 && b(n, t, s.text), s.forward(f), h += f;
+      }
+      let a = e[r++];
+      for (; h < a; ) {
+        if (s.done)
+          break e;
+        let f = Math.min(s.len, a - h);
+        k(t, f, -1), k(i, f, s.ins == -1 ? -1 : s.off == 0 ? s.ins : 0), s.forward(f), h += f;
+      }
+    }
     return {
-      token: function(r) {
-        if (t && !r.sol()) {
-          r.skipToEnd();
-          return;
-        }
-        var n = r.match(e, !1);
-        if (n)
-          return n[0].length == 0 ? (r.next(), "searching") : !r.sol() && (r.backUp(1), !e.exec(r.next() + n[0])) ? (r.next(), null) : (r.match(e), "searching");
-        for (; !r.eol() && (r.next(), !r.match(e, !1)); )
-          ;
-      },
-      query: e
+      changes: new y(t, n),
+      filtered: C.create(i)
     };
   }
-  var Ue = 0;
-  function st(e, t) {
-    clearTimeout(Ue);
-    var r = ye(e);
-    r.highlightTimeout = Ue, Ue = setTimeout(function() {
-      if (e.state.vim) {
-        var n = ye(e);
-        n.highlightTimeout = void 0;
-        var i = n.getOverlay();
-        (!i || t != i.query) && (i && e.removeOverlay(i), i = Xr(t), e.addOverlay(i), e.showMatchesOnScrollbar && (n.getScrollbarAnnotate() && n.getScrollbarAnnotate().clear(), n.setScrollbarAnnotate(e.showMatchesOnScrollbar(t))), n.setOverlay(i));
-      }
-    }, 50);
-  }
-  function Vt(e, t, r, n) {
-    return e.operation(function() {
-      n === void 0 && (n = 1);
-      for (var i = e.getCursor(), a = e.getSearchCursor(r, i), s = 0; s < n; s++) {
-        var l = a.find(t);
-        if (s == 0 && l && he(a.from(), i)) {
-          var u = t ? a.from() : a.to();
-          l = a.find(t), l && !l[0] && he(a.from(), u) && e.getLine(u.line).length == u.ch && (l = a.find(t));
-        }
-        if (!l && (a = e.getSearchCursor(
-          r,
-          // @ts-ignore
-          t ? new o(e.lastLine()) : new o(e.firstLine(), 0)
-        ), !a.find(t)))
-          return;
-      }
-      return a.from();
-    });
-  }
-  function Gr(e, t, r, n, i) {
-    return e.operation(function() {
-      n === void 0 && (n = 1);
-      var a = e.getCursor(), s = e.getSearchCursor(r, a), l = s.find(!t);
-      !i.visualMode && l && he(s.from(), a) && s.find(!t);
-      for (var u = 0; u < n; u++)
-        if (l = s.find(t), !l && (s = e.getSearchCursor(
-          r,
-          // @ts-ignore
-          t ? new o(e.lastLine()) : new o(e.firstLine(), 0)
-        ), !s.find(t)))
-          return;
-      var d = s.from(), h = s.to();
-      return d && h && [d, h];
-    });
-  }
-  function Fe(e) {
-    var t = ye(e);
-    t.highlightTimeout && (clearTimeout(t.highlightTimeout), t.highlightTimeout = void 0), e.removeOverlay(ye(e).getOverlay()), t.setOverlay(null), t.getScrollbarAnnotate() && (t.getScrollbarAnnotate().clear(), t.setScrollbarAnnotate(null));
-  }
-  function Yr(e, t, r) {
-    return typeof e != "number" && (e = e.line), t instanceof Array ? Ze(e, t) : typeof r == "number" ? e >= t && e <= r : e == t;
-  }
-  function lt(e) {
-    var t = e.getScrollInfo(), r = 6, n = 10, i = e.coordsChar({ left: 0, top: r + t.top }, "local"), a = t.clientHeight - n + t.top, s = e.coordsChar({ left: 0, top: a }, "local");
-    return { top: i.line, bottom: s.line };
-  }
-  function Ge(e, t, r) {
-    if (r == "'" || r == "`")
-      return T.jumpList.find(e, -1) || new o(0, 0);
-    if (r == ".")
-      return $t(e);
-    var n = t.marks[r];
-    return n && n.find();
-  }
-  function $t(e) {
-    if (e.getLastEditEnd)
-      return e.getLastEditEnd();
-    for (var t = (
-      /**@type{any}*/
-      e.doc.history.done
-    ), r = t.length; r--; )
-      if (t[r].changes)
-        return V(t[r].changes[0].to);
-  }
-  class Zr {
-    constructor() {
-      this.commandMap_, this.buildCommandMap_();
+  /**
+  Serialize this change set to a JSON-representable value.
+  */
+  toJSON() {
+    let e = [];
+    for (let t = 0; t < this.sections.length; t += 2) {
+      let n = this.sections[t], i = this.sections[t + 1];
+      i < 0 ? e.push(n) : i == 0 ? e.push([n]) : e.push([n].concat(this.inserted[t >> 1].toJSON()));
     }
-    /**
-     * @arg {CodeMirrorV} cm
-     * @arg {string} input
-     * @arg {{ callback: () => void; } | undefined} [opt_params]
-     */
-    processCommand(t, r, n) {
-      var i = this;
-      t.operation(function() {
-        t.curOp && (t.curOp.isVimOp = !0), i._processCommand(t, r, n);
-      });
-    }
-    /**
-     * @arg {CodeMirrorV} cm
-     * @arg {string} input
-     * @arg {{ callback?: () => void; input?: string, line?: string, commandName?: string  } } [opt_params]
-     */
-    _processCommand(t, r, n) {
-      var i = t.state.vim, a = T.registerController.getRegister(":"), s = a.toString(), l = new f.StringStream(r);
-      a.setText(r);
-      var u = n || {};
-      u.input = r;
-      try {
-        this.parseInput_(t, l, u);
-      } catch (g) {
-        throw K(t, g + ""), g;
-      }
-      i.visualMode && Se(t);
-      var d, h;
-      if (!u.commandName)
-        u.line !== void 0 && (h = "move");
-      else if (d = this.matchCommand_(u.commandName), d) {
-        if (h = d.name, d.excludeFromCommandHistory && a.setText(s), this.parseCommandArgs_(l, u, d), d.type == "exToKey") {
-          $e(t, d.toKeys || "", d);
-          return;
-        } else if (d.type == "exToEx") {
-          this.processCommand(t, d.toInput || "");
-          return;
-        }
-      }
-      if (!h) {
-        K(t, 'Not an editor command ":' + r + '"');
+    return e;
+  }
+  /**
+  Create a change set for the given changes, for a document of the
+  given length, using `lineSep` as line separator.
+  */
+  static of(e, t, n) {
+    let i = [], s = [], r = 0, h = null;
+    function o(f = !1) {
+      if (!f && !i.length)
         return;
-      }
-      try {
-        Wt[h](t, u), (!d || !d.possiblyAsync) && u.callback && u.callback();
-      } catch (g) {
-        throw K(t, g + ""), g;
-      }
+      r < t && k(i, t - r, -1);
+      let u = new y(i, s);
+      h = h ? h.compose(u.map(h)) : u, i = [], s = [], r = 0;
     }
-    /**
-     * @param {CodeMirrorV} cm
-     * @param {import("@codemirror/language").StringStream} inputStream
-     * @param {{ callback?: (() => void) | undefined; input?: string | undefined; line?: any; commandName?: any; lineEnd?: any; selectionLine?: any; selectionLineEnd?: any; }} result
-     */
-    parseInput_(t, r, n) {
-      var a, s;
-      r.eatWhile(":"), r.eat("%") ? (n.line = t.firstLine(), n.lineEnd = t.lastLine()) : (n.line = this.parseLineSpec_(t, r), n.line !== void 0 && r.eat(",") && (n.lineEnd = this.parseLineSpec_(t, r))), n.line == null ? t.state.vim.visualMode ? (n.selectionLine = (a = Ge(t, t.state.vim, "<")) == null ? void 0 : a.line, n.selectionLineEnd = (s = Ge(t, t.state.vim, ">")) == null ? void 0 : s.line) : n.selectionLine = t.getCursor().line : (n.selectionLine = n.line, n.selectionLineEnd = n.lineEnd);
-      var i = r.match(/^(\w+|!!|@@|[!#&*<=>@~])/);
-      return i ? n.commandName = i[1] : n.commandName = (r.match(/.*/) || [""])[0], n;
-    }
-    /**
-     * @param {CodeMirrorV} cm
-     * @param {import("@codemirror/language").StringStream} inputStream
-     */
-    parseLineSpec_(t, r) {
-      var n = r.match(/^(\d+)/);
-      if (n)
-        return parseInt(n[1], 10) - 1;
-      switch (r.next()) {
-        case ".":
-          return this.parseLineSpecOffset_(r, t.getCursor().line);
-        case "$":
-          return this.parseLineSpecOffset_(r, t.lastLine());
-        case "'":
-          var i = r.next() || "", a = Ge(t, t.state.vim, i);
-          if (!a) throw new Error("Mark not set");
-          return this.parseLineSpecOffset_(r, a.line);
-        case "-":
-        case "+":
-          return r.backUp(1), this.parseLineSpecOffset_(r, t.getCursor().line);
-        default:
-          r.backUp(1);
-          return;
-      }
-    }
-    /**
-     * @param {string | import("@codemirror/language").StringStream} inputStream
-     * @param {number} line
-     */
-    parseLineSpecOffset_(t, r) {
-      var n = t.match(/^([+-])?(\d+)/);
-      if (n) {
-        var i = parseInt(n[2], 10);
-        n[1] == "-" ? r -= i : r += i;
-      }
-      return r;
-    }
-    /**
-     * @param {import("@codemirror/language").StringStream} inputStream
-     * @param {import("./types").exCommandArgs} params
-     * @param {import("./types").exCommandDefinition} command
-     */
-    parseCommandArgs_(t, r, n) {
-      var s;
-      if (!t.eol()) {
-        r.argString = (s = t.match(/.*/)) == null ? void 0 : s[0];
-        var i = n.argDelimiter || /\s+/, a = nt(r.argString || "").split(i);
-        a.length && a[0] && (r.args = a);
-      }
-    }
-    /**
-     * @arg {string} commandName
-     */
-    matchCommand_(t) {
-      for (var r = t.length; r > 0; r--) {
-        var n = t.substring(0, r);
-        if (this.commandMap_[n]) {
-          var i = this.commandMap_[n];
-          if (i.name.indexOf(t) === 0)
-            return i;
-        }
-      }
-    }
-    buildCommandMap_() {
-      this.commandMap_ = {};
-      for (var t = 0; t < L.length; t++) {
-        var r = L[t], n = r.shortName || r.name;
-        this.commandMap_[n] = r;
-      }
-    }
-    /**@type {(lhs: string, rhs: string, ctx: string|void, noremap?: boolean) => void} */
-    map(t, r, n, i) {
-      if (t != ":" && t.charAt(0) == ":") {
-        if (n)
-          throw Error("Mode not supported for ex mappings");
-        var a = t.substring(1);
-        r != ":" && r.charAt(0) == ":" ? this.commandMap_[a] = {
-          name: a,
-          type: "exToEx",
-          toInput: r.substring(1),
-          user: !0
-        } : this.commandMap_[a] = {
-          name: a,
-          type: "exToKey",
-          toKeys: r,
-          user: !0
-        };
+    function a(f) {
+      if (Array.isArray(f))
+        for (let u of f)
+          a(u);
+      else if (f instanceof y) {
+        if (f.length != t)
+          throw new RangeError(`Mismatched change set length (got ${f.length}, expected ${t})`);
+        o(), h = h ? h.compose(f.map(h)) : f;
       } else {
-        var s = {
-          keys: t,
-          type: "keyToKey",
-          toKeys: r,
-          noremap: !!i
-        };
-        n && (s.context = n), ut(s);
+        let { from: u, to: c = u, insert: d } = f;
+        if (u > c || u < 0 || c > t)
+          throw new RangeError(`Invalid change range ${u} to ${c} (in doc of length ${t})`);
+        let p = d ? typeof d == "string" ? x.of(d.split(n || se)) : d : x.empty, E = p.length;
+        if (u == c && E == 0)
+          return;
+        u < r && o(), u > r && k(i, u - r, -1), k(i, c - u, E), b(s, i, p), r = c;
       }
     }
-    /**@type {(lhs: string, ctx: string) => boolean|void} */
-    unmap(t, r) {
-      if (t != ":" && t.charAt(0) == ":") {
-        if (r)
-          throw Error("Mode not supported for ex mappings");
-        var n = t.substring(1);
-        if (this.commandMap_[n] && this.commandMap_[n].user)
-          return delete this.commandMap_[n], !0;
-      } else
-        for (var i = t, a = 0; a < p.length; a++)
-          if (i == p[a].keys && p[a].context === r)
-            return p.splice(a, 1), rn(i), !0;
-    }
+    return a(e), o(!h), h;
   }
-  var Wt = {
-    /** @arg {CodeMirrorV} cm @arg {ExParams} params*/
-    colorscheme: function(e, t) {
-      if (!t.args || t.args.length < 1) {
-        K(e, e.getOption("theme"));
-        return;
-      }
-      e.setOption("theme", t.args[0]);
-    },
-    /** @arg {CodeMirrorV} cm @arg {ExParams} params @arg {'insert'|'normal'|string} [ctx] @arg {boolean} [defaultOnly]*/
-    map: function(e, t, r, n) {
-      var i = t.args;
-      if (!i || i.length < 2) {
-        e && K(e, "Invalid mapping: " + t.input);
-        return;
-      }
-      se.map(i[0], i[1], r, n);
-    },
-    /** @arg {CodeMirrorV} cm @arg {ExParams} params*/
-    imap: function(e, t) {
-      this.map(e, t, "insert");
-    },
-    /** @arg {CodeMirrorV} cm @arg {ExParams} params*/
-    nmap: function(e, t) {
-      this.map(e, t, "normal");
-    },
-    /** @arg {CodeMirrorV} cm @arg {ExParams} params*/
-    vmap: function(e, t) {
-      this.map(e, t, "visual");
-    },
-    /** @arg {CodeMirrorV} cm @arg {ExParams} params*/
-    omap: function(e, t) {
-      this.map(e, t, "operatorPending");
-    },
-    /** @arg {CodeMirrorV} cm @arg {ExParams} params*/
-    noremap: function(e, t) {
-      this.map(e, t, void 0, !0);
-    },
-    /** @arg {CodeMirrorV} cm @arg {ExParams} params*/
-    inoremap: function(e, t) {
-      this.map(e, t, "insert", !0);
-    },
-    /** @arg {CodeMirrorV} cm @arg {ExParams} params*/
-    nnoremap: function(e, t) {
-      this.map(e, t, "normal", !0);
-    },
-    /** @arg {CodeMirrorV} cm @arg {ExParams} params*/
-    vnoremap: function(e, t) {
-      this.map(e, t, "visual", !0);
-    },
-    /** @arg {CodeMirrorV} cm @arg {ExParams} params*/
-    onoremap: function(e, t) {
-      this.map(e, t, "operatorPending", !0);
-    },
-    /** @arg {CodeMirrorV} cm @arg {ExParams} params @arg {string} ctx*/
-    unmap: function(e, t, r) {
-      var n = t.args;
-      (!n || n.length < 1 || !se.unmap(n[0], r)) && e && K(e, "No such mapping: " + t.input);
-    },
-    /** @arg {CodeMirrorV} cm @arg {ExParams} params*/
-    mapclear: function(e, t) {
-      ue.mapclear();
-    },
-    /** @arg {CodeMirrorV} cm @arg {ExParams} params*/
-    imapclear: function(e, t) {
-      ue.mapclear("insert");
-    },
-    /** @arg {CodeMirrorV} cm @arg {ExParams} params*/
-    nmapclear: function(e, t) {
-      ue.mapclear("normal");
-    },
-    /** @arg {CodeMirrorV} cm @arg {ExParams} params*/
-    vmapclear: function(e, t) {
-      ue.mapclear("visual");
-    },
-    /** @arg {CodeMirrorV} cm @arg {ExParams} params*/
-    omapclear: function(e, t) {
-      ue.mapclear("operatorPending");
-    },
-    /** @arg {CodeMirrorV} cm @arg {ExParams} params*/
-    move: function(e, t) {
-      Oe.processCommand(e, e.state.vim, {
-        keys: "",
-        type: "motion",
-        motion: "moveToLineOrEdgeOfDocument",
-        motionArgs: { forward: !1, explicitRepeat: !0, linewise: !0 },
-        repeatOverride: t.line + 1
-      });
-    },
-    /** @arg {CodeMirrorV} cm @arg {ExParams} params*/
-    set: function(e, t) {
-      var r = t.args, n = t.setCfg || {};
-      if (!r || r.length < 1) {
-        e && K(e, "Invalid mapping: " + t.input);
-        return;
-      }
-      var i = r[0].split("="), a = i.shift() || "", s = i.length > 0 ? i.join("=") : void 0, l = !1, u = !1;
-      if (a.charAt(a.length - 1) == "?") {
-        if (s)
-          throw Error("Trailing characters: " + t.argString);
-        a = a.substring(0, a.length - 1), l = !0;
-      } else a.charAt(a.length - 1) == "!" && (a = a.substring(0, a.length - 1), u = !0);
-      s === void 0 && a.substring(0, 2) == "no" && (a = a.substring(2), s = !1);
-      var d = Le[a] && Le[a].type == "boolean";
-      if (d && (u ? s = !le(a, e, n) : s == null && (s = !0)), !d && s === void 0 || l) {
-        var h = le(a, e, n);
-        h instanceof Error ? K(e, h.message) : h === !0 || h === !1 ? K(e, " " + (h ? "" : "no") + a) : K(e, "  " + a + "=" + h);
-      } else {
-        var g = Je(a, s, e, n);
-        g instanceof Error && K(e, g.message);
-      }
-    },
-    /** @arg {CodeMirrorV} cm @arg {ExParams} params*/
-    setlocal: function(e, t) {
-      t.setCfg = { scope: "local" }, this.set(e, t);
-    },
-    /** @arg {CodeMirrorV} cm @arg {ExParams} params*/
-    setglobal: function(e, t) {
-      t.setCfg = { scope: "global" }, this.set(e, t);
-    },
-    /** @arg {CodeMirrorV} cm @arg {ExParams} params*/
-    registers: function(e, t) {
-      var r = t.args, n = T.registerController.registers, i = `----------Registers----------
-
-`;
-      if (r)
-        for (var l = r.join(""), u = 0; u < l.length; u++) {
-          var a = l.charAt(u);
-          if (T.registerController.isValidRegister(a)) {
-            var d = n[a] || new ke();
-            i += '"' + a + "    " + d.toString() + `
-`;
-          }
-        }
-      else
-        for (var a in n) {
-          var s = n[a].toString();
-          s.length && (i += '"' + a + "    " + s + `
-`);
-        }
-      K(e, i, !0);
-    },
-    /** @arg {CodeMirrorV} cm @arg {ExParams} params*/
-    marks: function(e, t) {
-      var r = t.args, n = e.state.vim.marks, i = `-----------Marks-----------
-mark	line	col
-
-`;
-      if (r)
-        for (var l = r.join(""), u = 0; u < l.length; u++) {
-          var a = l.charAt(u), s = n[a] && n[a].find();
-          s && (i += a + "	" + s.line + "	" + s.ch + `
-`);
-        }
-      else
-        for (var a in n) {
-          var s = n[a] && n[a].find();
-          s && (i += a + "	" + s.line + "	" + s.ch + `
-`);
-        }
-      K(e, i, !0);
-    },
-    /** @arg {CodeMirrorV} cm @arg {ExParams} params*/
-    sort: function(e, t) {
-      var r, n, i, a, s;
-      function l() {
-        if (t.argString) {
-          var P = new f.StringStream(t.argString);
-          if (P.eat("!") && (r = !0), P.eol())
-            return;
-          if (!P.eatSpace())
-            return "Invalid arguments";
-          var O = P.match(/([dinuox]+)?\s*(\/.+\/)?\s*/);
-          if (!O || !P.eol())
-            return "Invalid arguments";
-          if (O[1]) {
-            n = O[1].indexOf("i") != -1, i = O[1].indexOf("u") != -1;
-            var $ = O[1].indexOf("d") != -1 || O[1].indexOf("n") != -1, de = O[1].indexOf("x") != -1, ee = O[1].indexOf("o") != -1;
-            if (Number($) + Number(de) + Number(ee) > 1)
-              return "Invalid arguments";
-            a = $ && "decimal" || de && "hex" || ee && "octal";
-          }
-          O[2] && (s = new RegExp(O[2].substr(1, O[2].length - 2), n ? "i" : ""));
-        }
-      }
-      var u = l();
-      if (u) {
-        K(e, u + ": " + t.argString);
-        return;
-      }
-      var d = t.line || e.firstLine(), h = t.lineEnd || t.line || e.lastLine();
-      if (d == h)
-        return;
-      var g = new o(d, 0), C = new o(h, te(e, h)), m = e.getRange(g, C).split(`
-`), v = a == "decimal" ? /(-?)([\d]+)/ : a == "hex" ? /(-?)(?:0x)?([0-9a-f]+)/i : a == "octal" ? /([0-7]+)/ : null, w = a == "decimal" ? 10 : a == "hex" ? 16 : a == "octal" ? 8 : void 0, S = [], A = [];
-      if (a || s)
-        for (var M = 0; M < m.length; M++) {
-          var E = s ? m[M].match(s) : null;
-          E && E[0] != "" ? S.push(E) : v && v.exec(m[M]) ? S.push(m[M]) : A.push(m[M]);
-        }
-      else
-        A = m;
-      function N(P, O) {
-        if (r) {
-          var $;
-          $ = P, P = O, O = $;
-        }
-        n && (P = P.toLowerCase(), O = O.toLowerCase());
-        var de = v && v.exec(P), ee = v && v.exec(O);
-        if (!de || !ee)
-          return P < O ? -1 : 1;
-        var pe = parseInt((de[1] + de[2]).toLowerCase(), w), Ee = parseInt((ee[1] + ee[2]).toLowerCase(), w);
-        return pe - Ee;
-      }
-      function R(P, O) {
-        if (r) {
-          var $;
-          $ = P, P = O, O = $;
-        }
-        return n && (P[0] = P[0].toLowerCase(), O[0] = O[0].toLowerCase()), P[0] < O[0] ? -1 : 1;
-      }
-      if (S.sort(s ? R : N), s)
-        for (var M = 0; M < S.length; M++)
-          S[M] = S[M].input;
-      else a || A.sort(N);
-      if (m = r ? S.concat(A) : A.concat(S), i) {
-        var U = m, J;
-        m = [];
-        for (var M = 0; M < U.length; M++)
-          U[M] != J && m.push(U[M]), J = U[M];
-      }
-      e.replaceRange(m.join(`
-`), g, C);
-    },
-    /** @arg {CodeMirrorV} cm @arg {ExParams} params*/
-    vglobal: function(e, t) {
-      this.global(e, t);
-    },
-    /** @arg {CodeMirrorV} cm @arg {ExParams} params*/
-    normal: function(e, t) {
-      var r = !1, n = t.argString;
-      if (n && n[0] == "!" && (n = n.slice(1), r = !0), n = n.trimStart(), !n) {
-        K(e, "Argument is required.");
-        return;
-      }
-      var i = t.line;
-      if (typeof i == "number")
-        for (var a = isNaN(t.lineEnd) ? i : t.lineEnd, s = i; s <= a; s++)
-          e.setCursor(s, 0), $e(e, t.argString.trimStart(), { noremap: r }), e.state.vim.insertMode && Ae(e, !0);
-      else
-        $e(e, t.argString.trimStart(), { noremap: r }), e.state.vim.insertMode && Ae(e, !0);
-    },
-    /** @arg {CodeMirrorV} cm @arg {ExParams} params*/
-    global: function(e, t) {
-      var r = t.argString;
-      if (!r) {
-        K(e, "Regular Expression missing from global");
-        return;
-      }
-      var n = t.commandName[0] === "v";
-      r[0] === "!" && t.commandName[0] === "g" && (n = !0, r = r.slice(1));
-      var i = t.line !== void 0 ? t.line : e.firstLine(), a = t.lineEnd || t.line || e.lastLine(), s = Wr(r), l = r, u = "";
-      if (s && s.length && (l = s[0], u = s.slice(1, s.length).join("/")), l)
-        try {
-          je(
-            e,
-            l,
-            !0,
-            !0
-            /** smartCase */
-          );
-        } catch {
-          K(e, "Invalid regex: " + l);
-          return;
-        }
-      for (var d = ye(e).getQuery(), h = [], g = i; g <= a; g++) {
-        var C = e.getLine(g), m = d.test(C);
-        m !== n && h.push(u ? e.getLineHandle(g) : C);
-      }
-      if (!u) {
-        K(e, h.join(`
-`));
-        return;
-      }
-      var v = 0, w = function() {
-        if (v < h.length) {
-          var S = h[v++], A = e.getLineNumber(S);
-          if (A == null) {
-            w();
-            return;
-          }
-          var M = A + 1 + u;
-          se.processCommand(e, M, {
-            callback: w
-          });
-        } else e.releaseLineHandles && e.releaseLineHandles();
-      };
-      w();
-    },
-    /** @arg {CodeMirrorV} cm @arg {ExParams} params*/
-    substitute: function(e, t) {
-      if (!e.getSearchCursor)
-        throw new Error("Search feature not available. Requires searchcursor.js or any other getSearchCursor implementation.");
-      var r = t.argString, n = r ? Kt(r, r[0]) : [], i = "", a = "", s, l, u, d = !1, h = !1;
-      if (n && n.length)
-        i = n[0], le("pcre") && i !== "" && (i = new RegExp(i).source), a = n[1], a !== void 0 && (le("pcre") ? a = Jr(a.replace(/([^\\])&/g, "$1$$&")) : a = Qr(a), T.lastSubstituteReplacePart = a), s = n[2] ? n[2].split(" ") : [];
-      else if (r && r.length) {
-        K(e, "Substitutions should be of the form :s/pattern/replace/");
-        return;
-      }
-      if (s && (l = s[0], u = parseInt(s[1]), l && (l.indexOf("c") != -1 && (d = !0), l.indexOf("g") != -1 && (h = !0), le("pcre") ? i = i + "/" + l : i = i.replace(/\//g, "\\/") + "/" + l)), i)
-        try {
-          je(
-            e,
-            i,
-            !0,
-            !0
-            /** smartCase */
-          );
-        } catch {
-          K(e, "Invalid regex: " + i);
-          return;
-        }
-      if (a = a || T.lastSubstituteReplacePart, a === void 0) {
-        K(e, "No previous substitute regular expression");
-        return;
-      }
-      var g = ye(e), C = g.getQuery(), m = t.line !== void 0 ? t.line : e.getCursor().line, v = t.lineEnd || m;
-      m == e.firstLine() && v == e.lastLine() && (v = 1 / 0), u && (m = v, v = m + u - 1);
-      var w = re(e, new o(m, 0)), S = e.getSearchCursor(C, w);
-      en(e, d, h, m, v, S, C, a, t.callback);
-    },
-    /** @arg {CodeMirrorV} cm @arg {ExParams} params*/
-    startinsert: function(e, t) {
-      $e(e, t.argString == "!" ? "A" : "i", {});
-    },
-    redo: f.commands.redo,
-    undo: f.commands.undo,
-    /** @arg {CodeMirrorV} cm */
-    write: function(e) {
-      f.commands.save ? f.commands.save(e) : e.save && e.save();
-    },
-    /** @arg {CodeMirrorV} cm */
-    nohlsearch: function(e) {
-      Fe(e);
-    },
-    /** @arg {CodeMirrorV} cm */
-    yank: function(e) {
-      var t = V(e.getCursor()), r = t.line, n = e.getLine(r);
-      T.registerController.pushText(
-        "0",
-        "yank",
-        n,
-        !0,
-        !0
-      );
-    },
-    /** @arg {CodeMirrorV} cm @arg {ExParams} params*/
-    delete: function(e, t) {
-      var r = t.selectionLine, n = isNaN(t.selectionLineEnd) ? r : t.selectionLineEnd;
-      rt.delete(e, { linewise: !0 }, [
-        {
-          anchor: new o(r, 0),
-          head: new o(n + 1, 0)
-        }
-      ]);
-    },
-    /** @arg {CodeMirrorV} cm @arg {ExParams} params*/
-    join: function(e, t) {
-      var r = t.selectionLine, n = isNaN(t.selectionLineEnd) ? r : t.selectionLineEnd;
-      e.setCursor(new o(r, 0)), De.joinLines(e, { repeat: n - r }, e.state.vim);
-    },
-    /** @arg {CodeMirrorV} cm @arg {ExParams} params*/
-    delmarks: function(e, t) {
-      if (!t.argString || !nt(t.argString)) {
-        K(e, "Argument required");
-        return;
-      }
-      for (var r = e.state.vim, n = new f.StringStream(nt(t.argString)); !n.eol(); ) {
-        n.eatSpace();
-        var i = n.pos;
-        if (!n.match(/[a-zA-Z]/, !1)) {
-          K(e, "Invalid argument: " + t.argString.substring(i));
-          return;
-        }
-        var a = n.next();
-        if (n.match("-", !0)) {
-          if (!n.match(/[a-zA-Z]/, !1)) {
-            K(e, "Invalid argument: " + t.argString.substring(i));
-            return;
-          }
-          var s = a, l = n.next();
-          if (s && l && ae(s) == ae(l)) {
-            var u = s.charCodeAt(0), d = l.charCodeAt(0);
-            if (u >= d) {
-              K(e, "Invalid argument: " + t.argString.substring(i));
-              return;
-            }
-            for (var h = 0; h <= d - u; h++) {
-              var g = String.fromCharCode(u + h);
-              delete r.marks[g];
-            }
-          } else {
-            K(e, "Invalid argument: " + s + "-");
-            return;
-          }
-        } else a && delete r.marks[a];
-      }
-    }
-  }, se = new Zr();
-  ue.defineEx("version", "ve", (e) => {
-    K(e, "Codemirror-vim version: 6.3.0");
-  });
-  function en(e, t, r, n, i, a, s, l, u) {
-    e.state.vim.exMode = !0;
-    var d = !1, h = 0, g, C, m;
-    function v() {
-      e.operation(function() {
-        for (; !d; )
-          w(), A();
-        M();
-      });
-    }
-    function w() {
-      var N = "", R = a.match || a.pos && a.pos.match;
-      if (R)
-        N = l.replace(/\$(\d{1,3}|[$&])/g, function(P, O) {
-          if (O == "$") return "$";
-          if (O == "&") return R[0];
-          for (var $ = O; parseInt($) >= R.length && $.length > 0; )
-            $ = $.slice(0, $.length - 1);
-          return $ ? R[$] + O.slice($.length, O.length) : P;
-        });
+  /**
+  Create an empty changeset of the given length.
+  */
+  static empty(e) {
+    return new y(e ? [e, -1] : [], []);
+  }
+  /**
+  Create a changeset from its JSON representation (as produced by
+  [`toJSON`](https://codemirror.net/6/docs/ref/#state.ChangeSet.toJSON).
+  */
+  static fromJSON(e) {
+    if (!Array.isArray(e))
+      throw new RangeError("Invalid JSON representation of ChangeSet");
+    let t = [], n = [];
+    for (let i = 0; i < e.length; i++) {
+      let s = e[i];
+      if (typeof s == "number")
+        t.push(s, -1);
       else {
-        var U = e.getRange(a.from(), a.to());
-        N = U.replace(s, l);
-      }
-      var J = a.to().line;
-      a.replace(N), C = a.to().line, i += C - J, m = C < J;
-    }
-    function S() {
-      var N = g && V(a.to()), R = a.findNext();
-      return R && !R[0] && N && he(a.from(), N) && (R = a.findNext()), R && h++, R;
-    }
-    function A() {
-      for (; S() && Yr(a.from(), n, i); )
-        if (!(!r && a.from().line == C && !m)) {
-          e.scrollIntoView(a.from(), 30), e.setSelection(a.from(), a.to()), g = a.from(), d = !1;
-          return;
-        }
-      d = !0;
-    }
-    function M(N) {
-      if (N && N(), e.focus(), g) {
-        e.setCursor(g);
-        var R = e.state.vim;
-        R.exMode = !1, R.lastHPos = R.lastHSPos = g.ch;
-      }
-      u ? u() : d && K(
-        e,
-        (h ? "Found " + h + " matches" : "No matches found") + " for pattern: " + s + (le("pcre") ? " (set nopcre to use Vim regexps)" : "")
-      );
-    }
-    function E(N, R, U) {
-      f.e_stop(N);
-      var J = We(N);
-      switch (J) {
-        case "y":
-          w(), A();
-          break;
-        case "n":
-          A();
-          break;
-        case "a":
-          var P = u;
-          u = void 0, e.operation(v), u = P;
-          break;
-        case "l":
-          w();
-        case "q":
-        case "<Esc>":
-        case "<C-c>":
-        case "<C-[>":
-          M(U);
-          break;
-      }
-      return d && M(U), !0;
-    }
-    if (A(), d) {
-      K(e, "No matches for " + s + (le("pcre") ? " (set nopcre to use vim regexps)" : ""));
-      return;
-    }
-    if (!t) {
-      v(), u && u();
-      return;
-    }
-    Xe(e, {
-      prefix: me("span", "replace with ", me("strong", l), " (y/n/a/q/l)"),
-      onKeyDown: E
-    });
-  }
-  function Ae(e, t) {
-    var r = e.state.vim, n = T.macroModeState, i = T.registerController.getRegister("."), a = n.isPlaying, s = n.lastInsertModeChanges;
-    a || (e.off("change", jt), r.insertEnd && r.insertEnd.clear(), r.insertEnd = void 0, f.off(e.getInputField(), "keydown", Jt)), !a && r.insertModeRepeat && r.insertModeRepeat > 1 && (zt(
-      e,
-      r,
-      r.insertModeRepeat - 1,
-      !0
-      /** repeatForInsert */
-    ), r.lastEditInputState.repeatOverride = r.insertModeRepeat), delete r.insertModeRepeat, r.insertMode = !1, t || e.setCursor(e.getCursor().line, e.getCursor().ch - 1), e.setOption("keyMap", "vim"), e.setOption("disableInput", !0), e.toggleOverwrite(!1), i.setText(s.changes.join("")), f.signal(e, "vim-mode-change", { mode: "normal" }), n.isRecording && sn(n);
-  }
-  function ut(e) {
-    p.unshift(e), e.keys && tn(e.keys);
-  }
-  function tn(e) {
-    e.split(/(<(?:[CSMA]-)*\w+>|.)/i).forEach(function(t) {
-      t && (y[t] || (y[t] = 0), y[t]++);
-    });
-  }
-  function rn(e) {
-    e.split(/(<(?:[CSMA]-)*\w+>|.)/i).forEach(function(t) {
-      y[t] && y[t]--;
-    });
-  }
-  function nn(e, t, r, n, i) {
-    var a = { keys: e, type: t };
-    a[t] = r, a[t + "Args"] = n;
-    for (var s in i)
-      a[s] = i[s];
-    ut(a);
-  }
-  Be("insertModeEscKeysTimeout", 200, "number");
-  function an(e, t, r, n) {
-    var i = T.registerController.getRegister(n);
-    if (n == ":") {
-      i.keyBuffer[0] && se.processCommand(e, i.keyBuffer[0]), r.isPlaying = !1;
-      return;
-    }
-    var a = i.keyBuffer, s = 0;
-    r.isPlaying = !0, r.replaySearchQueries = i.searchQueries.slice(0);
-    for (var l = 0; l < a.length; l++)
-      for (var u = a[l], d, h, g = /<(?:[CSMA]-)*\w+>|./gi; d = g.exec(u); )
-        if (h = d[0], ue.handleKey(e, h, "macro"), t.insertMode) {
-          var C = i.insertModeChanges[s++].changes;
-          T.macroModeState.lastInsertModeChanges.changes = C, Xt(e, C, 1), Ae(e);
-        }
-    r.isPlaying = !1;
-  }
-  function on(e, t) {
-    if (!e.isPlaying) {
-      var r = e.latestRegister, n = T.registerController.getRegister(r);
-      n && n.pushText(t);
-    }
-  }
-  function sn(e) {
-    if (!e.isPlaying) {
-      var t = e.latestRegister, r = T.registerController.getRegister(t);
-      r && r.pushInsertModeChanges && r.pushInsertModeChanges(e.lastInsertModeChanges);
-    }
-  }
-  function ln(e, t) {
-    if (!e.isPlaying) {
-      var r = e.latestRegister, n = T.registerController.getRegister(r);
-      n && n.pushSearchQuery && n.pushSearchQuery(t);
-    }
-  }
-  function jt(e, t) {
-    var r = T.macroModeState, n = r.lastInsertModeChanges;
-    if (!r.isPlaying)
-      for (var i = e.state.vim; t; ) {
-        if (n.expectCursorActivityForChange = !0, n.ignoreCount > 1)
-          n.ignoreCount--;
-        else if (t.origin == "+input" || t.origin == "paste" || t.origin === void 0) {
-          var a = e.listSelections().length;
-          a > 1 && (n.ignoreCount = a);
-          var s = t.text.join(`
-`);
-          if (n.maybeReset && (n.changes = [], n.maybeReset = !1), s)
-            if (e.state.overwrite && !/\n/.test(s))
-              n.changes.push([s]);
-            else {
-              if (s.length > 1) {
-                var l = i && i.insertEnd && i.insertEnd.find(), u = e.getCursor();
-                if (l && l.line == u.line) {
-                  var d = l.ch - u.ch;
-                  d > 0 && d < s.length && (n.changes.push([s, d]), s = "");
-                }
-              }
-              s && n.changes.push(s);
-            }
-        }
-        t = t.next;
-      }
-  }
-  function Ut(e) {
-    var i;
-    var t = e.state.vim;
-    if (t.insertMode) {
-      var r = T.macroModeState;
-      if (r.isPlaying)
-        return;
-      var n = r.lastInsertModeChanges;
-      n.expectCursorActivityForChange ? n.expectCursorActivityForChange = !1 : (n.maybeReset = !0, t.insertEnd && t.insertEnd.clear(), t.insertEnd = e.setBookmark(e.getCursor(), { insertLeft: !0 }));
-    } else (i = e.curOp) != null && i.isVimOp || Qt(e, t);
-  }
-  function Qt(e, t) {
-    var r = e.getCursor("anchor"), n = e.getCursor("head");
-    if (t.visualMode && !e.somethingSelected() ? Se(e, !1) : !t.visualMode && !t.insertMode && e.somethingSelected() && (t.visualMode = !0, t.visualLine = !1, f.signal(e, "vim-mode-change", { mode: "visual" })), t.visualMode) {
-      var i = q(n, r) ? 0 : -1, a = q(n, r) ? -1 : 0;
-      n = G(n, 0, i), r = G(r, 0, a), t.sel = {
-        anchor: r,
-        head: n
-      }, be(e, t, "<", ne(n, r)), be(e, t, ">", Te(n, r));
-    } else t.insertMode || (t.lastHPos = e.getCursor().ch);
-  }
-  function Jt(e) {
-    var t = T.macroModeState, r = t.lastInsertModeChanges, n = f.keyName ? f.keyName(e) : e.key;
-    n && (n.indexOf("Delete") != -1 || n.indexOf("Backspace") != -1) && (r.maybeReset && (r.changes = [], r.maybeReset = !1), r.changes.push(new et(n, e)));
-  }
-  function zt(e, t, r, n) {
-    var i = T.macroModeState;
-    i.isPlaying = !0;
-    var a = t.lastEditActionCommand, s = t.inputState;
-    function l() {
-      a ? Oe.processAction(e, t, a) : Oe.evalInput(e, t);
-    }
-    function u(h) {
-      if (i.lastInsertModeChanges.changes.length > 0) {
-        h = t.lastEditActionCommand ? h : 1;
-        var g = i.lastInsertModeChanges;
-        Xt(e, g.changes, h);
-      }
-    }
-    if (t.inputState = t.lastEditInputState, a && a.interlaceInsertRepeat)
-      for (var d = 0; d < r; d++)
-        l(), u(1);
-    else
-      n || l(), u(r);
-    t.inputState = s, t.insertMode && !n && Ae(e), i.isPlaying = !1;
-  }
-  function qt(e, t) {
-    f.lookupKey(t, "vim-insert", function(n) {
-      return typeof n == "string" ? f.commands[n](e) : n(e), !0;
-    });
-  }
-  function Xt(e, t, r) {
-    var n = e.getCursor("head"), i = T.macroModeState.lastInsertModeChanges.visualBlock;
-    i && (bt(e, n, i + 1), r = e.listSelections().length, e.setCursor(n));
-    for (var a = 0; a < r; a++) {
-      i && e.setCursor(G(n, a, 0));
-      for (var s = 0; s < t.length; s++) {
-        var l = t[s];
-        if (l instanceof et)
-          qt(e, l.keyName);
-        else if (typeof l == "string")
-          e.replaceSelection(l);
+        if (!Array.isArray(s) || typeof s[0] != "number" || s.some((r, h) => h && typeof r != "string"))
+          throw new RangeError("Invalid JSON representation of ChangeSet");
+        if (s.length == 1)
+          t.push(s[0], 0);
         else {
-          var u = e.getCursor(), d = G(u, 0, l[0].length - (l[1] || 0));
-          e.replaceRange(l[0], u, l[1] ? u : d), e.setCursor(d);
+          for (; n.length < i; )
+            n.push(x.empty);
+          n[i] = x.of(s.slice(1)), t.push(s[0], n[i].length);
         }
       }
     }
-    i && e.setCursor(G(n, 0, 1));
+    return new y(t, n);
   }
-  function ft(e) {
-    var t = new e.constructor();
-    return Object.keys(e).forEach(function(r) {
-      if (r != "insertEnd") {
-        var n = e[r];
-        Array.isArray(n) ? n = n.slice() : n && typeof n == "object" && n.constructor != Object && (n = ft(n)), t[r] = n;
-      }
-    }), e.sel && (t.sel = {
-      head: e.sel.head && V(e.sel.head),
-      anchor: e.sel.anchor && V(e.sel.anchor)
-    }), t;
+  /**
+  @internal
+  */
+  static createSet(e, t) {
+    return new y(e, t);
   }
-  function un(e, t, r) {
-    var a = Ne(e), n = (
-      /**@type {CodeMirrorV}*/
-      e
-    ), i = !1, a = ue.maybeInitVimState_(n), s = a.visualBlock || a.wasInVisualBlock;
-    if (n.state.closeVimNotification) {
-      var l = n.state.closeVimNotification;
-      if (n.state.closeVimNotification = null, l(), t == "<CR>")
-        return Y(n), !0;
-    }
-    var u = n.isInMultiSelectMode();
-    if (a.wasInVisualBlock && !u ? a.wasInVisualBlock = !1 : u && a.visualBlock && (a.wasInVisualBlock = !0), t == "<Esc>" && !a.insertMode && !a.visualMode && u && a.status == "<Esc>")
-      Y(n);
-    else if (s || !u || n.inVirtualSelectionMode)
-      i = ue.handleKey(n, t, r);
+}
+function k(l, e, t, n = !1) {
+  if (e == 0 && t <= 0)
+    return;
+  let i = l.length - 2;
+  i >= 0 && t <= 0 && t == l[i + 1] ? l[i] += e : i >= 0 && e == 0 && l[i] == 0 ? l[i + 1] += t : n ? (l[i] += e, l[i + 1] += t) : l.push(e, t);
+}
+function b(l, e, t) {
+  if (t.length == 0)
+    return;
+  let n = e.length - 2 >> 1;
+  if (n < l.length)
+    l[l.length - 1] = l[l.length - 1].append(t);
+  else {
+    for (; l.length < n; )
+      l.push(x.empty);
+    l.push(t);
+  }
+}
+function re(l, e, t) {
+  let n = l.inserted;
+  for (let i = 0, s = 0, r = 0; r < l.sections.length; ) {
+    let h = l.sections[r++], o = l.sections[r++];
+    if (o < 0)
+      i += h, s += h;
     else {
-      var d = ft(a), h = a.inputState.changeQueueList || [];
-      n.operation(function() {
-        var C;
-        n.curOp && (n.curOp.isVimOp = !0);
-        var g = 0;
-        n.forEachSelection(function() {
-          n.state.vim.inputState.changeQueue = h[g];
-          var m = n.getCursor("head"), v = n.getCursor("anchor"), w = q(m, v) ? 0 : -1, S = q(m, v) ? -1 : 0;
-          m = G(m, 0, w), v = G(v, 0, S), n.state.vim.sel.head = m, n.state.vim.sel.anchor = v, i = ue.handleKey(n, t, r), n.virtualSelection && (h[g] = n.state.vim.inputState.changeQueue, n.state.vim = ft(d)), g++;
-        }), (C = n.curOp) != null && C.cursorActivity && !i && (n.curOp.cursorActivity = !1), n.state.vim = a, a.inputState.changeQueueList = h, a.inputState.changeQueue = null;
-      }, !0);
-    }
-    return i && !a.visualMode && !a.insertMode && a.visualMode != n.somethingSelected() && Qt(n, a), i;
-  }
-  return yt(), ue;
-}
-function fe(f, o) {
-  var c = o.ch, p = o.line + 1;
-  p < 1 && (p = 1, c = 0), p > f.lines && (p = f.lines, c = Number.MAX_VALUE);
-  var y = f.line(p);
-  return Math.min(y.from + Math.max(0, c), y.to);
-}
-function ve(f, o) {
-  let c = f.lineAt(o);
-  return { line: c.number - 1, ch: o - c.from };
-}
-class Me {
-  constructor(o, c) {
-    this.line = o, this.ch = c;
-  }
-}
-function ar(f, o, c) {
-  if (f.addEventListener)
-    f.addEventListener(o, c, !1);
-  else {
-    var p = f._handlers || (f._handlers = {});
-    p[o] = (p[o] || []).concat(c);
-  }
-}
-function or(f, o, c) {
-  if (f.removeEventListener)
-    f.removeEventListener(o, c, !1);
-  else {
-    var p = f._handlers, y = p && p[o];
-    if (y) {
-      var k = y.indexOf(c);
-      k > -1 && (p[o] = y.slice(0, k).concat(y.slice(k + 1)));
+      let a = i, f = s, u = x.empty;
+      for (; a += h, f += o, o && n && (u = u.append(n[r - 2 >> 1])), !(t || r == l.sections.length || l.sections[r + 1] < 0); )
+        h = l.sections[r++], o = l.sections[r++];
+      e(i, a, s, f, u), i = a, s = f;
     }
   }
 }
-function sr(f, o, ...c) {
-  var p, y = (p = f._handlers) === null || p === void 0 ? void 0 : p[o];
-  if (y)
-    for (var k = 0; k < y.length; ++k)
-      y[k](...c);
-}
-function Zt(f, ...o) {
-  if (f)
-    for (var c = 0; c < f.length; ++c)
-      f[c](...o);
-}
-let pt;
-try {
-  pt = /* @__PURE__ */ new RegExp("[\\w\\p{Alphabetic}\\p{Number}_]", "u");
-} catch {
-  pt = /[\w]/;
-}
-function Qe(f, o) {
-  var c = f.cm6;
-  if (!c.state.readOnly) {
-    var p = "input.type.compose";
-    if (f.curOp && (f.curOp.lastChange || (p = "input.type.compose.start")), o.annotations)
-      try {
-        o.annotations.some(function(y) {
-          y.value == "input" && (y.value = p);
-        });
-      } catch (y) {
-        console.error(y);
+function le(l, e, t, n = !1) {
+  let i = [], s = n ? [] : null, r = new q(l), h = new q(e);
+  for (let o = -1; ; ) {
+    if (r.done && h.len || h.done && r.len)
+      throw new Error("Mismatched change set lengths");
+    if (r.ins == -1 && h.ins == -1) {
+      let a = Math.min(r.len, h.len);
+      k(i, a, -1), r.forward(a), h.forward(a);
+    } else if (h.ins >= 0 && (r.ins < 0 || o == r.i || r.off == 0 && (h.len < r.len || h.len == r.len && !t))) {
+      let a = h.len;
+      for (k(i, h.ins, -1); a; ) {
+        let f = Math.min(r.len, a);
+        r.ins >= 0 && o < r.i && r.len <= f && (k(i, 0, r.ins), s && b(s, i, r.text), o = r.i), r.forward(f), a -= f;
       }
-    else
-      o.userEvent = p;
-    return c.dispatch(o);
+      h.next();
+    } else if (r.ins >= 0) {
+      let a = 0, f = r.len;
+      for (; f; )
+        if (h.ins == -1) {
+          let u = Math.min(f, h.len);
+          a += u, f -= u, h.forward(u);
+        } else if (h.ins == 0 && h.len < f)
+          f -= h.len, h.next();
+        else
+          break;
+      k(i, a, o < r.i ? r.ins : 0), s && o < r.i && b(s, i, r.text), o = r.i, r.forward(r.len - f);
+    } else {
+      if (r.done && h.done)
+        return s ? y.createSet(i, s) : C.create(i);
+      throw new Error("Mismatched change set lengths");
+    }
   }
 }
-function er(f, o) {
-  var c;
-  f.curOp && (f.curOp.$changeStart = void 0), (o ? En : Rn)(f.cm6);
-  let p = (c = f.curOp) === null || c === void 0 ? void 0 : c.$changeStart;
-  p != null && f.cm6.dispatch({ selection: { anchor: p } });
+function Pe(l, e, t = !1) {
+  let n = [], i = t ? [] : null, s = new q(l), r = new q(e);
+  for (let h = !1; ; ) {
+    if (s.done && r.done)
+      return i ? y.createSet(n, i) : C.create(n);
+    if (s.ins == 0)
+      k(n, s.len, 0, h), s.next();
+    else if (r.len == 0 && !r.done)
+      k(n, 0, r.ins, h), i && b(i, n, r.text), r.next();
+    else {
+      if (s.done || r.done)
+        throw new Error("Mismatched change set lengths");
+      {
+        let o = Math.min(s.len2, r.len), a = n.length;
+        if (s.ins == -1) {
+          let f = r.ins == -1 ? -1 : r.off ? 0 : r.ins;
+          k(n, o, f, h), i && f && b(i, n, r.text);
+        } else r.ins == -1 ? (k(n, s.off ? 0 : s.len, o, h), i && b(i, n, s.textBit(o))) : (k(n, s.off ? 0 : s.len, r.off ? 0 : r.ins, h), i && !r.off && b(i, n, r.text));
+        h = (s.ins > o || r.ins >= 0 && r.len > o) && (h || n.length > a), s.forward2(o), r.forward(o);
+      }
+    }
+  }
 }
-var Bn = {
-  Left: (f) => He(f.cm6, { key: "Left" }, "editor"),
-  Right: (f) => He(f.cm6, { key: "Right" }, "editor"),
-  Up: (f) => He(f.cm6, { key: "Up" }, "editor"),
-  Down: (f) => He(f.cm6, { key: "Down" }, "editor"),
-  Backspace: (f) => He(f.cm6, { key: "Backspace" }, "editor"),
-  Delete: (f) => He(f.cm6, { key: "Delete" }, "editor")
+class q {
+  constructor(e) {
+    this.set = e, this.i = 0, this.next();
+  }
+  next() {
+    let { sections: e } = this.set;
+    this.i < e.length ? (this.len = e[this.i++], this.ins = e[this.i++]) : (this.len = 0, this.ins = -2), this.off = 0;
+  }
+  get done() {
+    return this.ins == -2;
+  }
+  get len2() {
+    return this.ins < 0 ? this.len : this.ins;
+  }
+  get text() {
+    let { inserted: e } = this.set, t = this.i - 2 >> 1;
+    return t >= e.length ? x.empty : e[t];
+  }
+  textBit(e) {
+    let { inserted: t } = this.set, n = this.i - 2 >> 1;
+    return n >= t.length && !e ? x.empty : t[n].slice(this.off, e == null ? void 0 : this.off + e);
+  }
+  forward(e) {
+    e == this.len ? this.next() : (this.len -= e, this.off += e);
+  }
+  forward2(e) {
+    this.ins == -1 ? this.forward(e) : e == this.ins ? this.next() : (this.ins -= e, this.off += e);
+  }
+}
+class B {
+  constructor(e, t, n) {
+    this.from = e, this.to = t, this.flags = n;
+  }
+  /**
+  The anchor of the range—the side that doesn't move when you
+  extend it.
+  */
+  get anchor() {
+    return this.flags & 32 ? this.to : this.from;
+  }
+  /**
+  The head of the range, which is moved when the range is
+  [extended](https://codemirror.net/6/docs/ref/#state.SelectionRange.extend).
+  */
+  get head() {
+    return this.flags & 32 ? this.from : this.to;
+  }
+  /**
+  True when `anchor` and `head` are at the same position.
+  */
+  get empty() {
+    return this.from == this.to;
+  }
+  /**
+  If this is a cursor that is explicitly associated with the
+  character on one of its sides, this returns the side. -1 means
+  the character before its position, 1 the character after, and 0
+  means no association.
+  */
+  get assoc() {
+    return this.flags & 8 ? -1 : this.flags & 16 ? 1 : 0;
+  }
+  /**
+  The bidirectional text level associated with this cursor, if
+  any.
+  */
+  get bidiLevel() {
+    let e = this.flags & 7;
+    return e == 7 ? null : e;
+  }
+  /**
+  The goal column (stored vertical offset) associated with a
+  cursor. This is used to preserve the vertical position when
+  [moving](https://codemirror.net/6/docs/ref/#view.EditorView.moveVertically) across
+  lines of different length.
+  */
+  get goalColumn() {
+    let e = this.flags >> 6;
+    return e == 16777215 ? void 0 : e;
+  }
+  /**
+  Map this range through a change, producing a valid range in the
+  updated document.
+  */
+  map(e, t = -1) {
+    let n, i;
+    return this.empty ? n = i = e.mapPos(this.from, t) : (n = e.mapPos(this.from, 1), i = e.mapPos(this.to, -1)), n == this.from && i == this.to ? this : new B(n, i, this.flags);
+  }
+  /**
+  Extend this range to cover at least `from` to `to`.
+  */
+  extend(e, t = e) {
+    if (e <= this.anchor && t >= this.anchor)
+      return g.range(e, t);
+    let n = Math.abs(e - this.anchor) > Math.abs(t - this.anchor) ? e : t;
+    return g.range(this.anchor, n);
+  }
+  /**
+  Compare this range to another range.
+  */
+  eq(e, t = !1) {
+    return this.anchor == e.anchor && this.head == e.head && (!t || !this.empty || this.assoc == e.assoc);
+  }
+  /**
+  Return a JSON-serializable object representing the range.
+  */
+  toJSON() {
+    return { anchor: this.anchor, head: this.head };
+  }
+  /**
+  Convert a JSON representation of a range to a `SelectionRange`
+  instance.
+  */
+  static fromJSON(e) {
+    if (!e || typeof e.anchor != "number" || typeof e.head != "number")
+      throw new RangeError("Invalid JSON representation for SelectionRange");
+    return g.range(e.anchor, e.head);
+  }
+  /**
+  @internal
+  */
+  static create(e, t, n) {
+    return new B(e, t, n);
+  }
+}
+class g {
+  constructor(e, t) {
+    this.ranges = e, this.mainIndex = t;
+  }
+  /**
+  Map a selection through a change. Used to adjust the selection
+  position for changes.
+  */
+  map(e, t = -1) {
+    return e.empty ? this : g.create(this.ranges.map((n) => n.map(e, t)), this.mainIndex);
+  }
+  /**
+  Compare this selection to another selection. By default, ranges
+  are compared only by position. When `includeAssoc` is true,
+  cursor ranges must also have the same
+  [`assoc`](https://codemirror.net/6/docs/ref/#state.SelectionRange.assoc) value.
+  */
+  eq(e, t = !1) {
+    if (this.ranges.length != e.ranges.length || this.mainIndex != e.mainIndex)
+      return !1;
+    for (let n = 0; n < this.ranges.length; n++)
+      if (!this.ranges[n].eq(e.ranges[n], t))
+        return !1;
+    return !0;
+  }
+  /**
+  Get the primary selection range. Usually, you should make sure
+  your code applies to _all_ ranges, by using methods like
+  [`changeByRange`](https://codemirror.net/6/docs/ref/#state.EditorState.changeByRange).
+  */
+  get main() {
+    return this.ranges[this.mainIndex];
+  }
+  /**
+  Make sure the selection only has one range. Returns a selection
+  holding only the main range from this selection.
+  */
+  asSingle() {
+    return this.ranges.length == 1 ? this : new g([this.main], 0);
+  }
+  /**
+  Extend this selection with an extra range.
+  */
+  addRange(e, t = !0) {
+    return g.create([e].concat(this.ranges), t ? 0 : this.mainIndex + 1);
+  }
+  /**
+  Replace a given range with another range, and then normalize the
+  selection to merge and sort ranges if necessary.
+  */
+  replaceRange(e, t = this.mainIndex) {
+    let n = this.ranges.slice();
+    return n[t] = e, g.create(n, this.mainIndex);
+  }
+  /**
+  Convert this selection to an object that can be serialized to
+  JSON.
+  */
+  toJSON() {
+    return { ranges: this.ranges.map((e) => e.toJSON()), main: this.mainIndex };
+  }
+  /**
+  Create a selection from a JSON representation.
+  */
+  static fromJSON(e) {
+    if (!e || !Array.isArray(e.ranges) || typeof e.main != "number" || e.main >= e.ranges.length)
+      throw new RangeError("Invalid JSON representation for EditorSelection");
+    return new g(e.ranges.map((t) => B.fromJSON(t)), e.main);
+  }
+  /**
+  Create a selection holding a single range.
+  */
+  static single(e, t = e) {
+    return new g([g.range(e, t)], 0);
+  }
+  /**
+  Sort and merge the given set of ranges, creating a valid
+  selection.
+  */
+  static create(e, t = 0) {
+    if (e.length == 0)
+      throw new RangeError("A selection needs at least one range");
+    for (let n = 0, i = 0; i < e.length; i++) {
+      let s = e[i];
+      if (s.empty ? s.from <= n : s.from < n)
+        return g.normalized(e.slice(), t);
+      n = s.to;
+    }
+    return new g(e, t);
+  }
+  /**
+  Create a cursor selection range at the given position. You can
+  safely ignore the optional arguments in most situations.
+  */
+  static cursor(e, t = 0, n, i) {
+    return B.create(e, e, (t == 0 ? 0 : t < 0 ? 8 : 16) | (n == null ? 7 : Math.min(6, n)) | (i ?? 16777215) << 6);
+  }
+  /**
+  Create a selection range.
+  */
+  static range(e, t, n, i) {
+    let s = (n ?? 16777215) << 6 | (i == null ? 7 : Math.min(6, i));
+    return t < e ? B.create(t, e, 48 | s) : B.create(e, t, (t > e ? 8 : 0) | s);
+  }
+  /**
+  @internal
+  */
+  static normalized(e, t = 0) {
+    let n = e[t];
+    e.sort((i, s) => i.from - s.from), t = e.indexOf(n);
+    for (let i = 1; i < e.length; i++) {
+      let s = e[i], r = e[i - 1];
+      if (s.empty ? s.from <= r.to : s.from < r.to) {
+        let h = r.from, o = Math.max(s.to, r.to);
+        i <= t && t--, e.splice(--i, 2, s.anchor > s.head ? g.range(o, h) : g.range(h, o));
+      }
+    }
+    return new g(e, t);
+  }
+}
+function Ae(l, e) {
+  for (let t of l.ranges)
+    if (t.to > e)
+      throw new RangeError("Selection points outside of document");
+}
+let ge = 0;
+class A {
+  constructor(e, t, n, i, s) {
+    this.combine = e, this.compareInput = t, this.compare = n, this.isStatic = i, this.id = ge++, this.default = e([]), this.extensions = typeof s == "function" ? s(this) : s;
+  }
+  /**
+  Returns a facet reader for this facet, which can be used to
+  [read](https://codemirror.net/6/docs/ref/#state.EditorState.facet) it but not to define values for it.
+  */
+  get reader() {
+    return this;
+  }
+  /**
+  Define a new facet.
+  */
+  static define(e = {}) {
+    return new A(e.combine || ((t) => t), e.compareInput || ((t, n) => t === n), e.compare || (e.combine ? (t, n) => t === n : pe), !!e.static, e.enables);
+  }
+  /**
+  Returns an extension that adds the given value to this facet.
+  */
+  of(e) {
+    return new X([], this, 0, e);
+  }
+  /**
+  Create an extension that computes a value for the facet from a
+  state. You must take care to declare the parts of the state that
+  this value depends on, since your function is only called again
+  for a new state when one of those parts changed.
+  
+  In cases where your value depends only on a single field, you'll
+  want to use the [`from`](https://codemirror.net/6/docs/ref/#state.Facet.from) method instead.
+  */
+  compute(e, t) {
+    if (this.isStatic)
+      throw new Error("Can't compute a static facet");
+    return new X(e, this, 1, t);
+  }
+  /**
+  Create an extension that computes zero or more values for this
+  facet from a state.
+  */
+  computeN(e, t) {
+    if (this.isStatic)
+      throw new Error("Can't compute a static facet");
+    return new X(e, this, 2, t);
+  }
+  from(e, t) {
+    return t || (t = (n) => n), this.compute([e], (n) => t(n.field(e)));
+  }
+}
+function pe(l, e) {
+  return l == e || l.length == e.length && l.every((t, n) => t === e[n]);
+}
+class X {
+  constructor(e, t, n, i) {
+    this.dependencies = e, this.facet = t, this.type = n, this.value = i, this.id = ge++;
+  }
+  dynamicSlot(e) {
+    var t;
+    let n = this.value, i = this.facet.compareInput, s = this.id, r = e[s] >> 1, h = this.type == 2, o = !1, a = !1, f = [];
+    for (let u of this.dependencies)
+      u == "doc" ? o = !0 : u == "selection" ? a = !0 : ((t = e[u.id]) !== null && t !== void 0 ? t : 1) & 1 || f.push(e[u.id]);
+    return {
+      create(u) {
+        return u.values[r] = n(u), 1;
+      },
+      update(u, c) {
+        if (o && c.docChanged || a && (c.docChanged || c.selection) || he(u, f)) {
+          let d = n(u);
+          if (h ? !ve(d, u.values[r], i) : !i(d, u.values[r]))
+            return u.values[r] = d, 1;
+        }
+        return 0;
+      },
+      reconfigure: (u, c) => {
+        let d, p = c.config.address[s];
+        if (p != null) {
+          let E = j(c, p);
+          if (this.dependencies.every((v) => v instanceof A ? c.facet(v) === u.facet(v) : v instanceof L ? c.field(v, !1) == u.field(v, !1) : !0) || (h ? ve(d = n(u), E, i) : i(d = n(u), E)))
+            return u.values[r] = E, 0;
+        } else
+          d = n(u);
+        return u.values[r] = d, 1;
+      }
+    };
+  }
+}
+function ve(l, e, t) {
+  if (l.length != e.length)
+    return !1;
+  for (let n = 0; n < l.length; n++)
+    if (!t(l[n], e[n]))
+      return !1;
+  return !0;
+}
+function he(l, e) {
+  let t = !1;
+  for (let n of e)
+    $(l, n) & 1 && (t = !0);
+  return t;
+}
+function qe(l, e, t) {
+  let n = t.map((o) => l[o.id]), i = t.map((o) => o.type), s = n.filter((o) => !(o & 1)), r = l[e.id] >> 1;
+  function h(o) {
+    let a = [];
+    for (let f = 0; f < n.length; f++) {
+      let u = j(o, n[f]);
+      if (i[f] == 2)
+        for (let c of u)
+          a.push(c);
+      else
+        a.push(u);
+    }
+    return e.combine(a);
+  }
+  return {
+    create(o) {
+      for (let a of n)
+        $(o, a);
+      return o.values[r] = h(o), 1;
+    },
+    update(o, a) {
+      if (!he(o, s))
+        return 0;
+      let f = h(o);
+      return e.compare(f, o.values[r]) ? 0 : (o.values[r] = f, 1);
+    },
+    reconfigure(o, a) {
+      let f = he(o, n), u = a.config.facets[e.id], c = a.facet(e);
+      if (u && !f && pe(t, u))
+        return o.values[r] = c, 0;
+      let d = h(o);
+      return e.compare(d, c) ? (o.values[r] = c, 0) : (o.values[r] = d, 1);
+    }
+  };
+}
+const G = /* @__PURE__ */ A.define({ static: !0 });
+class L {
+  constructor(e, t, n, i, s) {
+    this.id = e, this.createF = t, this.updateF = n, this.compareF = i, this.spec = s, this.provides = void 0;
+  }
+  /**
+  Define a state field.
+  */
+  static define(e) {
+    let t = new L(ge++, e.create, e.update, e.compare || ((n, i) => n === i), e);
+    return e.provide && (t.provides = e.provide(t)), t;
+  }
+  create(e) {
+    let t = e.facet(G).find((n) => n.field == this);
+    return ((t == null ? void 0 : t.create) || this.createF)(e);
+  }
+  /**
+  @internal
+  */
+  slot(e) {
+    let t = e[this.id] >> 1;
+    return {
+      create: (n) => (n.values[t] = this.create(n), 1),
+      update: (n, i) => {
+        let s = n.values[t], r = this.updateF(s, i);
+        return this.compareF(s, r) ? 0 : (n.values[t] = r, 1);
+      },
+      reconfigure: (n, i) => {
+        let s = n.facet(G), r = i.facet(G), h;
+        return (h = s.find((o) => o.field == this)) && h != r.find((o) => o.field == this) ? (n.values[t] = h.create(n), 1) : i.config.address[this.id] != null ? (n.values[t] = i.field(this), 0) : (n.values[t] = this.create(n), 1);
+      }
+    };
+  }
+  /**
+  Returns an extension that enables this field and overrides the
+  way it is initialized. Can be useful when you need to provide a
+  non-default starting value for the field.
+  */
+  init(e) {
+    return [this, G.of({ field: this, create: e })];
+  }
+  /**
+  State field instances can be used as
+  [`Extension`](https://codemirror.net/6/docs/ref/#state.Extension) values to enable the field in a
+  given state.
+  */
+  get extension() {
+    return this;
+  }
+}
+const T = { lowest: 4, low: 3, default: 2, high: 1, highest: 0 };
+function V(l) {
+  return (e) => new Ee(e, l);
+}
+const it = {
+  /**
+  The highest precedence level, for extensions that should end up
+  near the start of the precedence ordering.
+  */
+  highest: /* @__PURE__ */ V(T.highest),
+  /**
+  A higher-than-default precedence, for extensions that should
+  come before those with default precedence.
+  */
+  high: /* @__PURE__ */ V(T.high),
+  /**
+  The default precedence, which is also used for extensions
+  without an explicit precedence.
+  */
+  default: /* @__PURE__ */ V(T.default),
+  /**
+  A lower-than-default precedence.
+  */
+  low: /* @__PURE__ */ V(T.low),
+  /**
+  The lowest precedence level. Meant for things that should end up
+  near the end of the extension order.
+  */
+  lowest: /* @__PURE__ */ V(T.lowest)
 };
+class Ee {
+  constructor(e, t) {
+    this.inner = e, this.prec = t;
+  }
+}
+class te {
+  /**
+  Create an instance of this compartment to add to your [state
+  configuration](https://codemirror.net/6/docs/ref/#state.EditorStateConfig.extensions).
+  */
+  of(e) {
+    return new oe(this, e);
+  }
+  /**
+  Create an [effect](https://codemirror.net/6/docs/ref/#state.TransactionSpec.effects) that
+  reconfigures this compartment.
+  */
+  reconfigure(e) {
+    return te.reconfigure.of({ compartment: this, extension: e });
+  }
+  /**
+  Get the current content of the compartment in the state, or
+  `undefined` if it isn't present.
+  */
+  get(e) {
+    return e.config.compartments.get(this);
+  }
+}
+class oe {
+  constructor(e, t) {
+    this.compartment = e, this.inner = t;
+  }
+}
+class Z {
+  constructor(e, t, n, i, s, r) {
+    for (this.base = e, this.compartments = t, this.dynamicSlots = n, this.address = i, this.staticValues = s, this.facets = r, this.statusTemplate = []; this.statusTemplate.length < n.length; )
+      this.statusTemplate.push(
+        0
+        /* SlotStatus.Unresolved */
+      );
+  }
+  staticFacet(e) {
+    let t = this.address[e.id];
+    return t == null ? e.default : this.staticValues[t >> 1];
+  }
+  static resolve(e, t, n) {
+    let i = [], s = /* @__PURE__ */ Object.create(null), r = /* @__PURE__ */ new Map();
+    for (let c of ze(e, t, r))
+      c instanceof L ? i.push(c) : (s[c.facet.id] || (s[c.facet.id] = [])).push(c);
+    let h = /* @__PURE__ */ Object.create(null), o = [], a = [];
+    for (let c of i)
+      h[c.id] = a.length << 1, a.push((d) => c.slot(d));
+    let f = n == null ? void 0 : n.config.facets;
+    for (let c in s) {
+      let d = s[c], p = d[0].facet, E = f && f[c] || [];
+      if (d.every(
+        (v) => v.type == 0
+        /* Provider.Static */
+      ))
+        if (h[p.id] = o.length << 1 | 1, pe(E, d))
+          o.push(n.facet(p));
+        else {
+          let v = p.combine(d.map((ne) => ne.value));
+          o.push(n && p.compare(v, n.facet(p)) ? n.facet(p) : v);
+        }
+      else {
+        for (let v of d)
+          v.type == 0 ? (h[v.id] = o.length << 1 | 1, o.push(v.value)) : (h[v.id] = a.length << 1, a.push((ne) => v.dynamicSlot(ne)));
+        h[p.id] = a.length << 1, a.push((v) => qe(v, p, d));
+      }
+    }
+    let u = a.map((c) => c(h));
+    return new Z(e, r, u, h, o, s);
+  }
+}
+function ze(l, e, t) {
+  let n = [[], [], [], [], []], i = /* @__PURE__ */ new Map();
+  function s(r, h) {
+    let o = i.get(r);
+    if (o != null) {
+      if (o <= h)
+        return;
+      let a = n[o].indexOf(r);
+      a > -1 && n[o].splice(a, 1), r instanceof oe && t.delete(r.compartment);
+    }
+    if (i.set(r, h), Array.isArray(r))
+      for (let a of r)
+        s(a, h);
+    else if (r instanceof oe) {
+      if (t.has(r.compartment))
+        throw new RangeError("Duplicate use of compartment in extensions");
+      let a = e.get(r.compartment) || r.inner;
+      t.set(r.compartment, a), s(a, h);
+    } else if (r instanceof Ee)
+      s(r.inner, r.prec);
+    else if (r instanceof L)
+      n[h].push(r), r.provides && s(r.provides, h);
+    else if (r instanceof X)
+      n[h].push(r), r.facet.extensions && s(r.facet.extensions, T.default);
+    else {
+      let a = r.extension;
+      if (!a)
+        throw new Error(`Unrecognized extension value in extension set (${r}). This sometimes happens because multiple instances of @codemirror/state are loaded, breaking instanceof checks.`);
+      s(a, h);
+    }
+  }
+  return s(l, T.default), n.reduce((r, h) => r.concat(h));
+}
+function $(l, e) {
+  if (e & 1)
+    return 2;
+  let t = e >> 1, n = l.status[t];
+  if (n == 4)
+    throw new Error("Cyclic dependency between fields and/or facets");
+  if (n & 2)
+    return n;
+  l.status[t] = 4;
+  let i = l.computeSlot(l, l.config.dynamicSlots[t]);
+  return l.status[t] = 2 | i;
+}
+function j(l, e) {
+  return e & 1 ? l.config.staticValues[e >> 1] : l.values[e >> 1];
+}
+const Oe = /* @__PURE__ */ A.define(), ae = /* @__PURE__ */ A.define({
+  combine: (l) => l.some((e) => e),
+  static: !0
+}), Ce = /* @__PURE__ */ A.define({
+  combine: (l) => l.length ? l[0] : void 0,
+  static: !0
+}), Me = /* @__PURE__ */ A.define(), be = /* @__PURE__ */ A.define(), Re = /* @__PURE__ */ A.define(), Te = /* @__PURE__ */ A.define({
+  combine: (l) => l.length ? l[0] : !1
+});
+class U {
+  /**
+  @internal
+  */
+  constructor(e, t) {
+    this.type = e, this.value = t;
+  }
+  /**
+  Define a new type of annotation.
+  */
+  static define() {
+    return new We();
+  }
+}
+class We {
+  /**
+  Create an instance of this annotation.
+  */
+  of(e) {
+    return new U(this, e);
+  }
+}
+class Ue {
+  /**
+  @internal
+  */
+  constructor(e) {
+    this.map = e;
+  }
+  /**
+  Create a [state effect](https://codemirror.net/6/docs/ref/#state.StateEffect) instance of this
+  type.
+  */
+  of(e) {
+    return new I(this, e);
+  }
+}
 class I {
-  // --------------------------
-  openDialog(o, c, p) {
-    return Pn(this, o, c, p);
+  /**
+  @internal
+  */
+  constructor(e, t) {
+    this.type = e, this.value = t;
   }
-  openNotification(o, c) {
-    return Nn(this, o, c);
+  /**
+  Map this effect through a position mapping. Will return
+  `undefined` when that ends up deleting the effect.
+  */
+  map(e) {
+    let t = this.type.map(this.value, e);
+    return t === void 0 ? void 0 : t == this.value ? this : new I(this.type, t);
   }
-  constructor(o) {
-    this.state = {}, this.marks = /* @__PURE__ */ Object.create(null), this.$mid = 0, this.options = {}, this._handlers = {}, this.$lastChangeEndOffset = 0, this.virtualSelection = null, this.cm6 = o, this.onChange = this.onChange.bind(this), this.onSelectionChange = this.onSelectionChange.bind(this);
+  /**
+  Tells you whether this effect object is of a given
+  [type](https://codemirror.net/6/docs/ref/#state.StateEffectType).
+  */
+  is(e) {
+    return this.type == e;
   }
-  on(o, c) {
-    ar(this, o, c);
+  /**
+  Define a new effect type. The type parameter indicates the type
+  of values that his effect holds. It should be a type that
+  doesn't include `undefined`, since that is used in
+  [mapping](https://codemirror.net/6/docs/ref/#state.StateEffect.map) to indicate that an effect is
+  removed.
+  */
+  static define(e = {}) {
+    return new Ue(e.map || ((t) => t));
   }
-  off(o, c) {
-    or(this, o, c);
+  /**
+  Map an array of effects through a change set.
+  */
+  static mapEffects(e, t) {
+    if (!e.length)
+      return e;
+    let n = [];
+    for (let i of e) {
+      let s = i.map(t);
+      s && n.push(s);
+    }
+    return n;
   }
-  signal(o, c, p) {
-    sr(this, o, c, p);
+}
+I.reconfigure = /* @__PURE__ */ I.define();
+I.appendConfig = /* @__PURE__ */ I.define();
+class P {
+  constructor(e, t, n, i, s, r) {
+    this.startState = e, this.changes = t, this.selection = n, this.effects = i, this.annotations = s, this.scrollIntoView = r, this._doc = null, this._state = null, n && Ae(n, t.newLength), s.some((h) => h.type == P.time) || (this.annotations = s.concat(P.time.of(Date.now())));
   }
-  indexFromPos(o) {
-    return fe(this.cm6.state.doc, o);
+  /**
+  @internal
+  */
+  static create(e, t, n, i, s, r) {
+    return new P(e, t, n, i, s, r);
   }
-  posFromIndex(o) {
-    return ve(this.cm6.state.doc, o);
+  /**
+  The new document produced by the transaction. Contrary to
+  [`.state`](https://codemirror.net/6/docs/ref/#state.Transaction.state)`.doc`, accessing this won't
+  force the entire new state to be computed right away, so it is
+  recommended that [transaction
+  filters](https://codemirror.net/6/docs/ref/#state.EditorState^transactionFilter) use this getter
+  when they need to look at the new document.
+  */
+  get newDoc() {
+    return this._doc || (this._doc = this.changes.apply(this.startState.doc));
   }
-  foldCode(o) {
-    let c = this.cm6, p = c.state.selection.ranges, y = this.cm6.state.doc, k = fe(y, o), L = Ce.create([Ce.range(k, k)], 0).ranges;
-    c.state.selection.ranges = L, vn(c), c.state.selection.ranges = p;
+  /**
+  The new selection produced by the transaction. If
+  [`this.selection`](https://codemirror.net/6/docs/ref/#state.Transaction.selection) is undefined,
+  this will [map](https://codemirror.net/6/docs/ref/#state.EditorSelection.map) the start state's
+  current selection through the changes made by the transaction.
+  */
+  get newSelection() {
+    return this.selection || this.startState.selection.map(this.changes);
   }
-  firstLine() {
-    return 0;
+  /**
+  The new state created by the transaction. Computed on demand
+  (but retained for subsequent access), so it is recommended not to
+  access it in [transaction
+  filters](https://codemirror.net/6/docs/ref/#state.EditorState^transactionFilter) when possible.
+  */
+  get state() {
+    return this._state || this.startState.applyTransaction(this), this._state;
   }
-  lastLine() {
-    return this.cm6.state.doc.lines - 1;
+  /**
+  Get the value of the given annotation type, if any.
+  */
+  annotation(e) {
+    for (let t of this.annotations)
+      if (t.type == e)
+        return t.value;
   }
-  lineCount() {
-    return this.cm6.state.doc.lines;
+  /**
+  Indicates whether the transaction changed the document.
+  */
+  get docChanged() {
+    return !this.changes.empty;
   }
-  setCursor(o, c) {
-    typeof o == "object" && (c = o.ch, o = o.line);
-    var p = fe(this.cm6.state.doc, { line: o, ch: c || 0 });
-    this.cm6.dispatch({ selection: { anchor: p } }, { scrollIntoView: !this.curOp }), this.curOp && !this.curOp.isVimOp && this.onBeforeEndOperation();
+  /**
+  Indicates whether this transaction reconfigures the state
+  (through a [configuration compartment](https://codemirror.net/6/docs/ref/#state.Compartment) or
+  with a top-level configuration
+  [effect](https://codemirror.net/6/docs/ref/#state.StateEffect^reconfigure).
+  */
+  get reconfigured() {
+    return this.startState.config != this.state.config;
   }
-  getCursor(o) {
-    var c = this.cm6.state.selection.main, p = o == "head" || !o ? c.head : o == "anchor" ? c.anchor : o == "start" ? c.from : o == "end" ? c.to : null;
-    if (p == null)
-      throw new Error("Invalid cursor type");
-    return this.posFromIndex(p);
+  /**
+  Returns true if the transaction has a [user
+  event](https://codemirror.net/6/docs/ref/#state.Transaction^userEvent) annotation that is equal to
+  or more specific than `event`. For example, if the transaction
+  has `"select.pointer"` as user event, `"select"` and
+  `"select.pointer"` will match it.
+  */
+  isUserEvent(e) {
+    let t = this.annotation(P.userEvent);
+    return !!(t && (t == e || t.length > e.length && t.slice(0, e.length) == e && t[e.length] == "."));
   }
-  listSelections() {
-    var o = this.cm6.state.doc;
-    return this.cm6.state.selection.ranges.map((c) => ({
-      anchor: ve(o, c.anchor),
-      head: ve(o, c.head)
+}
+P.time = /* @__PURE__ */ U.define();
+P.userEvent = /* @__PURE__ */ U.define();
+P.addToHistory = /* @__PURE__ */ U.define();
+P.remote = /* @__PURE__ */ U.define();
+function Ge(l, e) {
+  let t = [];
+  for (let n = 0, i = 0; ; ) {
+    let s, r;
+    if (n < l.length && (i == e.length || e[i] >= l[n]))
+      s = l[n++], r = l[n++];
+    else if (i < e.length)
+      s = e[i++], r = e[i++];
+    else
+      return t;
+    !t.length || t[t.length - 1] < s ? t.push(s, r) : t[t.length - 1] < r && (t[t.length - 1] = r);
+  }
+}
+function Be(l, e, t) {
+  var n;
+  let i, s, r;
+  return t ? (i = e.changes, s = y.empty(e.changes.length), r = l.changes.compose(e.changes)) : (i = e.changes.map(l.changes), s = l.changes.mapDesc(e.changes, !0), r = l.changes.compose(i)), {
+    changes: r,
+    selection: e.selection ? e.selection.map(s) : (n = l.selection) === null || n === void 0 ? void 0 : n.map(i),
+    effects: I.mapEffects(l.effects, i).concat(I.mapEffects(e.effects, s)),
+    annotations: l.annotations.length ? l.annotations.concat(e.annotations) : e.annotations,
+    scrollIntoView: l.scrollIntoView || e.scrollIntoView
+  };
+}
+function fe(l, e, t) {
+  let n = e.selection, i = F(e.annotations);
+  return e.userEvent && (i = i.concat(P.userEvent.of(e.userEvent))), {
+    changes: e.changes instanceof y ? e.changes : y.of(e.changes || [], t, l.facet(Ce)),
+    selection: n && (n instanceof g ? n : g.single(n.anchor, n.head)),
+    effects: F(e.effects),
+    annotations: i,
+    scrollIntoView: !!e.scrollIntoView
+  };
+}
+function Fe(l, e, t) {
+  let n = fe(l, e.length ? e[0] : {}, l.doc.length);
+  e.length && e[0].filter === !1 && (t = !1);
+  for (let s = 1; s < e.length; s++) {
+    e[s].filter === !1 && (t = !1);
+    let r = !!e[s].sequential;
+    n = Be(n, fe(l, e[s], r ? n.changes.newLength : l.doc.length), r);
+  }
+  let i = P.create(l, n.changes, n.selection, n.effects, n.annotations, n.scrollIntoView);
+  return Ke(t ? He(i) : i);
+}
+function He(l) {
+  let e = l.startState, t = !0;
+  for (let i of e.facet(Me)) {
+    let s = i(l);
+    if (s === !1) {
+      t = !1;
+      break;
+    }
+    Array.isArray(s) && (t = t === !0 ? s : Ge(t, s));
+  }
+  if (t !== !0) {
+    let i, s;
+    if (t === !1)
+      s = l.changes.invertedDesc, i = y.empty(e.doc.length);
+    else {
+      let r = l.changes.filter(t);
+      i = r.changes, s = r.filtered.mapDesc(r.changes).invertedDesc;
+    }
+    l = P.create(e, i, l.selection && l.selection.map(s), I.mapEffects(l.effects, s), l.annotations, l.scrollIntoView);
+  }
+  let n = e.facet(be);
+  for (let i = n.length - 1; i >= 0; i--) {
+    let s = n[i](l);
+    s instanceof P ? l = s : Array.isArray(s) && s.length == 1 && s[0] instanceof P ? l = s[0] : l = Fe(e, F(s), !1);
+  }
+  return l;
+}
+function Ke(l) {
+  let e = l.startState, t = e.facet(Re), n = l;
+  for (let i = t.length - 1; i >= 0; i--) {
+    let s = t[i](l);
+    s && Object.keys(s).length && (n = Be(n, fe(e, s, l.changes.newLength), !0));
+  }
+  return n == l ? l : P.create(e, l.changes, l.selection, n.effects, n.annotations, n.scrollIntoView);
+}
+const Qe = [];
+function F(l) {
+  return l == null ? Qe : Array.isArray(l) ? l : [l];
+}
+var R = /* @__PURE__ */ function(l) {
+  return l[l.Word = 0] = "Word", l[l.Space = 1] = "Space", l[l.Other = 2] = "Other", l;
+}(R || (R = {}));
+const Xe = /[\u00df\u0587\u0590-\u05f4\u0600-\u06ff\u3040-\u309f\u30a0-\u30ff\u3400-\u4db5\u4e00-\u9fcc\uac00-\ud7af]/;
+let ue;
+try {
+  ue = /* @__PURE__ */ new RegExp("[\\p{Alphabetic}\\p{Number}_]", "u");
+} catch {
+}
+function Ye(l) {
+  if (ue)
+    return ue.test(l);
+  for (let e = 0; e < l.length; e++) {
+    let t = l[e];
+    if (/\w/.test(t) || t > "" && (t.toUpperCase() != t.toLowerCase() || Xe.test(t)))
+      return !0;
+  }
+  return !1;
+}
+function Ze(l) {
+  return (e) => {
+    if (!/\S/.test(e))
+      return R.Space;
+    if (Ye(e))
+      return R.Word;
+    for (let t = 0; t < l.length; t++)
+      if (e.indexOf(l[t]) > -1)
+        return R.Word;
+    return R.Other;
+  };
+}
+class w {
+  constructor(e, t, n, i, s, r) {
+    this.config = e, this.doc = t, this.selection = n, this.values = i, this.status = e.statusTemplate.slice(), this.computeSlot = s, r && (r._state = this);
+    for (let h = 0; h < this.config.dynamicSlots.length; h++)
+      $(this, h << 1);
+    this.computeSlot = null;
+  }
+  field(e, t = !0) {
+    let n = this.config.address[e.id];
+    if (n == null) {
+      if (t)
+        throw new RangeError("Field is not present in this state");
+      return;
+    }
+    return $(this, n), j(this, n);
+  }
+  /**
+  Create a [transaction](https://codemirror.net/6/docs/ref/#state.Transaction) that updates this
+  state. Any number of [transaction specs](https://codemirror.net/6/docs/ref/#state.TransactionSpec)
+  can be passed. Unless
+  [`sequential`](https://codemirror.net/6/docs/ref/#state.TransactionSpec.sequential) is set, the
+  [changes](https://codemirror.net/6/docs/ref/#state.TransactionSpec.changes) (if any) of each spec
+  are assumed to start in the _current_ document (not the document
+  produced by previous specs), and its
+  [selection](https://codemirror.net/6/docs/ref/#state.TransactionSpec.selection) and
+  [effects](https://codemirror.net/6/docs/ref/#state.TransactionSpec.effects) are assumed to refer
+  to the document created by its _own_ changes. The resulting
+  transaction contains the combined effect of all the different
+  specs. For [selection](https://codemirror.net/6/docs/ref/#state.TransactionSpec.selection), later
+  specs take precedence over earlier ones.
+  */
+  update(...e) {
+    return Fe(this, e, !0);
+  }
+  /**
+  @internal
+  */
+  applyTransaction(e) {
+    let t = this.config, { base: n, compartments: i } = t;
+    for (let h of e.effects)
+      h.is(te.reconfigure) ? (t && (i = /* @__PURE__ */ new Map(), t.compartments.forEach((o, a) => i.set(a, o)), t = null), i.set(h.value.compartment, h.value.extension)) : h.is(I.reconfigure) ? (t = null, n = h.value) : h.is(I.appendConfig) && (t = null, n = F(n).concat(h.value));
+    let s;
+    t ? s = e.startState.values.slice() : (t = Z.resolve(n, i, this), s = new w(t, this.doc, this.selection, t.dynamicSlots.map(() => null), (o, a) => a.reconfigure(o, this), null).values);
+    let r = e.startState.facet(ae) ? e.newSelection : e.newSelection.asSingle();
+    new w(t, e.newDoc, r, s, (h, o) => o.update(h, e), e);
+  }
+  /**
+  Create a [transaction spec](https://codemirror.net/6/docs/ref/#state.TransactionSpec) that
+  replaces every selection range with the given content.
+  */
+  replaceSelection(e) {
+    return typeof e == "string" && (e = this.toText(e)), this.changeByRange((t) => ({
+      changes: { from: t.from, to: t.to, insert: e },
+      range: g.cursor(t.from + e.length)
     }));
   }
-  setSelections(o, c) {
-    var p = this.cm6.state.doc, y = o.map((k) => {
-      var L = fe(p, k.head), x = fe(p, k.anchor);
-      return L == x ? Ce.cursor(L, 1) : Ce.range(x, L);
-    });
-    this.cm6.dispatch({
-      selection: Ce.create(y, c)
-    });
-  }
-  setSelection(o, c, p) {
-    this.setSelections([{ anchor: o, head: c }], 0), p && p.origin == "*mouse" && this.onBeforeEndOperation();
-  }
-  getLine(o) {
-    var c = this.cm6.state.doc;
-    return o < 0 || o >= c.lines ? "" : this.cm6.state.doc.line(o + 1).text;
-  }
-  getLineHandle(o) {
-    return this.$lineHandleChanges || (this.$lineHandleChanges = []), { row: o, index: this.indexFromPos(new Me(o, 0)) };
-  }
-  getLineNumber(o) {
-    var c = this.$lineHandleChanges;
-    if (!c)
-      return null;
-    for (var p = o.index, y = 0; y < c.length; y++)
-      if (p = c[y].changes.mapPos(p, 1, rr.TrackAfter), p == null)
-        return null;
-    var k = this.posFromIndex(p);
-    return k.ch == 0 ? k.line : null;
-  }
-  releaseLineHandles() {
-    this.$lineHandleChanges = void 0;
-  }
-  getRange(o, c) {
-    var p = this.cm6.state.doc;
-    return this.cm6.state.sliceDoc(fe(p, o), fe(p, c));
-  }
-  replaceRange(o, c, p, y) {
-    p || (p = c);
-    var k = this.cm6.state.doc, L = fe(k, c), x = fe(k, p);
-    Qe(this, { changes: { from: L, to: x, insert: o } });
-  }
-  replaceSelection(o) {
-    Qe(this, this.cm6.state.replaceSelection(o));
-  }
-  replaceSelections(o) {
-    var c = this.cm6.state.selection.ranges, p = c.map((y, k) => ({ from: y.from, to: y.to, insert: o[k] || "" }));
-    Qe(this, { changes: p });
-  }
-  getSelection() {
-    return this.getSelections().join(`
-`);
-  }
-  getSelections() {
-    var o = this.cm6;
-    return o.state.selection.ranges.map((c) => o.state.sliceDoc(c.from, c.to));
-  }
-  somethingSelected() {
-    return this.cm6.state.selection.ranges.some((o) => !o.empty);
-  }
-  getInputField() {
-    return this.cm6.contentDOM;
-  }
-  clipPos(o) {
-    var c = this.cm6.state.doc, p = o.ch, y = o.line + 1;
-    y < 1 && (y = 1, p = 0), y > c.lines && (y = c.lines, p = Number.MAX_VALUE);
-    var k = c.line(y);
-    return p = Math.min(Math.max(0, p), k.to - k.from), new Me(y - 1, p);
-  }
-  getValue() {
-    return this.cm6.state.doc.toString();
-  }
-  setValue(o) {
-    var c = this.cm6;
-    return c.dispatch({
-      changes: { from: 0, to: c.state.doc.length, insert: o },
-      selection: Ce.range(0, 0)
-    });
-  }
-  focus() {
-    return this.cm6.focus();
-  }
-  blur() {
-    return this.cm6.contentDOM.blur();
-  }
-  defaultTextHeight() {
-    return this.cm6.defaultLineHeight;
-  }
-  findMatchingBracket(o, c) {
-    var p = this.cm6.state, y = fe(p.doc, o), k = Gt(p, y + 1, -1);
-    return k && k.end ? { to: ve(p.doc, k.end.from) } : (k = Gt(p, y, 1), k && k.end ? { to: ve(p.doc, k.end.from) } : { to: void 0 });
-  }
-  scanForBracket(o, c, p, y) {
-    return _n(this, o, c, p, y);
-  }
-  indentLine(o, c) {
-    c ? this.indentMore() : this.indentLess();
-  }
-  indentMore() {
-    Sn(this.cm6);
-  }
-  indentLess() {
-    xn(this.cm6);
-  }
-  execCommand(o) {
-    if (o == "indentAuto")
-      I.commands.indentAuto(this);
-    else if (o == "goLineLeft")
-      Mn(this.cm6);
-    else if (o == "goLineRight") {
-      Ln(this.cm6);
-      let c = this.cm6.state, p = c.selection.main.head;
-      p < c.doc.length && c.sliceDoc(p, p + 1) !== `
-` && bn(this.cm6);
-    } else
-      console.log(o + " is not implemented");
-  }
-  setBookmark(o, c) {
-    var p = c != null && c.insertLeft ? 1 : -1, y = this.indexFromPos(o), k = new Vn(this, y, p);
-    return k;
-  }
-  addOverlay({ query: o }) {
-    let c = new kn({
-      regexp: !0,
-      search: o.source,
-      caseSensitive: !/i/.test(o.flags)
-    });
-    if (c.valid) {
-      c.forVim = !0, this.cm6Query = c;
-      let p = dt.of(c);
-      return this.cm6.dispatch({ effects: p }), c;
-    }
-  }
-  removeOverlay(o) {
-    if (!this.cm6Query)
-      return;
-    this.cm6Query.forVim = !1;
-    let c = dt.of(this.cm6Query);
-    this.cm6.dispatch({ effects: c });
-  }
-  getSearchCursor(o, c) {
-    var p = this, y = null, k = null, L = !1;
-    c.ch == null && (c.ch = Number.MAX_VALUE);
-    var x = fe(p.cm6.state.doc, c), b = o.source.replace(/(\\.|{(?:\d+(?:,\d*)?|,\d+)})|[{}]/g, function(B, _) {
-      return _ || "\\" + B;
-    });
-    function F(B, _ = 0, Q = B.length) {
-      return new wn(B, b, { ignoreCase: o.ignoreCase }, _, Q);
-    }
-    function D(B) {
-      var _ = p.cm6.state.doc;
-      if (B > _.length)
-        return null;
-      let Q = F(_, B).next();
-      return Q.done ? null : Q.value;
-    }
-    var H = 1e4;
-    function j(B, _) {
-      var Q = p.cm6.state.doc;
-      for (let W = 1; ; W++) {
-        let z = Math.max(B, _ - W * H), ie = F(Q, z, _), ae = null;
-        for (; !ie.next().done; )
-          ae = ie.value;
-        if (ae && (z == B || ae.from > z + 10))
-          return ae;
-        if (z == B)
-          return null;
-      }
+  /**
+  Create a set of changes and a new selection by running the given
+  function for each range in the active selection. The function
+  can return an optional set of changes (in the coordinate space
+  of the start document), plus an updated range (in the coordinate
+  space of the document produced by the call's own changes). This
+  method will merge all the changes and ranges into a single
+  changeset and selection, and return it as a [transaction
+  spec](https://codemirror.net/6/docs/ref/#state.TransactionSpec), which can be passed to
+  [`update`](https://codemirror.net/6/docs/ref/#state.EditorState.update).
+  */
+  changeByRange(e) {
+    let t = this.selection, n = e(t.ranges[0]), i = this.changes(n.changes), s = [n.range], r = F(n.effects);
+    for (let h = 1; h < t.ranges.length; h++) {
+      let o = e(t.ranges[h]), a = this.changes(o.changes), f = a.map(i);
+      for (let c = 0; c < h; c++)
+        s[c] = s[c].map(f);
+      let u = i.mapDesc(a, !0);
+      s.push(o.range.map(u)), i = i.compose(f), r = I.mapEffects(r, f).concat(I.mapEffects(F(o.effects), u));
     }
     return {
-      findNext: function() {
-        return this.find(!1);
-      },
-      findPrevious: function() {
-        return this.find(!0);
-      },
-      find: function(B) {
-        var _ = p.cm6.state.doc;
-        if (B) {
-          let Q = y ? L ? y.to - 1 : y.from : x;
-          y = j(0, Q);
-        } else {
-          let Q = y ? L ? y.to + 1 : y.to : x;
-          y = D(Q);
-        }
-        return k = y && {
-          from: ve(_, y.from),
-          to: ve(_, y.to),
-          match: y.match
-        }, L = y ? y.from == y.to : !1, y && y.match;
-      },
-      from: function() {
-        return k == null ? void 0 : k.from;
-      },
-      to: function() {
-        return k == null ? void 0 : k.to;
-      },
-      replace: function(B) {
-        y && (Qe(p, {
-          changes: { from: y.from, to: y.to, insert: B }
-        }), y.to = y.from + B.length, k && (k.to = ve(p.cm6.state.doc, y.to)));
-      },
-      get match() {
-        return k && k.match;
-      }
+      changes: i,
+      selection: g.create(s, t.mainIndex),
+      effects: r
     };
   }
-  findPosV(o, c, p, y) {
-    let { cm6: k } = this;
-    const L = k.state.doc;
-    let x = p == "page" ? k.dom.clientHeight : 0;
-    const b = fe(L, o);
-    let F = Ce.cursor(b, 1, void 0, y), D = Math.round(Math.abs(c));
-    for (let j = 0; j < D; j++)
-      p == "page" ? F = k.moveVertically(F, c > 0, x) : p == "line" && (F = k.moveVertically(F, c > 0));
-    let H = ve(L, F.head);
-    return (c < 0 && F.head == 0 && y != 0 && o.line == 0 && o.ch != 0 || c > 0 && F.head == L.length && H.ch != y && o.line == H.line) && (H.hitSide = !0), H;
+  /**
+  Create a [change set](https://codemirror.net/6/docs/ref/#state.ChangeSet) from the given change
+  description, taking the state's document length and line
+  separator into account.
+  */
+  changes(e = []) {
+    return e instanceof y ? e : y.of(e, this.doc.length, this.facet(w.lineSeparator));
   }
-  charCoords(o, c) {
-    var p = this.cm6.contentDOM.getBoundingClientRect(), y = fe(this.cm6.state.doc, o), k = this.cm6.coordsAtPos(y), L = -p.top;
-    return { left: ((k == null ? void 0 : k.left) || 0) - p.left, top: ((k == null ? void 0 : k.top) || 0) + L, bottom: ((k == null ? void 0 : k.bottom) || 0) + L };
+  /**
+  Using the state's [line
+  separator](https://codemirror.net/6/docs/ref/#state.EditorState^lineSeparator), create a
+  [`Text`](https://codemirror.net/6/docs/ref/#state.Text) instance from the given string.
+  */
+  toText(e) {
+    return x.of(e.split(this.facet(w.lineSeparator) || se));
   }
-  coordsChar(o, c) {
-    var p = this.cm6.contentDOM.getBoundingClientRect(), y = this.cm6.posAtCoords({ x: o.left + p.left, y: o.top + p.top }) || 0;
-    return ve(this.cm6.state.doc, y);
+  /**
+  Return the given range of the document as a string.
+  */
+  sliceDoc(e = 0, t = this.doc.length) {
+    return this.doc.sliceString(e, t, this.lineBreak);
   }
-  getScrollInfo() {
-    var o = this.cm6.scrollDOM;
-    return {
-      left: o.scrollLeft,
-      top: o.scrollTop,
-      height: o.scrollHeight,
-      width: o.scrollWidth,
-      clientHeight: o.clientHeight,
-      clientWidth: o.clientWidth
+  /**
+  Get the value of a state [facet](https://codemirror.net/6/docs/ref/#state.Facet).
+  */
+  facet(e) {
+    let t = this.config.address[e.id];
+    return t == null ? e.default : ($(this, t), j(this, t));
+  }
+  /**
+  Convert this state to a JSON-serializable object. When custom
+  fields should be serialized, you can pass them in as an object
+  mapping property names (in the resulting object, which should
+  not use `doc` or `selection`) to fields.
+  */
+  toJSON(e) {
+    let t = {
+      doc: this.sliceDoc(),
+      selection: this.selection.toJSON()
     };
-  }
-  scrollTo(o, c) {
-    o != null && (this.cm6.scrollDOM.scrollLeft = o), c != null && (this.cm6.scrollDOM.scrollTop = c);
-  }
-  scrollIntoView(o, c) {
-    if (o) {
-      var p = this.indexFromPos(o);
-      this.cm6.dispatch({
-        effects: Ye.scrollIntoView(p)
-      });
-    } else
-      this.cm6.dispatch({ scrollIntoView: !0, userEvent: "scroll" });
-  }
-  getWrapperElement() {
-    return this.cm6.dom;
-  }
-  // for tests
-  getMode() {
-    return { name: this.getOption("mode") };
-  }
-  setSize(o, c) {
-    this.cm6.dom.style.width = o + 4 + "px", this.cm6.dom.style.height = c + "px", this.refresh();
-  }
-  refresh() {
-    this.cm6.measure();
-  }
-  // event listeners
-  destroy() {
-    this.removeOverlay();
-  }
-  getLastEditEnd() {
-    return this.posFromIndex(this.$lastChangeEndOffset);
-  }
-  onChange(o) {
-    this.$lineHandleChanges && this.$lineHandleChanges.push(o);
-    for (let p in this.marks)
-      this.marks[p].update(o.changes);
-    this.virtualSelection && (this.virtualSelection.ranges = this.virtualSelection.ranges.map((p) => p.map(o.changes)));
-    var c = this.curOp = this.curOp || {};
-    o.changes.iterChanges((p, y, k, L, x) => {
-      (c.$changeStart == null || c.$changeStart > k) && (c.$changeStart = k), this.$lastChangeEndOffset = L;
-      var b = { text: x.toJSON() };
-      c.lastChange ? c.lastChange.next = c.lastChange = b : c.lastChange = c.change = b;
-    }, !0), c.changeHandlers || (c.changeHandlers = this._handlers.change && this._handlers.change.slice());
-  }
-  onSelectionChange() {
-    var o = this.curOp = this.curOp || {};
-    o.cursorActivityHandlers || (o.cursorActivityHandlers = this._handlers.cursorActivity && this._handlers.cursorActivity.slice()), this.curOp.cursorActivity = !0;
-  }
-  operation(o, c) {
-    this.curOp || (this.curOp = { $d: 0 }), this.curOp.$d++;
-    try {
-      var p = o();
-    } finally {
-      this.curOp && (this.curOp.$d--, this.curOp.$d || this.onBeforeEndOperation());
-    }
-    return p;
-  }
-  onBeforeEndOperation() {
-    var o = this.curOp, c = !1;
-    o && (o.change && Zt(o.changeHandlers, this, o.change), o && o.cursorActivity && (Zt(o.cursorActivityHandlers, this, null), o.isVimOp && (c = !0)), this.curOp = null), c && this.scrollIntoView();
-  }
-  moveH(o, c) {
-    if (c == "char") {
-      var p = this.getCursor();
-      this.setCursor(p.line, p.ch + o);
-    }
-  }
-  setOption(o, c) {
-    switch (o) {
-      case "keyMap":
-        this.state.keyMap = c;
-        break;
-      case "textwidth":
-        this.state.textwidth = c;
-        break;
-    }
-  }
-  getOption(o) {
-    switch (o) {
-      case "firstLineNumber":
-        return 1;
-      case "tabSize":
-        return this.cm6.state.tabSize || 4;
-      case "readOnly":
-        return this.cm6.state.readOnly;
-      case "indentWithTabs":
-        return this.cm6.state.facet(Yt) == "	";
-      case "indentUnit":
-        return this.cm6.state.facet(Yt).length || 2;
-      case "textwidth":
-        return this.state.textwidth;
-      case "keyMap":
-        return this.state.keyMap || "vim";
-    }
-  }
-  toggleOverwrite(o) {
-    this.state.overwrite = o;
-  }
-  getTokenTypeAt(o) {
-    var c, p = this.indexFromPos(o), y = nr(this.cm6.state, p), k = y == null ? void 0 : y.resolve(p), L = ((c = k == null ? void 0 : k.type) === null || c === void 0 ? void 0 : c.name) || "";
-    return /comment/i.test(L) ? "comment" : /string/i.test(L) ? "string" : "";
-  }
-  overWriteSelection(o) {
-    var c = this.cm6.state.doc, p = this.cm6.state.selection, y = p.ranges.map((k) => {
-      if (k.empty) {
-        var L = k.to < c.length ? c.sliceString(k.from, k.to + 1) : "";
-        if (L && !/\n/.test(L))
-          return Ce.range(k.from, k.to + 1);
+    if (e)
+      for (let n in e) {
+        let i = e[n];
+        i instanceof L && this.config.address[i.id] != null && (t[n] = i.spec.toJSON(this.field(e[n]), this));
       }
-      return k;
-    });
-    this.cm6.dispatch({
-      selection: Ce.create(y, p.mainIndex)
-    }), this.replaceSelection(o);
+    return t;
   }
-  /*** multiselect ****/
-  isInMultiSelectMode() {
-    return this.cm6.state.selection.ranges.length > 1;
-  }
-  virtualSelectionMode() {
-    return !!this.virtualSelection;
-  }
-  forEachSelection(o) {
-    var c = this.cm6.state.selection;
-    this.virtualSelection = Ce.create(c.ranges, c.mainIndex);
-    for (var p = 0; p < this.virtualSelection.ranges.length; p++) {
-      var y = this.virtualSelection.ranges[p];
-      y && (this.cm6.dispatch({ selection: Ce.create([y]) }), o(), this.virtualSelection.ranges[p] = this.cm6.state.selection.ranges[0]);
-    }
-    this.cm6.dispatch({ selection: this.virtualSelection }), this.virtualSelection = null;
-  }
-  hardWrap(o) {
-    return $n(this, o);
-  }
-}
-I.isMac = typeof navigator < "u" && /* @__PURE__ */ /Mac/.test(navigator.platform);
-I.Pos = Me;
-I.StringStream = gn;
-I.commands = {
-  cursorCharLeft: function(f) {
-    On(f.cm6);
-  },
-  redo: function(f) {
-    er(f, !1);
-  },
-  undo: function(f) {
-    er(f, !0);
-  },
-  newlineAndIndent: function(f) {
-    An({
-      state: f.cm6.state,
-      dispatch: (o) => Qe(f, o)
-    });
-  },
-  indentAuto: function(f) {
-    Tn(f.cm6);
-  },
-  newlineAndIndentContinueComment: void 0,
-  save: void 0
-};
-I.isWordChar = function(f) {
-  return pt.test(f);
-};
-I.keys = Bn;
-I.addClass = function(f, o) {
-};
-I.rmClass = function(f, o) {
-};
-I.e_preventDefault = function(f) {
-  f.preventDefault();
-};
-I.e_stop = function(f) {
-  var o, c;
-  (o = f == null ? void 0 : f.stopPropagation) === null || o === void 0 || o.call(f), (c = f == null ? void 0 : f.preventDefault) === null || c === void 0 || c.call(f);
-};
-I.lookupKey = function(o, c, p) {
-  var y = I.keys[o];
-  !y && /^Arrow/.test(o) && (y = I.keys[o.slice(5)]), y && p(y);
-};
-I.on = ar;
-I.off = or;
-I.signal = sr;
-I.findMatchingTag = Fn;
-I.findEnclosingTag = Hn;
-I.keyName = void 0;
-function lr(f, o, c) {
-  var p = document.createElement("div");
-  return p.appendChild(o), p;
-}
-function ur(f, o) {
-  f.state.currentNotificationClose && f.state.currentNotificationClose(), f.state.currentNotificationClose = o;
-}
-function Nn(f, o, c) {
-  ur(f, x);
-  var p = lr(f, o, c && c.bottom), y = !1, k, L = c && typeof c.duration < "u" ? c.duration : 5e3;
-  function x() {
-    y || (y = !0, clearTimeout(k), p.remove(), cr(f, p));
-  }
-  return p.onclick = function(b) {
-    b.preventDefault(), x();
-  }, fr(f, p), L && (k = setTimeout(x, L)), x;
-}
-function fr(f, o) {
-  var c = f.state.dialog;
-  f.state.dialog = o, o.style.flex = "1", o && c !== o && (c && c.contains(document.activeElement) && f.focus(), c && c.parentElement ? c.parentElement.replaceChild(o, c) : c && c.remove(), I.signal(f, "dialog"));
-}
-function cr(f, o) {
-  f.state.dialog == o && (f.state.dialog = null, I.signal(f, "dialog"));
-}
-function Pn(f, o, c, p) {
-  p || (p = {}), ur(f, void 0);
-  var y = lr(f, o, p.bottom), k = !1;
-  fr(f, y);
-  function L(b) {
-    if (typeof b == "string")
-      x.value = b;
-    else {
-      if (k)
-        return;
-      k = !0, cr(f, y), f.state.dialog || f.focus(), p.onClose && p.onClose(y);
-    }
-  }
-  var x = y.getElementsByTagName("input")[0];
-  return x && (p.value && (x.value = p.value, p.selectValueOnOpen !== !1 && x.select()), p.onInput && I.on(x, "input", function(b) {
-    p.onInput(b, x.value, L);
-  }), p.onKeyUp && I.on(x, "keyup", function(b) {
-    p.onKeyUp(b, x.value, L);
-  }), I.on(x, "keydown", function(b) {
-    p && p.onKeyDown && p.onKeyDown(b, x.value, L) || (b.keyCode == 13 && c && c(x.value), (b.keyCode == 27 || p.closeOnEnter !== !1 && b.keyCode == 13) && (x.blur(), I.e_stop(b), L()));
-  }), p.closeOnBlur !== !1 && I.on(x, "blur", function() {
-    setTimeout(function() {
-      document.activeElement !== x && L();
-    });
-  }), x.focus()), L;
-}
-var Kn = { "(": ")>", ")": "(<", "[": "]>", "]": "[<", "{": "}>", "}": "{<", "<": ">>", ">": "<<" };
-function Dn(f) {
-  return f && f.bracketRegex || /[(){}[\]]/;
-}
-function _n(f, o, c, p, y) {
-  for (var k = y && y.maxScanLineLength || 1e4, L = y && y.maxScanLines || 1e3, x = [], b = Dn(y), F = c > 0 ? Math.min(o.line + L, f.lastLine() + 1) : Math.max(f.firstLine() - 1, o.line - L), D = o.line; D != F; D += c) {
-    var H = f.getLine(D);
-    if (H) {
-      var j = c > 0 ? 0 : H.length - 1, B = c > 0 ? H.length : -1;
-      if (!(H.length > k))
-        for (D == o.line && (j = o.ch - (c < 0 ? 1 : 0)); j != B; j += c) {
-          var _ = H.charAt(j);
-          if (b.test(_)) {
-            var Q = Kn[_];
-            if (Q && Q.charAt(1) == ">" == c > 0)
-              x.push(_);
-            else if (x.length)
-              x.pop();
-            else
-              return { pos: new Me(D, j), ch: _ };
-          }
+  /**
+  Deserialize a state from its JSON representation. When custom
+  fields should be deserialized, pass the same object you passed
+  to [`toJSON`](https://codemirror.net/6/docs/ref/#state.EditorState.toJSON) when serializing as
+  third argument.
+  */
+  static fromJSON(e, t = {}, n) {
+    if (!e || typeof e.doc != "string")
+      throw new RangeError("Invalid JSON representation for EditorState");
+    let i = [];
+    if (n) {
+      for (let s in n)
+        if (Object.prototype.hasOwnProperty.call(e, s)) {
+          let r = n[s], h = e[s];
+          i.push(r.init((o) => r.spec.fromJSON(h, o)));
         }
     }
+    return w.create({
+      doc: e.doc,
+      selection: g.fromJSON(e.selection),
+      extensions: t.extensions ? i.concat([t.extensions]) : i
+    });
   }
-  return D - c == (c > 0 ? f.lastLine() : f.firstLine()) ? !1 : null;
-}
-function Fn(f, o) {
-  return null;
-}
-function Hn(f, o) {
-  var c, p, y = f.cm6.state, k = f.indexFromPos(o);
-  if (k < y.doc.length) {
-    var L = y.sliceDoc(k, k + 1);
-    L == "<" && k++;
+  /**
+  Create a new state. You'll usually only need this when
+  initializing an editor—updated states are created by applying
+  transactions.
+  */
+  static create(e = {}) {
+    let t = Z.resolve(e.extensions || [], /* @__PURE__ */ new Map()), n = e.doc instanceof x ? e.doc : x.of((e.doc || "").split(t.staticFacet(w.lineSeparator) || se)), i = e.selection ? e.selection instanceof g ? e.selection : g.single(e.selection.anchor, e.selection.head) : g.single(0);
+    return Ae(i, n.length), t.staticFacet(ae) || (i = i.asSingle()), new w(t, n, i, t.dynamicSlots.map(() => null), (s, r) => r.create(s), null);
   }
-  for (var x = nr(y, k), b = (x == null ? void 0 : x.resolve(k)) || null; b; ) {
-    if (((c = b.firstChild) === null || c === void 0 ? void 0 : c.type.name) == "OpenTag" && ((p = b.lastChild) === null || p === void 0 ? void 0 : p.type.name) == "CloseTag")
-      return {
-        open: tr(y.doc, b.firstChild),
-        close: tr(y.doc, b.lastChild)
-      };
-    b = b.parent;
+  /**
+  The size (in columns) of a tab in the document, determined by
+  the [`tabSize`](https://codemirror.net/6/docs/ref/#state.EditorState^tabSize) facet.
+  */
+  get tabSize() {
+    return this.facet(w.tabSize);
   }
-}
-function tr(f, o) {
-  return {
-    from: ve(f, o.from),
-    to: ve(f, o.to)
-  };
-}
-class Vn {
-  constructor(o, c, p) {
-    this.cm = o, this.id = o.$mid++, this.offset = c, this.assoc = p, o.marks[this.id] = this;
+  /**
+  Get the proper [line-break](https://codemirror.net/6/docs/ref/#state.EditorState^lineSeparator)
+  string for this state.
+  */
+  get lineBreak() {
+    return this.facet(w.lineSeparator) || `
+`;
   }
-  clear() {
-    delete this.cm.marks[this.id];
+  /**
+  Returns true when the editor is
+  [configured](https://codemirror.net/6/docs/ref/#state.EditorState^readOnly) to be read-only.
+  */
+  get readOnly() {
+    return this.facet(Te);
   }
-  find() {
-    return this.offset == null ? null : this.cm.posFromIndex(this.offset);
-  }
-  update(o) {
-    this.offset != null && (this.offset = o.mapPos(this.offset, this.assoc, rr.TrackDel));
-  }
-}
-function $n(f, o) {
-  for (var c, p = o.column || f.getOption("textwidth") || 80, y = o.allowMerge != !1, k = Math.min(o.from, o.to), L = Math.max(o.from, o.to); k <= L; ) {
-    var x = f.getLine(k);
-    if (x.length > p) {
-      var b = _(x, p, 5);
-      if (b) {
-        var F = (c = /^\s*/.exec(x)) === null || c === void 0 ? void 0 : c[0];
-        f.replaceRange(`
-` + F, new Me(k, b.start), new Me(k, b.end));
+  /**
+  Look up a translation for the given phrase (via the
+  [`phrases`](https://codemirror.net/6/docs/ref/#state.EditorState^phrases) facet), or return the
+  original string if no translation is found.
+  
+  If additional arguments are passed, they will be inserted in
+  place of markers like `$1` (for the first value) and `$2`, etc.
+  A single `$` is equivalent to `$1`, and `$$` will produce a
+  literal dollar sign.
+  */
+  phrase(e, ...t) {
+    for (let n of this.facet(w.phrases))
+      if (Object.prototype.hasOwnProperty.call(n, e)) {
+        e = n[e];
+        break;
       }
-      L++;
-    } else if (y && /\S/.test(x) && k != L) {
-      var D = f.getLine(k + 1);
-      if (D && /\S/.test(D)) {
-        var H = x.replace(/\s+$/, ""), j = D.replace(/^\s+/, ""), B = H + " " + j, b = _(B, p, 5);
-        b && b.start > H.length || B.length < p ? (f.replaceRange(" ", new Me(k, H.length), new Me(k + 1, D.length - j.length)), k--, L--) : H.length < x.length && f.replaceRange("", new Me(k, H.length), new Me(k, x.length));
-      }
-    }
-    k++;
+    return t.length && (e = e.replace(/\$(\$|\d*)/g, (n, i) => {
+      if (i == "$")
+        return "$";
+      let s = +(i || 1);
+      return !s || s > t.length ? n : t[s - 1];
+    })), e;
   }
-  return k;
-  function _(Q, W, z) {
-    if (!(Q.length < W)) {
-      var ie = Q.slice(0, W), ae = Q.slice(W), ce = /^(?:(\s+)|(\S+)(\s+))/.exec(ae), oe = /(?:(\s+)|(\s+)(\S+))$/.exec(ie), ge = 0, Z = 0;
-      if (oe && !oe[2] && (ge = W - oe[1].length, Z = W), ce && !ce[2] && (ge || (ge = W), Z = W + ce[1].length), ge)
-        return {
-          start: ge,
-          end: Z
-        };
-      if (oe && oe[2] && oe.index > z)
-        return {
-          start: oe.index,
-          end: oe.index + oe[2].length
-        };
-      if (ce && ce[2])
-        return ge = W + ce[2].length, {
-          start: ge,
-          end: ge + ce[3].length
-        };
+  /**
+  Find the values for a given language data field, provided by the
+  the [`languageData`](https://codemirror.net/6/docs/ref/#state.EditorState^languageData) facet.
+  
+  Examples of language data fields are...
+  
+  - [`"commentTokens"`](https://codemirror.net/6/docs/ref/#commands.CommentTokens) for specifying
+    comment syntax.
+  - [`"autocomplete"`](https://codemirror.net/6/docs/ref/#autocomplete.autocompletion^config.override)
+    for providing language-specific completion sources.
+  - [`"wordChars"`](https://codemirror.net/6/docs/ref/#state.EditorState.charCategorizer) for adding
+    characters that should be considered part of words in this
+    language.
+  - [`"closeBrackets"`](https://codemirror.net/6/docs/ref/#autocomplete.CloseBracketConfig) controls
+    bracket closing behavior.
+  */
+  languageDataAt(e, t, n = -1) {
+    let i = [];
+    for (let s of this.facet(Oe))
+      for (let r of s(this, t, n))
+        Object.prototype.hasOwnProperty.call(r, e) && i.push(r[e]);
+    return i;
+  }
+  /**
+  Return a function that can categorize strings (expected to
+  represent a single [grapheme cluster](https://codemirror.net/6/docs/ref/#state.findClusterBreak))
+  into one of:
+  
+   - Word (contains an alphanumeric character or a character
+     explicitly listed in the local language's `"wordChars"`
+     language data, which should be a string)
+   - Space (contains only whitespace)
+   - Other (anything else)
+  */
+  charCategorizer(e) {
+    return Ze(this.languageDataAt("wordChars", e).join(""));
+  }
+  /**
+  Find the word at the given position, meaning the range
+  containing all [word](https://codemirror.net/6/docs/ref/#state.CharCategory.Word) characters
+  around it. If no word characters are adjacent to the position,
+  this returns null.
+  */
+  wordAt(e) {
+    let { text: t, from: n, length: i } = this.doc.lineAt(e), s = this.charCategorizer(e), r = e - n, h = e - n;
+    for (; r > 0; ) {
+      let o = Y(t, r, !1);
+      if (s(t.slice(o, r)) != R.Word)
+        break;
+      r = o;
     }
+    for (; h < i; ) {
+      let o = Y(t, h);
+      if (s(t.slice(h, o)) != R.Word)
+        break;
+      h = o;
+    }
+    return r == h ? null : g.range(r + n, h + n);
   }
 }
-let vt = mn || /* @__PURE__ */ function() {
-  let f = { cursorBlinkRate: 1200 };
-  return function() {
-    return f;
-  };
-}();
-class Wn {
-  constructor(o, c, p, y, k, L, x, b, F, D) {
-    this.left = o, this.top = c, this.height = p, this.fontFamily = y, this.fontSize = k, this.fontWeight = L, this.color = x, this.className = b, this.letter = F, this.partial = D;
+w.allowMultipleSelections = ae;
+w.tabSize = /* @__PURE__ */ A.define({
+  combine: (l) => l.length ? l[0] : 4
+});
+w.lineSeparator = Ce;
+w.readOnly = Te;
+w.phrases = /* @__PURE__ */ A.define({
+  compare(l, e) {
+    let t = Object.keys(l), n = Object.keys(e);
+    return t.length == n.length && t.every((i) => l[i] == e[i]);
   }
-  draw() {
-    let o = document.createElement("div");
-    return o.className = this.className, this.adjust(o), o;
+});
+w.languageData = Oe;
+w.changeFilter = Me;
+w.transactionFilter = be;
+w.transactionExtender = Re;
+te.reconfigure = /* @__PURE__ */ I.define();
+function st(l, e, t = {}) {
+  let n = {};
+  for (let i of l)
+    for (let s of Object.keys(i)) {
+      let r = i[s], h = n[s];
+      if (h === void 0)
+        n[s] = r;
+      else if (!(h === r || r === void 0)) if (Object.hasOwnProperty.call(t, s))
+        n[s] = t[s](h, r);
+      else
+        throw new Error("Config merge conflict for field " + s);
+    }
+  for (let i in e)
+    n[i] === void 0 && (n[i] = e[i]);
+  return n;
+}
+class _ {
+  /**
+  Compare this value with another value. Used when comparing
+  rangesets. The default implementation compares by identity.
+  Unless you are only creating a fixed number of unique instances
+  of your value type, it is a good idea to implement this
+  properly.
+  */
+  eq(e) {
+    return this == e;
   }
-  adjust(o) {
-    o.style.left = this.left + "px", o.style.top = this.top + "px", o.style.height = this.height + "px", o.style.lineHeight = this.height + "px", o.style.fontFamily = this.fontFamily, o.style.fontSize = this.fontSize, o.style.fontWeight = this.fontWeight, o.style.color = this.partial ? "transparent" : this.color, o.className = this.className, o.textContent = this.letter;
-  }
-  eq(o) {
-    return this.left == o.left && this.top == o.top && this.height == o.height && this.fontFamily == o.fontFamily && this.fontSize == o.fontSize && this.fontWeight == o.fontWeight && this.color == o.color && this.className == o.className && this.letter == o.letter;
+  /**
+  Create a [range](https://codemirror.net/6/docs/ref/#state.Range) with this value.
+  */
+  range(e, t = e) {
+    return z.create(e, t, this);
   }
 }
-class jn {
-  constructor(o, c) {
-    this.view = o, this.rangePieces = [], this.cursors = [], this.cm = c, this.measureReq = { read: this.readPos.bind(this), write: this.drawSel.bind(this) }, this.cursorLayer = o.scrollDOM.appendChild(document.createElement("div")), this.cursorLayer.className = "cm-cursorLayer cm-vimCursorLayer", this.cursorLayer.setAttribute("aria-hidden", "true"), o.requestMeasure(this.measureReq), this.setBlinkRate();
+_.prototype.startSide = _.prototype.endSide = 0;
+_.prototype.point = !1;
+_.prototype.mapMode = M.TrackDel;
+class z {
+  constructor(e, t, n) {
+    this.from = e, this.to = t, this.value = n;
   }
-  setBlinkRate() {
-    let c = vt(this.cm.cm6.state).cursorBlinkRate;
-    this.cursorLayer.style.animationDuration = c + "ms";
-  }
-  update(o) {
-    (o.selectionSet || o.geometryChanged || o.viewportChanged) && (this.view.requestMeasure(this.measureReq), this.cursorLayer.style.animationName = this.cursorLayer.style.animationName == "cm-blink" ? "cm-blink2" : "cm-blink"), Un(o) && this.setBlinkRate();
-  }
-  scheduleRedraw() {
-    this.view.requestMeasure(this.measureReq);
-  }
-  readPos() {
-    let { state: o } = this.view, c = [];
-    for (let p of o.selection.ranges) {
-      let y = p == o.selection.main, k = qn(this.cm, this.view, p, y);
-      k && c.push(k);
-    }
-    return { cursors: c };
-  }
-  drawSel({ cursors: o }) {
-    if (o.length != this.cursors.length || o.some((c, p) => !c.eq(this.cursors[p]))) {
-      let c = this.cursorLayer.children;
-      if (c.length !== o.length) {
-        this.cursorLayer.textContent = "";
-        for (const p of o)
-          this.cursorLayer.appendChild(p.draw());
-      } else
-        o.forEach((p, y) => p.adjust(c[y]));
-      this.cursors = o;
-    }
-  }
-  destroy() {
-    this.cursorLayer.remove();
+  /**
+  @internal
+  */
+  static create(e, t, n) {
+    return new z(e, t, n);
   }
 }
-function Un(f) {
-  return vt(f.startState) != vt(f.state);
+function ce(l, e) {
+  return l.from - e.from || l.value.startSide - e.value.startSide;
 }
-const Qn = {
-  ".cm-vimMode .cm-line": {
-    "& ::selection": { backgroundColor: "transparent !important" },
-    "&::selection": { backgroundColor: "transparent !important" },
-    caretColor: "transparent !important"
-  },
-  ".cm-fat-cursor": {
-    position: "absolute",
-    background: "#ff9696",
-    border: "none",
-    whiteSpace: "pre"
-  },
-  "&:not(.cm-focused) .cm-fat-cursor": {
-    background: "none",
-    outline: "solid 1px #ff9696",
-    color: "transparent !important"
+class me {
+  constructor(e, t, n, i) {
+    this.from = e, this.to = t, this.value = n, this.maxPoint = i;
   }
-}, Jn = /* @__PURE__ */ cn.highest(/* @__PURE__ */ Ye.theme(Qn));
-function zn(f) {
-  let o = f.scrollDOM.getBoundingClientRect();
-  return { left: (f.textDirection == Cn.LTR ? o.left : o.right - f.scrollDOM.clientWidth) - f.scrollDOM.scrollLeft * f.scaleX, top: o.top - f.scrollDOM.scrollTop * f.scaleY };
-}
-function qn(f, o, c, p) {
-  var y, k, L, x;
-  let b = c.head, F = !1, D = 1, H = f.state.vim;
-  if (H && (!H.insertMode || f.state.overwrite)) {
-    if (F = !0, H.visualBlock && !p)
-      return null;
-    c.anchor < c.head && (b < o.state.doc.length && o.state.sliceDoc(b, b + 1)) != `
-` && b--, f.state.overwrite ? D = 0.2 : H.status && (D = 0.5);
+  get length() {
+    return this.to[this.to.length - 1];
   }
-  if (F) {
-    let B = b < o.state.doc.length && o.state.sliceDoc(b, b + 1);
-    B && /[\uDC00-\uDFFF]/.test(B) && b > 1 && (b--, B = o.state.sliceDoc(b, b + 1));
-    let _ = o.coordsAtPos(b, 1);
-    if (!_)
-      return null;
-    let Q = zn(o), W = o.domAtPos(b), z = W ? W.node : o.contentDOM;
-    for (z instanceof Text && W.offset >= z.data.length && !((y = z.parentElement) === null || y === void 0) && y.nextSibling && (z = (k = z.parentElement) === null || k === void 0 ? void 0 : k.nextSibling, W = { node: z, offset: 0 }); W && W.node instanceof HTMLElement; )
-      z = W.node, W = { node: W.node.childNodes[W.offset], offset: 0 };
-    if (!(z instanceof HTMLElement)) {
-      if (!z.parentNode)
-        return null;
-      z = z.parentNode;
+  // Find the index of the given position and side. Use the ranges'
+  // `from` pos when `end == false`, `to` when `end == true`.
+  findIndex(e, t, n, i = 0) {
+    let s = n ? this.to : this.from;
+    for (let r = i, h = s.length; ; ) {
+      if (r == h)
+        return r;
+      let o = r + h >> 1, a = s[o] - e || (n ? this.value[o].endSide : this.value[o].startSide) - t;
+      if (o == r)
+        return a >= 0 ? r : h;
+      a >= 0 ? h = o : r = o + 1;
     }
-    let ie = getComputedStyle(z), ae = _.left, ce = (x = (L = o).coordsForChar) === null || x === void 0 ? void 0 : x.call(L, b);
-    if (ce && (ae = ce.left), !B || B == `
-` || B == "\r")
-      B = " ";
-    else if (B == "	") {
-      B = " ";
-      var j = o.coordsAtPos(b + 1, -1);
-      j && (ae = j.left - (j.left - _.left) / parseInt(ie.tabSize));
-    } else /[\uD800-\uDBFF]/.test(B) && b < o.state.doc.length - 1 && (B += o.state.sliceDoc(b + 1, b + 2));
-    let oe = _.bottom - _.top;
-    return new Wn((ae - Q.left) / o.scaleX, (_.top - Q.top + oe * (1 - D)) / o.scaleY, oe * D / o.scaleY, ie.fontFamily, ie.fontSize, ie.fontWeight, ie.color, p ? "cm-fat-cursor cm-cursor-primary" : "cm-fat-cursor cm-cursor-secondary", B, D != 1);
-  } else
-    return null;
-}
-var Xn = typeof navigator < "u" && /* @__PURE__ */ /linux/i.test(navigator.platform) && /* @__PURE__ */ / Gecko\/\d+/.exec(navigator.userAgent);
-const Re = /* @__PURE__ */ In(I), Gn = 250, Yn = /* @__PURE__ */ Ye.baseTheme({
-  ".cm-vimMode .cm-cursorLayer:not(.cm-vimCursorLayer)": {
-    display: "none"
-  },
-  ".cm-vim-panel": {
-    padding: "0px 10px",
-    fontFamily: "monospace",
-    minHeight: "1.3em",
-    display: "flex"
-  },
-  ".cm-vim-panel input": {
-    border: "none",
-    outline: "none",
-    backgroundColor: "inherit"
-  },
-  "&light .cm-searchMatch": { backgroundColor: "#ffff0054" },
-  "&dark .cm-searchMatch": { backgroundColor: "#00ffff8a" }
-}), Zn = /* @__PURE__ */ yn.fromClass(class {
-  constructor(f) {
-    this.status = "", this.query = null, this.decorations = ht.none, this.waitForCopy = !1, this.lastKeydown = "", this.useNextTextInput = !1, this.compositionText = "", this.view = f;
-    const o = this.cm = new I(f);
-    Re.enterVimMode(this.cm), this.view.cm = this.cm, this.cm.state.vimPlugin = this, this.blockCursor = new jn(f, o), this.updateClass(), this.cm.on("vim-command-done", () => {
-      o.state.vim && (o.state.vim.status = ""), this.blockCursor.scheduleRedraw(), this.updateStatus();
-    }), this.cm.on("vim-mode-change", (c) => {
-      o.state.vim && (o.state.vim.mode = c.mode, c.subMode && (o.state.vim.mode += " block"), o.state.vim.status = "", this.blockCursor.scheduleRedraw(), this.updateClass(), this.updateStatus());
-    }), this.cm.on("dialog", () => {
-      this.cm.state.statusbar ? this.updateStatus() : f.dispatch({
-        effects: hr.of(!!this.cm.state.dialog)
-      });
-    }), this.dom = document.createElement("span"), this.spacer = document.createElement("span"), this.spacer.style.flex = "1", this.statusButton = document.createElement("span"), this.statusButton.onclick = (c) => {
-      Re.handleKey(this.cm, "<Esc>", "user"), this.cm.focus();
-    }, this.statusButton.style.cssText = "cursor: pointer";
   }
-  update(f) {
-    var o;
-    if ((f.viewportChanged || f.docChanged) && this.query && this.highlight(this.query), f.docChanged && this.cm.onChange(f), f.selectionSet && this.cm.onSelectionChange(), f.viewportChanged, this.cm.curOp && !this.cm.curOp.isVimOp && this.cm.onBeforeEndOperation(), f.transactions) {
-      for (let c of f.transactions)
-        for (let p of c.effects)
-          if (p.is(dt))
-            if (!((o = p.value) === null || o === void 0 ? void 0 : o.forVim))
-              this.highlight(null);
-            else {
-              let k = p.value.create();
-              this.highlight(k);
-            }
-    }
-    this.blockCursor.update(f);
-  }
-  updateClass() {
-    const f = this.cm.state;
-    !f.vim || f.vim.insertMode && !f.overwrite ? this.view.scrollDOM.classList.remove("cm-vimMode") : this.view.scrollDOM.classList.add("cm-vimMode");
-  }
-  updateStatus() {
-    let f = this.cm.state.statusbar, o = this.cm.state.vim;
-    if (!f || !o)
-      return;
-    let c = this.cm.state.dialog;
-    if (c)
-      c.parentElement != f && (f.textContent = "", f.appendChild(c));
-    else {
-      f.textContent = "";
-      var p = (o.mode || "normal").toUpperCase();
-      o.insertModeReturn && (p += "(C-O)"), this.statusButton.textContent = `--${p}--`, f.appendChild(this.statusButton), f.appendChild(this.spacer);
-    }
-    this.dom.textContent = o.status, f.appendChild(this.dom);
-  }
-  destroy() {
-    Re.leaveVimMode(this.cm), this.updateClass(), this.blockCursor.destroy(), delete this.view.cm;
-  }
-  highlight(f) {
-    if (this.query = f, !f)
-      return this.decorations = ht.none;
-    let { view: o } = this, c = new pn();
-    for (let p = 0, y = o.visibleRanges, k = y.length; p < k; p++) {
-      let { from: L, to: x } = y[p];
-      for (; p < k - 1 && x > y[p + 1].from - 2 * Gn; )
-        x = y[++p].to;
-      f.highlight(o.state, L, x, (b, F) => {
-        c.add(b, F, ti);
-      });
-    }
-    return this.decorations = c.finish();
-  }
-  handleKey(f, o) {
-    const c = this.cm;
-    let p = c.state.vim;
-    if (!p)
-      return;
-    const y = Re.vimKeyFromEvent(f, p);
-    if (I.signal(this.cm, "inputEvent", { type: "handleKey", key: y }), !y)
-      return;
-    if (y == "<Esc>" && !p.insertMode && !p.visualMode && this.query) {
-      const x = p.searchState_;
-      x && (c.removeOverlay(x.getOverlay()), x.setOverlay(null));
-    }
-    if (y === "<C-c>" && !I.isMac && c.somethingSelected())
-      return this.waitForCopy = !0, !0;
-    p.status = (p.status || "") + y;
-    let L = Re.multiSelectHandleKey(c, y, "user");
-    return p = Re.maybeInitVimState_(c), !L && p.insertMode && c.state.overwrite && (f.key && f.key.length == 1 && !/\n/.test(f.key) ? (L = !0, c.overWriteSelection(f.key)) : f.key == "Backspace" && (L = !0, I.commands.cursorCharLeft(c))), L && (I.signal(this.cm, "vim-keypress", y), f.preventDefault(), f.stopPropagation(), this.blockCursor.scheduleRedraw()), this.updateStatus(), !!L;
-  }
-}, {
-  eventHandlers: {
-    copy: function(f, o) {
-      this.waitForCopy && (this.waitForCopy = !1, Promise.resolve().then(() => {
-        var c = this.cm, p = c.state.vim;
-        p && (p.insertMode ? c.setSelection(c.getCursor(), c.getCursor()) : c.operation(() => {
-          c.curOp && (c.curOp.isVimOp = !0), Re.handleKey(c, "<Esc>", "user");
-        }));
-      }));
-    },
-    compositionstart: function(f, o) {
-      this.useNextTextInput = !0, I.signal(this.cm, "inputEvent", f);
-    },
-    compositionupdate: function(f, o) {
-      I.signal(this.cm, "inputEvent", f);
-    },
-    compositionend: function(f, o) {
-      I.signal(this.cm, "inputEvent", f);
-    },
-    keypress: function(f, o) {
-      I.signal(this.cm, "inputEvent", f), this.lastKeydown == "Dead" && this.handleKey(f, o);
-    },
-    keydown: function(f, o) {
-      I.signal(this.cm, "inputEvent", f), this.lastKeydown = f.key, this.lastKeydown == "Unidentified" || this.lastKeydown == "Process" || this.lastKeydown == "Dead" ? this.useNextTextInput = !0 : (this.useNextTextInput = !1, this.handleKey(f, o));
-    }
-  },
-  provide: () => [
-    Ye.inputHandler.of((f, o, c, p) => {
-      var y, k, L = ai(f);
-      if (!L)
+  between(e, t, n, i) {
+    for (let s = this.findIndex(t, -1e9, !0), r = this.findIndex(n, 1e9, !1, s); s < r; s++)
+      if (i(this.from[s] + e, this.to[s] + e, this.value[s]) === !1)
         return !1;
-      var x = (y = L.state) === null || y === void 0 ? void 0 : y.vim, b = L.state.vimPlugin;
-      if (x && !x.insertMode && !(!((k = L.curOp) === null || k === void 0) && k.isVimOp)) {
-        if (p === "\0\0")
-          return !0;
-        if (I.signal(L, "inputEvent", {
-          type: "text",
-          text: p,
-          from: o,
-          to: c
-        }), p.length == 1 && b.useNextTextInput) {
-          if (x.expectLiteralNext && f.composing)
-            return b.compositionText = p, !1;
-          if (b.compositionText) {
-            var F = b.compositionText;
-            b.compositionText = "";
-            var D = f.state.selection.main.head, H = f.state.sliceDoc(D - F.length, D);
-            if (F === H) {
-              var j = L.getCursor();
-              L.replaceRange("", L.posFromIndex(D - F.length), j);
-            }
-          }
-          return b.handleKey({
-            key: p,
-            preventDefault: () => {
-            },
-            stopPropagation: () => {
-            }
-          }), ei(f), !0;
-        }
-      }
-      return !1;
-    })
-  ],
-  decorations: (f) => f.decorations
-});
-function ei(f) {
-  var o = f.scrollDOM.parentElement;
-  if (o) {
-    if (Xn) {
-      f.contentDOM.textContent = "\0\0", f.contentDOM.dispatchEvent(new CustomEvent("compositionend"));
-      return;
+  }
+  map(e, t) {
+    let n = [], i = [], s = [], r = -1, h = -1;
+    for (let o = 0; o < this.value.length; o++) {
+      let a = this.value[o], f = this.from[o] + e, u = this.to[o] + e, c, d;
+      if (f == u) {
+        let p = t.mapPos(f, a.startSide, a.mapMode);
+        if (p == null || (c = d = p, a.startSide != a.endSide && (d = t.mapPos(f, a.endSide), d < c)))
+          continue;
+      } else if (c = t.mapPos(f, a.startSide), d = t.mapPos(u, a.endSide), c > d || c == d && a.startSide > 0 && a.endSide <= 0)
+        continue;
+      (d - c || a.endSide - a.startSide) < 0 || (r < 0 && (r = c), a.point && (h = Math.max(h, d - c)), n.push(a), i.push(c - r), s.push(d - r));
     }
-    var c = f.scrollDOM.nextSibling, p = window.getSelection(), y = p && {
-      anchorNode: p.anchorNode,
-      anchorOffset: p.anchorOffset,
-      focusNode: p.focusNode,
-      focusOffset: p.focusOffset
-    };
-    f.scrollDOM.remove(), o.insertBefore(f.scrollDOM, c);
-    try {
-      y && p && (p.setPosition(y.anchorNode, y.anchorOffset), y.focusNode && p.extend(y.focusNode, y.focusOffset));
-    } catch (k) {
-      console.error(k);
-    }
-    f.focus(), f.contentDOM.dispatchEvent(new CustomEvent("compositionend"));
+    return { mapped: n.length ? new me(i, s, n, h) : null, pos: r };
   }
 }
-const ti = /* @__PURE__ */ ht.mark({ class: "cm-searchMatch" }), hr = /* @__PURE__ */ dn.define(), ri = /* @__PURE__ */ hn.define({
-  create: () => !1,
-  update(f, o) {
-    for (let c of o.effects)
-      c.is(hr) && (f = c.value);
-    return f;
-  },
-  provide: (f) => ir.from(f, (o) => o ? ni : null)
-});
-function ni(f) {
-  let o = document.createElement("div");
-  o.className = "cm-vim-panel";
-  let c = f.cm;
-  return c.state.dialog && o.appendChild(c.state.dialog), { top: !1, dom: o };
+class S {
+  constructor(e, t, n, i) {
+    this.chunkPos = e, this.chunk = t, this.nextLayer = n, this.maxPoint = i;
+  }
+  /**
+  @internal
+  */
+  static create(e, t, n, i) {
+    return new S(e, t, n, i);
+  }
+  /**
+  @internal
+  */
+  get length() {
+    let e = this.chunk.length - 1;
+    return e < 0 ? 0 : Math.max(this.chunkEnd(e), this.nextLayer.length);
+  }
+  /**
+  The number of ranges in the set.
+  */
+  get size() {
+    if (this.isEmpty)
+      return 0;
+    let e = this.nextLayer.size;
+    for (let t of this.chunk)
+      e += t.value.length;
+    return e;
+  }
+  /**
+  @internal
+  */
+  chunkEnd(e) {
+    return this.chunkPos[e] + this.chunk[e].length;
+  }
+  /**
+  Update the range set, optionally adding new ranges or filtering
+  out existing ones.
+  
+  (Note: The type parameter is just there as a kludge to work
+  around TypeScript variance issues that prevented `RangeSet<X>`
+  from being a subtype of `RangeSet<Y>` when `X` is a subtype of
+  `Y`.)
+  */
+  update(e) {
+    let { add: t = [], sort: n = !1, filterFrom: i = 0, filterTo: s = this.length } = e, r = e.filter;
+    if (t.length == 0 && !r)
+      return this;
+    if (n && (t = t.slice().sort(ce)), this.isEmpty)
+      return t.length ? S.of(t) : this;
+    let h = new Je(this, null, -1).goto(0), o = 0, a = [], f = new ee();
+    for (; h.value || o < t.length; )
+      if (o < t.length && (h.from - t[o].from || h.startSide - t[o].value.startSide) >= 0) {
+        let u = t[o++];
+        f.addInner(u.from, u.to, u.value) || a.push(u);
+      } else h.rangeIndex == 1 && h.chunkIndex < this.chunk.length && (o == t.length || this.chunkEnd(h.chunkIndex) < t[o].from) && (!r || i > this.chunkEnd(h.chunkIndex) || s < this.chunkPos[h.chunkIndex]) && f.addChunk(this.chunkPos[h.chunkIndex], this.chunk[h.chunkIndex]) ? h.nextChunk() : ((!r || i > h.to || s < h.from || r(h.from, h.to, h.value)) && (f.addInner(h.from, h.to, h.value) || a.push(z.create(h.from, h.to, h.value))), h.next());
+    return f.finishInner(this.nextLayer.isEmpty && !a.length ? S.empty : this.nextLayer.update({ add: a, filter: r, filterFrom: i, filterTo: s }));
+  }
+  /**
+  Map this range set through a set of changes, return the new set.
+  */
+  map(e) {
+    if (e.empty || this.isEmpty)
+      return this;
+    let t = [], n = [], i = -1;
+    for (let r = 0; r < this.chunk.length; r++) {
+      let h = this.chunkPos[r], o = this.chunk[r], a = e.touchesRange(h, h + o.length);
+      if (a === !1)
+        i = Math.max(i, o.maxPoint), t.push(o), n.push(e.mapPos(h));
+      else if (a === !0) {
+        let { mapped: f, pos: u } = o.map(h, e);
+        f && (i = Math.max(i, f.maxPoint), t.push(f), n.push(u));
+      }
+    }
+    let s = this.nextLayer.map(e);
+    return t.length == 0 ? s : new S(n, t, s || S.empty, i);
+  }
+  /**
+  Iterate over the ranges that touch the region `from` to `to`,
+  calling `f` for each. There is no guarantee that the ranges will
+  be reported in any specific order. When the callback returns
+  `false`, iteration stops.
+  */
+  between(e, t, n) {
+    if (!this.isEmpty) {
+      for (let i = 0; i < this.chunk.length; i++) {
+        let s = this.chunkPos[i], r = this.chunk[i];
+        if (t >= s && e <= s + r.length && r.between(s, e - s, t - s, n) === !1)
+          return;
+      }
+      this.nextLayer.between(e, t, n);
+    }
+  }
+  /**
+  Iterate over the ranges in this set, in order, including all
+  ranges that end at or after `from`.
+  */
+  iter(e = 0) {
+    return W.from([this]).goto(e);
+  }
+  /**
+  @internal
+  */
+  get isEmpty() {
+    return this.nextLayer == this;
+  }
+  /**
+  Iterate over the ranges in a collection of sets, in order,
+  starting from `from`.
+  */
+  static iter(e, t = 0) {
+    return W.from(e).goto(t);
+  }
+  /**
+  Iterate over two groups of sets, calling methods on `comparator`
+  to notify it of possible differences.
+  */
+  static compare(e, t, n, i, s = -1) {
+    let r = e.filter((u) => u.maxPoint > 0 || !u.isEmpty && u.maxPoint >= s), h = t.filter((u) => u.maxPoint > 0 || !u.isEmpty && u.maxPoint >= s), o = xe(r, h, n), a = new N(r, o, s), f = new N(h, o, s);
+    n.iterGaps((u, c, d) => ye(a, u, f, c, d, i)), n.empty && n.length == 0 && ye(a, 0, f, 0, 0, i);
+  }
+  /**
+  Compare the contents of two groups of range sets, returning true
+  if they are equivalent in the given range.
+  */
+  static eq(e, t, n = 0, i) {
+    i == null && (i = 999999999);
+    let s = e.filter((f) => !f.isEmpty && t.indexOf(f) < 0), r = t.filter((f) => !f.isEmpty && e.indexOf(f) < 0);
+    if (s.length != r.length)
+      return !1;
+    if (!s.length)
+      return !0;
+    let h = xe(s, r), o = new N(s, h, 0).goto(n), a = new N(r, h, 0).goto(n);
+    for (; ; ) {
+      if (o.to != a.to || !de(o.active, a.active) || o.point && (!a.point || !o.point.eq(a.point)))
+        return !1;
+      if (o.to > i)
+        return !0;
+      o.next(), a.next();
+    }
+  }
+  /**
+  Iterate over a group of range sets at the same time, notifying
+  the iterator about the ranges covering every given piece of
+  content. Returns the open count (see
+  [`SpanIterator.span`](https://codemirror.net/6/docs/ref/#state.SpanIterator.span)) at the end
+  of the iteration.
+  */
+  static spans(e, t, n, i, s = -1) {
+    let r = new N(e, null, s).goto(t), h = t, o = r.openStart;
+    for (; ; ) {
+      let a = Math.min(r.to, n);
+      if (r.point) {
+        let f = r.activeForPoint(r.to), u = r.pointFrom < t ? f.length + 1 : r.point.startSide < 0 ? f.length : Math.min(f.length, o);
+        i.point(h, a, r.point, f, u, r.pointRank), o = Math.min(r.openEnd(a), f.length);
+      } else a > h && (i.span(h, a, r.active, o), o = r.openEnd(a));
+      if (r.to > n)
+        return o + (r.point && r.to > n ? 1 : 0);
+      h = r.to, r.next();
+    }
+  }
+  /**
+  Create a range set for the given range or array of ranges. By
+  default, this expects the ranges to be _sorted_ (by start
+  position and, if two start at the same position,
+  `value.startSide`). You can pass `true` as second argument to
+  cause the method to sort them.
+  */
+  static of(e, t = !1) {
+    let n = new ee();
+    for (let i of e instanceof z ? [e] : t ? je(e) : e)
+      n.add(i.from, i.to, i.value);
+    return n.finish();
+  }
+  /**
+  Join an array of range sets into a single set.
+  */
+  static join(e) {
+    if (!e.length)
+      return S.empty;
+    let t = e[e.length - 1];
+    for (let n = e.length - 2; n >= 0; n--)
+      for (let i = e[n]; i != S.empty; i = i.nextLayer)
+        t = new S(i.chunkPos, i.chunk, t, Math.max(i.maxPoint, t.maxPoint));
+    return t;
+  }
 }
-function ii(f) {
-  let o = document.createElement("div");
-  o.className = "cm-vim-panel";
-  let c = f.cm;
-  return c.state.statusbar = o, c.state.vimPlugin.updateStatus(), { dom: o };
+S.empty = /* @__PURE__ */ new S([], [], null, -1);
+function je(l) {
+  if (l.length > 1)
+    for (let e = l[0], t = 1; t < l.length; t++) {
+      let n = l[t];
+      if (ce(e, n) > 0)
+        return l.slice().sort(ce);
+      e = n;
+    }
+  return l;
 }
-function ci(f = {}) {
-  return [
-    Yn,
-    Zn,
-    Jn,
-    f.status ? ir.of(ii) : ri
-  ];
+S.empty.nextLayer = S.empty;
+class ee {
+  finishChunk(e) {
+    this.chunks.push(new me(this.from, this.to, this.value, this.maxPoint)), this.chunkPos.push(this.chunkStart), this.chunkStart = -1, this.setMaxPoint = Math.max(this.setMaxPoint, this.maxPoint), this.maxPoint = -1, e && (this.from = [], this.to = [], this.value = []);
+  }
+  /**
+  Create an empty builder.
+  */
+  constructor() {
+    this.chunks = [], this.chunkPos = [], this.chunkStart = -1, this.last = null, this.lastFrom = -1e9, this.lastTo = -1e9, this.from = [], this.to = [], this.value = [], this.maxPoint = -1, this.setMaxPoint = -1, this.nextLayer = null;
+  }
+  /**
+  Add a range. Ranges should be added in sorted (by `from` and
+  `value.startSide`) order.
+  */
+  add(e, t, n) {
+    this.addInner(e, t, n) || (this.nextLayer || (this.nextLayer = new ee())).add(e, t, n);
+  }
+  /**
+  @internal
+  */
+  addInner(e, t, n) {
+    let i = e - this.lastTo || n.startSide - this.last.endSide;
+    if (i <= 0 && (e - this.lastFrom || n.startSide - this.last.startSide) < 0)
+      throw new Error("Ranges must be added sorted by `from` position and `startSide`");
+    return i < 0 ? !1 : (this.from.length == 250 && this.finishChunk(!0), this.chunkStart < 0 && (this.chunkStart = e), this.from.push(e - this.chunkStart), this.to.push(t - this.chunkStart), this.last = n, this.lastFrom = e, this.lastTo = t, this.value.push(n), n.point && (this.maxPoint = Math.max(this.maxPoint, t - e)), !0);
+  }
+  /**
+  @internal
+  */
+  addChunk(e, t) {
+    if ((e - this.lastTo || t.value[0].startSide - this.last.endSide) < 0)
+      return !1;
+    this.from.length && this.finishChunk(!0), this.setMaxPoint = Math.max(this.setMaxPoint, t.maxPoint), this.chunks.push(t), this.chunkPos.push(e);
+    let n = t.value.length - 1;
+    return this.last = t.value[n], this.lastFrom = t.from[n] + e, this.lastTo = t.to[n] + e, !0;
+  }
+  /**
+  Finish the range set. Returns the new set. The builder can't be
+  used anymore after this has been called.
+  */
+  finish() {
+    return this.finishInner(S.empty);
+  }
+  /**
+  @internal
+  */
+  finishInner(e) {
+    if (this.from.length && this.finishChunk(!1), this.chunks.length == 0)
+      return e;
+    let t = S.create(this.chunkPos, this.chunks, this.nextLayer ? this.nextLayer.finishInner(e) : e, this.setMaxPoint);
+    return this.from = null, t;
+  }
 }
-function ai(f) {
-  return f.cm || null;
+function xe(l, e, t) {
+  let n = /* @__PURE__ */ new Map();
+  for (let s of l)
+    for (let r = 0; r < s.chunk.length; r++)
+      s.chunk[r].maxPoint <= 0 && n.set(s.chunk[r], s.chunkPos[r]);
+  let i = /* @__PURE__ */ new Set();
+  for (let s of e)
+    for (let r = 0; r < s.chunk.length; r++) {
+      let h = n.get(s.chunk[r]);
+      h != null && (t ? t.mapPos(h) : h) == s.chunkPos[r] && !(t != null && t.touchesRange(h, h + s.chunk[r].length)) && i.add(s.chunk[r]);
+    }
+  return i;
+}
+class Je {
+  constructor(e, t, n, i = 0) {
+    this.layer = e, this.skip = t, this.minPoint = n, this.rank = i;
+  }
+  get startSide() {
+    return this.value ? this.value.startSide : 0;
+  }
+  get endSide() {
+    return this.value ? this.value.endSide : 0;
+  }
+  goto(e, t = -1e9) {
+    return this.chunkIndex = this.rangeIndex = 0, this.gotoInner(e, t, !1), this;
+  }
+  gotoInner(e, t, n) {
+    for (; this.chunkIndex < this.layer.chunk.length; ) {
+      let i = this.layer.chunk[this.chunkIndex];
+      if (!(this.skip && this.skip.has(i) || this.layer.chunkEnd(this.chunkIndex) < e || i.maxPoint < this.minPoint))
+        break;
+      this.chunkIndex++, n = !1;
+    }
+    if (this.chunkIndex < this.layer.chunk.length) {
+      let i = this.layer.chunk[this.chunkIndex].findIndex(e - this.layer.chunkPos[this.chunkIndex], t, !0);
+      (!n || this.rangeIndex < i) && this.setRangeIndex(i);
+    }
+    this.next();
+  }
+  forward(e, t) {
+    (this.to - e || this.endSide - t) < 0 && this.gotoInner(e, t, !0);
+  }
+  next() {
+    for (; ; )
+      if (this.chunkIndex == this.layer.chunk.length) {
+        this.from = this.to = 1e9, this.value = null;
+        break;
+      } else {
+        let e = this.layer.chunkPos[this.chunkIndex], t = this.layer.chunk[this.chunkIndex], n = e + t.from[this.rangeIndex];
+        if (this.from = n, this.to = e + t.to[this.rangeIndex], this.value = t.value[this.rangeIndex], this.setRangeIndex(this.rangeIndex + 1), this.minPoint < 0 || this.value.point && this.to - this.from >= this.minPoint)
+          break;
+      }
+  }
+  setRangeIndex(e) {
+    if (e == this.layer.chunk[this.chunkIndex].value.length) {
+      if (this.chunkIndex++, this.skip)
+        for (; this.chunkIndex < this.layer.chunk.length && this.skip.has(this.layer.chunk[this.chunkIndex]); )
+          this.chunkIndex++;
+      this.rangeIndex = 0;
+    } else
+      this.rangeIndex = e;
+  }
+  nextChunk() {
+    this.chunkIndex++, this.rangeIndex = 0, this.next();
+  }
+  compare(e) {
+    return this.from - e.from || this.startSide - e.startSide || this.rank - e.rank || this.to - e.to || this.endSide - e.endSide;
+  }
+}
+class W {
+  constructor(e) {
+    this.heap = e;
+  }
+  static from(e, t = null, n = -1) {
+    let i = [];
+    for (let s = 0; s < e.length; s++)
+      for (let r = e[s]; !r.isEmpty; r = r.nextLayer)
+        r.maxPoint >= n && i.push(new Je(r, t, n, s));
+    return i.length == 1 ? i[0] : new W(i);
+  }
+  get startSide() {
+    return this.value ? this.value.startSide : 0;
+  }
+  goto(e, t = -1e9) {
+    for (let n of this.heap)
+      n.goto(e, t);
+    for (let n = this.heap.length >> 1; n >= 0; n--)
+      ie(this.heap, n);
+    return this.next(), this;
+  }
+  forward(e, t) {
+    for (let n of this.heap)
+      n.forward(e, t);
+    for (let n = this.heap.length >> 1; n >= 0; n--)
+      ie(this.heap, n);
+    (this.to - e || this.value.endSide - t) < 0 && this.next();
+  }
+  next() {
+    if (this.heap.length == 0)
+      this.from = this.to = 1e9, this.value = null, this.rank = -1;
+    else {
+      let e = this.heap[0];
+      this.from = e.from, this.to = e.to, this.value = e.value, this.rank = e.rank, e.value && e.next(), ie(this.heap, 0);
+    }
+  }
+}
+function ie(l, e) {
+  for (let t = l[e]; ; ) {
+    let n = (e << 1) + 1;
+    if (n >= l.length)
+      break;
+    let i = l[n];
+    if (n + 1 < l.length && i.compare(l[n + 1]) >= 0 && (i = l[n + 1], n++), t.compare(i) < 0)
+      break;
+    l[n] = t, l[e] = i, e = n;
+  }
+}
+class N {
+  constructor(e, t, n) {
+    this.minPoint = n, this.active = [], this.activeTo = [], this.activeRank = [], this.minActive = -1, this.point = null, this.pointFrom = 0, this.pointRank = 0, this.to = -1e9, this.endSide = 0, this.openStart = -1, this.cursor = W.from(e, t, n);
+  }
+  goto(e, t = -1e9) {
+    return this.cursor.goto(e, t), this.active.length = this.activeTo.length = this.activeRank.length = 0, this.minActive = -1, this.to = e, this.endSide = t, this.openStart = -1, this.next(), this;
+  }
+  forward(e, t) {
+    for (; this.minActive > -1 && (this.activeTo[this.minActive] - e || this.active[this.minActive].endSide - t) < 0; )
+      this.removeActive(this.minActive);
+    this.cursor.forward(e, t);
+  }
+  removeActive(e) {
+    H(this.active, e), H(this.activeTo, e), H(this.activeRank, e), this.minActive = ke(this.active, this.activeTo);
+  }
+  addActive(e) {
+    let t = 0, { value: n, to: i, rank: s } = this.cursor;
+    for (; t < this.activeRank.length && (s - this.activeRank[t] || i - this.activeTo[t]) > 0; )
+      t++;
+    K(this.active, t, n), K(this.activeTo, t, i), K(this.activeRank, t, s), e && K(e, t, this.cursor.from), this.minActive = ke(this.active, this.activeTo);
+  }
+  // After calling this, if `this.point` != null, the next range is a
+  // point. Otherwise, it's a regular range, covered by `this.active`.
+  next() {
+    let e = this.to, t = this.point;
+    this.point = null;
+    let n = this.openStart < 0 ? [] : null;
+    for (; ; ) {
+      let i = this.minActive;
+      if (i > -1 && (this.activeTo[i] - this.cursor.from || this.active[i].endSide - this.cursor.startSide) < 0) {
+        if (this.activeTo[i] > e) {
+          this.to = this.activeTo[i], this.endSide = this.active[i].endSide;
+          break;
+        }
+        this.removeActive(i), n && H(n, i);
+      } else if (this.cursor.value)
+        if (this.cursor.from > e) {
+          this.to = this.cursor.from, this.endSide = this.cursor.startSide;
+          break;
+        } else {
+          let s = this.cursor.value;
+          if (!s.point)
+            this.addActive(n), this.cursor.next();
+          else if (t && this.cursor.to == this.to && this.cursor.from < this.cursor.to)
+            this.cursor.next();
+          else {
+            this.point = s, this.pointFrom = this.cursor.from, this.pointRank = this.cursor.rank, this.to = this.cursor.to, this.endSide = s.endSide, this.cursor.next(), this.forward(this.to, this.endSide);
+            break;
+          }
+        }
+      else {
+        this.to = this.endSide = 1e9;
+        break;
+      }
+    }
+    if (n) {
+      this.openStart = 0;
+      for (let i = n.length - 1; i >= 0 && n[i] < e; i--)
+        this.openStart++;
+    }
+  }
+  activeForPoint(e) {
+    if (!this.active.length)
+      return this.active;
+    let t = [];
+    for (let n = this.active.length - 1; n >= 0 && !(this.activeRank[n] < this.pointRank); n--)
+      (this.activeTo[n] > e || this.activeTo[n] == e && this.active[n].endSide >= this.point.endSide) && t.push(this.active[n]);
+    return t.reverse();
+  }
+  openEnd(e) {
+    let t = 0;
+    for (let n = this.activeTo.length - 1; n >= 0 && this.activeTo[n] > e; n--)
+      t++;
+    return t;
+  }
+}
+function ye(l, e, t, n, i, s) {
+  l.goto(e), t.goto(n);
+  let r = n + i, h = n, o = n - e;
+  for (; ; ) {
+    let a = l.to + o - t.to, f = a || l.endSide - t.endSide, u = f < 0 ? l.to + o : t.to, c = Math.min(u, r);
+    if (l.point || t.point ? l.point && t.point && (l.point == t.point || l.point.eq(t.point)) && de(l.activeForPoint(l.to), t.activeForPoint(t.to)) || s.comparePoint(h, c, l.point, t.point) : c > h && !de(l.active, t.active) && s.compareRange(h, c, l.active, t.active), u > r)
+      break;
+    (a || l.openEnd != t.openEnd) && s.boundChange && s.boundChange(u), h = u, f <= 0 && l.next(), f >= 0 && t.next();
+  }
+}
+function de(l, e) {
+  if (l.length != e.length)
+    return !1;
+  for (let t = 0; t < l.length; t++)
+    if (l[t] != e[t] && !l[t].eq(e[t]))
+      return !1;
+  return !0;
+}
+function H(l, e) {
+  for (let t = e, n = l.length - 1; t < n; t++)
+    l[t] = l[t + 1];
+  l.pop();
+}
+function K(l, e, t) {
+  for (let n = l.length - 1; n >= e; n--)
+    l[n + 1] = l[n];
+  l[e] = t;
+}
+function ke(l, e) {
+  let t = -1, n = 1e9;
+  for (let i = 0; i < e.length; i++)
+    (e[i] - n || l[i].endSide - l[t].endSide) < 0 && (t = i, n = e[i]);
+  return t;
+}
+function rt(l, e, t = l.length) {
+  let n = 0;
+  for (let i = 0; i < t && i < l.length; )
+    l.charCodeAt(i) == 9 ? (n += e - n % e, i++) : (n++, i = Y(l, i));
+  return n;
+}
+function lt(l, e, t, n) {
+  for (let i = 0, s = 0; ; ) {
+    if (s >= e)
+      return i;
+    if (i == l.length)
+      break;
+    s += l.charCodeAt(i) == 9 ? t - s % t : 1, i = Y(l, i);
+  }
+  return l.length;
 }
 export {
-  I as CodeMirror,
-  Re as Vim,
-  ai as getCM,
-  ci as vim
+  U as Annotation,
+  We as AnnotationType,
+  C as ChangeDesc,
+  y as ChangeSet,
+  R as CharCategory,
+  te as Compartment,
+  g as EditorSelection,
+  w as EditorState,
+  A as Facet,
+  Ne as Line,
+  M as MapMode,
+  it as Prec,
+  z as Range,
+  S as RangeSet,
+  ee as RangeSetBuilder,
+  _ as RangeValue,
+  B as SelectionRange,
+  I as StateEffect,
+  Ue as StateEffectType,
+  L as StateField,
+  x as Text,
+  P as Transaction,
+  et as codePointAt,
+  nt as codePointSize,
+  st as combineConfig,
+  rt as countColumn,
+  Y as findClusterBreak,
+  lt as findColumn,
+  tt as fromCodePoint
 };

@@ -1,15 +1,14 @@
-import * as o from "react";
-import { stylesheetSingleton as r } from "./index163.js";
-var i = function() {
-  var t = r();
-  return function(e, n) {
-    o.useEffect(function() {
-      return t.add(e), function() {
-        t.remove();
-      };
-    }, [e && n]);
-  };
-};
+import * as r from "react";
+import { useCallbackRef as s } from "./index108.js";
+function p(n, e = globalThis == null ? void 0 : globalThis.document) {
+  const t = s(n);
+  r.useEffect(() => {
+    const o = (a) => {
+      a.key === "Escape" && t(a);
+    };
+    return e.addEventListener("keydown", o, { capture: !0 }), () => e.removeEventListener("keydown", o, { capture: !0 });
+  }, [t, e]);
+}
 export {
-  i as styleHookSingleton
+  p as useEscapeKeydown
 };

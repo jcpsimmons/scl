@@ -1,338 +1,127 @@
-import * as s from "react";
-import { composeEventHandlers as g } from "./index89.js";
-import { useComposedRefs as N } from "./index88.js";
-import { createContextScope as K } from "./index87.js";
-import { DismissableLayer as W } from "./index101.js";
-import { useId as $ } from "./index97.js";
-import { createPopperScope as S, Root as z, Anchor as J, Content as Q, Arrow as Z } from "./index102.js";
-import { Portal as ee } from "./index103.js";
-import { Presence as G } from "./index94.js";
-import { Primitive as te } from "./index95.js";
-import { createSlottable as oe } from "./index90.js";
-import { useControllableState as re } from "./index91.js";
-import { Root as ne } from "./index104.js";
-import { jsx as f, jsxs as se } from "react/jsx-runtime";
-var [D] = K("Tooltip", [
-  S
-]), O = S(), j = "TooltipProvider", ie = 700, L = "tooltip.open", [ae, k] = D(j), F = (t) => {
-  const {
-    __scopeTooltip: o,
-    delayDuration: e = ie,
-    skipDelayDuration: r = 300,
-    disableHoverableContent: n = !1,
-    children: a
-  } = t, l = s.useRef(!0), v = s.useRef(!1), i = s.useRef(0);
-  return s.useEffect(() => {
-    const p = i.current;
-    return () => window.clearTimeout(p);
-  }, []), /* @__PURE__ */ f(
-    ae,
-    {
-      scope: o,
-      isOpenDelayedRef: l,
-      delayDuration: e,
-      onOpen: s.useCallback(() => {
-        window.clearTimeout(i.current), l.current = !1;
-      }, []),
-      onClose: s.useCallback(() => {
-        window.clearTimeout(i.current), i.current = window.setTimeout(
-          () => l.current = !0,
-          r
-        );
-      }, [r]),
-      isPointerInTransitRef: v,
-      onPointerInTransitChange: s.useCallback((p) => {
-        v.current = p;
-      }, []),
-      disableHoverableContent: n,
-      children: a
-    }
-  );
+import * as l from "react";
+import { createContextScope as w } from "./index87.js";
+import { useComposedRefs as v } from "./index89.js";
+import { createDialogScope as A, Root as M, Portal as x, Trigger as I, Overlay as L, WarningProvider as $, Content as F, Title as G, Description as j, Close as f } from "./index82.js";
+import { composeEventHandlers as W } from "./index98.js";
+import { createSlottable as Y } from "./index99.js";
+import { jsx as i, jsxs as q } from "react/jsx-runtime";
+var D = "AlertDialog", [B] = w(D, [
+  A
+]), n = A(), m = (e) => {
+  const { __scopeAlertDialog: o, ...r } = e, t = n(o);
+  return /* @__PURE__ */ i(M, { ...t, ...r, modal: !0 });
 };
-F.displayName = j;
-var R = "Tooltip", [le, _] = D(R), B = (t) => {
-  const {
-    __scopeTooltip: o,
-    children: e,
-    open: r,
-    defaultOpen: n,
-    onOpenChange: a,
-    disableHoverableContent: l,
-    delayDuration: v
-  } = t, i = k(R, t.__scopeTooltip), p = O(o), [c, d] = s.useState(null), h = $(), u = s.useRef(0), m = l ?? i.disableHoverableContent, y = v ?? i.delayDuration, T = s.useRef(!1), [x, C] = re({
-    prop: r,
-    defaultProp: n ?? !1,
-    onChange: (H) => {
-      H ? (i.onOpen(), document.dispatchEvent(new CustomEvent(L))) : i.onClose(), a == null || a(H);
-    },
-    caller: R
-  }), w = s.useMemo(() => x ? T.current ? "delayed-open" : "instant-open" : "closed", [x]), P = s.useCallback(() => {
-    window.clearTimeout(u.current), u.current = 0, T.current = !1, C(!0);
-  }, [C]), E = s.useCallback(() => {
-    window.clearTimeout(u.current), u.current = 0, C(!1);
-  }, [C]), I = s.useCallback(() => {
-    window.clearTimeout(u.current), u.current = window.setTimeout(() => {
-      T.current = !0, C(!0), u.current = 0;
-    }, y);
-  }, [y, C]);
-  return s.useEffect(() => () => {
-    u.current && (window.clearTimeout(u.current), u.current = 0);
-  }, []), /* @__PURE__ */ f(z, { ...p, children: /* @__PURE__ */ f(
-    le,
-    {
-      scope: o,
-      contentId: h,
-      open: x,
-      stateAttribute: w,
-      trigger: c,
-      onTriggerChange: d,
-      onTriggerEnter: s.useCallback(() => {
-        i.isOpenDelayedRef.current ? I() : P();
-      }, [i.isOpenDelayedRef, I, P]),
-      onTriggerLeave: s.useCallback(() => {
-        m ? E() : (window.clearTimeout(u.current), u.current = 0);
-      }, [E, m]),
-      onOpen: P,
-      onClose: E,
-      disableHoverableContent: m,
-      children: e
-    }
-  ) });
-};
-B.displayName = R;
-var A = "TooltipTrigger", U = s.forwardRef(
-  (t, o) => {
-    const { __scopeTooltip: e, ...r } = t, n = _(A, e), a = k(A, e), l = O(e), v = s.useRef(null), i = N(o, v, n.onTriggerChange), p = s.useRef(!1), c = s.useRef(!1), d = s.useCallback(() => p.current = !1, []);
-    return s.useEffect(() => () => document.removeEventListener("pointerup", d), [d]), /* @__PURE__ */ f(J, { asChild: !0, ...l, children: /* @__PURE__ */ f(
-      te.button,
-      {
-        "aria-describedby": n.open ? n.contentId : void 0,
-        "data-state": n.stateAttribute,
-        ...r,
-        ref: i,
-        onPointerMove: g(t.onPointerMove, (h) => {
-          h.pointerType !== "touch" && !c.current && !a.isPointerInTransitRef.current && (n.onTriggerEnter(), c.current = !0);
-        }),
-        onPointerLeave: g(t.onPointerLeave, () => {
-          n.onTriggerLeave(), c.current = !1;
-        }),
-        onPointerDown: g(t.onPointerDown, () => {
-          n.open && n.onClose(), p.current = !0, document.addEventListener("pointerup", d, { once: !0 });
-        }),
-        onFocus: g(t.onFocus, () => {
-          p.current || n.onOpen();
-        }),
-        onBlur: g(t.onBlur, n.onClose),
-        onClick: g(t.onClick, n.onClose)
-      }
-    ) });
+m.displayName = D;
+var H = "AlertDialogTrigger", y = l.forwardRef(
+  (e, o) => {
+    const { __scopeAlertDialog: r, ...t } = e, a = n(r);
+    return /* @__PURE__ */ i(I, { ...a, ...t, ref: o });
   }
 );
-U.displayName = A;
-var M = "TooltipPortal", [ce, ue] = D(M, {
-  forceMount: void 0
-}), V = (t) => {
-  const { __scopeTooltip: o, forceMount: e, children: r, container: n } = t, a = _(M, o);
-  return /* @__PURE__ */ f(ce, { scope: o, forceMount: e, children: /* @__PURE__ */ f(G, { present: e || a.open, children: /* @__PURE__ */ f(ee, { asChild: !0, container: n, children: r }) }) });
+y.displayName = H;
+var V = "AlertDialogPortal", _ = (e) => {
+  const { __scopeAlertDialog: o, ...r } = e, t = n(o);
+  return /* @__PURE__ */ i(x, { ...t, ...r });
 };
-V.displayName = M;
-var b = "TooltipContent", Y = s.forwardRef(
-  (t, o) => {
-    const e = ue(b, t.__scopeTooltip), { forceMount: r = e.forceMount, side: n = "top", ...a } = t, l = _(b, t.__scopeTooltip);
-    return /* @__PURE__ */ f(G, { present: r || l.open, children: l.disableHoverableContent ? /* @__PURE__ */ f(q, { side: n, ...a, ref: o }) : /* @__PURE__ */ f(pe, { side: n, ...a, ref: o }) });
+_.displayName = V;
+var k = "AlertDialogOverlay", N = l.forwardRef(
+  (e, o) => {
+    const { __scopeAlertDialog: r, ...t } = e, a = n(r);
+    return /* @__PURE__ */ i(L, { ...a, ...t, ref: o });
   }
-), pe = s.forwardRef((t, o) => {
-  const e = _(b, t.__scopeTooltip), r = k(b, t.__scopeTooltip), n = s.useRef(null), a = N(o, n), [l, v] = s.useState(null), { trigger: i, onClose: p } = e, c = n.current, { onPointerInTransitChange: d } = r, h = s.useCallback(() => {
-    v(null), d(!1);
-  }, [d]), u = s.useCallback(
-    (m, y) => {
-      const T = m.currentTarget, x = { x: m.clientX, y: m.clientY }, C = me(x, T.getBoundingClientRect()), w = Te(x, C), P = ye(y.getBoundingClientRect()), E = xe([...w, ...P]);
-      v(E), d(!0);
-    },
-    [d]
-  );
-  return s.useEffect(() => () => h(), [h]), s.useEffect(() => {
-    if (i && c) {
-      const m = (T) => u(T, c), y = (T) => u(T, i);
-      return i.addEventListener("pointerleave", m), c.addEventListener("pointerleave", y), () => {
-        i.removeEventListener("pointerleave", m), c.removeEventListener("pointerleave", y);
-      };
-    }
-  }, [i, c, u, h]), s.useEffect(() => {
-    if (l) {
-      const m = (y) => {
-        const T = y.target, x = { x: y.clientX, y: y.clientY }, C = (i == null ? void 0 : i.contains(T)) || (c == null ? void 0 : c.contains(T)), w = !Ce(x, l);
-        C ? h() : w && (h(), p());
-      };
-      return document.addEventListener("pointermove", m), () => document.removeEventListener("pointermove", m);
-    }
-  }, [i, c, l, p, h]), /* @__PURE__ */ f(q, { ...t, ref: a });
-}), [de, fe] = D(R, { isInside: !1 }), ve = oe("TooltipContent"), q = s.forwardRef(
-  (t, o) => {
-    const {
-      __scopeTooltip: e,
-      children: r,
-      "aria-label": n,
-      onEscapeKeyDown: a,
-      onPointerDownOutside: l,
-      ...v
-    } = t, i = _(b, e), p = O(e), { onClose: c } = i;
-    return s.useEffect(() => (document.addEventListener(L, c), () => document.removeEventListener(L, c)), [c]), s.useEffect(() => {
-      if (i.trigger) {
-        const d = (h) => {
-          const u = h.target;
-          u != null && u.contains(i.trigger) && c();
-        };
-        return window.addEventListener("scroll", d, { capture: !0 }), () => window.removeEventListener("scroll", d, { capture: !0 });
-      }
-    }, [i.trigger, c]), /* @__PURE__ */ f(
-      W,
+);
+N.displayName = k;
+var s = "AlertDialogContent", [z, J] = B(s), K = Y("AlertDialogContent"), R = l.forwardRef(
+  (e, o) => {
+    const { __scopeAlertDialog: r, children: t, ...a } = e, g = n(r), p = l.useRef(null), b = v(o, p), d = l.useRef(null);
+    return /* @__PURE__ */ i(
+      $,
       {
-        asChild: !0,
-        disableOutsidePointerEvents: !1,
-        onEscapeKeyDown: a,
-        onPointerDownOutside: l,
-        onFocusOutside: (d) => d.preventDefault(),
-        onDismiss: c,
-        children: /* @__PURE__ */ se(
-          Q,
+        contentName: s,
+        titleName: C,
+        docsSlug: "alert-dialog",
+        children: /* @__PURE__ */ i(z, { scope: r, cancelRef: d, children: /* @__PURE__ */ q(
+          F,
           {
-            "data-state": i.stateAttribute,
-            ...p,
-            ...v,
-            ref: o,
-            style: {
-              ...v.style,
-              "--radix-tooltip-content-transform-origin": "var(--radix-popper-transform-origin)",
-              "--radix-tooltip-content-available-width": "var(--radix-popper-available-width)",
-              "--radix-tooltip-content-available-height": "var(--radix-popper-available-height)",
-              "--radix-tooltip-trigger-width": "var(--radix-popper-anchor-width)",
-              "--radix-tooltip-trigger-height": "var(--radix-popper-anchor-height)"
-            },
+            role: "alertdialog",
+            ...g,
+            ...a,
+            ref: b,
+            onOpenAutoFocus: W(a.onOpenAutoFocus, (c) => {
+              var u;
+              c.preventDefault(), (u = d.current) == null || u.focus({ preventScroll: !0 });
+            }),
+            onPointerDownOutside: (c) => c.preventDefault(),
+            onInteractOutside: (c) => c.preventDefault(),
             children: [
-              /* @__PURE__ */ f(ve, { children: r }),
-              /* @__PURE__ */ f(de, { scope: e, isInside: !0, children: /* @__PURE__ */ f(ne, { id: i.contentId, role: "tooltip", children: n || r }) })
+              /* @__PURE__ */ i(K, { children: t }),
+              /* @__PURE__ */ i(U, { contentRef: p })
             ]
           }
-        )
+        ) })
       }
     );
   }
 );
-Y.displayName = b;
-var X = "TooltipArrow", he = s.forwardRef(
-  (t, o) => {
-    const { __scopeTooltip: e, ...r } = t, n = O(e);
-    return fe(
-      X,
-      e
-    ).isInside ? null : /* @__PURE__ */ f(Z, { ...n, ...r, ref: o });
+R.displayName = s;
+var C = "AlertDialogTitle", h = l.forwardRef(
+  (e, o) => {
+    const { __scopeAlertDialog: r, ...t } = e, a = n(r);
+    return /* @__PURE__ */ i(G, { ...a, ...t, ref: o });
   }
 );
-he.displayName = X;
-function me(t, o) {
-  const e = Math.abs(o.top - t.y), r = Math.abs(o.bottom - t.y), n = Math.abs(o.right - t.x), a = Math.abs(o.left - t.x);
-  switch (Math.min(e, r, n, a)) {
-    case a:
-      return "left";
-    case n:
-      return "right";
-    case e:
-      return "top";
-    case r:
-      return "bottom";
-    default:
-      throw new Error("unreachable");
+h.displayName = C;
+var E = "AlertDialogDescription", P = l.forwardRef((e, o) => {
+  const { __scopeAlertDialog: r, ...t } = e, a = n(r);
+  return /* @__PURE__ */ i(j, { ...a, ...t, ref: o });
+});
+P.displayName = E;
+var Q = "AlertDialogAction", S = l.forwardRef(
+  (e, o) => {
+    const { __scopeAlertDialog: r, ...t } = e, a = n(r);
+    return /* @__PURE__ */ i(f, { ...a, ...t, ref: o });
   }
-}
-function Te(t, o, e = 5) {
-  const r = [];
-  switch (o) {
-    case "top":
-      r.push(
-        { x: t.x - e, y: t.y + e },
-        { x: t.x + e, y: t.y + e }
-      );
-      break;
-    case "bottom":
-      r.push(
-        { x: t.x - e, y: t.y - e },
-        { x: t.x + e, y: t.y - e }
-      );
-      break;
-    case "left":
-      r.push(
-        { x: t.x + e, y: t.y - e },
-        { x: t.x + e, y: t.y + e }
-      );
-      break;
-    case "right":
-      r.push(
-        { x: t.x - e, y: t.y - e },
-        { x: t.x - e, y: t.y + e }
-      );
-      break;
+);
+S.displayName = Q;
+var T = "AlertDialogCancel", O = l.forwardRef(
+  (e, o) => {
+    const { __scopeAlertDialog: r, ...t } = e, { cancelRef: a } = J(T, r), g = n(r), p = v(o, a);
+    return /* @__PURE__ */ i(f, { ...g, ...t, ref: p });
   }
-  return r;
-}
-function ye(t) {
-  const { top: o, right: e, bottom: r, left: n } = t;
-  return [
-    { x: n, y: o },
-    { x: e, y: o },
-    { x: e, y: r },
-    { x: n, y: r }
-  ];
-}
-function Ce(t, o) {
-  const { x: e, y: r } = t;
-  let n = !1;
-  for (let a = 0, l = o.length - 1; a < o.length; l = a++) {
-    const v = o[a], i = o[l], p = v.x, c = v.y, d = i.x, h = i.y;
-    c > r != h > r && e < (d - p) * (r - c) / (h - c) + p && (n = !n);
-  }
-  return n;
-}
-function xe(t) {
-  const o = t.slice();
-  return o.sort((e, r) => e.x < r.x ? -1 : e.x > r.x ? 1 : e.y < r.y ? -1 : e.y > r.y ? 1 : 0), ge(o);
-}
-function ge(t) {
-  if (t.length <= 1) return t.slice();
-  const o = [];
-  for (let r = 0; r < t.length; r++) {
-    const n = t[r];
-    for (; o.length >= 2; ) {
-      const a = o[o.length - 1], l = o[o.length - 2];
-      if ((a.x - l.x) * (n.y - l.y) >= (a.y - l.y) * (n.x - l.x)) o.pop();
-      else break;
-    }
-    o.push(n);
-  }
-  o.pop();
-  const e = [];
-  for (let r = t.length - 1; r >= 0; r--) {
-    const n = t[r];
-    for (; e.length >= 2; ) {
-      const a = e[e.length - 1], l = e[e.length - 2];
-      if ((a.x - l.x) * (n.y - l.y) >= (a.y - l.y) * (n.x - l.x)) e.pop();
-      else break;
-    }
-    e.push(n);
-  }
-  return e.pop(), o.length === 1 && e.length === 1 && o[0].x === e[0].x && o[0].y === e[0].y ? o : o.concat(e);
-}
-var He = F, Ne = B, Se = U, Ge = V, je = Y;
+);
+O.displayName = T;
+var U = ({ contentRef: e }) => {
+  const o = `\`${s}\` requires a description for the component to be accessible for screen reader users.
+
+You can add a description to the \`${s}\` by passing a \`${E}\` component as a child, which also benefits sighted users by adding visible context to the dialog.
+
+Alternatively, you can use your own component as a description by assigning it an \`id\` and passing the same value to the \`aria-describedby\` prop in \`${s}\`. If the description is confusing or duplicative for sighted users, you can use the \`@radix-ui/react-visually-hidden\` primitive as a wrapper around your description component.
+
+For more information, see https://radix-ui.com/primitives/docs/components/alert-dialog`;
+  return l.useEffect(() => {
+    var t;
+    document.getElementById(
+      (t = e.current) == null ? void 0 : t.getAttribute("aria-describedby")
+    ) || console.warn(o);
+  }, [o, e]), null;
+}, ae = m, ie = y, le = _, ne = N, se = R, ce = S, pe = O, ge = h, de = P;
 export {
-  je as Content,
-  Ge as Portal,
-  He as Provider,
-  Ne as Root,
-  B as Tooltip,
-  he as TooltipArrow,
-  Y as TooltipContent,
-  V as TooltipPortal,
-  F as TooltipProvider,
-  U as TooltipTrigger,
-  Se as Trigger
+  ce as Action,
+  m as AlertDialog,
+  S as AlertDialogAction,
+  O as AlertDialogCancel,
+  R as AlertDialogContent,
+  P as AlertDialogDescription,
+  N as AlertDialogOverlay,
+  _ as AlertDialogPortal,
+  h as AlertDialogTitle,
+  y as AlertDialogTrigger,
+  pe as Cancel,
+  se as Content,
+  de as Description,
+  ne as Overlay,
+  le as Portal,
+  ae as Root,
+  ge as Title,
+  ie as Trigger
 };

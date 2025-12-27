@@ -1,57 +1,221 @@
-import * as i from "react";
-import { jsx as _ } from "react/jsx-runtime";
-function $(e, x = []) {
-  let o = [];
-  function f(r, n) {
-    const t = i.createContext(n);
-    t.displayName = r + "Context";
-    const c = o.length;
-    o = [...o, n];
-    const m = (a) => {
-      var l;
-      const { scope: s, children: C, ...p } = a, d = ((l = s == null ? void 0 : s[e]) == null ? void 0 : l[c]) || t, v = i.useMemo(() => p, Object.values(p));
-      return /* @__PURE__ */ _(d.Provider, { value: v, children: C });
-    };
-    m.displayName = r + "Provider";
-    function S(a, s) {
-      var d;
-      const C = ((d = s == null ? void 0 : s[e]) == null ? void 0 : d[c]) || t, p = i.useContext(C);
-      if (p) return p;
-      if (n !== void 0) return n;
-      throw new Error(`\`${a}\` must be used within \`${r}\``);
-    }
-    return [m, S];
+import * as p from "react";
+import { useFloating as xe, offset as Pe, shift as ye, flip as Ae, size as ve, arrow as Ce, hide as be, limitShift as Se } from "./index163.js";
+import { Root as Oe } from "./index164.js";
+import { useComposedRefs as j } from "./index89.js";
+import { createContextScope as Re } from "./index87.js";
+import { Primitive as z } from "./index92.js";
+import { useCallbackRef as Ee } from "./index108.js";
+import { useLayoutEffect as T } from "./index109.js";
+import { useSize as Ne } from "./index141.js";
+import { jsx as f } from "react/jsx-runtime";
+import { autoUpdate as _e } from "./index165.js";
+var N = "Popper", [L, Ue] = Re(N), [$e, Z] = L(N), U = (e) => {
+  const { __scopePopper: s, children: a } = e, [t, i] = p.useState(null);
+  return /* @__PURE__ */ f($e, { scope: s, anchor: t, onAnchorChange: i, children: a });
+};
+U.displayName = N;
+var q = "PopperAnchor", G = p.forwardRef(
+  (e, s) => {
+    const { __scopePopper: a, virtualRef: t, ...i } = e, r = Z(q, a), o = p.useRef(null), w = j(s, o), n = p.useRef(null);
+    return p.useEffect(() => {
+      const c = n.current;
+      n.current = (t == null ? void 0 : t.current) || o.current, c !== n.current && r.onAnchorChange(n.current);
+    }), t ? null : /* @__PURE__ */ f(z.div, { ...i, ref: w });
   }
-  const u = () => {
-    const r = o.map((n) => i.createContext(n));
-    return function(t) {
-      const c = (t == null ? void 0 : t[e]) || r;
-      return i.useMemo(
-        () => ({ [`__scope${e}`]: { ...t, [e]: c } }),
-        [t, c]
-      );
-    };
-  };
-  return u.scopeName = e, [f, h(u, ...x)];
+);
+G.displayName = q;
+var _ = "PopperContent", [He, We] = L(_), J = p.forwardRef(
+  (e, s) => {
+    var Y, M, X, D, F, k;
+    const {
+      __scopePopper: a,
+      side: t = "bottom",
+      sideOffset: i = 0,
+      align: r = "center",
+      alignOffset: o = 0,
+      arrowPadding: w = 0,
+      avoidCollisions: n = !0,
+      collisionBoundary: c = [],
+      collisionPadding: x = 0,
+      sticky: m = "partial",
+      hideWhenDetached: y = !1,
+      updatePositionStrategy: A = "optimized",
+      onPlaced: l,
+      ...d
+    } = e, v = Z(_, a), [h, C] = p.useState(null), ee = j(s, (P) => C(P)), [E, te] = p.useState(null), u = Ne(E), re = (u == null ? void 0 : u.width) ?? 0, $ = (u == null ? void 0 : u.height) ?? 0, oe = t + (r !== "center" ? "-" + r : ""), ne = typeof x == "number" ? x : { top: 0, right: 0, bottom: 0, left: 0, ...x }, H = Array.isArray(c) ? c : [c], ae = H.length > 0, b = {
+      padding: ne,
+      boundary: H.filter(Ye),
+      // with `strategy: 'fixed'`, this is the only way to get it to respect boundaries
+      altBoundary: ae
+    }, { refs: ie, floatingStyles: W, placement: se, isPositioned: S, middlewareData: g } = xe({
+      // default to `fixed` strategy so users don't have to pick and we also avoid focus scroll issues
+      strategy: "fixed",
+      placement: oe,
+      whileElementsMounted: (...P) => _e(...P, {
+        animationFrame: A === "always"
+      }),
+      elements: {
+        reference: v.anchor
+      },
+      middleware: [
+        Pe({ mainAxis: i + $, alignmentAxis: o }),
+        n && ye({
+          mainAxis: !0,
+          crossAxis: !1,
+          limiter: m === "partial" ? Se() : void 0,
+          ...b
+        }),
+        n && Ae({ ...b }),
+        ve({
+          ...b,
+          apply: ({ elements: P, rects: B, availableWidth: he, availableHeight: ue }) => {
+            const { width: ge, height: we } = B.reference, R = P.floating.style;
+            R.setProperty("--radix-popper-available-width", `${he}px`), R.setProperty("--radix-popper-available-height", `${ue}px`), R.setProperty("--radix-popper-anchor-width", `${ge}px`), R.setProperty("--radix-popper-anchor-height", `${we}px`);
+          }
+        }),
+        E && Ce({ element: E, padding: w }),
+        Me({ arrowWidth: re, arrowHeight: $ }),
+        y && be({ strategy: "referenceHidden", ...b })
+      ]
+    }), [I, ce] = V(se), O = Ee(l);
+    T(() => {
+      S && (O == null || O());
+    }, [S, O]);
+    const pe = (Y = g.arrow) == null ? void 0 : Y.x, de = (M = g.arrow) == null ? void 0 : M.y, le = ((X = g.arrow) == null ? void 0 : X.centerOffset) !== 0, [fe, me] = p.useState();
+    return T(() => {
+      h && me(window.getComputedStyle(h).zIndex);
+    }, [h]), /* @__PURE__ */ f(
+      "div",
+      {
+        ref: ie.setFloating,
+        "data-radix-popper-content-wrapper": "",
+        style: {
+          ...W,
+          transform: S ? W.transform : "translate(0, -200%)",
+          // keep off the page when measuring
+          minWidth: "max-content",
+          zIndex: fe,
+          "--radix-popper-transform-origin": [
+            (D = g.transformOrigin) == null ? void 0 : D.x,
+            (F = g.transformOrigin) == null ? void 0 : F.y
+          ].join(" "),
+          // hide the content if using the hide middleware and should be hidden
+          // set visibility to hidden and disable pointer events so the UI behaves
+          // as if the PopperContent isn't there at all
+          ...((k = g.hide) == null ? void 0 : k.referenceHidden) && {
+            visibility: "hidden",
+            pointerEvents: "none"
+          }
+        },
+        dir: e.dir,
+        children: /* @__PURE__ */ f(
+          He,
+          {
+            scope: a,
+            placedSide: I,
+            onArrowChange: te,
+            arrowX: pe,
+            arrowY: de,
+            shouldHideArrow: le,
+            children: /* @__PURE__ */ f(
+              z.div,
+              {
+                "data-side": I,
+                "data-align": ce,
+                ...d,
+                ref: ee,
+                style: {
+                  ...d.style,
+                  // if the PopperContent hasn't been placed yet (not all measurements done)
+                  // we prevent animations so that users's animation don't kick in too early referring wrong sides
+                  animation: S ? void 0 : "none"
+                }
+              }
+            )
+          }
+        )
+      }
+    );
+  }
+);
+J.displayName = _;
+var K = "PopperArrow", Ie = {
+  top: "bottom",
+  right: "left",
+  bottom: "top",
+  left: "right"
+}, Q = p.forwardRef(function(s, a) {
+  const { __scopePopper: t, ...i } = s, r = We(K, t), o = Ie[r.placedSide];
+  return (
+    // we have to use an extra wrapper because `ResizeObserver` (used by `useSize`)
+    // doesn't report size as we'd expect on SVG elements.
+    // it reports their bounding box which is effectively the largest path inside the SVG.
+    /* @__PURE__ */ f(
+      "span",
+      {
+        ref: r.onArrowChange,
+        style: {
+          position: "absolute",
+          left: r.arrowX,
+          top: r.arrowY,
+          [o]: 0,
+          transformOrigin: {
+            top: "",
+            right: "0 0",
+            bottom: "center 0",
+            left: "100% 0"
+          }[r.placedSide],
+          transform: {
+            top: "translateY(100%)",
+            right: "translateY(50%) rotate(90deg) translateX(-50%)",
+            bottom: "rotate(180deg)",
+            left: "translateY(50%) rotate(-90deg) translateX(50%)"
+          }[r.placedSide],
+          visibility: r.shouldHideArrow ? "hidden" : void 0
+        },
+        children: /* @__PURE__ */ f(
+          Oe,
+          {
+            ...i,
+            ref: a,
+            style: {
+              ...i.style,
+              // ensures the element can be measured correctly (mostly for if SVG)
+              display: "block"
+            }
+          }
+        )
+      }
+    )
+  );
+});
+Q.displayName = K;
+function Ye(e) {
+  return e !== null;
 }
-function h(...e) {
-  const x = e[0];
-  if (e.length === 1) return x;
-  const o = () => {
-    const f = e.map((u) => ({
-      useScope: u(),
-      scopeName: u.scopeName
-    }));
-    return function(r) {
-      const n = f.reduce((t, { useScope: c, scopeName: m }) => {
-        const a = c(r)[`__scope${m}`];
-        return { ...t, ...a };
-      }, {});
-      return i.useMemo(() => ({ [`__scope${x.scopeName}`]: n }), [n]);
-    };
-  };
-  return o.scopeName = x.scopeName, o;
+var Me = (e) => ({
+  name: "transformOrigin",
+  options: e,
+  fn(s) {
+    var v, h, C;
+    const { placement: a, rects: t, middlewareData: i } = s, o = ((v = i.arrow) == null ? void 0 : v.centerOffset) !== 0, w = o ? 0 : e.arrowWidth, n = o ? 0 : e.arrowHeight, [c, x] = V(a), m = { start: "0%", center: "50%", end: "100%" }[x], y = (((h = i.arrow) == null ? void 0 : h.x) ?? 0) + w / 2, A = (((C = i.arrow) == null ? void 0 : C.y) ?? 0) + n / 2;
+    let l = "", d = "";
+    return c === "bottom" ? (l = o ? m : `${y}px`, d = `${-n}px`) : c === "top" ? (l = o ? m : `${y}px`, d = `${t.floating.height + n}px`) : c === "right" ? (l = `${-n}px`, d = o ? m : `${A}px`) : c === "left" && (l = `${t.floating.width + n}px`, d = o ? m : `${A}px`), { data: { x: l, y: d } };
+  }
+});
+function V(e) {
+  const [s, a = "center"] = e.split("-");
+  return [s, a];
 }
+var qe = U, Ge = G, Je = J, Ke = Q;
 export {
-  $ as createContextScope
+  Ge as Anchor,
+  Ke as Arrow,
+  Je as Content,
+  U as Popper,
+  G as PopperAnchor,
+  Q as PopperArrow,
+  J as PopperContent,
+  qe as Root,
+  Ue as createPopperScope
 };

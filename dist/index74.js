@@ -1,199 +1,174 @@
 import * as i from "react";
-import { composeEventHandlers as P } from "./index89.js";
-import { useComposedRefs as O } from "./index88.js";
-import { createContextScope as G } from "./index87.js";
-import { DismissableLayer as H } from "./index101.js";
-import { useFocusGuards as K } from "./index110.js";
-import { FocusScope as $ } from "./index111.js";
-import { useId as j } from "./index97.js";
-import { createPopperScope as _, Root as U, Anchor as x, Content as V, Arrow as W } from "./index102.js";
-import { Portal as Z } from "./index103.js";
-import { Presence as w } from "./index94.js";
-import { Primitive as E } from "./index95.js";
-import { createSlot as q } from "./index90.js";
-import { useControllableState as z } from "./index91.js";
-import { hideOthers as B } from "./index112.js";
-import J from "./index113.js";
-import { jsx as p } from "react/jsx-runtime";
-var C = "Popover", [b] = G(C, [
-  _
-]), m = _(), [Q, f] = b(C), F = (o) => {
-  const {
-    __scopePopover: n,
-    children: t,
-    open: a,
-    defaultOpen: e,
-    onOpenChange: r,
-    modal: s = !1
-  } = o, c = m(n), u = i.useRef(null), [l, g] = i.useState(!1), [h, d] = z({
-    prop: a,
-    defaultProp: e ?? !1,
-    onChange: r,
-    caller: C
-  });
-  return /* @__PURE__ */ p(U, { ...c, children: /* @__PURE__ */ p(
-    Q,
-    {
-      scope: n,
-      contentId: j(),
-      triggerRef: u,
-      open: h,
-      onOpenChange: d,
-      onOpenToggle: i.useCallback(() => d((R) => !R), [d]),
-      hasCustomAnchor: l,
-      onCustomAnchorAdd: i.useCallback(() => g(!0), []),
-      onCustomAnchorRemove: i.useCallback(() => g(!1), []),
-      modal: s,
-      children: t
-    }
-  ) });
-};
-F.displayName = C;
-var N = "PopoverAnchor", S = i.forwardRef(
-  (o, n) => {
-    const { __scopePopover: t, ...a } = o, e = f(N, t), r = m(t), { onCustomAnchorAdd: s, onCustomAnchorRemove: c } = e;
-    return i.useEffect(() => (s(), () => c()), [s, c]), /* @__PURE__ */ p(x, { ...r, ...a, ref: n });
+import { composeEventHandlers as I } from "./index140.js";
+import { useComposedRefs as E } from "./index89.js";
+import { createContextScope as w } from "./index87.js";
+import { Primitive as b } from "./index92.js";
+import { createRovingFocusGroupScope as P, Root as B, Item as q } from "./index118.js";
+import { useControllableState as K } from "./index91.js";
+import { useDirection as T } from "./index94.js";
+import { useSize as U } from "./index141.js";
+import { usePrevious as V } from "./index110.js";
+import { Presence as j } from "./index115.js";
+import { jsx as p, jsxs as z } from "react/jsx-runtime";
+var _ = "Radio", [H, g] = w(_), [W, X] = H(_), k = i.forwardRef(
+  (a, d) => {
+    const {
+      __scopeRadio: o,
+      name: s,
+      checked: e = !1,
+      required: r,
+      disabled: n,
+      value: f = "on",
+      onCheck: c,
+      form: m,
+      ...R
+    } = a, [l, v] = i.useState(null), t = E(d, (y) => v(y)), u = i.useRef(!1), h = l ? m || !!l.closest("form") : !0;
+    return /* @__PURE__ */ z(W, { scope: o, checked: e, disabled: n, children: [
+      /* @__PURE__ */ p(
+        b.button,
+        {
+          type: "button",
+          role: "radio",
+          "aria-checked": e,
+          "data-state": N(e),
+          "data-disabled": n ? "" : void 0,
+          disabled: n,
+          value: f,
+          ...R,
+          ref: t,
+          onClick: I(a.onClick, (y) => {
+            e || c == null || c(), h && (u.current = y.isPropagationStopped(), u.current || y.stopPropagation());
+          })
+        }
+      ),
+      h && /* @__PURE__ */ p(
+        A,
+        {
+          control: l,
+          bubbles: !u.current,
+          name: s,
+          value: f,
+          checked: e,
+          required: r,
+          disabled: n,
+          form: m,
+          style: { transform: "translateX(-100%)" }
+        }
+      )
+    ] });
   }
 );
-S.displayName = N;
-var y = "PopoverTrigger", D = i.forwardRef(
-  (o, n) => {
-    const { __scopePopover: t, ...a } = o, e = f(y, t), r = m(t), s = O(n, e.triggerRef), c = /* @__PURE__ */ p(
-      E.button,
+k.displayName = _;
+var G = "RadioIndicator", S = i.forwardRef(
+  (a, d) => {
+    const { __scopeRadio: o, forceMount: s, ...e } = a, r = X(G, o);
+    return /* @__PURE__ */ p(j, { present: s || r.checked, children: /* @__PURE__ */ p(
+      b.span,
       {
-        type: "button",
-        "aria-haspopup": "dialog",
-        "aria-expanded": e.open,
-        "aria-controls": e.contentId,
-        "data-state": L(e.open),
-        ...a,
-        ref: s,
-        onClick: P(o.onClick, e.onOpenToggle)
-      }
-    );
-    return e.hasCustomAnchor ? c : /* @__PURE__ */ p(x, { asChild: !0, ...r, children: c });
-  }
-);
-D.displayName = y;
-var A = "PopoverPortal", [X, Y] = b(A, {
-  forceMount: void 0
-}), M = (o) => {
-  const { __scopePopover: n, forceMount: t, children: a, container: e } = o, r = f(A, n);
-  return /* @__PURE__ */ p(X, { scope: n, forceMount: t, children: /* @__PURE__ */ p(w, { present: t || r.open, children: /* @__PURE__ */ p(Z, { asChild: !0, container: e, children: a }) }) });
-};
-M.displayName = A;
-var v = "PopoverContent", k = i.forwardRef(
-  (o, n) => {
-    const t = Y(v, o.__scopePopover), { forceMount: a = t.forceMount, ...e } = o, r = f(v, o.__scopePopover);
-    return /* @__PURE__ */ p(w, { present: a || r.open, children: r.modal ? /* @__PURE__ */ p(eo, { ...e, ref: n }) : /* @__PURE__ */ p(ro, { ...e, ref: n }) });
-  }
-);
-k.displayName = v;
-var oo = q("PopoverContent.RemoveScroll"), eo = i.forwardRef(
-  (o, n) => {
-    const t = f(v, o.__scopePopover), a = i.useRef(null), e = O(n, a), r = i.useRef(!1);
-    return i.useEffect(() => {
-      const s = a.current;
-      if (s) return B(s);
-    }, []), /* @__PURE__ */ p(J, { as: oo, allowPinchZoom: !0, children: /* @__PURE__ */ p(
-      I,
-      {
-        ...o,
-        ref: e,
-        trapFocus: t.open,
-        disableOutsidePointerEvents: !0,
-        onCloseAutoFocus: P(o.onCloseAutoFocus, (s) => {
-          var c;
-          s.preventDefault(), r.current || (c = t.triggerRef.current) == null || c.focus();
-        }),
-        onPointerDownOutside: P(
-          o.onPointerDownOutside,
-          (s) => {
-            const c = s.detail.originalEvent, u = c.button === 0 && c.ctrlKey === !0, l = c.button === 2 || u;
-            r.current = l;
-          },
-          { checkForDefaultPrevented: !1 }
-        ),
-        onFocusOutside: P(
-          o.onFocusOutside,
-          (s) => s.preventDefault(),
-          { checkForDefaultPrevented: !1 }
-        )
+        "data-state": N(r.checked),
+        "data-disabled": r.disabled ? "" : void 0,
+        ...e,
+        ref: d
       }
     ) });
   }
-), ro = i.forwardRef(
-  (o, n) => {
-    const t = f(v, o.__scopePopover), a = i.useRef(!1), e = i.useRef(!1);
-    return /* @__PURE__ */ p(
-      I,
+);
+S.displayName = G;
+var Y = "RadioBubbleInput", A = i.forwardRef(
+  ({
+    __scopeRadio: a,
+    control: d,
+    checked: o,
+    bubbles: s = !0,
+    ...e
+  }, r) => {
+    const n = i.useRef(null), f = E(n, r), c = V(o), m = U(d);
+    return i.useEffect(() => {
+      const R = n.current;
+      if (!R) return;
+      const l = window.HTMLInputElement.prototype, t = Object.getOwnPropertyDescriptor(
+        l,
+        "checked"
+      ).set;
+      if (c !== o && t) {
+        const u = new Event("click", { bubbles: s });
+        t.call(R, o), R.dispatchEvent(u);
+      }
+    }, [c, o, s]), /* @__PURE__ */ p(
+      b.input,
       {
-        ...o,
-        ref: n,
-        trapFocus: !1,
-        disableOutsidePointerEvents: !1,
-        onCloseAutoFocus: (r) => {
-          var s, c;
-          (s = o.onCloseAutoFocus) == null || s.call(o, r), r.defaultPrevented || (a.current || (c = t.triggerRef.current) == null || c.focus(), r.preventDefault()), a.current = !1, e.current = !1;
-        },
-        onInteractOutside: (r) => {
-          var u, l;
-          (u = o.onInteractOutside) == null || u.call(o, r), r.defaultPrevented || (a.current = !0, r.detail.originalEvent.type === "pointerdown" && (e.current = !0));
-          const s = r.target;
-          ((l = t.triggerRef.current) == null ? void 0 : l.contains(s)) && r.preventDefault(), r.detail.originalEvent.type === "focusin" && e.current && r.preventDefault();
+        type: "radio",
+        "aria-hidden": !0,
+        defaultChecked: o,
+        ...e,
+        tabIndex: -1,
+        ref: f,
+        style: {
+          ...e.style,
+          ...m,
+          position: "absolute",
+          pointerEvents: "none",
+          opacity: 0,
+          margin: 0
         }
       }
     );
   }
-), I = i.forwardRef(
-  (o, n) => {
+);
+A.displayName = Y;
+function N(a) {
+  return a ? "checked" : "unchecked";
+}
+var J = ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"], C = "RadioGroup", [Q] = w(C, [
+  P,
+  g
+]), x = P(), D = g(), [Z, $] = Q(C), M = i.forwardRef(
+  (a, d) => {
     const {
-      __scopePopover: t,
-      trapFocus: a,
-      onOpenAutoFocus: e,
-      onCloseAutoFocus: r,
-      disableOutsidePointerEvents: s,
-      onEscapeKeyDown: c,
-      onPointerDownOutside: u,
-      onFocusOutside: l,
-      onInteractOutside: g,
-      ...h
-    } = o, d = f(v, t), R = m(t);
-    return K(), /* @__PURE__ */ p(
-      $,
+      __scopeRadioGroup: o,
+      name: s,
+      defaultValue: e,
+      value: r,
+      required: n = !1,
+      disabled: f = !1,
+      orientation: c,
+      dir: m,
+      loop: R = !0,
+      onValueChange: l,
+      ...v
+    } = a, t = x(o), u = T(m), [h, y] = K({
+      prop: r,
+      defaultProp: e ?? null,
+      onChange: l,
+      caller: C
+    });
+    return /* @__PURE__ */ p(
+      Z,
       {
-        asChild: !0,
-        loop: !0,
-        trapped: a,
-        onMountAutoFocus: e,
-        onUnmountAutoFocus: r,
+        scope: o,
+        name: s,
+        required: n,
+        disabled: f,
+        value: h,
+        onValueChange: y,
         children: /* @__PURE__ */ p(
-          H,
+          B,
           {
             asChild: !0,
-            disableOutsidePointerEvents: s,
-            onInteractOutside: g,
-            onEscapeKeyDown: c,
-            onPointerDownOutside: u,
-            onFocusOutside: l,
-            onDismiss: () => d.onOpenChange(!1),
+            ...t,
+            orientation: c,
+            dir: u,
+            loop: R,
             children: /* @__PURE__ */ p(
-              V,
+              b.div,
               {
-                "data-state": L(d.open),
-                role: "dialog",
-                id: d.contentId,
-                ...R,
-                ...h,
-                ref: n,
-                style: {
-                  ...h.style,
-                  "--radix-popover-content-transform-origin": "var(--radix-popper-transform-origin)",
-                  "--radix-popover-content-available-width": "var(--radix-popper-available-width)",
-                  "--radix-popover-content-available-height": "var(--radix-popper-available-height)",
-                  "--radix-popover-trigger-width": "var(--radix-popper-anchor-width)",
-                  "--radix-popover-trigger-height": "var(--radix-popper-anchor-height)"
-                }
+                role: "radiogroup",
+                "aria-required": n,
+                "aria-orientation": c,
+                "data-disabled": f ? "" : void 0,
+                dir: u,
+                ...v,
+                ref: d
               }
             )
           }
@@ -201,43 +176,63 @@ var oo = q("PopoverContent.RemoveScroll"), eo = i.forwardRef(
       }
     );
   }
-), T = "PopoverClose", to = i.forwardRef(
-  (o, n) => {
-    const { __scopePopover: t, ...a } = o, e = f(T, t);
-    return /* @__PURE__ */ p(
-      E.button,
+);
+M.displayName = C;
+var O = "RadioGroupItem", F = i.forwardRef(
+  (a, d) => {
+    const { __scopeRadioGroup: o, disabled: s, ...e } = a, r = $(O, o), n = r.disabled || s, f = x(o), c = D(o), m = i.useRef(null), R = E(d, m), l = r.value === e.value, v = i.useRef(!1);
+    return i.useEffect(() => {
+      const t = (h) => {
+        J.includes(h.key) && (v.current = !0);
+      }, u = () => v.current = !1;
+      return document.addEventListener("keydown", t), document.addEventListener("keyup", u), () => {
+        document.removeEventListener("keydown", t), document.removeEventListener("keyup", u);
+      };
+    }, []), /* @__PURE__ */ p(
+      q,
       {
-        type: "button",
-        ...a,
-        ref: n,
-        onClick: P(o.onClick, () => e.onOpenChange(!1))
+        asChild: !0,
+        ...f,
+        focusable: !n,
+        active: l,
+        children: /* @__PURE__ */ p(
+          k,
+          {
+            disabled: n,
+            required: r.required,
+            checked: l,
+            ...c,
+            ...e,
+            name: r.name,
+            ref: R,
+            onCheck: () => r.onValueChange(e.value),
+            onKeyDown: I((t) => {
+              t.key === "Enter" && t.preventDefault();
+            }),
+            onFocus: I(e.onFocus, () => {
+              var t;
+              v.current && ((t = m.current) == null || t.click());
+            })
+          }
+        )
       }
     );
   }
 );
-to.displayName = T;
-var no = "PopoverArrow", ao = i.forwardRef(
-  (o, n) => {
-    const { __scopePopover: t, ...a } = o, e = m(t);
-    return /* @__PURE__ */ p(W, { ...e, ...a, ref: n });
+F.displayName = O;
+var ee = "RadioGroupIndicator", L = i.forwardRef(
+  (a, d) => {
+    const { __scopeRadioGroup: o, ...s } = a, e = D(o);
+    return /* @__PURE__ */ p(S, { ...e, ...s, ref: d });
   }
 );
-ao.displayName = no;
-function L(o) {
-  return o ? "open" : "closed";
-}
-var _o = F, xo = S, wo = D, Eo = M, bo = k;
+L.displayName = ee;
+var le = M, fe = F, me = L;
 export {
-  xo as Anchor,
-  bo as Content,
-  F as Popover,
-  S as PopoverAnchor,
-  ao as PopoverArrow,
-  to as PopoverClose,
-  k as PopoverContent,
-  M as PopoverPortal,
-  D as PopoverTrigger,
-  Eo as Portal,
-  _o as Root,
-  wo as Trigger
+  me as Indicator,
+  fe as Item,
+  M as RadioGroup,
+  L as RadioGroupIndicator,
+  F as RadioGroupItem,
+  le as Root
 };

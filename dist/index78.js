@@ -1,163 +1,83 @@
-import * as v from "react";
-import { composeEventHandlers as g } from "./index89.js";
-import { createContextScope as x } from "./index87.js";
-import { createRovingFocusGroupScope as C, Root as E, Item as F } from "./index99.js";
-import { Presence as w } from "./index94.js";
-import { Primitive as b } from "./index95.js";
-import { useDirection as D } from "./index98.js";
-import { useControllableState as V } from "./index91.js";
-import { useId as G } from "./index97.js";
+import * as m from "react";
+import { createContextScope as $ } from "./index142.js";
+import { Primitive as c } from "./index143.js";
 import { jsx as l } from "react/jsx-runtime";
-var p = "Tabs", [L] = x(p, [
-  C
-]), h = C(), [$, T] = L(p), I = v.forwardRef(
-  (e, r) => {
+var u = "Progress", d = 100, [I] = $(u), [h, R] = I(u), f = m.forwardRef(
+  (r, e) => {
     const {
-      __scopeTabs: s,
-      value: t,
-      onValueChange: n,
-      defaultValue: c,
-      orientation: o = "horizontal",
-      dir: d,
-      activationMode: f = "automatic",
-      ...m
-    } = e, i = D(d), [a, u] = V({
-      prop: t,
-      onChange: n,
-      defaultProp: c ?? "",
-      caller: p
-    });
-    return /* @__PURE__ */ l(
-      $,
+      __scopeProgress: i,
+      value: o = null,
+      max: a,
+      getValueLabel: P = E,
+      ...N
+    } = r;
+    (a || a === 0) && !v(a) && console.error(M(`${a}`, "Progress"));
+    const t = v(a) ? a : d;
+    o !== null && !p(o, t) && console.error(V(`${o}`, "Progress"));
+    const n = p(o, t) ? o : null, b = s(n) ? P(n, t) : void 0;
+    return /* @__PURE__ */ l(h, { scope: i, value: n, max: t, children: /* @__PURE__ */ l(
+      c.div,
       {
-        scope: s,
-        baseId: G(),
-        value: a,
-        onValueChange: u,
-        orientation: o,
-        dir: i,
-        activationMode: f,
-        children: /* @__PURE__ */ l(
-          b.div,
-          {
-            dir: i,
-            "data-orientation": o,
-            ...m,
-            ref: r
-          }
-        )
-      }
-    );
-  }
-);
-I.displayName = p;
-var R = "TabsList", _ = v.forwardRef(
-  (e, r) => {
-    const { __scopeTabs: s, loop: t = !0, ...n } = e, c = T(R, s), o = h(s);
-    return /* @__PURE__ */ l(
-      E,
-      {
-        asChild: !0,
-        ...o,
-        orientation: c.orientation,
-        dir: c.dir,
-        loop: t,
-        children: /* @__PURE__ */ l(
-          b.div,
-          {
-            role: "tablist",
-            "aria-orientation": c.orientation,
-            ...n,
-            ref: r
-          }
-        )
-      }
-    );
-  }
-);
-_.displayName = R;
-var y = "TabsTrigger", A = v.forwardRef(
-  (e, r) => {
-    const { __scopeTabs: s, value: t, disabled: n = !1, ...c } = e, o = T(y, s), d = h(s), f = P(o.baseId, t), m = S(o.baseId, t), i = t === o.value;
-    return /* @__PURE__ */ l(
-      F,
-      {
-        asChild: !0,
-        ...d,
-        focusable: !n,
-        active: i,
-        children: /* @__PURE__ */ l(
-          b.button,
-          {
-            type: "button",
-            role: "tab",
-            "aria-selected": i,
-            "aria-controls": m,
-            "data-state": i ? "active" : "inactive",
-            "data-disabled": n ? "" : void 0,
-            disabled: n,
-            id: f,
-            ...c,
-            ref: r,
-            onMouseDown: g(e.onMouseDown, (a) => {
-              !n && a.button === 0 && a.ctrlKey === !1 ? o.onValueChange(t) : a.preventDefault();
-            }),
-            onKeyDown: g(e.onKeyDown, (a) => {
-              [" ", "Enter"].includes(a.key) && o.onValueChange(t);
-            }),
-            onFocus: g(e.onFocus, () => {
-              const a = o.activationMode !== "manual";
-              !i && !n && a && o.onValueChange(t);
-            })
-          }
-        )
-      }
-    );
-  }
-);
-A.displayName = y;
-var M = "TabsContent", N = v.forwardRef(
-  (e, r) => {
-    const { __scopeTabs: s, value: t, forceMount: n, children: c, ...o } = e, d = T(M, s), f = P(d.baseId, t), m = S(d.baseId, t), i = t === d.value, a = v.useRef(i);
-    return v.useEffect(() => {
-      const u = requestAnimationFrame(() => a.current = !1);
-      return () => cancelAnimationFrame(u);
-    }, []), /* @__PURE__ */ l(w, { present: n || i, children: ({ present: u }) => /* @__PURE__ */ l(
-      b.div,
-      {
-        "data-state": i ? "active" : "inactive",
-        "data-orientation": d.orientation,
-        role: "tabpanel",
-        "aria-labelledby": f,
-        hidden: !u,
-        id: m,
-        tabIndex: 0,
-        ...o,
-        ref: r,
-        style: {
-          ...e.style,
-          animationDuration: a.current ? "0s" : void 0
-        },
-        children: u && c
+        "aria-valuemax": t,
+        "aria-valuemin": 0,
+        "aria-valuenow": s(n) ? n : void 0,
+        "aria-valuetext": b,
+        role: "progressbar",
+        "data-state": x(n, t),
+        "data-value": n ?? void 0,
+        "data-max": t,
+        ...N,
+        ref: e
       }
     ) });
   }
 );
-N.displayName = M;
-function P(e, r) {
-  return `${e}-trigger-${r}`;
+f.displayName = u;
+var g = "ProgressIndicator", _ = m.forwardRef(
+  (r, e) => {
+    const { __scopeProgress: i, ...o } = r, a = R(g, i);
+    return /* @__PURE__ */ l(
+      c.div,
+      {
+        "data-state": x(a.value, a.max),
+        "data-value": a.value ?? void 0,
+        "data-max": a.max,
+        ...o,
+        ref: e
+      }
+    );
+  }
+);
+_.displayName = g;
+function E(r, e) {
+  return `${Math.round(r / e * 100)}%`;
 }
-function S(e, r) {
-  return `${e}-content-${r}`;
+function x(r, e) {
+  return r == null ? "indeterminate" : r === e ? "complete" : "loading";
 }
-var Q = I, U = _, W = A, X = N;
+function s(r) {
+  return typeof r == "number";
+}
+function v(r) {
+  return s(r) && !isNaN(r) && r > 0;
+}
+function p(r, e) {
+  return s(r) && !isNaN(r) && r <= e && r >= 0;
+}
+function M(r, e) {
+  return `Invalid prop \`max\` of value \`${r}\` supplied to \`${e}\`. Only numbers greater than 0 are valid max values. Defaulting to \`${d}\`.`;
+}
+function V(r, e) {
+  return `Invalid prop \`value\` of value \`${r}\` supplied to \`${e}\`. The \`value\` prop must be:
+  - a positive number
+  - less than the value passed to \`max\` (or ${d} if no \`max\` prop is set)
+  - \`null\` or \`undefined\` if the progress is indeterminate.
+
+Defaulting to \`null\`.`;
+}
+var D = f;
 export {
-  X as Content,
-  U as List,
-  Q as Root,
-  I as Tabs,
-  N as TabsContent,
-  _ as TabsList,
-  A as TabsTrigger,
-  W as Trigger
+  f as Progress,
+  _ as ProgressIndicator,
+  D as Root
 };
