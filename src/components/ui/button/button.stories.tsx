@@ -8,7 +8,7 @@ const meta: Meta<typeof Button> = {
   argTypes: {
     variant: {
       control: 'select',
-      options: ['default', 'destructive', 'outline', 'secondary', 'ghost', 'link', 'green', 'green-outline', 'white', 'white-outline', 'yellow', 'yellow-outline', 'hotpink', 'hotpink-outline', 'blue', 'blue-outline'],
+      options: ['default', 'destructive', 'outline', 'secondary', 'secondary-outline', 'ghost', 'link', 'destructive-outline'],
     },
     size: {
       control: 'select',
@@ -52,7 +52,9 @@ export const AllVariants: Story = {
       <Button variant="default">[Start Quiz]</Button>
       <Button variant="secondary">Reset Progress</Button>
       <Button variant="outline">Continue</Button>
+      <Button variant="secondary-outline">Secondary Outline</Button>
       <Button variant="destructive">Delete Data</Button>
+      <Button variant="destructive-outline">Destructive Outline</Button>
       <Button variant="ghost">Press ENTER to start</Button>
       <Button variant="link">Learn More</Button>
     </div>
@@ -120,28 +122,28 @@ export const InteractiveDemo: Story = {
   ),
 }
 
-export const AllColors: Story = {
+export const WithThemeColors: Story = {
   render: () => (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-4">
       <div className="flex gap-4 items-center">
-        <Button variant="green">Green Fill</Button>
-        <Button variant="green-outline">Green Outline</Button>
+        <Button>Default (Green)</Button>
+        <Button variant="outline">Green Outline</Button>
       </div>
-      <div className="flex gap-4 items-center">
-        <Button variant="white">White Fill</Button>
-        <Button variant="white-outline">White Outline</Button>
+      <div className="flex gap-4 items-center theme-cyan">
+        <Button>Cyan Fill</Button>
+        <Button variant="outline">Cyan Outline</Button>
       </div>
-      <div className="flex gap-4 items-center">
-        <Button variant="yellow">Yellow Fill</Button>
-        <Button variant="yellow-outline">Yellow Outline</Button>
+      <div className="flex gap-4 items-center theme-yellow">
+        <Button>Yellow Fill</Button>
+        <Button variant="outline">Yellow Outline</Button>
       </div>
-      <div className="flex gap-4 items-center">
-        <Button variant="hotpink">Hotpink Fill</Button>
-        <Button variant="hotpink-outline">Hotpink Outline</Button>
+      <div className="flex gap-4 items-center theme-hotpink">
+        <Button>Hot Pink Fill</Button>
+        <Button variant="outline">Hot Pink Outline</Button>
       </div>
-      <div className="flex gap-4 items-center">
-        <Button variant="blue">Blue Fill</Button>
-        <Button variant="blue-outline">Blue Outline</Button>
+      <div className="flex gap-4 items-center theme-amber">
+        <Button>Amber Fill</Button>
+        <Button variant="outline">Amber Outline</Button>
       </div>
     </div>
   ),
