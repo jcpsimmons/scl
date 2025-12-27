@@ -143,15 +143,15 @@ export const CustomContent: Story = {
   args: {
     mode: 'NORMAL',
     leftContent: (
-      <div className="flex items-center px-2 bg-terminal-orange text-black">
+      <div className="flex items-center px-2 bg-amber-500 text-black">
         LSP: Ready
       </div>
     ),
     centerContent: (
-      <span className="text-terminal-yellow">Custom Center Content</span>
+      <span className="text-yellow-400">Custom Center Content</span>
     ),
     rightContent: (
-      <div className="flex items-center px-2 text-terminal-green">
+      <div className="flex items-center px-2 text-green-400">
         Spaces: 2
       </div>
     ),
