@@ -14,9 +14,14 @@
     --color-hotpink: 300 100% 50%;
     --color-yellow: 60 100% 50%;
     --color-blue: 240 100% 50%;
+    --color-cyan: 180 100% 50%;
     --color-white: 0 0% 100%;
     --color-amber: 45 100% 50%;
     --color-red: 0 100% 50%;
+
+    /* Statusline colors (vim powerline style) */
+    --statusline-bg: 210 100% 35%;
+    --statusline-fg: 60 100% 50%;
 
     /* Semantic colors (swappable) */
     --primary: var(--color-green);
