@@ -284,17 +284,17 @@
     --tw-ring-color: hsl(var(--primary));
   }
 
-  /* Blink animation utility */
+  /* Blink animation utility - only blinks the fill, not the border */
   .animate-blink {
     animation: blink 0.5s step-end infinite;
   }
 
   @keyframes blink {
     0%, 100% {
-      opacity: 1;
+      background-color: hsl(var(--primary) / 0.1);
     }
     50% {
-      opacity: 0;
+      background-color: transparent;
     }
   }
 }
