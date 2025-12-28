@@ -72,24 +72,6 @@ export const WithLabel: Story = {
   },
 }
 
-export const CustomSegments: Story = {
-  args: {
-    value: 60,
-    segments: 10,
-    showPercentage: true,
-    label: '10 segments',
-  },
-}
-
-export const ManySegments: Story = {
-  args: {
-    value: 73,
-    segments: 40,
-    showPercentage: true,
-    label: '40 segments',
-  },
-}
-
 export const WithThemeColors: Story = {
   render: () => (
     <div className="flex flex-col gap-6 w-full">
