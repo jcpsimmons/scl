@@ -136,7 +136,7 @@ export default {
         'collapsible-down': 'collapsible-down 0.2s ease-out',
         'collapsible-up': 'collapsible-up 0.2s ease-out',
         scanline: 'scanline 1.5s ease-in-out infinite',
-        blink: 'blink 1s step-end infinite',
+        blink: 'blink 0.5s step-end infinite',
       },
     },
   },
