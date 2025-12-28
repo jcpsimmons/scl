@@ -6,8 +6,6 @@ export interface ProgressProps
   extends React.ComponentPropsWithoutRef<typeof ProgressPrimitive.Root> {
   /** Progress value from 0 to 100 */
   value?: number
-  /** Number of segments/blocks to display */
-  segments?: number
   /** Show percentage text */
   showPercentage?: boolean
   /** Custom label text */
