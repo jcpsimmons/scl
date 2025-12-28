@@ -76,27 +76,27 @@
 
   /* Theme utility classes for per-section color swapping */
   .theme-yellow {
-    --primary: var(--color-yellow);
+    --primary: 60 100% 50%;
   }
   .theme-blue {
-    --primary: var(--color-blue);
+    --primary: 240 100% 50%;
     --primary-foreground: 0 0% 100%;
   }
   .theme-white {
-    --primary: var(--color-white);
+    --primary: 0 0% 100%;
   }
   .theme-amber {
-    --primary: var(--color-amber);
+    --primary: 45 100% 50%;
   }
   .theme-hotpink {
-    --primary: var(--color-hotpink);
+    --primary: 300 100% 50%;
   }
   .theme-cyan {
-    --primary: var(--color-cyan);
+    --primary: 180 100% 50%;
   }
   .theme-secondary {
-    --primary: var(--secondary);
-    --primary-foreground: var(--secondary-foreground);
+    --primary: 300 100% 50%;
+    --primary-foreground: 0 0% 0%;
   }
 }
 
