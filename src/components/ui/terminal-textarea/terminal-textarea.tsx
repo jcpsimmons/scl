@@ -296,7 +296,7 @@ const TerminalTextarea = React.forwardRef<HTMLDivElement, TerminalTextareaProps>
       >
         <div ref={editorRef} />
         {vimMode && (
-          <div className="text-xs text-secondary px-2 py-1 border-t border-primary bg-background">
+          <div className="text-xs text-secondary px-2 py-1 border-t border-primary bg-black">
             VIM MODE ENABLED
           </div>
         )}
