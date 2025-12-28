@@ -41,6 +41,7 @@ type Story = StoryObj<typeof TerminalTextarea>
 export const Default: Story = {
   args: {
     visibleLines: 10,
+    language: 'javascript',
     value: `function greet(name) {
   console.log("Hello, " + name);
 }
