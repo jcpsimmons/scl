@@ -1,54 +1,11 @@
-import * as n from "react";
-import { useLayoutEffect as v } from "./index89.js";
-var E = n[" useInsertionEffect ".trim().toString()] || v;
-function y({
-  prop: t,
-  defaultProp: u,
-  onChange: o = () => {
-  },
-  caller: i
-}) {
-  const [l, e, r] = w({
-    defaultProp: u,
-    onChange: o
-  }), c = t !== void 0, a = c ? t : l;
-  {
-    const s = n.useRef(t !== void 0);
-    n.useEffect(() => {
-      const f = s.current;
-      f !== c && console.warn(
-        `${i} is changing from ${f ? "controlled" : "uncontrolled"} to ${c ? "controlled" : "uncontrolled"}. Components should not switch from controlled to uncontrolled (or vice versa). Decide between using a controlled or uncontrolled value for the lifetime of the component.`
-      ), s.current = c;
-    }, [c, i]);
-  }
-  const m = n.useCallback(
-    (s) => {
-      var f;
-      if (c) {
-        const d = R(s) ? s(t) : s;
-        d !== t && ((f = r.current) == null || f.call(r, d));
-      } else
-        e(s);
-    },
-    [c, t, e, r]
-  );
-  return [a, m];
-}
-function w({
-  defaultProp: t,
-  onChange: u
-}) {
-  const [o, i] = n.useState(t), l = n.useRef(o), e = n.useRef(u);
-  return E(() => {
-    e.current = u;
-  }, [u]), n.useEffect(() => {
-    var r;
-    l.current !== o && ((r = e.current) == null || r.call(e, o), l.current = o);
-  }, [o, l]), [o, i, e];
-}
-function R(t) {
-  return typeof t == "function";
+import "react";
+import { jsx as e, Fragment as o } from "react/jsx-runtime";
+var l = Symbol("radix.slottable");
+// @__NO_SIDE_EFFECTS__
+function n(r) {
+  const t = ({ children: a }) => /* @__PURE__ */ e(o, { children: a });
+  return t.displayName = `${r}.Slottable`, t.__radixId = l, t;
 }
 export {
-  y as useControllableState
+  n as createSlottable
 };

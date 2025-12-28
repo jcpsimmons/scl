@@ -1,1613 +1,280 @@
-import { Parser as Te, NodeType as y, NodeProp as H, NodeSet as fe, parseMixed as De, Tree as E } from "./index171.js";
-import { Tag as Xe, styleTags as de, tags as p } from "./index72.js";
-class O {
-  static create(e, s, r, n, i) {
-    let o = n + (n << 8) + e + (s << 4) | 0;
-    return new O(e, s, r, o, i, [], []);
-  }
-  constructor(e, s, r, n, i, o, a) {
-    this.type = e, this.value = s, this.from = r, this.hash = n, this.end = i, this.children = o, this.positions = a, this.hashProp = [[H.contextHash, n]];
-  }
-  addChild(e, s) {
-    e.prop(H.contextHash) != this.hash && (e = new E(e.type, e.children, e.positions, e.length, this.hashProp)), this.children.push(e), this.positions.push(s);
-  }
-  toTree(e, s = this.end) {
-    let r = this.children.length - 1;
-    return r >= 0 && (s = Math.max(s, this.positions[r] + this.children[r].length + this.from)), new E(e.types[this.type], this.children, this.positions, s - this.from).balance({
-      makeTree: (n, i, o) => new E(y.none, n, i, o, this.hashProp)
-    });
-  }
-}
-var l;
-(function(t) {
-  t[t.Document = 1] = "Document", t[t.CodeBlock = 2] = "CodeBlock", t[t.FencedCode = 3] = "FencedCode", t[t.Blockquote = 4] = "Blockquote", t[t.HorizontalRule = 5] = "HorizontalRule", t[t.BulletList = 6] = "BulletList", t[t.OrderedList = 7] = "OrderedList", t[t.ListItem = 8] = "ListItem", t[t.ATXHeading1 = 9] = "ATXHeading1", t[t.ATXHeading2 = 10] = "ATXHeading2", t[t.ATXHeading3 = 11] = "ATXHeading3", t[t.ATXHeading4 = 12] = "ATXHeading4", t[t.ATXHeading5 = 13] = "ATXHeading5", t[t.ATXHeading6 = 14] = "ATXHeading6", t[t.SetextHeading1 = 15] = "SetextHeading1", t[t.SetextHeading2 = 16] = "SetextHeading2", t[t.HTMLBlock = 17] = "HTMLBlock", t[t.LinkReference = 18] = "LinkReference", t[t.Paragraph = 19] = "Paragraph", t[t.CommentBlock = 20] = "CommentBlock", t[t.ProcessingInstructionBlock = 21] = "ProcessingInstructionBlock", t[t.Escape = 22] = "Escape", t[t.Entity = 23] = "Entity", t[t.HardBreak = 24] = "HardBreak", t[t.Emphasis = 25] = "Emphasis", t[t.StrongEmphasis = 26] = "StrongEmphasis", t[t.Link = 27] = "Link", t[t.Image = 28] = "Image", t[t.InlineCode = 29] = "InlineCode", t[t.HTMLTag = 30] = "HTMLTag", t[t.Comment = 31] = "Comment", t[t.ProcessingInstruction = 32] = "ProcessingInstruction", t[t.Autolink = 33] = "Autolink", t[t.HeaderMark = 34] = "HeaderMark", t[t.QuoteMark = 35] = "QuoteMark", t[t.ListMark = 36] = "ListMark", t[t.LinkMark = 37] = "LinkMark", t[t.EmphasisMark = 38] = "EmphasisMark", t[t.CodeMark = 39] = "CodeMark", t[t.CodeText = 40] = "CodeText", t[t.CodeInfo = 41] = "CodeInfo", t[t.LinkTitle = 42] = "LinkTitle", t[t.LinkLabel = 43] = "LinkLabel", t[t.URL = 44] = "URL";
-})(l || (l = {}));
-class Fe {
-  /**
-  @internal
-  */
-  constructor(e, s) {
-    this.start = e, this.content = s, this.marks = [], this.parsers = [];
-  }
-}
-class je {
-  constructor() {
-    this.text = "", this.baseIndent = 0, this.basePos = 0, this.depth = 0, this.markers = [], this.pos = 0, this.indent = 0, this.next = -1;
-  }
-  /**
-  @internal
-  */
-  forward() {
-    this.basePos > this.pos && this.forwardInner();
-  }
-  /**
-  @internal
-  */
-  forwardInner() {
-    let e = this.skipSpace(this.basePos);
-    this.indent = this.countIndent(e, this.pos, this.indent), this.pos = e, this.next = e == this.text.length ? -1 : this.text.charCodeAt(e);
-  }
-  /**
-  Skip whitespace after the given position, return the position of
-  the next non-space character or the end of the line if there's
-  only space after `from`.
-  */
-  skipSpace(e) {
-    return x(this.text, e);
-  }
-  /**
-  @internal
-  */
-  reset(e) {
-    for (this.text = e, this.baseIndent = this.basePos = this.pos = this.indent = 0, this.forwardInner(), this.depth = 1; this.markers.length; )
-      this.markers.pop();
-  }
-  /**
-  Move the line's base position forward to the given position.
-  This should only be called by composite [block
-  parsers](#BlockParser.parse) or [markup skipping
-  functions](#NodeSpec.composite).
-  */
-  moveBase(e) {
-    this.basePos = e, this.baseIndent = this.countIndent(e, this.pos, this.indent);
-  }
-  /**
-  Move the line's base position forward to the given _column_.
-  */
-  moveBaseColumn(e) {
-    this.baseIndent = e, this.basePos = this.findColumn(e);
-  }
-  /**
-  Store a composite-block-level marker. Should be called from
-  [markup skipping functions](#NodeSpec.composite) when they
-  consume any non-whitespace characters.
-  */
-  addMarker(e) {
-    this.markers.push(e);
-  }
-  /**
-  Find the column position at `to`, optionally starting at a given
-  position and column.
-  */
-  countIndent(e, s = 0, r = 0) {
-    for (let n = s; n < e; n++)
-      r += this.text.charCodeAt(n) == 9 ? 4 - r % 4 : 1;
-    return r;
-  }
-  /**
-  Find the position corresponding to the given column.
-  */
-  findColumn(e) {
-    let s = 0;
-    for (let r = 0; s < this.text.length && r < e; s++)
-      r += this.text.charCodeAt(s) == 9 ? 4 - r % 4 : 1;
-    return s;
-  }
-  /**
-  @internal
-  */
-  scrub() {
-    if (!this.baseIndent)
-      return this.text;
-    let e = "";
-    for (let s = 0; s < this.basePos; s++)
-      e += " ";
-    return e + this.text.slice(this.basePos);
-  }
-}
-function Y(t, e, s) {
-  if (s.pos == s.text.length || t != e.block && s.indent >= e.stack[s.depth + 1].value + s.baseIndent)
-    return !0;
-  if (s.indent >= s.baseIndent + 4)
-    return !1;
-  let r = (t.type == l.OrderedList ? G : Q)(s, e, !1);
-  return r > 0 && (t.type != l.BulletList || Z(s, e, !1) < 0) && s.text.charCodeAt(s.pos + r - 1) == t.value;
-}
-const ue = {
-  [l.Blockquote](t, e, s) {
-    return s.next != 62 ? !1 : (s.markers.push(c(l.QuoteMark, e.lineStart + s.pos, e.lineStart + s.pos + 1)), s.moveBase(s.pos + (S(s.text.charCodeAt(s.pos + 1)) ? 2 : 1)), t.end = e.lineStart + s.text.length, !0);
+import { LRParser as U, ExternalTokenizer as f, ContextTracker as I } from "./index168.js";
+import { styleTags as N, tags as n } from "./index75.js";
+import { parseMixed as j } from "./index169.js";
+const H = 55, F = 1, K = 56, J = 2, L = 57, ee = 3, h = 4, te = 5, _ = 6, R = 7, y = 8, Z = 9, B = 10, Oe = 11, re = 12, ae = 13, X = 58, se = 14, le = 15, Q = 59, E = 21, Se = 23, z = 24, ne = 25, m = 27, W = 28, oe = 29, Pe = 32, Ve = 35, de = 37, Te = 38, ce = 0, ie = 1, pe = {
+  area: !0,
+  base: !0,
+  br: !0,
+  col: !0,
+  command: !0,
+  embed: !0,
+  frame: !0,
+  hr: !0,
+  img: !0,
+  input: !0,
+  keygen: !0,
+  link: !0,
+  meta: !0,
+  param: !0,
+  source: !0,
+  track: !0,
+  wbr: !0,
+  menuitem: !0
+}, ue = {
+  dd: !0,
+  li: !0,
+  optgroup: !0,
+  option: !0,
+  p: !0,
+  rp: !0,
+  rt: !0,
+  tbody: !0,
+  td: !0,
+  tfoot: !0,
+  th: !0,
+  tr: !0
+}, Y = {
+  dd: { dd: !0, dt: !0 },
+  dt: { dd: !0, dt: !0 },
+  li: { li: !0 },
+  option: { option: !0, optgroup: !0 },
+  optgroup: { optgroup: !0 },
+  p: {
+    address: !0,
+    article: !0,
+    aside: !0,
+    blockquote: !0,
+    dir: !0,
+    div: !0,
+    dl: !0,
+    fieldset: !0,
+    footer: !0,
+    form: !0,
+    h1: !0,
+    h2: !0,
+    h3: !0,
+    h4: !0,
+    h5: !0,
+    h6: !0,
+    header: !0,
+    hgroup: !0,
+    hr: !0,
+    menu: !0,
+    nav: !0,
+    ol: !0,
+    p: !0,
+    pre: !0,
+    section: !0,
+    table: !0,
+    ul: !0
   },
-  [l.ListItem](t, e, s) {
-    return s.indent < s.baseIndent + t.value && s.next > -1 ? !1 : (s.moveBaseColumn(s.baseIndent + t.value), !0);
-  },
-  [l.OrderedList]: Y,
-  [l.BulletList]: Y,
-  [l.Document]() {
-    return !0;
-  }
+  rp: { rp: !0, rt: !0 },
+  rt: { rp: !0, rt: !0 },
+  tbody: { tbody: !0, tfoot: !0 },
+  td: { td: !0, th: !0 },
+  tfoot: { tbody: !0 },
+  th: { td: !0, th: !0 },
+  thead: { tbody: !0, tfoot: !0 },
+  tr: { tr: !0 }
 };
-function S(t) {
-  return t == 32 || t == 9 || t == 10 || t == 13;
+function xe(e) {
+  return e == 45 || e == 46 || e == 58 || e >= 65 && e <= 90 || e == 95 || e >= 97 && e <= 122 || e >= 161;
 }
-function x(t, e = 0) {
-  for (; e < t.length && S(t.charCodeAt(e)); )
-    e++;
-  return e;
+let v = null, C = null, k = 0;
+function b(e, t) {
+  let a = e.pos + t;
+  if (k == a && C == e) return v;
+  let r = e.peek(t), O = "";
+  for (; xe(r); )
+    O += String.fromCharCode(r), r = e.peek(++t);
+  return C = e, k = a, v = O ? O.toLowerCase() : r == fe || r == Xe ? void 0 : null;
 }
-function W(t, e, s) {
-  for (; e > s && S(t.charCodeAt(e - 1)); )
-    e--;
-  return e;
+const D = 60, x = 62, q = 47, fe = 63, Xe = 33, ge = 45;
+function A(e, t) {
+  this.name = e, this.parent = t;
 }
-function pe(t) {
-  if (t.next != 96 && t.next != 126)
-    return -1;
-  let e = t.pos + 1;
-  for (; e < t.text.length && t.text.charCodeAt(e) == t.next; )
-    e++;
-  if (e < t.pos + 3)
-    return -1;
-  if (t.next == 96) {
-    for (let s = e; s < t.text.length; s++)
-      if (t.text.charCodeAt(s) == 96)
-        return -1;
-  }
-  return e;
-}
-function ce(t) {
-  return t.next != 62 ? -1 : t.text.charCodeAt(t.pos + 1) == 32 ? 2 : 1;
-}
-function Z(t, e, s) {
-  if (t.next != 42 && t.next != 45 && t.next != 95)
-    return -1;
-  let r = 1;
-  for (let n = t.pos + 1; n < t.text.length; n++) {
-    let i = t.text.charCodeAt(n);
-    if (i == t.next)
-      r++;
-    else if (!S(i))
-      return -1;
-  }
-  return s && t.next == 45 && me(t) > -1 && t.depth == e.stack.length && e.parser.leafBlockParsers.indexOf(we.SetextHeading) > -1 || r < 3 ? -1 : 1;
-}
-function ke(t, e) {
-  for (let s = t.stack.length - 1; s >= 0; s--)
-    if (t.stack[s].type == e)
-      return !0;
-  return !1;
-}
-function Q(t, e, s) {
-  return (t.next == 45 || t.next == 43 || t.next == 42) && (t.pos == t.text.length - 1 || S(t.text.charCodeAt(t.pos + 1))) && (!s || ke(e, l.BulletList) || t.skipSpace(t.pos + 2) < t.text.length) ? 1 : -1;
-}
-function G(t, e, s) {
-  let r = t.pos, n = t.next;
-  for (; n >= 48 && n <= 57; ) {
-    r++;
-    if (r == t.text.length)
-      return -1;
-    n = t.text.charCodeAt(r);
-  }
-  return r == t.pos || r > t.pos + 9 || n != 46 && n != 41 || r < t.text.length - 1 && !S(t.text.charCodeAt(r + 1)) || s && !ke(e, l.OrderedList) && (t.skipSpace(r + 1) == t.text.length || r > t.pos + 1 || t.next != 49) ? -1 : r + 1 - t.pos;
-}
-function ge(t) {
-  if (t.next != 35)
-    return -1;
-  let e = t.pos + 1;
-  for (; e < t.text.length && t.text.charCodeAt(e) == 35; )
-    e++;
-  if (e < t.text.length && t.text.charCodeAt(e) != 32)
-    return -1;
-  let s = e - t.pos;
-  return s > 6 ? -1 : s;
-}
-function me(t) {
-  if (t.next != 45 && t.next != 61 || t.indent >= t.baseIndent + 4)
-    return -1;
-  let e = t.pos + 1;
-  for (; e < t.text.length && t.text.charCodeAt(e) == t.next; )
-    e++;
-  let s = e;
-  for (; e < t.text.length && S(t.text.charCodeAt(e)); )
-    e++;
-  return e == t.text.length ? s : -1;
-}
-const $ = /^[ \t]*$/, Le = /-->/, be = /\?>/, _ = [
-  [/^<(?:script|pre|style)(?:\s|>|$)/i, /<\/(?:script|pre|style)>/i],
-  [/^\s*<!--/, Le],
-  [/^\s*<\?/, be],
-  [/^\s*<![A-Z]/, />/],
-  [/^\s*<!\[CDATA\[/, /\]\]>/],
-  [/^\s*<\/?(?:address|article|aside|base|basefont|blockquote|body|caption|center|col|colgroup|dd|details|dialog|dir|div|dl|dt|fieldset|figcaption|figure|footer|form|frame|frameset|h1|h2|h3|h4|h5|h6|head|header|hr|html|iframe|legend|li|link|main|menu|menuitem|nav|noframes|ol|optgroup|option|p|param|section|source|summary|table|tbody|td|tfoot|th|thead|title|tr|track|ul)(?:\s|\/?>|$)/i, $],
-  [/^\s*(?:<\/[a-z][\w-]*\s*>|<[a-z][\w-]*(\s+[a-z:_][\w-.]*(?:\s*=\s*(?:[^\s"'=<>`]+|'[^']*'|"[^"]*"))?)*\s*>)\s*$/i, $]
-];
-function Se(t, e, s) {
-  if (t.next != 60)
-    return -1;
-  let r = t.text.slice(t.pos);
-  for (let n = 0, i = _.length - (s ? 1 : 0); n < i; n++)
-    if (_[n][0].test(r))
-      return n;
-  return -1;
-}
-function ee(t, e) {
-  let s = t.countIndent(e, t.pos, t.indent), r = t.countIndent(t.skipSpace(e), e, s);
-  return r >= s + 5 ? s + 1 : r;
-}
-function w(t, e, s) {
-  let r = t.length - 1;
-  r >= 0 && t[r].to == e && t[r].type == l.CodeText ? t[r].to = s : t.push(c(l.CodeText, e, s));
-}
-const N = {
-  LinkReference: void 0,
-  IndentedCode(t, e) {
-    let s = e.baseIndent + 4;
-    if (e.indent < s)
-      return !1;
-    let r = e.findColumn(s), n = t.lineStart + r, i = t.lineStart + e.text.length, o = [], a = [];
-    for (w(o, n, i); t.nextLine() && e.depth >= t.stack.length; )
-      if (e.pos == e.text.length) {
-        w(a, t.lineStart - 1, t.lineStart);
-        for (let h of e.markers)
-          a.push(h);
-      } else {
-        if (e.indent < s)
-          break;
-        {
-          if (a.length) {
-            for (let d of a)
-              d.type == l.CodeText ? w(o, d.from, d.to) : o.push(d);
-            a = [];
-          }
-          w(o, t.lineStart - 1, t.lineStart);
-          for (let d of e.markers)
-            o.push(d);
-          i = t.lineStart + e.text.length;
-          let h = t.lineStart + e.findColumn(e.baseIndent + 4);
-          h < i && w(o, h, i);
-        }
-      }
-    return a.length && (a = a.filter((h) => h.type != l.CodeText), a.length && (e.markers = a.concat(e.markers))), t.addNode(t.buffer.writeElements(o, -n).finish(l.CodeBlock, i - n), n), !0;
+const me = [_, B, R, y, Z], be = new I({
+  start: null,
+  shift(e, t, a, r) {
+    return me.indexOf(t) > -1 ? new A(b(r, 1) || "", e) : e;
   },
-  FencedCode(t, e) {
-    let s = pe(e);
-    if (s < 0)
-      return !1;
-    let r = t.lineStart + e.pos, n = e.next, i = s - e.pos, o = e.skipSpace(s), a = W(e.text, e.text.length, o), h = [c(l.CodeMark, r, r + i)];
-    o < a && h.push(c(l.CodeInfo, t.lineStart + o, t.lineStart + a));
-    for (let d = !0; t.nextLine() && e.depth >= t.stack.length; d = !1) {
-      let u = e.pos;
-      if (e.indent - e.baseIndent < 4)
-        for (; u < e.text.length && e.text.charCodeAt(u) == n; )
-          u++;
-      if (u - e.pos >= i && e.skipSpace(u) == e.text.length) {
-        for (let k of e.markers)
-          h.push(k);
-        h.push(c(l.CodeMark, t.lineStart + e.pos, t.lineStart + u)), t.nextLine();
-        break;
-      } else {
-        d || w(h, t.lineStart - 1, t.lineStart);
-        for (let g of e.markers)
-          h.push(g);
-        let k = t.lineStart + e.basePos, f = t.lineStart + e.text.length;
-        k < f && w(h, k, f);
-      }
-    }
-    return t.addNode(t.buffer.writeElements(h, -r).finish(l.FencedCode, t.prevLineEnd() - r), r), !0;
+  reduce(e, t) {
+    return t == E && e ? e.parent : e;
   },
-  Blockquote(t, e) {
-    let s = ce(e);
-    return s < 0 ? !1 : (t.startContext(l.Blockquote, e.pos), t.addNode(l.QuoteMark, t.lineStart + e.pos, t.lineStart + e.pos + 1), e.moveBase(e.pos + s), null);
+  reuse(e, t, a, r) {
+    let O = t.type.id;
+    return O == _ || O == de ? new A(b(r, 1) || "", e) : e;
   },
-  HorizontalRule(t, e) {
-    if (Z(e, t, !1) < 0)
-      return !1;
-    let s = t.lineStart + e.pos;
-    return t.nextLine(), t.addNode(l.HorizontalRule, s), !0;
-  },
-  BulletList(t, e) {
-    let s = Q(e, t, !1);
-    if (s < 0)
-      return !1;
-    t.block.type != l.BulletList && t.startContext(l.BulletList, e.basePos, e.next);
-    let r = ee(e, e.pos + 1);
-    return t.startContext(l.ListItem, e.basePos, r - e.baseIndent), t.addNode(l.ListMark, t.lineStart + e.pos, t.lineStart + e.pos + s), e.moveBaseColumn(r), null;
-  },
-  OrderedList(t, e) {
-    let s = G(e, t, !1);
-    if (s < 0)
-      return !1;
-    t.block.type != l.OrderedList && t.startContext(l.OrderedList, e.basePos, e.text.charCodeAt(e.pos + s - 1));
-    let r = ee(e, e.pos + s);
-    return t.startContext(l.ListItem, e.basePos, r - e.baseIndent), t.addNode(l.ListMark, t.lineStart + e.pos, t.lineStart + e.pos + s), e.moveBaseColumn(r), null;
-  },
-  ATXHeading(t, e) {
-    let s = ge(e);
-    if (s < 0)
-      return !1;
-    let r = e.pos, n = t.lineStart + r, i = W(e.text, e.text.length, r), o = i;
-    for (; o > r && e.text.charCodeAt(o - 1) == e.next; )
-      o--;
-    (o == i || o == r || !S(e.text.charCodeAt(o - 1))) && (o = e.text.length);
-    let a = t.buffer.write(l.HeaderMark, 0, s).writeElements(t.parser.parseInline(e.text.slice(r + s + 1, o), n + s + 1), -n);
-    o < e.text.length && a.write(l.HeaderMark, o - r, i - r);
-    let h = a.finish(l.ATXHeading1 - 1 + s, e.text.length - r);
-    return t.nextLine(), t.addNode(h, n), !0;
-  },
-  HTMLBlock(t, e) {
-    let s = Se(e, t, !1);
-    if (s < 0)
-      return !1;
-    let r = t.lineStart + e.pos, n = _[s][1], i = [], o = n != $;
-    for (; !n.test(e.text) && t.nextLine(); ) {
-      if (e.depth < t.stack.length) {
-        o = !1;
-        break;
-      }
-      for (let d of e.markers)
-        i.push(d);
-    }
-    o && t.nextLine();
-    let a = n == Le ? l.CommentBlock : n == be ? l.ProcessingInstructionBlock : l.HTMLBlock, h = t.prevLineEnd();
-    return t.addNode(t.buffer.writeElements(i, -r).finish(a, h - r), r), !0;
-  },
-  SetextHeading: void 0
-  // Specifies relative precedence for block-continue function
-};
-class $e {
-  constructor(e) {
-    this.stage = 0, this.elts = [], this.pos = 0, this.start = e.start, this.advance(e.content);
+  strict: !1
+}), _e = new f((e, t) => {
+  if (e.next != D) {
+    e.next < 0 && t.context && e.acceptToken(X);
+    return;
   }
-  nextLine(e, s, r) {
-    if (this.stage == -1)
-      return !1;
-    let n = r.content + `
-` + s.scrub(), i = this.advance(n);
-    return i > -1 && i < n.length ? this.complete(e, r, i) : !1;
-  }
-  finish(e, s) {
-    return (this.stage == 2 || this.stage == 3) && x(s.content, this.pos) == s.content.length ? this.complete(e, s, s.content.length) : !1;
-  }
-  complete(e, s, r) {
-    return e.addLeafElement(s, c(l.LinkReference, this.start, this.start + r, this.elts)), !0;
-  }
-  nextStage(e) {
-    return e ? (this.pos = e.to - this.start, this.elts.push(e), this.stage++, !0) : (e === !1 && (this.stage = -1), !1);
-  }
-  advance(e) {
-    for (; ; ) {
-      if (this.stage == -1)
-        return -1;
-      if (this.stage == 0) {
-        if (!this.nextStage(Pe(e, this.pos, this.start, !0)))
-          return -1;
-        if (e.charCodeAt(this.pos) != 58)
-          return this.stage = -1;
-        this.elts.push(c(l.LinkMark, this.pos + this.start, this.pos + this.start + 1)), this.pos++;
-      } else if (this.stage == 1) {
-        if (!this.nextStage(Me(e, x(e, this.pos), this.start)))
-          return -1;
-      } else if (this.stage == 2) {
-        let s = x(e, this.pos), r = 0;
-        if (s > this.pos) {
-          let n = He(e, s, this.start);
-          if (n) {
-            let i = F(e, n.to - this.start);
-            i > 0 && (this.nextStage(n), r = i);
-          }
-        }
-        return r || (r = F(e, this.pos)), r > 0 && r < e.length ? r : -1;
-      } else
-        return F(e, this.pos);
-    }
-  }
-}
-function F(t, e) {
-  for (; e < t.length; e++) {
-    let s = t.charCodeAt(e);
-    if (s == 10)
-      break;
-    if (!S(s))
-      return -1;
-  }
-  return e;
-}
-class _e {
-  nextLine(e, s, r) {
-    let n = s.depth < e.stack.length ? -1 : me(s), i = s.next;
-    if (n < 0)
-      return !1;
-    let o = c(l.HeaderMark, e.lineStart + s.pos, e.lineStart + n);
-    return e.nextLine(), e.addLeafElement(r, c(i == 61 ? l.SetextHeading1 : l.SetextHeading2, r.start, e.prevLineEnd(), [
-      ...e.parser.parseInline(r.content, r.start),
-      o
-    ])), !0;
-  }
-  finish() {
-    return !1;
-  }
-}
-const we = {
-  LinkReference(t, e) {
-    return e.content.charCodeAt(0) == 91 ? new $e(e) : null;
-  },
-  SetextHeading() {
-    return new _e();
-  }
-}, Ue = [
-  (t, e) => ge(e) >= 0,
-  (t, e) => pe(e) >= 0,
-  (t, e) => ce(e) >= 0,
-  (t, e) => Q(e, t, !0) >= 0,
-  (t, e) => G(e, t, !0) >= 0,
-  (t, e) => Z(e, t, !0) >= 0,
-  (t, e) => Se(e, t, !0) >= 0
-], qe = { text: "", end: 0 };
-class Ze {
-  /**
-  @internal
-  */
-  constructor(e, s, r, n) {
-    this.parser = e, this.input = s, this.ranges = n, this.line = new je(), this.atEnd = !1, this.reusePlaceholders = /* @__PURE__ */ new Map(), this.stoppedAt = null, this.rangeI = 0, this.to = n[n.length - 1].to, this.lineStart = this.absoluteLineStart = this.absoluteLineEnd = n[0].from, this.block = O.create(l.Document, 0, this.lineStart, 0, 0), this.stack = [this.block], this.fragments = r.length ? new Ve(r, s) : null, this.readLine();
-  }
-  get parsedPos() {
-    return this.absoluteLineStart;
-  }
-  advance() {
-    if (this.stoppedAt != null && this.absoluteLineStart > this.stoppedAt)
-      return this.finish();
-    let { line: e } = this;
-    for (; ; ) {
-      for (let r = 0; ; ) {
-        let n = e.depth < this.stack.length ? this.stack[this.stack.length - 1] : null;
-        for (; r < e.markers.length && (!n || e.markers[r].from < n.end); ) {
-          let i = e.markers[r++];
-          this.addNode(i.type, i.from, i.to);
-        }
-        if (!n)
-          break;
-        this.finishContext();
-      }
-      if (e.pos < e.text.length)
-        break;
-      if (!this.nextLine())
-        return this.finish();
-    }
-    if (this.fragments && this.reuseFragment(e.basePos))
-      return null;
-    e: for (; ; ) {
-      for (let r of this.parser.blockParsers)
-        if (r) {
-          let n = r(this, e);
-          if (n != !1) {
-            if (n == !0)
-              return null;
-            e.forward();
-            continue e;
-          }
-        }
-      break;
-    }
-    let s = new Fe(this.lineStart + e.pos, e.text.slice(e.pos));
-    for (let r of this.parser.leafBlockParsers)
-      if (r) {
-        let n = r(this, s);
-        n && s.parsers.push(n);
-      }
-    e: for (; this.nextLine() && e.pos != e.text.length; ) {
-      if (e.indent < e.baseIndent + 4) {
-        for (let r of this.parser.endLeafBlock)
-          if (r(this, e, s))
-            break e;
-      }
-      for (let r of s.parsers)
-        if (r.nextLine(this, e, s))
-          return null;
-      s.content += `
-` + e.scrub();
-      for (let r of e.markers)
-        s.marks.push(r);
-    }
-    return this.finishLeaf(s), null;
-  }
-  stopAt(e) {
-    if (this.stoppedAt != null && this.stoppedAt < e)
-      throw new RangeError("Can't move stoppedAt forward");
-    this.stoppedAt = e;
-  }
-  reuseFragment(e) {
-    if (!this.fragments.moveTo(this.absoluteLineStart + e, this.absoluteLineStart) || !this.fragments.matches(this.block.hash))
-      return !1;
-    let s = this.fragments.takeNodes(this);
-    return s ? (this.absoluteLineStart += s, this.lineStart = ve(this.absoluteLineStart, this.ranges), this.moveRangeI(), this.absoluteLineStart < this.to ? (this.lineStart++, this.absoluteLineStart++, this.readLine()) : (this.atEnd = !0, this.readLine()), !0) : !1;
-  }
-  /**
-  The number of parent blocks surrounding the current block.
-  */
-  get depth() {
-    return this.stack.length;
-  }
-  /**
-  Get the type of the parent block at the given depth. When no
-  depth is passed, return the type of the innermost parent.
-  */
-  parentType(e = this.depth - 1) {
-    return this.parser.nodeSet.types[this.stack[e].type];
-  }
-  /**
-  Move to the next input line. This should only be called by
-  (non-composite) [block parsers](#BlockParser.parse) that consume
-  the line directly, or leaf block parser
-  [`nextLine`](#LeafBlockParser.nextLine) methods when they
-  consume the current line (and return true).
-  */
-  nextLine() {
-    return this.lineStart += this.line.text.length, this.absoluteLineEnd >= this.to ? (this.absoluteLineStart = this.absoluteLineEnd, this.atEnd = !0, this.readLine(), !1) : (this.lineStart++, this.absoluteLineStart = this.absoluteLineEnd + 1, this.moveRangeI(), this.readLine(), !0);
-  }
-  /**
-  Retrieve the text of the line after the current one, without
-  actually moving the context's current line forward.
-  */
-  peekLine() {
-    return this.scanLine(this.absoluteLineEnd + 1).text;
-  }
-  moveRangeI() {
-    for (; this.rangeI < this.ranges.length - 1 && this.absoluteLineStart >= this.ranges[this.rangeI].to; )
-      this.rangeI++, this.absoluteLineStart = Math.max(this.absoluteLineStart, this.ranges[this.rangeI].from);
-  }
-  /**
-  @internal
-  Collect the text for the next line.
-  */
-  scanLine(e) {
-    let s = qe;
-    if (s.end = e, e >= this.to)
-      s.text = "";
-    else if (s.text = this.lineChunkAt(e), s.end += s.text.length, this.ranges.length > 1) {
-      let r = this.absoluteLineStart, n = this.rangeI;
-      for (; this.ranges[n].to < s.end; ) {
-        n++;
-        let i = this.ranges[n].from, o = this.lineChunkAt(i);
-        s.end = i + o.length, s.text = s.text.slice(0, this.ranges[n - 1].to - r) + o, r = s.end - s.text.length;
-      }
-    }
-    return s;
-  }
-  /**
-  @internal
-  Populate this.line with the content of the next line. Skip
-  leading characters covered by composite blocks.
-  */
-  readLine() {
-    let { line: e } = this, { text: s, end: r } = this.scanLine(this.absoluteLineStart);
-    for (this.absoluteLineEnd = r, e.reset(s); e.depth < this.stack.length; e.depth++) {
-      let n = this.stack[e.depth], i = this.parser.skipContextMarkup[n.type];
-      if (!i)
-        throw new Error("Unhandled block context " + l[n.type]);
-      let o = this.line.markers.length;
-      if (!i(n, this, e)) {
-        this.line.markers.length > o && (n.end = this.line.markers[this.line.markers.length - 1].to), e.forward();
-        break;
-      }
-      e.forward();
-    }
-  }
-  lineChunkAt(e) {
-    let s = this.input.chunk(e), r;
-    if (this.input.lineChunks)
-      r = s == `
-` ? "" : s;
-    else {
-      let n = s.indexOf(`
-`);
-      r = n < 0 ? s : s.slice(0, n);
-    }
-    return e + r.length > this.to ? r.slice(0, this.to - e) : r;
-  }
-  /**
-  The end position of the previous line.
-  */
-  prevLineEnd() {
-    return this.atEnd ? this.lineStart : this.lineStart - 1;
-  }
-  /**
-  @internal
-  */
-  startContext(e, s, r = 0) {
-    this.block = O.create(e, r, this.lineStart + s, this.block.hash, this.lineStart + this.line.text.length), this.stack.push(this.block);
-  }
-  /**
-  Start a composite block. Should only be called from [block
-  parser functions](#BlockParser.parse) that return null.
-  */
-  startComposite(e, s, r = 0) {
-    this.startContext(this.parser.getNodeType(e), s, r);
-  }
-  /**
-  @internal
-  */
-  addNode(e, s, r) {
-    typeof e == "number" && (e = new E(this.parser.nodeSet.types[e], A, A, (r ?? this.prevLineEnd()) - s)), this.block.addChild(e, s - this.block.from);
-  }
-  /**
-  Add a block element. Can be called by [block
-  parsers](#BlockParser.parse).
-  */
-  addElement(e) {
-    this.block.addChild(e.toTree(this.parser.nodeSet), e.from - this.block.from);
-  }
-  /**
-  Add a block element from a [leaf parser](#LeafBlockParser). This
-  makes sure any extra composite block markup (such as blockquote
-  markers) inside the block are also added to the syntax tree.
-  */
-  addLeafElement(e, s) {
-    this.addNode(this.buffer.writeElements(q(s.children, e.marks), -s.from).finish(s.type, s.to - s.from), s.from);
-  }
-  /**
-  @internal
-  */
-  finishContext() {
-    let e = this.stack.pop(), s = this.stack[this.stack.length - 1];
-    s.addChild(e.toTree(this.parser.nodeSet), e.from - s.from), this.block = s;
-  }
-  finish() {
-    for (; this.stack.length > 1; )
-      this.finishContext();
-    return this.addGaps(this.block.toTree(this.parser.nodeSet, this.lineStart));
-  }
-  addGaps(e) {
-    return this.ranges.length > 1 ? Ce(this.ranges, 0, e.topNode, this.ranges[0].from, this.reusePlaceholders) : e;
-  }
-  /**
-  @internal
-  */
-  finishLeaf(e) {
-    for (let r of e.parsers)
-      if (r.finish(this, e))
-        return;
-    let s = q(this.parser.parseInline(e.content, e.start), e.marks);
-    this.addNode(this.buffer.writeElements(s, -e.start).finish(l.Paragraph, e.content.length), e.start);
-  }
-  elt(e, s, r, n) {
-    return typeof e == "string" ? c(this.parser.getNodeType(e), s, r, n) : new Ie(e, s);
-  }
-  /**
-  @internal
-  */
-  get buffer() {
-    return new Ae(this.parser.nodeSet);
-  }
-}
-function Ce(t, e, s, r, n) {
-  let i = t[e].to, o = [], a = [], h = s.from + r;
-  function d(u, k) {
-    for (; k ? u >= i : u > i; ) {
-      let f = t[e + 1].from - i;
-      r += f, u += f, e++, i = t[e].to;
-    }
-  }
-  for (let u = s.firstChild; u; u = u.nextSibling) {
-    d(u.from + r, !0);
-    let k = u.from + r, f, g = n.get(u.tree);
-    g ? f = g : u.to + r > i ? (f = Ce(t, e, u, r, n), d(u.to + r, !1)) : f = u.toTree(), o.push(f), a.push(k - h);
-  }
-  return d(s.to + r, !1), new E(s.type, o, a, s.to + r - h, s.tree ? s.tree.propValues : void 0);
-}
-class V extends Te {
-  /**
-  @internal
-  */
-  constructor(e, s, r, n, i, o, a, h, d) {
-    super(), this.nodeSet = e, this.blockParsers = s, this.leafBlockParsers = r, this.blockNames = n, this.endLeafBlock = i, this.skipContextMarkup = o, this.inlineParsers = a, this.inlineNames = h, this.wrappers = d, this.nodeTypes = /* @__PURE__ */ Object.create(null);
-    for (let u of e.types)
-      this.nodeTypes[u.name] = u.id;
-  }
-  createParse(e, s, r) {
-    let n = new Ze(this, e, s, r);
-    for (let i of this.wrappers)
-      n = i(n, e, s, r);
-    return n;
-  }
-  /**
-  Reconfigure the parser.
-  */
-  configure(e) {
-    let s = U(e);
-    if (!s)
-      return this;
-    let { nodeSet: r, skipContextMarkup: n } = this, i = this.blockParsers.slice(), o = this.leafBlockParsers.slice(), a = this.blockNames.slice(), h = this.inlineParsers.slice(), d = this.inlineNames.slice(), u = this.endLeafBlock.slice(), k = this.wrappers;
-    if (B(s.defineNodes)) {
-      n = Object.assign({}, n);
-      let f = r.types.slice(), g;
-      for (let L of s.defineNodes) {
-        let { name: m, block: Oe, composite: T, style: I } = typeof L == "string" ? { name: L } : L;
-        if (f.some((X) => X.name == m))
-          continue;
-        T && (n[f.length] = (X, ze, ye) => T(ze, ye, X.value));
-        let D = f.length, K = T ? ["Block", "BlockContext"] : Oe ? D >= l.ATXHeading1 && D <= l.SetextHeading2 ? ["Block", "LeafBlock", "Heading"] : ["Block", "LeafBlock"] : void 0;
-        f.push(y.define({
-          id: D,
-          name: m,
-          props: K && [[H.group, K]]
-        })), I && (g || (g = {}), Array.isArray(I) || I instanceof Xe ? g[m] = I : Object.assign(g, I));
-      }
-      r = new fe(f), g && (r = r.extend(de(g)));
-    }
-    if (B(s.props) && (r = r.extend(...s.props)), B(s.remove))
-      for (let f of s.remove) {
-        let g = this.blockNames.indexOf(f), L = this.inlineNames.indexOf(f);
-        g > -1 && (i[g] = o[g] = void 0), L > -1 && (h[L] = void 0);
-      }
-    if (B(s.parseBlock))
-      for (let f of s.parseBlock) {
-        let g = a.indexOf(f.name);
-        if (g > -1)
-          i[g] = f.parse, o[g] = f.leaf;
-        else {
-          let L = f.before ? R(a, f.before) : f.after ? R(a, f.after) + 1 : a.length - 1;
-          i.splice(L, 0, f.parse), o.splice(L, 0, f.leaf), a.splice(L, 0, f.name);
-        }
-        f.endLeaf && u.push(f.endLeaf);
-      }
-    if (B(s.parseInline))
-      for (let f of s.parseInline) {
-        let g = d.indexOf(f.name);
-        if (g > -1)
-          h[g] = f.parse;
-        else {
-          let L = f.before ? R(d, f.before) : f.after ? R(d, f.after) + 1 : d.length - 1;
-          h.splice(L, 0, f.parse), d.splice(L, 0, f.name);
-        }
-      }
-    return s.wrap && (k = k.concat(s.wrap)), new V(r, i, o, a, u, n, h, d, k);
-  }
-  /**
-  @internal
-  */
-  getNodeType(e) {
-    let s = this.nodeTypes[e];
-    if (s == null)
-      throw new RangeError(`Unknown node type '${e}'`);
-    return s;
-  }
-  /**
-  Parse the given piece of inline text at the given offset,
-  returning an array of [`Element`](#Element) objects representing
-  the inline content.
-  */
-  parseInline(e, s) {
-    let r = new J(this, e, s);
-    e: for (let n = s; n < r.end; ) {
-      let i = r.char(n);
-      for (let o of this.inlineParsers)
-        if (o) {
-          let a = o(r, i, n);
-          if (a >= 0) {
-            n = a;
-            continue e;
-          }
-        }
-      n++;
-    }
-    return r.resolveMarkers(0);
-  }
-}
-function B(t) {
-  return t != null && t.length > 0;
-}
-function U(t) {
-  if (!Array.isArray(t))
-    return t;
-  if (t.length == 0)
-    return null;
-  let e = U(t[0]);
-  if (t.length == 1)
-    return e;
-  let s = U(t.slice(1));
-  if (!s || !e)
-    return e || s;
-  let r = (o, a) => (o || A).concat(a || A), n = e.wrap, i = s.wrap;
-  return {
-    props: r(e.props, s.props),
-    defineNodes: r(e.defineNodes, s.defineNodes),
-    parseBlock: r(e.parseBlock, s.parseBlock),
-    parseInline: r(e.parseInline, s.parseInline),
-    remove: r(e.remove, s.remove),
-    wrap: n ? i ? (o, a, h, d) => n(i(o, a, h, d), a, h, d) : n : i
-  };
-}
-function R(t, e) {
-  let s = t.indexOf(e);
-  if (s < 0)
-    throw new RangeError(`Position specified relative to unknown parser ${e}`);
-  return s;
-}
-let Ee = [y.none];
-for (let t = 1, e; e = l[t]; t++)
-  Ee[t] = y.define({
-    id: t,
-    name: e,
-    props: t >= l.Escape ? [] : [[H.group, t in ue ? ["Block", "BlockContext"] : ["Block", "LeafBlock"]]],
-    top: e == "Document"
-  });
-const A = [];
-class Ae {
-  constructor(e) {
-    this.nodeSet = e, this.content = [], this.nodes = [];
-  }
-  write(e, s, r, n = 0) {
-    return this.content.push(e, s, r, 4 + n * 4), this;
-  }
-  writeElements(e, s = 0) {
-    for (let r of e)
-      r.writeTo(this, s);
-    return this;
-  }
-  finish(e, s) {
-    return E.build({
-      buffer: this.content,
-      nodeSet: this.nodeSet,
-      reused: this.nodes,
-      topID: e,
-      length: s
-    });
-  }
-}
-class P {
-  /**
-  @internal
-  */
-  constructor(e, s, r, n = A) {
-    this.type = e, this.from = s, this.to = r, this.children = n;
-  }
-  /**
-  @internal
-  */
-  writeTo(e, s) {
-    let r = e.content.length;
-    e.writeElements(this.children, s), e.content.push(this.type, this.from + s, this.to + s, e.content.length + 4 - r);
-  }
-  /**
-  @internal
-  */
-  toTree(e) {
-    return new Ae(e).writeElements(this.children, -this.from).finish(this.type, this.to - this.from);
-  }
-}
-class Ie {
-  constructor(e, s) {
-    this.tree = e, this.from = s;
-  }
-  get to() {
-    return this.from + this.tree.length;
-  }
-  get type() {
-    return this.tree.type.id;
-  }
-  get children() {
-    return A;
-  }
-  writeTo(e, s) {
-    e.nodes.push(this.tree), e.content.push(e.nodes.length - 1, this.from + s, this.to + s, -1);
-  }
-  toTree() {
-    return this.tree;
-  }
-}
-function c(t, e, s, r) {
-  return new P(t, e, s, r);
-}
-const Be = { resolve: "Emphasis", mark: "EmphasisMark" }, xe = { resolve: "Emphasis", mark: "EmphasisMark" }, C = {}, z = {};
-class b {
-  constructor(e, s, r, n) {
-    this.type = e, this.from = s, this.to = r, this.side = n;
-  }
-}
-const te = "!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~";
-let v = /[!"#$%&'()*+,\-.\/:;<=>?@\[\\\]^_`{|}~\xA1\u2010-\u2027]/;
-try {
-  v = new RegExp("[\\p{S}|\\p{P}]", "u");
-} catch {
-}
-const j = {
-  Escape(t, e, s) {
-    if (e != 92 || s == t.end - 1)
-      return -1;
-    let r = t.char(s + 1);
-    for (let n = 0; n < te.length; n++)
-      if (te.charCodeAt(n) == r)
-        return t.append(c(l.Escape, s, s + 2));
-    return -1;
-  },
-  Entity(t, e, s) {
-    if (e != 38)
-      return -1;
-    let r = /^(?:#\d+|#x[a-f\d]+|\w+);/i.exec(t.slice(s + 1, s + 31));
-    return r ? t.append(c(l.Entity, s, s + 1 + r[0].length)) : -1;
-  },
-  InlineCode(t, e, s) {
-    if (e != 96 || s && t.char(s - 1) == 96)
-      return -1;
-    let r = s + 1;
-    for (; r < t.end && t.char(r) == 96; )
-      r++;
-    let n = r - s, i = 0;
-    for (; r < t.end; r++)
-      if (t.char(r) == 96) {
-        if (i++, i == n && t.char(r + 1) != 96)
-          return t.append(c(l.InlineCode, s, r + 1, [
-            c(l.CodeMark, s, s + n),
-            c(l.CodeMark, r + 1 - n, r + 1)
-          ]));
-      } else
-        i = 0;
-    return -1;
-  },
-  HTMLTag(t, e, s) {
-    if (e != 60 || s == t.end - 1)
-      return -1;
-    let r = t.slice(s + 1, t.end), n = /^(?:[a-z][-\w+.]+:[^\s>]+|[a-z\d.!#$%&'*+/=?^_`{|}~-]+@[a-z\d](?:[a-z\d-]{0,61}[a-z\d])?(?:\.[a-z\d](?:[a-z\d-]{0,61}[a-z\d])?)*)>/i.exec(r);
-    if (n)
-      return t.append(c(l.Autolink, s, s + 1 + n[0].length, [
-        c(l.LinkMark, s, s + 1),
-        // url[0] includes the closing bracket, so exclude it from this slice
-        c(l.URL, s + 1, s + n[0].length),
-        c(l.LinkMark, s + n[0].length, s + 1 + n[0].length)
-      ]));
-    let i = /^!--[^>](?:-[^-]|[^-])*?-->/i.exec(r);
-    if (i)
-      return t.append(c(l.Comment, s, s + 1 + i[0].length));
-    let o = /^\?[^]*?\?>/.exec(r);
-    if (o)
-      return t.append(c(l.ProcessingInstruction, s, s + 1 + o[0].length));
-    let a = /^(?:![A-Z][^]*?>|!\[CDATA\[[^]*?\]\]>|\/\s*[a-zA-Z][\w-]*\s*>|\s*[a-zA-Z][\w-]*(\s+[a-zA-Z:_][\w-.:]*(?:\s*=\s*(?:[^\s"'=<>`]+|'[^']*'|"[^"]*"))?)*\s*(\/\s*)?>)/.exec(r);
-    return a ? t.append(c(l.HTMLTag, s, s + 1 + a[0].length)) : -1;
-  },
-  Emphasis(t, e, s) {
-    if (e != 95 && e != 42)
-      return -1;
-    let r = s + 1;
-    for (; t.char(r) == e; )
-      r++;
-    let n = t.slice(s - 1, s), i = t.slice(r, r + 1), o = v.test(n), a = v.test(i), h = /\s|^$/.test(n), d = /\s|^$/.test(i), u = !d && (!a || h || o), k = !h && (!o || d || a), f = u && (e == 42 || !k || o), g = k && (e == 42 || !u || a);
-    return t.append(new b(e == 95 ? Be : xe, s, r, (f ? 1 : 0) | (g ? 2 : 0)));
-  },
-  HardBreak(t, e, s) {
-    if (e == 92 && t.char(s + 1) == 10)
-      return t.append(c(l.HardBreak, s, s + 2));
-    if (e == 32) {
-      let r = s + 1;
-      for (; t.char(r) == 32; )
-        r++;
-      if (t.char(r) == 10 && r >= s + 2)
-        return t.append(c(l.HardBreak, s, r + 1));
-    }
-    return -1;
-  },
-  Link(t, e, s) {
-    return e == 91 ? t.append(new b(
-      C,
-      s,
-      s + 1,
-      1
-      /* Mark.Open */
-    )) : -1;
-  },
-  Image(t, e, s) {
-    return e == 33 && t.char(s + 1) == 91 ? t.append(new b(
-      z,
-      s,
-      s + 2,
-      1
-      /* Mark.Open */
-    )) : -1;
-  },
-  LinkEnd(t, e, s) {
-    if (e != 93)
-      return -1;
-    for (let r = t.parts.length - 1; r >= 0; r--) {
-      let n = t.parts[r];
-      if (n instanceof b && (n.type == C || n.type == z)) {
-        if (!n.side || t.skipSpace(n.to) == s && !/[(\[]/.test(t.slice(s + 1, s + 2)))
-          return t.parts[r] = null, -1;
-        let i = t.takeContent(r), o = t.parts[r] = Qe(t, i, n.type == C ? l.Link : l.Image, n.from, s + 1);
-        if (n.type == C)
-          for (let a = 0; a < r; a++) {
-            let h = t.parts[a];
-            h instanceof b && h.type == C && (h.side = 0);
-          }
-        return o.to;
-      }
-    }
-    return -1;
-  }
-};
-function Qe(t, e, s, r, n) {
-  let { text: i } = t, o = t.char(n), a = n;
-  if (e.unshift(c(l.LinkMark, r, r + (s == l.Image ? 2 : 1))), e.push(c(l.LinkMark, n - 1, n)), o == 40) {
-    let h = t.skipSpace(n + 1), d = Me(i, h - t.offset, t.offset), u;
-    d && (h = t.skipSpace(d.to), h != d.to && (u = He(i, h - t.offset, t.offset), u && (h = t.skipSpace(u.to)))), t.char(h) == 41 && (e.push(c(l.LinkMark, n, n + 1)), a = h + 1, d && e.push(d), u && e.push(u), e.push(c(l.LinkMark, h, a)));
-  } else if (o == 91) {
-    let h = Pe(i, n - t.offset, t.offset, !1);
-    h && (e.push(h), a = h.to);
-  }
-  return c(s, r, a, e);
-}
-function Me(t, e, s) {
-  if (t.charCodeAt(e) == 60) {
-    for (let n = e + 1; n < t.length; n++) {
-      let i = t.charCodeAt(n);
-      if (i == 62)
-        return c(l.URL, e + s, n + 1 + s);
-      if (i == 60 || i == 10)
-        return !1;
-    }
-    return null;
+  e.advance();
+  let a = e.next == q;
+  a && e.advance();
+  let r = b(e, 0);
+  if (r === void 0) return;
+  if (!r) return e.acceptToken(a ? le : se);
+  let O = t.context ? t.context.name : null;
+  if (a) {
+    if (r == O) return e.acceptToken(Oe);
+    if (O && ue[O]) return e.acceptToken(X, -2);
+    if (t.dialectEnabled(ce)) return e.acceptToken(re);
+    for (let s = t.context; s; s = s.parent) if (s.name == r) return;
+    e.acceptToken(ae);
   } else {
-    let n = 0, i = e;
-    for (let o = !1; i < t.length; i++) {
-      let a = t.charCodeAt(i);
-      if (S(a))
-        break;
-      if (o)
-        o = !1;
-      else if (a == 40)
-        n++;
-      else if (a == 41) {
-        if (!n)
-          break;
-        n--;
-      } else a == 92 && (o = !0);
-    }
-    return i > e ? c(l.URL, e + s, i + s) : i == t.length ? null : !1;
+    if (r == "script") return e.acceptToken(R);
+    if (r == "style") return e.acceptToken(y);
+    if (r == "textarea") return e.acceptToken(Z);
+    if (pe.hasOwnProperty(r)) return e.acceptToken(B);
+    O && Y[O] && Y[O][r] ? e.acceptToken(X, -1) : e.acceptToken(_);
   }
-}
-function He(t, e, s) {
-  let r = t.charCodeAt(e);
-  if (r != 39 && r != 34 && r != 40)
-    return !1;
-  let n = r == 40 ? 41 : r;
-  for (let i = e + 1, o = !1; i < t.length; i++) {
-    let a = t.charCodeAt(i);
-    if (o)
-      o = !1;
-    else {
-      if (a == n)
-        return c(l.LinkTitle, e + s, i + 1 + s);
-      a == 92 && (o = !0);
-    }
-  }
-  return null;
-}
-function Pe(t, e, s, r) {
-  for (let n = !1, i = e + 1, o = Math.min(t.length, i + 999); i < o; i++) {
-    let a = t.charCodeAt(i);
-    if (n)
-      n = !1;
-    else {
-      if (a == 93)
-        return r ? !1 : c(l.LinkLabel, e + s, i + 1 + s);
-      if (r && !S(a) && (r = !1), a == 91)
-        return !1;
-      a == 92 && (n = !0);
-    }
-  }
-  return null;
-}
-class J {
-  /**
-  @internal
-  */
-  constructor(e, s, r) {
-    this.parser = e, this.text = s, this.offset = r, this.parts = [];
-  }
-  /**
-  Get the character code at the given (document-relative)
-  position.
-  */
-  char(e) {
-    return e >= this.end ? -1 : this.text.charCodeAt(e - this.offset);
-  }
-  /**
-  The position of the end of this inline section.
-  */
-  get end() {
-    return this.offset + this.text.length;
-  }
-  /**
-  Get a substring of this inline section. Again uses
-  document-relative positions.
-  */
-  slice(e, s) {
-    return this.text.slice(e - this.offset, s - this.offset);
-  }
-  /**
-  @internal
-  */
-  append(e) {
-    return this.parts.push(e), e.to;
-  }
-  /**
-  Add a [delimiter](#DelimiterType) at this given position. `open`
-  and `close` indicate whether this delimiter is opening, closing,
-  or both. Returns the end of the delimiter, for convenient
-  returning from [parse functions](#InlineParser.parse).
-  */
-  addDelimiter(e, s, r, n, i) {
-    return this.append(new b(e, s, r, (n ? 1 : 0) | (i ? 2 : 0)));
-  }
-  /**
-  Returns true when there is an unmatched link or image opening
-  token before the current position.
-  */
-  get hasOpenLink() {
-    for (let e = this.parts.length - 1; e >= 0; e--) {
-      let s = this.parts[e];
-      if (s instanceof b && (s.type == C || s.type == z))
-        return !0;
-    }
-    return !1;
-  }
-  /**
-  Add an inline element. Returns the end of the element.
-  */
-  addElement(e) {
-    return this.append(e);
-  }
-  /**
-  Resolve markers between this.parts.length and from, wrapping matched markers in the
-  appropriate node and updating the content of this.parts. @internal
-  */
-  resolveMarkers(e) {
-    for (let r = e; r < this.parts.length; r++) {
-      let n = this.parts[r];
-      if (!(n instanceof b && n.type.resolve && n.side & 2))
-        continue;
-      let i = n.type == Be || n.type == xe, o = n.to - n.from, a, h = r - 1;
-      for (; h >= e; h--) {
-        let m = this.parts[h];
-        if (m instanceof b && m.side & 1 && m.type == n.type && // Ignore emphasis delimiters where the character count doesn't match
-        !(i && (n.side & 1 || m.side & 2) && (m.to - m.from + o) % 3 == 0 && ((m.to - m.from) % 3 || o % 3))) {
-          a = m;
-          break;
-        }
-      }
-      if (!a)
-        continue;
-      let d = n.type.resolve, u = [], k = a.from, f = n.to;
-      if (i) {
-        let m = Math.min(2, a.to - a.from, o);
-        k = a.to - m, f = n.from + m, d = m == 1 ? "Emphasis" : "StrongEmphasis";
-      }
-      a.type.mark && u.push(this.elt(a.type.mark, k, a.to));
-      for (let m = h + 1; m < r; m++)
-        this.parts[m] instanceof P && u.push(this.parts[m]), this.parts[m] = null;
-      n.type.mark && u.push(this.elt(n.type.mark, n.from, f));
-      let g = this.elt(d, k, f, u);
-      this.parts[h] = i && a.from != k ? new b(a.type, a.from, k, a.side) : null, (this.parts[r] = i && n.to != f ? new b(n.type, f, n.to, n.side) : null) ? this.parts.splice(r, 0, g) : this.parts[r] = g;
-    }
-    let s = [];
-    for (let r = e; r < this.parts.length; r++) {
-      let n = this.parts[r];
-      n instanceof P && s.push(n);
-    }
-    return s;
-  }
-  /**
-  Find an opening delimiter of the given type. Returns `null` if
-  no delimiter is found, or an index that can be passed to
-  [`takeContent`](#InlineContext.takeContent) otherwise.
-  */
-  findOpeningDelimiter(e) {
-    for (let s = this.parts.length - 1; s >= 0; s--) {
-      let r = this.parts[s];
-      if (r instanceof b && r.type == e && r.side & 1)
-        return s;
-    }
-    return null;
-  }
-  /**
-  Remove all inline elements and delimiters starting from the
-  given index (which you should get from
-  [`findOpeningDelimiter`](#InlineContext.findOpeningDelimiter),
-  resolve delimiters inside of them, and return them as an array
-  of elements.
-  */
-  takeContent(e) {
-    let s = this.resolveMarkers(e);
-    return this.parts.length = e, s;
-  }
-  /**
-  Return the delimiter at the given index. Mostly useful to get
-  additional info out of a delimiter index returned by
-  [`findOpeningDelimiter`](#InlineContext.findOpeningDelimiter).
-  Returns null if there is no delimiter at this index.
-  */
-  getDelimiterAt(e) {
-    let s = this.parts[e];
-    return s instanceof b ? s : null;
-  }
-  /**
-  Skip space after the given (document) position, returning either
-  the position of the next non-space character or the end of the
-  section.
-  */
-  skipSpace(e) {
-    return x(this.text, e - this.offset) + this.offset;
-  }
-  elt(e, s, r, n) {
-    return typeof e == "string" ? c(this.parser.getNodeType(e), s, r, n) : new Ie(e, s);
-  }
-}
-J.linkStart = C;
-J.imageStart = z;
-function q(t, e) {
-  if (!e.length)
-    return t;
-  if (!t.length)
-    return e;
-  let s = t.slice(), r = 0;
-  for (let n of e) {
-    for (; r < s.length && s[r].to < n.to; )
-      r++;
-    if (r < s.length && s[r].from < n.from) {
-      let i = s[r];
-      i instanceof P && (s[r] = new P(i.type, i.from, i.to, q(i.children, [n])));
-    } else
-      s.splice(r++, 0, n);
-  }
-  return s;
-}
-const Ge = [l.CodeBlock, l.ListItem, l.OrderedList, l.BulletList];
-class Ve {
-  constructor(e, s) {
-    this.fragments = e, this.input = s, this.i = 0, this.fragment = null, this.fragmentEnd = -1, this.cursor = null, e.length && (this.fragment = e[this.i++]);
-  }
-  nextFragment() {
-    this.fragment = this.i < this.fragments.length ? this.fragments[this.i++] : null, this.cursor = null, this.fragmentEnd = -1;
-  }
-  moveTo(e, s) {
-    for (; this.fragment && this.fragment.to <= e; )
-      this.nextFragment();
-    if (!this.fragment || this.fragment.from > (e ? e - 1 : 0))
-      return !1;
-    if (this.fragmentEnd < 0) {
-      let i = this.fragment.to;
-      for (; i > 0 && this.input.read(i - 1, i) != `
-`; )
-        i--;
-      this.fragmentEnd = i ? i - 1 : 0;
-    }
-    let r = this.cursor;
-    r || (r = this.cursor = this.fragment.tree.cursor(), r.firstChild());
-    let n = e + this.fragment.offset;
-    for (; r.to <= n; )
-      if (!r.parent())
-        return !1;
-    for (; ; ) {
-      if (r.from >= n)
-        return this.fragment.from <= s;
-      if (!r.childAfter(n))
-        return !1;
-    }
-  }
-  matches(e) {
-    let s = this.cursor.tree;
-    return s && s.prop(H.contextHash) == e;
-  }
-  takeNodes(e) {
-    let s = this.cursor, r = this.fragment.offset, n = this.fragmentEnd - (this.fragment.openEnd ? 1 : 0), i = e.absoluteLineStart, o = i, a = e.block.children.length, h = o, d = a;
-    for (; ; ) {
-      if (s.to - r > n) {
-        if (s.type.isAnonymous && s.firstChild())
-          continue;
-        break;
-      }
-      let u = ve(s.from - r, e.ranges);
-      if (s.to - r <= e.ranges[e.rangeI].to)
-        e.addNode(s.tree, u);
-      else {
-        let k = new E(e.parser.nodeSet.types[l.Paragraph], [], [], 0, e.block.hashProp);
-        e.reusePlaceholders.set(k, s.tree), e.addNode(k, u);
-      }
-      if (s.type.is("Block") && (Ge.indexOf(s.type.id) < 0 ? (o = s.to - r, a = e.block.children.length) : (o = h, a = d, h = s.to - r, d = e.block.children.length)), !s.nextSibling())
-        break;
-    }
-    for (; e.block.children.length > a; )
-      e.block.children.pop(), e.block.positions.pop();
-    return o - i;
-  }
-}
-function ve(t, e) {
-  let s = t;
-  for (let r = 1; r < e.length; r++) {
-    let n = e[r - 1].to, i = e[r].from;
-    n < t && (s -= i - n);
-  }
-  return s;
-}
-const Je = de({
-  "Blockquote/...": p.quote,
-  HorizontalRule: p.contentSeparator,
-  "ATXHeading1/... SetextHeading1/...": p.heading1,
-  "ATXHeading2/... SetextHeading2/...": p.heading2,
-  "ATXHeading3/...": p.heading3,
-  "ATXHeading4/...": p.heading4,
-  "ATXHeading5/...": p.heading5,
-  "ATXHeading6/...": p.heading6,
-  "Comment CommentBlock": p.comment,
-  Escape: p.escape,
-  Entity: p.character,
-  "Emphasis/...": p.emphasis,
-  "StrongEmphasis/...": p.strong,
-  "Link/... Image/...": p.link,
-  "OrderedList/... BulletList/...": p.list,
-  "BlockQuote/...": p.quote,
-  "InlineCode CodeText": p.monospace,
-  "URL Autolink": p.url,
-  "HeaderMark HardBreak QuoteMark ListMark LinkMark EmphasisMark CodeMark": p.processingInstruction,
-  "CodeInfo LinkLabel": p.labelName,
-  LinkTitle: p.string,
-  Paragraph: p.content
-}), lt = new V(new fe(Ee).extend(Je), Object.keys(N).map((t) => N[t]), Object.keys(N).map((t) => we[t]), Object.keys(N), Ue, ue, Object.keys(j).map((t) => j[t]), Object.keys(j), []);
-function Ke(t, e, s) {
-  let r = [];
-  for (let n = t.firstChild, i = e; ; n = n.nextSibling) {
-    let o = n ? n.from : s;
-    if (o > i && r.push({ from: i, to: o }), !n)
+}, { contextual: !0 }), qe = new f((e) => {
+  for (let t = 0, a = 0; ; a++) {
+    if (e.next < 0) {
+      a && e.acceptToken(Q);
       break;
-    i = n.to;
+    }
+    if (e.next == ge)
+      t++;
+    else if (e.next == x && t >= 2) {
+      a >= 3 && e.acceptToken(Q, -2);
+      break;
+    } else
+      t = 0;
+    e.advance();
   }
-  return r;
-}
-function ht(t) {
-  let { codeParser: e, htmlParser: s } = t;
-  return { wrap: De((n, i) => {
-    let o = n.type.id;
-    if (e && (o == l.CodeBlock || o == l.FencedCode)) {
-      let a = "";
-      if (o == l.FencedCode) {
-        let d = n.node.getChild(l.CodeInfo);
-        d && (a = i.read(d.from, d.to));
-      }
-      let h = e(a);
-      if (h)
-        return { parser: h, overlay: (d) => d.type.id == l.CodeText };
-    } else if (s && (o == l.HTMLBlock || o == l.HTMLTag || o == l.CommentBlock))
-      return { parser: s, overlay: Ke(n.node, n.from, n.to) };
-    return null;
-  }) };
-}
-const Ye = { resolve: "Strikethrough", mark: "StrikethroughMark" }, We = {
-  defineNodes: [{
-    name: "Strikethrough",
-    style: { "Strikethrough/...": p.strikethrough }
-  }, {
-    name: "StrikethroughMark",
-    style: p.processingInstruction
-  }],
-  parseInline: [{
-    name: "Strikethrough",
-    parse(t, e, s) {
-      if (e != 126 || t.char(s + 1) != 126 || t.char(s + 2) == 126)
-        return -1;
-      let r = t.slice(s - 1, s), n = t.slice(s + 2, s + 3), i = /\s|^$/.test(r), o = /\s|^$/.test(n), a = v.test(r), h = v.test(n);
-      return t.addDelimiter(Ye, s, s + 2, !o && (!h || i || a), !i && (!a || o || h));
-    },
-    after: "Emphasis"
-  }]
-};
-function M(t, e, s = 0, r, n = 0) {
-  let i = 0, o = !0, a = -1, h = -1, d = !1, u = () => {
-    r.push(t.elt("TableCell", n + a, n + h, t.parser.parseInline(e.slice(a, h), n + a)));
-  };
-  for (let k = s; k < e.length; k++) {
-    let f = e.charCodeAt(k);
-    f == 124 && !d ? ((!o || a > -1) && i++, o = !1, r && (a > -1 && u(), r.push(t.elt("TableDelimiter", k + n, k + n + 1))), a = h = -1) : (d || f != 32 && f != 9) && (a < 0 && (a = k), h = k + 1), d = !d && f == 92;
-  }
-  return a > -1 && (i++, r && u()), i;
-}
-function se(t, e) {
-  for (let s = e; s < t.length; s++) {
-    let r = t.charCodeAt(s);
-    if (r == 124)
-      return !0;
-    r == 92 && s++;
-  }
+});
+function $e(e) {
+  for (; e; e = e.parent)
+    if (e.name == "svg" || e.name == "math") return !0;
   return !1;
 }
-const Ne = /^\|?(\s*:?-+:?\s*\|)+(\s*:?-+:?\s*)?$/;
-class re {
-  constructor() {
-    this.rows = null;
-  }
-  nextLine(e, s, r) {
-    if (this.rows == null) {
-      this.rows = !1;
-      let n;
-      if ((s.next == 45 || s.next == 58 || s.next == 124) && Ne.test(n = s.text.slice(s.pos))) {
-        let i = [];
-        M(e, r.content, 0, i, r.start) == M(e, n, s.pos) && (this.rows = [
-          e.elt("TableHeader", r.start, r.start + r.content.length, i),
-          e.elt("TableDelimiter", e.lineStart + s.pos, e.lineStart + s.text.length)
-        ]);
-      }
-    } else if (this.rows) {
-      let n = [];
-      M(e, s.text, s.pos, n, e.lineStart), this.rows.push(e.elt("TableRow", e.lineStart + s.pos, e.lineStart + s.text.length, n));
-    }
-    return !1;
-  }
-  finish(e, s) {
-    return this.rows ? (e.addLeafElement(s, e.elt("Table", s.start, s.start + s.content.length, this.rows)), !0) : !1;
-  }
-}
-const et = {
-  defineNodes: [
-    { name: "Table", block: !0 },
-    { name: "TableHeader", style: { "TableHeader/...": p.heading } },
-    "TableRow",
-    { name: "TableCell", style: p.content },
-    { name: "TableDelimiter", style: p.processingInstruction }
-  ],
-  parseBlock: [{
-    name: "Table",
-    leaf(t, e) {
-      return se(e.content, 0) ? new re() : null;
-    },
-    endLeaf(t, e, s) {
-      if (s.parsers.some((n) => n instanceof re) || !se(e.text, e.basePos))
-        return !1;
-      let r = t.peekLine();
-      return Ne.test(r) && M(t, e.text, e.basePos) == M(t, r, e.basePos);
-    },
-    before: "SetextHeading"
-  }]
-};
-class tt {
-  nextLine() {
-    return !1;
-  }
-  finish(e, s) {
-    return e.addLeafElement(s, e.elt("Task", s.start, s.start + s.content.length, [
-      e.elt("TaskMarker", s.start, s.start + 3),
-      ...e.parser.parseInline(s.content.slice(3), s.start + 3)
-    ])), !0;
-  }
-}
-const st = {
-  defineNodes: [
-    { name: "Task", block: !0, style: p.list },
-    { name: "TaskMarker", style: p.atom }
-  ],
-  parseBlock: [{
-    name: "TaskList",
-    leaf(t, e) {
-      return /^\[[ xX]\][ \t]/.test(e.content) && t.parentType().name == "ListItem" ? new tt() : null;
-    },
-    after: "SetextHeading"
-  }]
-}, ne = /(www\.)|(https?:\/\/)|([\w.+-]{1,100}@)|(mailto:|xmpp:)/gy, ie = /[\w-]+(\.[\w-]+)+(\/[^\s<]*)?/gy, rt = /[\w-]+\.[\w-]+($|\/)/, ae = /[\w.+-]+@[\w-]+(\.[\w.-]+)+/gy, oe = /\/[a-zA-Z\d@.]+/gy;
-function le(t, e, s, r) {
-  let n = 0;
-  for (let i = e; i < s; i++)
-    t[i] == r && n++;
-  return n;
-}
-function nt(t, e) {
-  ie.lastIndex = e;
-  let s = ie.exec(t);
-  if (!s || rt.exec(s[0])[0].indexOf("_") > -1)
-    return -1;
-  let r = e + s[0].length;
-  for (; ; ) {
-    let n = t[r - 1], i;
-    if (/[?!.,:*_~]/.test(n) || n == ")" && le(t, e, r, ")") > le(t, e, r, "("))
-      r--;
-    else if (n == ";" && (i = /&(?:#\d+|#x[a-f\d]+|\w+);$/.exec(t.slice(e, r))))
-      r = e + i.index;
-    else
-      break;
-  }
-  return r;
-}
-function he(t, e) {
-  ae.lastIndex = e;
-  let s = ae.exec(t);
-  if (!s)
-    return -1;
-  let r = s[0][s[0].length - 1];
-  return r == "_" || r == "-" ? -1 : e + s[0].length - (r == "." ? 1 : 0);
-}
-const it = {
-  parseInline: [{
-    name: "Autolink",
-    parse(t, e, s) {
-      let r = s - t.offset;
-      if (r && /\w/.test(t.text[r - 1]))
-        return -1;
-      ne.lastIndex = r;
-      let n = ne.exec(t.text), i = -1;
-      if (!n)
-        return -1;
-      if (n[1] || n[2]) {
-        if (i = nt(t.text, r + n[0].length), i > -1 && t.hasOpenLink) {
-          let o = /([^\[\]]|\[[^\]]*\])*/.exec(t.text.slice(r, i));
-          i = r + o[0].length;
-        }
-      } else n[3] ? i = he(t.text, r) : (i = he(t.text, r + n[0].length), i > -1 && n[0] == "xmpp:" && (oe.lastIndex = i, n = oe.exec(t.text), n && (i = n.index + n[0].length)));
-      return i < 0 ? -1 : (t.addElement(t.elt("URL", s, i + t.offset)), i + t.offset);
-    }
-  }]
-}, ft = [et, st, We, it];
-function Re(t, e, s) {
-  return (r, n, i) => {
-    if (n != t || r.char(i + 1) == t)
-      return -1;
-    let o = [r.elt(s, i, i + 1)];
-    for (let a = i + 1; a < r.end; a++) {
-      let h = r.char(a);
-      if (h == t)
-        return r.addElement(r.elt(e, i, a + 1, o.concat(r.elt(s, a, a + 1))));
-      if (h == 92 && o.push(r.elt("Escape", a, a++ + 2)), S(h))
+const we = new f((e, t) => {
+  if (e.next == q && e.peek(1) == x) {
+    let a = t.dialectEnabled(ie) || $e(t.context);
+    e.acceptToken(a ? te : h, 2);
+  } else e.next == x && e.acceptToken(h, 1);
+});
+function $(e, t, a) {
+  let r = 2 + e.length;
+  return new f((O) => {
+    for (let s = 0, o = 0, l = 0; ; l++) {
+      if (O.next < 0) {
+        l && O.acceptToken(t);
         break;
+      }
+      if (s == 0 && O.next == D || s == 1 && O.next == q || s >= 2 && s < r && O.next == e.charCodeAt(s - 2))
+        s++, o++;
+      else if (s == r && O.next == x) {
+        l > o ? O.acceptToken(t, -o) : O.acceptToken(a, -(o - 2));
+        break;
+      } else if ((O.next == 10 || O.next == 13) && l) {
+        O.acceptToken(t, 1);
+        break;
+      } else
+        s = o = 0;
+      O.advance();
     }
-    return -1;
-  };
+  });
 }
-const dt = {
-  defineNodes: [
-    { name: "Superscript", style: p.special(p.content) },
-    { name: "SuperscriptMark", style: p.processingInstruction }
+const he = $("script", H, F), Qe = $("style", K, J), Ye = $("textarea", L, ee), ve = N({
+  "Text RawText IncompleteTag IncompleteCloseTag": n.content,
+  "StartTag StartCloseTag SelfClosingEndTag EndTag": n.angleBracket,
+  TagName: n.tagName,
+  "MismatchedCloseTag/TagName": [n.tagName, n.invalid],
+  AttributeName: n.attributeName,
+  "AttributeValue UnquotedAttributeValue": n.attributeValue,
+  Is: n.definitionOperator,
+  "EntityReference CharacterReference": n.character,
+  Comment: n.blockComment,
+  ProcessingInst: n.processingInstruction,
+  DoctypeDecl: n.documentMeta
+}), Me = U.deserialize({
+  version: 14,
+  states: ",xOVO!rOOO!ZQ#tO'#CrO!`Q#tO'#C{O!eQ#tO'#DOO!jQ#tO'#DRO!oQ#tO'#DTO!tOaO'#CqO#PObO'#CqO#[OdO'#CqO$kO!rO'#CqOOO`'#Cq'#CqO$rO$fO'#DUO$zQ#tO'#DWO%PQ#tO'#DXOOO`'#Dl'#DlOOO`'#DZ'#DZQVO!rOOO%UQ&rO,59^O%aQ&rO,59gO%lQ&rO,59jO%wQ&rO,59mO&SQ&rO,59oOOOa'#D_'#D_O&_OaO'#CyO&jOaO,59]OOOb'#D`'#D`O&rObO'#C|O&}ObO,59]OOOd'#Da'#DaO'VOdO'#DPO'bOdO,59]OOO`'#Db'#DbO'jO!rO,59]O'qQ#tO'#DSOOO`,59],59]OOOp'#Dc'#DcO'vO$fO,59pOOO`,59p,59pO(OQ#|O,59rO(TQ#|O,59sOOO`-E7X-E7XO(YQ&rO'#CtOOQW'#D['#D[O(hQ&rO1G.xOOOa1G.x1G.xOOO`1G/Z1G/ZO(sQ&rO1G/ROOOb1G/R1G/RO)OQ&rO1G/UOOOd1G/U1G/UO)ZQ&rO1G/XOOO`1G/X1G/XO)fQ&rO1G/ZOOOa-E7]-E7]O)qQ#tO'#CzOOO`1G.w1G.wOOOb-E7^-E7^O)vQ#tO'#C}OOOd-E7_-E7_O){Q#tO'#DQOOO`-E7`-E7`O*QQ#|O,59nOOOp-E7a-E7aOOO`1G/[1G/[OOO`1G/^1G/^OOO`1G/_1G/_O*VQ,UO,59`OOQW-E7Y-E7YOOOa7+$d7+$dOOO`7+$u7+$uOOOb7+$m7+$mOOOd7+$p7+$pOOO`7+$s7+$sO*bQ#|O,59fO*gQ#|O,59iO*lQ#|O,59lOOO`1G/Y1G/YO*qO7[O'#CwO+SOMhO'#CwOOQW1G.z1G.zOOO`1G/Q1G/QOOO`1G/T1G/TOOO`1G/W1G/WOOOO'#D]'#D]O+eO7[O,59cOOQW,59c,59cOOOO'#D^'#D^O+vOMhO,59cOOOO-E7Z-E7ZOOQW1G.}1G.}OOOO-E7[-E7[",
+  stateData: ",c~O!_OS~OUSOVPOWQOXROYTO[]O][O^^O_^Oa^Ob^Oc^Od^Oy^O|_O!eZO~OgaO~OgbO~OgcO~OgdO~OgeO~O!XfOPmP![mP~O!YiOQpP![pP~O!ZlORsP![sP~OUSOVPOWQOXROYTOZqO[]O][O^^O_^Oa^Ob^Oc^Od^Oy^O!eZO~O![rO~P#gO!]sO!fuO~OgvO~OgwO~OS|OT}OiyO~OS!POT}OiyO~OS!ROT}OiyO~OS!TOT}OiyO~OS}OT}OiyO~O!XfOPmX![mX~OP!WO![!XO~O!YiOQpX![pX~OQ!ZO![!XO~O!ZlORsX![sX~OR!]O![!XO~O![!XO~P#gOg!_O~O!]sO!f!aO~OS!bO~OS!cO~Oj!dOShXThXihX~OS!fOT!gOiyO~OS!hOT!gOiyO~OS!iOT!gOiyO~OS!jOT!gOiyO~OS!gOT!gOiyO~Og!kO~Og!lO~Og!mO~OS!nO~Ol!qO!a!oO!c!pO~OS!rO~OS!sO~OS!tO~Ob!uOc!uOd!uO!a!wO!b!uO~Ob!xOc!xOd!xO!c!wO!d!xO~Ob!uOc!uOd!uO!a!{O!b!uO~Ob!xOc!xOd!xO!c!{O!d!xO~OT~cbd!ey|!e~",
+  goto: "%q!aPPPPPPPPPPPPPPPPPPPPP!b!hP!nPP!zP!}#Q#T#Z#^#a#g#j#m#s#y!bP!b!bP$P$V$m$s$y%P%V%]%cPPPPPPPP%iX^OX`pXUOX`pezabcde{!O!Q!S!UR!q!dRhUR!XhXVOX`pRkVR!XkXWOX`pRnWR!XnXXOX`pQrXR!XpXYOX`pQ`ORx`Q{aQ!ObQ!QcQ!SdQ!UeZ!e{!O!Q!S!UQ!v!oR!z!vQ!y!pR!|!yQgUR!VgQjVR!YjQmWR![mQpXR!^pQtZR!`tS_O`ToXp",
+  nodeNames: "⚠ StartCloseTag StartCloseTag StartCloseTag EndTag SelfClosingEndTag StartTag StartTag StartTag StartTag StartTag StartCloseTag StartCloseTag StartCloseTag IncompleteTag IncompleteCloseTag Document Text EntityReference CharacterReference InvalidEntity Element OpenTag TagName Attribute AttributeName Is AttributeValue UnquotedAttributeValue ScriptText CloseTag OpenTag StyleText CloseTag OpenTag TextareaText CloseTag OpenTag CloseTag SelfClosingTag Comment ProcessingInst MismatchedCloseTag CloseTag DoctypeDecl",
+  maxTerm: 68,
+  context: be,
+  nodeProps: [
+    ["closedBy", -10, 1, 2, 3, 7, 8, 9, 10, 11, 12, 13, "EndTag", 6, "EndTag SelfClosingEndTag", -4, 22, 31, 34, 37, "CloseTag"],
+    ["openedBy", 4, "StartTag StartCloseTag", 5, "StartTag", -4, 30, 33, 36, 38, "OpenTag"],
+    ["group", -10, 14, 15, 18, 19, 20, 21, 40, 41, 42, 43, "Entity", 17, "Entity TextContent", -3, 29, 32, 35, "TextContent Entity"],
+    ["isolate", -11, 22, 30, 31, 33, 34, 36, 37, 38, 39, 42, 43, "ltr", -3, 27, 28, 40, ""]
   ],
-  parseInline: [{
-    name: "Superscript",
-    parse: Re(94, "Superscript", "SuperscriptMark")
-  }]
-}, ut = {
-  defineNodes: [
-    { name: "Subscript", style: p.special(p.content) },
-    { name: "SubscriptMark", style: p.processingInstruction }
-  ],
-  parseInline: [{
-    name: "Subscript",
-    parse: Re(126, "Subscript", "SubscriptMark")
-  }]
-}, pt = {
-  defineNodes: [{ name: "Emoji", style: p.character }],
-  parseInline: [{
-    name: "Emoji",
-    parse(t, e, s) {
-      let r;
-      return e != 58 || !(r = /^[a-zA-Z_0-9]+:/.exec(t.slice(s + 1, t.end))) ? -1 : t.addElement(t.elt("Emoji", s, s + 1 + r[0].length));
+  propSources: [ve],
+  skippedNodes: [0],
+  repeatNodeCount: 9,
+  tokenData: "!<p!aR!YOX$qXY,QYZ,QZ[$q[]&X]^,Q^p$qpq,Qqr-_rs3_sv-_vw3}wxHYx}-_}!OH{!O!P-_!P!Q$q!Q![-_![!]Mz!]!^-_!^!_!$S!_!`!;x!`!a&X!a!c-_!c!}Mz!}#R-_#R#SMz#S#T1k#T#oMz#o#s-_#s$f$q$f%W-_%W%oMz%o%p-_%p&aMz&a&b-_&b1pMz1p4U-_4U4dMz4d4e-_4e$ISMz$IS$I`-_$I`$IbMz$Ib$Kh-_$Kh%#tMz%#t&/x-_&/x&EtMz&Et&FV-_&FV;'SMz;'S;:j!#|;:j;=`3X<%l?&r-_?&r?AhMz?Ah?BY$q?BY?MnMz?MnO$q!Z$|caPlW!b`!dpOX$qXZ&XZ[$q[^&X^p$qpq&Xqr$qrs&}sv$qvw+Pwx(tx!^$q!^!_*V!_!a&X!a#S$q#S#T&X#T;'S$q;'S;=`+z<%lO$q!R&bXaP!b`!dpOr&Xrs&}sv&Xwx(tx!^&X!^!_*V!_;'S&X;'S;=`*y<%lO&Xq'UVaP!dpOv&}wx'kx!^&}!^!_(V!_;'S&};'S;=`(n<%lO&}P'pTaPOv'kw!^'k!_;'S'k;'S;=`(P<%lO'kP(SP;=`<%l'kp([S!dpOv(Vx;'S(V;'S;=`(h<%lO(Vp(kP;=`<%l(Vq(qP;=`<%l&}a({WaP!b`Or(trs'ksv(tw!^(t!^!_)e!_;'S(t;'S;=`*P<%lO(t`)jT!b`Or)esv)ew;'S)e;'S;=`)y<%lO)e`)|P;=`<%l)ea*SP;=`<%l(t!Q*^V!b`!dpOr*Vrs(Vsv*Vwx)ex;'S*V;'S;=`*s<%lO*V!Q*vP;=`<%l*V!R*|P;=`<%l&XW+UYlWOX+PZ[+P^p+Pqr+Psw+Px!^+P!a#S+P#T;'S+P;'S;=`+t<%lO+PW+wP;=`<%l+P!Z+}P;=`<%l$q!a,]`aP!b`!dp!_^OX&XXY,QYZ,QZ]&X]^,Q^p&Xpq,Qqr&Xrs&}sv&Xwx(tx!^&X!^!_*V!_;'S&X;'S;=`*y<%lO&X!_-ljiSaPlW!b`!dpOX$qXZ&XZ[$q[^&X^p$qpq&Xqr-_rs&}sv-_vw/^wx(tx!P-_!P!Q$q!Q!^-_!^!_*V!_!a&X!a#S-_#S#T1k#T#s-_#s$f$q$f;'S-_;'S;=`3X<%l?Ah-_?Ah?BY$q?BY?Mn-_?MnO$q[/ebiSlWOX+PZ[+P^p+Pqr/^sw/^x!P/^!P!Q+P!Q!^/^!a#S/^#S#T0m#T#s/^#s$f+P$f;'S/^;'S;=`1e<%l?Ah/^?Ah?BY+P?BY?Mn/^?MnO+PS0rXiSqr0msw0mx!P0m!Q!^0m!a#s0m$f;'S0m;'S;=`1_<%l?Ah0m?BY?Mn0mS1bP;=`<%l0m[1hP;=`<%l/^!V1vciSaP!b`!dpOq&Xqr1krs&}sv1kvw0mwx(tx!P1k!P!Q&X!Q!^1k!^!_*V!_!a&X!a#s1k#s$f&X$f;'S1k;'S;=`3R<%l?Ah1k?Ah?BY&X?BY?Mn1k?MnO&X!V3UP;=`<%l1k!_3[P;=`<%l-_!Z3hV!ahaP!dpOv&}wx'kx!^&}!^!_(V!_;'S&};'S;=`(n<%lO&}!_4WiiSlWd!ROX5uXZ7SZ[5u[^7S^p5uqr8trs7Sst>]tw8twx7Sx!P8t!P!Q5u!Q!]8t!]!^/^!^!a7S!a#S8t#S#T;{#T#s8t#s$f5u$f;'S8t;'S;=`>V<%l?Ah8t?Ah?BY5u?BY?Mn8t?MnO5u!Z5zblWOX5uXZ7SZ[5u[^7S^p5uqr5urs7Sst+Ptw5uwx7Sx!]5u!]!^7w!^!a7S!a#S5u#S#T7S#T;'S5u;'S;=`8n<%lO5u!R7VVOp7Sqs7St!]7S!]!^7l!^;'S7S;'S;=`7q<%lO7S!R7qOb!R!R7tP;=`<%l7S!Z8OYlWb!ROX+PZ[+P^p+Pqr+Psw+Px!^+P!a#S+P#T;'S+P;'S;=`+t<%lO+P!Z8qP;=`<%l5u!_8{iiSlWOX5uXZ7SZ[5u[^7S^p5uqr8trs7Sst/^tw8twx7Sx!P8t!P!Q5u!Q!]8t!]!^:j!^!a7S!a#S8t#S#T;{#T#s8t#s$f5u$f;'S8t;'S;=`>V<%l?Ah8t?Ah?BY5u?BY?Mn8t?MnO5u!_:sbiSlWb!ROX+PZ[+P^p+Pqr/^sw/^x!P/^!P!Q+P!Q!^/^!a#S/^#S#T0m#T#s/^#s$f+P$f;'S/^;'S;=`1e<%l?Ah/^?Ah?BY+P?BY?Mn/^?MnO+P!V<QciSOp7Sqr;{rs7Sst0mtw;{wx7Sx!P;{!P!Q7S!Q!];{!]!^=]!^!a7S!a#s;{#s$f7S$f;'S;{;'S;=`>P<%l?Ah;{?Ah?BY7S?BY?Mn;{?MnO7S!V=dXiSb!Rqr0msw0mx!P0m!Q!^0m!a#s0m$f;'S0m;'S;=`1_<%l?Ah0m?BY?Mn0m!V>SP;=`<%l;{!_>YP;=`<%l8t!_>dhiSlWOX@OXZAYZ[@O[^AY^p@OqrBwrsAYswBwwxAYx!PBw!P!Q@O!Q!]Bw!]!^/^!^!aAY!a#SBw#S#TE{#T#sBw#s$f@O$f;'SBw;'S;=`HS<%l?AhBw?Ah?BY@O?BY?MnBw?MnO@O!Z@TalWOX@OXZAYZ[@O[^AY^p@Oqr@OrsAYsw@OwxAYx!]@O!]!^Az!^!aAY!a#S@O#S#TAY#T;'S@O;'S;=`Bq<%lO@O!RA]UOpAYq!]AY!]!^Ao!^;'SAY;'S;=`At<%lOAY!RAtOc!R!RAwP;=`<%lAY!ZBRYlWc!ROX+PZ[+P^p+Pqr+Psw+Px!^+P!a#S+P#T;'S+P;'S;=`+t<%lO+P!ZBtP;=`<%l@O!_COhiSlWOX@OXZAYZ[@O[^AY^p@OqrBwrsAYswBwwxAYx!PBw!P!Q@O!Q!]Bw!]!^Dj!^!aAY!a#SBw#S#TE{#T#sBw#s$f@O$f;'SBw;'S;=`HS<%l?AhBw?Ah?BY@O?BY?MnBw?MnO@O!_DsbiSlWc!ROX+PZ[+P^p+Pqr/^sw/^x!P/^!P!Q+P!Q!^/^!a#S/^#S#T0m#T#s/^#s$f+P$f;'S/^;'S;=`1e<%l?Ah/^?Ah?BY+P?BY?Mn/^?MnO+P!VFQbiSOpAYqrE{rsAYswE{wxAYx!PE{!P!QAY!Q!]E{!]!^GY!^!aAY!a#sE{#s$fAY$f;'SE{;'S;=`G|<%l?AhE{?Ah?BYAY?BY?MnE{?MnOAY!VGaXiSc!Rqr0msw0mx!P0m!Q!^0m!a#s0m$f;'S0m;'S;=`1_<%l?Ah0m?BY?Mn0m!VHPP;=`<%lE{!_HVP;=`<%lBw!ZHcW!cxaP!b`Or(trs'ksv(tw!^(t!^!_)e!_;'S(t;'S;=`*P<%lO(t!aIYliSaPlW!b`!dpOX$qXZ&XZ[$q[^&X^p$qpq&Xqr-_rs&}sv-_vw/^wx(tx}-_}!OKQ!O!P-_!P!Q$q!Q!^-_!^!_*V!_!a&X!a#S-_#S#T1k#T#s-_#s$f$q$f;'S-_;'S;=`3X<%l?Ah-_?Ah?BY$q?BY?Mn-_?MnO$q!aK_kiSaPlW!b`!dpOX$qXZ&XZ[$q[^&X^p$qpq&Xqr-_rs&}sv-_vw/^wx(tx!P-_!P!Q$q!Q!^-_!^!_*V!_!`&X!`!aMS!a#S-_#S#T1k#T#s-_#s$f$q$f;'S-_;'S;=`3X<%l?Ah-_?Ah?BY$q?BY?Mn-_?MnO$q!TM_XaP!b`!dp!fQOr&Xrs&}sv&Xwx(tx!^&X!^!_*V!_;'S&X;'S;=`*y<%lO&X!aNZ!ZiSgQaPlW!b`!dpOX$qXZ&XZ[$q[^&X^p$qpq&Xqr-_rs&}sv-_vw/^wx(tx}-_}!OMz!O!PMz!P!Q$q!Q![Mz![!]Mz!]!^-_!^!_*V!_!a&X!a!c-_!c!}Mz!}#R-_#R#SMz#S#T1k#T#oMz#o#s-_#s$f$q$f$}-_$}%OMz%O%W-_%W%oMz%o%p-_%p&aMz&a&b-_&b1pMz1p4UMz4U4dMz4d4e-_4e$ISMz$IS$I`-_$I`$IbMz$Ib$Je-_$Je$JgMz$Jg$Kh-_$Kh%#tMz%#t&/x-_&/x&EtMz&Et&FV-_&FV;'SMz;'S;:j!#|;:j;=`3X<%l?&r-_?&r?AhMz?Ah?BY$q?BY?MnMz?MnO$q!a!$PP;=`<%lMz!R!$ZY!b`!dpOq*Vqr!$yrs(Vsv*Vwx)ex!a*V!a!b!4t!b;'S*V;'S;=`*s<%lO*V!R!%Q]!b`!dpOr*Vrs(Vsv*Vwx)ex}*V}!O!%y!O!f*V!f!g!']!g#W*V#W#X!0`#X;'S*V;'S;=`*s<%lO*V!R!&QX!b`!dpOr*Vrs(Vsv*Vwx)ex}*V}!O!&m!O;'S*V;'S;=`*s<%lO*V!R!&vV!b`!dp!ePOr*Vrs(Vsv*Vwx)ex;'S*V;'S;=`*s<%lO*V!R!'dX!b`!dpOr*Vrs(Vsv*Vwx)ex!q*V!q!r!(P!r;'S*V;'S;=`*s<%lO*V!R!(WX!b`!dpOr*Vrs(Vsv*Vwx)ex!e*V!e!f!(s!f;'S*V;'S;=`*s<%lO*V!R!(zX!b`!dpOr*Vrs(Vsv*Vwx)ex!v*V!v!w!)g!w;'S*V;'S;=`*s<%lO*V!R!)nX!b`!dpOr*Vrs(Vsv*Vwx)ex!{*V!{!|!*Z!|;'S*V;'S;=`*s<%lO*V!R!*bX!b`!dpOr*Vrs(Vsv*Vwx)ex!r*V!r!s!*}!s;'S*V;'S;=`*s<%lO*V!R!+UX!b`!dpOr*Vrs(Vsv*Vwx)ex!g*V!g!h!+q!h;'S*V;'S;=`*s<%lO*V!R!+xY!b`!dpOr!+qrs!,hsv!+qvw!-Swx!.[x!`!+q!`!a!/j!a;'S!+q;'S;=`!0Y<%lO!+qq!,mV!dpOv!,hvx!-Sx!`!,h!`!a!-q!a;'S!,h;'S;=`!.U<%lO!,hP!-VTO!`!-S!`!a!-f!a;'S!-S;'S;=`!-k<%lO!-SP!-kO|PP!-nP;=`<%l!-Sq!-xS!dp|POv(Vx;'S(V;'S;=`(h<%lO(Vq!.XP;=`<%l!,ha!.aX!b`Or!.[rs!-Ssv!.[vw!-Sw!`!.[!`!a!.|!a;'S!.[;'S;=`!/d<%lO!.[a!/TT!b`|POr)esv)ew;'S)e;'S;=`)y<%lO)ea!/gP;=`<%l!.[!R!/sV!b`!dp|POr*Vrs(Vsv*Vwx)ex;'S*V;'S;=`*s<%lO*V!R!0]P;=`<%l!+q!R!0gX!b`!dpOr*Vrs(Vsv*Vwx)ex#c*V#c#d!1S#d;'S*V;'S;=`*s<%lO*V!R!1ZX!b`!dpOr*Vrs(Vsv*Vwx)ex#V*V#V#W!1v#W;'S*V;'S;=`*s<%lO*V!R!1}X!b`!dpOr*Vrs(Vsv*Vwx)ex#h*V#h#i!2j#i;'S*V;'S;=`*s<%lO*V!R!2qX!b`!dpOr*Vrs(Vsv*Vwx)ex#m*V#m#n!3^#n;'S*V;'S;=`*s<%lO*V!R!3eX!b`!dpOr*Vrs(Vsv*Vwx)ex#d*V#d#e!4Q#e;'S*V;'S;=`*s<%lO*V!R!4XX!b`!dpOr*Vrs(Vsv*Vwx)ex#X*V#X#Y!+q#Y;'S*V;'S;=`*s<%lO*V!R!4{Y!b`!dpOr!4trs!5ksv!4tvw!6Vwx!8]x!a!4t!a!b!:]!b;'S!4t;'S;=`!;r<%lO!4tq!5pV!dpOv!5kvx!6Vx!a!5k!a!b!7W!b;'S!5k;'S;=`!8V<%lO!5kP!6YTO!a!6V!a!b!6i!b;'S!6V;'S;=`!7Q<%lO!6VP!6lTO!`!6V!`!a!6{!a;'S!6V;'S;=`!7Q<%lO!6VP!7QOyPP!7TP;=`<%l!6Vq!7]V!dpOv!5kvx!6Vx!`!5k!`!a!7r!a;'S!5k;'S;=`!8V<%lO!5kq!7yS!dpyPOv(Vx;'S(V;'S;=`(h<%lO(Vq!8YP;=`<%l!5ka!8bX!b`Or!8]rs!6Vsv!8]vw!6Vw!a!8]!a!b!8}!b;'S!8];'S;=`!:V<%lO!8]a!9SX!b`Or!8]rs!6Vsv!8]vw!6Vw!`!8]!`!a!9o!a;'S!8];'S;=`!:V<%lO!8]a!9vT!b`yPOr)esv)ew;'S)e;'S;=`)y<%lO)ea!:YP;=`<%l!8]!R!:dY!b`!dpOr!4trs!5ksv!4tvw!6Vwx!8]x!`!4t!`!a!;S!a;'S!4t;'S;=`!;r<%lO!4t!R!;]V!b`!dpyPOr*Vrs(Vsv*Vwx)ex;'S*V;'S;=`*s<%lO*V!R!;uP;=`<%l!4t!V!<TXjSaP!b`!dpOr&Xrs&}sv&Xwx(tx!^&X!^!_*V!_;'S&X;'S;=`*y<%lO&X",
+  tokenizers: [he, Qe, Ye, we, _e, qe, 0, 1, 2, 3, 4, 5],
+  topRules: { Document: [0, 16] },
+  dialects: { noMatch: 0, selfClosing: 515 },
+  tokenPrec: 517
+});
+function G(e, t) {
+  let a = /* @__PURE__ */ Object.create(null);
+  for (let r of e.getChildren(z)) {
+    let O = r.getChild(ne), s = r.getChild(m) || r.getChild(W);
+    O && (a[t.read(O.from, O.to)] = s ? s.type.id == m ? t.read(s.from + 1, s.to - 1) : t.read(s.from, s.to) : "");
+  }
+  return a;
+}
+function M(e, t) {
+  let a = e.getChild(Se);
+  return a ? t.read(a.from, a.to) : " ";
+}
+function g(e, t, a) {
+  let r;
+  for (let O of a)
+    if (!O.attrs || O.attrs(r || (r = G(e.node.parent.firstChild, t))))
+      return { parser: O.parser };
+  return null;
+}
+function Re(e = [], t = []) {
+  let a = [], r = [], O = [], s = [];
+  for (let l of e)
+    (l.tag == "script" ? a : l.tag == "style" ? r : l.tag == "textarea" ? O : s).push(l);
+  let o = t.length ? /* @__PURE__ */ Object.create(null) : null;
+  for (let l of t) (o[l.name] || (o[l.name] = [])).push(l);
+  return j((l, V) => {
+    let c = l.type.id;
+    if (c == oe) return g(l, V, a);
+    if (c == Pe) return g(l, V, r);
+    if (c == Ve) return g(l, V, O);
+    if (c == E && s.length) {
+      let d = l.node, P = d.firstChild, i = P && M(P, V), T;
+      if (i) {
+        for (let S of s)
+          if (S.tag == i && (!S.attrs || S.attrs(T || (T = G(P, V))))) {
+            let p = d.lastChild, u = p.type.id == Te ? p.from : d.to;
+            if (u > P.to)
+              return { parser: S.parser, overlay: [{ from: P.to, to: u }] };
+          }
+      }
     }
-  }]
-};
+    if (o && c == z) {
+      let d = l.node, P;
+      if (P = d.firstChild) {
+        let i = o[V.read(P.from, P.to)];
+        if (i) for (let T of i) {
+          if (T.tagName && T.tagName != M(d.parent, V)) continue;
+          let S = d.lastChild;
+          if (S.type.id == m) {
+            let p = S.from + 1, u = S.lastChild, w = S.to - (u && u.isError ? 0 : 1);
+            if (w > p) return { parser: T.parser, overlay: [{ from: p, to: w }] };
+          } else if (S.type.id == W)
+            return { parser: T.parser, overlay: [{ from: S.from, to: S.to }] };
+        }
+      }
+    }
+    return null;
+  });
+}
 export {
-  it as Autolink,
-  Ze as BlockContext,
-  P as Element,
-  pt as Emoji,
-  ft as GFM,
-  J as InlineContext,
-  Fe as LeafBlock,
-  je as Line,
-  V as MarkdownParser,
-  We as Strikethrough,
-  ut as Subscript,
-  dt as Superscript,
-  et as Table,
-  st as TaskList,
-  ht as parseCode,
-  lt as parser
+  Re as configureNesting,
+  Me as parser
 };

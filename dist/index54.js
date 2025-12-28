@@ -1,262 +1,62 @@
-import * as s from "react";
-import { composeEventHandlers as p } from "./index101.js";
-import { useComposedRefs as _ } from "./index95.js";
-import { createContextScope as V, createContext as q } from "./index97.js";
-import { useId as R } from "./index94.js";
-import { useControllableState as K } from "./index98.js";
-import { DismissableLayer as U } from "./index102.js";
-import { FocusScope as Y } from "./index103.js";
-import { Portal as Z } from "./index104.js";
-import { Presence as h } from "./index105.js";
-import { Primitive as m } from "./index93.js";
-import { useFocusGuards as z } from "./index106.js";
-import J from "./index107.js";
-import { hideOthers as Q } from "./index108.js";
-import { createSlot as X } from "./index109.js";
-import { jsx as i, jsxs as P, Fragment as O } from "react/jsx-runtime";
-var v = "Dialog", [I, Ne] = V(v), [ee, u] = I(v), x = (e) => {
-  const {
-    __scopeDialog: o,
-    children: n,
-    open: a,
-    defaultOpen: r,
-    onOpenChange: t,
-    modal: c = !0
-  } = e, l = s.useRef(null), d = s.useRef(null), [g, C] = K({
-    prop: a,
-    defaultProp: r ?? !1,
-    onChange: t,
-    caller: v
-  });
-  return /* @__PURE__ */ i(
-    ee,
-    {
-      scope: o,
-      triggerRef: l,
-      contentRef: d,
-      contentId: R(),
-      titleId: R(),
-      descriptionId: R(),
-      open: g,
-      onOpenChange: C,
-      onOpenToggle: s.useCallback(() => C((H) => !H), [C]),
-      modal: c,
-      children: n
-    }
-  );
-};
-x.displayName = v;
-var A = "DialogTrigger", T = s.forwardRef(
-  (e, o) => {
-    const { __scopeDialog: n, ...a } = e, r = u(A, n), t = _(o, r.triggerRef);
-    return /* @__PURE__ */ i(
-      m.button,
-      {
-        type: "button",
-        "aria-haspopup": "dialog",
-        "aria-expanded": r.open,
-        "aria-controls": r.contentId,
-        "data-state": N(r.open),
-        ...a,
-        ref: t,
-        onClick: p(e.onClick, r.onOpenToggle)
-      }
-    );
-  }
-);
-T.displayName = A;
-var E = "DialogPortal", [te, b] = I(E, {
-  forceMount: void 0
-}), M = (e) => {
-  const { __scopeDialog: o, forceMount: n, children: a, container: r } = e, t = u(E, o);
-  return /* @__PURE__ */ i(te, { scope: o, forceMount: n, children: s.Children.map(a, (c) => /* @__PURE__ */ i(h, { present: n || t.open, children: /* @__PURE__ */ i(Z, { asChild: !0, container: r, children: c }) })) });
-};
-M.displayName = E;
-var D = "DialogOverlay", w = s.forwardRef(
-  (e, o) => {
-    const n = b(D, e.__scopeDialog), { forceMount: a = n.forceMount, ...r } = e, t = u(D, e.__scopeDialog);
-    return t.modal ? /* @__PURE__ */ i(h, { present: a || t.open, children: /* @__PURE__ */ i(re, { ...r, ref: o }) }) : null;
-  }
-);
-w.displayName = D;
-var oe = X("DialogOverlay.RemoveScroll"), re = s.forwardRef(
-  (e, o) => {
-    const { __scopeDialog: n, ...a } = e, r = u(D, n);
-    return (
-      // Make sure `Content` is scrollable even when it doesn't live inside `RemoveScroll`
-      // ie. when `Overlay` and `Content` are siblings
-      /* @__PURE__ */ i(J, { as: oe, allowPinchZoom: !0, shards: [r.contentRef], children: /* @__PURE__ */ i(
-        m.div,
-        {
-          "data-state": N(r.open),
-          ...a,
-          ref: o,
-          style: { pointerEvents: "auto", ...a.style }
-        }
-      ) })
-    );
-  }
-), f = "DialogContent", S = s.forwardRef(
-  (e, o) => {
-    const n = b(f, e.__scopeDialog), { forceMount: a = n.forceMount, ...r } = e, t = u(f, e.__scopeDialog);
-    return /* @__PURE__ */ i(h, { present: a || t.open, children: t.modal ? /* @__PURE__ */ i(ne, { ...r, ref: o }) : /* @__PURE__ */ i(ae, { ...r, ref: o }) });
-  }
-);
-S.displayName = f;
-var ne = s.forwardRef(
-  (e, o) => {
-    const n = u(f, e.__scopeDialog), a = s.useRef(null), r = _(o, n.contentRef, a);
-    return s.useEffect(() => {
-      const t = a.current;
-      if (t) return Q(t);
-    }, []), /* @__PURE__ */ i(
-      F,
-      {
-        ...e,
-        ref: r,
-        trapFocus: n.open,
-        disableOutsidePointerEvents: !0,
-        onCloseAutoFocus: p(e.onCloseAutoFocus, (t) => {
-          var c;
-          t.preventDefault(), (c = n.triggerRef.current) == null || c.focus();
-        }),
-        onPointerDownOutside: p(e.onPointerDownOutside, (t) => {
-          const c = t.detail.originalEvent, l = c.button === 0 && c.ctrlKey === !0;
-          (c.button === 2 || l) && t.preventDefault();
-        }),
-        onFocusOutside: p(
-          e.onFocusOutside,
-          (t) => t.preventDefault()
-        )
-      }
-    );
-  }
-), ae = s.forwardRef(
-  (e, o) => {
-    const n = u(f, e.__scopeDialog), a = s.useRef(!1), r = s.useRef(!1);
-    return /* @__PURE__ */ i(
-      F,
-      {
-        ...e,
-        ref: o,
-        trapFocus: !1,
-        disableOutsidePointerEvents: !1,
-        onCloseAutoFocus: (t) => {
-          var c, l;
-          (c = e.onCloseAutoFocus) == null || c.call(e, t), t.defaultPrevented || (a.current || (l = n.triggerRef.current) == null || l.focus(), t.preventDefault()), a.current = !1, r.current = !1;
-        },
-        onInteractOutside: (t) => {
-          var d, g;
-          (d = e.onInteractOutside) == null || d.call(e, t), t.defaultPrevented || (a.current = !0, t.detail.originalEvent.type === "pointerdown" && (r.current = !0));
-          const c = t.target;
-          ((g = n.triggerRef.current) == null ? void 0 : g.contains(c)) && t.preventDefault(), t.detail.originalEvent.type === "focusin" && r.current && t.preventDefault();
-        }
-      }
-    );
-  }
-), F = s.forwardRef(
-  (e, o) => {
-    const { __scopeDialog: n, trapFocus: a, onOpenAutoFocus: r, onCloseAutoFocus: t, ...c } = e, l = u(f, n), d = s.useRef(null), g = _(o, d);
-    return z(), /* @__PURE__ */ P(O, { children: [
-      /* @__PURE__ */ i(
-        Y,
-        {
-          asChild: !0,
-          loop: !0,
-          trapped: a,
-          onMountAutoFocus: r,
-          onUnmountAutoFocus: t,
-          children: /* @__PURE__ */ i(
-            U,
-            {
-              role: "dialog",
-              id: l.contentId,
-              "aria-describedby": l.descriptionId,
-              "aria-labelledby": l.titleId,
-              "data-state": N(l.open),
-              ...c,
-              ref: g,
-              onDismiss: () => l.onOpenChange(!1)
-            }
-          )
-        }
-      ),
-      /* @__PURE__ */ P(O, { children: [
-        /* @__PURE__ */ i(ie, { titleId: l.titleId }),
-        /* @__PURE__ */ i(ce, { contentRef: d, descriptionId: l.descriptionId })
-      ] })
-    ] });
-  }
-), y = "DialogTitle", W = s.forwardRef(
-  (e, o) => {
-    const { __scopeDialog: n, ...a } = e, r = u(y, n);
-    return /* @__PURE__ */ i(m.h2, { id: r.titleId, ...a, ref: o });
-  }
-);
-W.displayName = y;
-var k = "DialogDescription", G = s.forwardRef(
-  (e, o) => {
-    const { __scopeDialog: n, ...a } = e, r = u(k, n);
-    return /* @__PURE__ */ i(m.p, { id: r.descriptionId, ...a, ref: o });
-  }
-);
-G.displayName = k;
-var L = "DialogClose", $ = s.forwardRef(
-  (e, o) => {
-    const { __scopeDialog: n, ...a } = e, r = u(L, n);
-    return /* @__PURE__ */ i(
-      m.button,
-      {
-        type: "button",
-        ...a,
-        ref: o,
-        onClick: p(e.onClick, () => r.onOpenChange(!1))
-      }
-    );
-  }
-);
-$.displayName = L;
-function N(e) {
-  return e ? "open" : "closed";
+import * as o from "react";
+import { composeRefs as S } from "./index91.js";
+import { jsx as y } from "react/jsx-runtime";
+var E = Symbol.for("react.lazy"), p = o[" use ".trim().toString()];
+function g(t) {
+  return typeof t == "object" && t !== null && "then" in t;
 }
-var B = "DialogTitleWarning", [Pe, j] = q(B, {
-  contentName: f,
-  titleName: y,
-  docsSlug: "dialog"
-}), ie = ({ titleId: e }) => {
-  const o = j(B), n = `\`${o.contentName}\` requires a \`${o.titleName}\` for the component to be accessible for screen reader users.
-
-If you want to hide the \`${o.titleName}\`, you can wrap it with our VisuallyHidden component.
-
-For more information, see https://radix-ui.com/primitives/docs/components/${o.docsSlug}`;
-  return s.useEffect(() => {
-    e && (document.getElementById(e) || console.error(n));
-  }, [n, e]), null;
-}, se = "DialogDescriptionWarning", ce = ({ contentRef: e, descriptionId: o }) => {
-  const a = `Warning: Missing \`Description\` or \`aria-describedby={undefined}\` for {${j(se).contentName}}.`;
-  return s.useEffect(() => {
-    var t;
-    const r = (t = e.current) == null ? void 0 : t.getAttribute("aria-describedby");
-    o && r && (document.getElementById(o) || console.warn(a));
-  }, [a, e, o]), null;
-}, Oe = x, Ie = T, xe = M, Ae = w, Te = S, be = W, Me = G, we = $;
+function d(t) {
+  return t != null && typeof t == "object" && "$$typeof" in t && t.$$typeof === E && "_payload" in t && g(t._payload);
+}
+// @__NO_SIDE_EFFECTS__
+function C(t) {
+  const n = /* @__PURE__ */ R(t), i = o.forwardRef((e, r) => {
+    let { children: l, ...a } = e;
+    d(l) && typeof p == "function" && (l = p(l._payload));
+    const s = o.Children.toArray(l), f = s.find(b);
+    if (f) {
+      const c = f.props.children, m = s.map((u) => u === f ? o.Children.count(c) > 1 ? o.Children.only(null) : o.isValidElement(c) ? c.props.children : null : u);
+      return /* @__PURE__ */ y(n, { ...a, ref: r, children: o.isValidElement(c) ? o.cloneElement(c, void 0, m) : null });
+    }
+    return /* @__PURE__ */ y(n, { ...a, ref: r, children: l });
+  });
+  return i.displayName = `${t}.Slot`, i;
+}
+var V = /* @__PURE__ */ C("Slot");
+// @__NO_SIDE_EFFECTS__
+function R(t) {
+  const n = o.forwardRef((i, e) => {
+    let { children: r, ...l } = i;
+    if (d(r) && typeof p == "function" && (r = p(r._payload)), o.isValidElement(r)) {
+      const a = P(r), s = h(l, r.props);
+      return r.type !== o.Fragment && (s.ref = e ? S(e, a) : a), o.cloneElement(r, s);
+    }
+    return o.Children.count(r) > 1 ? o.Children.only(null) : null;
+  });
+  return n.displayName = `${t}.SlotClone`, n;
+}
+var _ = Symbol("radix.slottable");
+function b(t) {
+  return o.isValidElement(t) && typeof t.type == "function" && "__radixId" in t.type && t.type.__radixId === _;
+}
+function h(t, n) {
+  const i = { ...n };
+  for (const e in n) {
+    const r = t[e], l = n[e];
+    /^on[A-Z]/.test(e) ? r && l ? i[e] = (...s) => {
+      const f = l(...s);
+      return r(...s), f;
+    } : r && (i[e] = r) : e === "style" ? i[e] = { ...r, ...l } : e === "className" && (i[e] = [r, l].filter(Boolean).join(" "));
+  }
+  return { ...t, ...i };
+}
+function P(t) {
+  var e, r;
+  let n = (e = Object.getOwnPropertyDescriptor(t.props, "ref")) == null ? void 0 : e.get, i = n && "isReactWarning" in n && n.isReactWarning;
+  return i ? t.ref : (n = (r = Object.getOwnPropertyDescriptor(t, "ref")) == null ? void 0 : r.get, i = n && "isReactWarning" in n && n.isReactWarning, i ? t.props.ref : t.props.ref || t.ref);
+}
 export {
-  we as Close,
-  Te as Content,
-  Me as Description,
-  x as Dialog,
-  $ as DialogClose,
-  S as DialogContent,
-  G as DialogDescription,
-  w as DialogOverlay,
-  M as DialogPortal,
-  W as DialogTitle,
-  T as DialogTrigger,
-  Ae as Overlay,
-  xe as Portal,
-  Oe as Root,
-  be as Title,
-  Ie as Trigger,
-  Pe as WarningProvider,
-  Ne as createDialogScope
+  V as Root,
+  V as Slot,
+  C as createSlot
 };

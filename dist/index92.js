@@ -1,17 +1,70 @@
-var m = 1, j = 0.9, k = 0.8, B = 0.17, v = 0.1, w = 0.999, D = 0.9999, G = 0.99, H = /[\\\/_+.#"@\[\(\{&]/, J = /[\\\/_+.#"@\[\(\{&]/g, K = /[\s-]/, A = /[\s-]/g;
-function $(t, o, e, i, n, h, u) {
-  if (h === o.length) return n === t.length ? m : G;
-  var s = `${n},${h}`;
-  if (u[s] !== void 0) return u[s];
-  for (var d = i.charAt(h), a = e.indexOf(d, n), l = 0, r, g, c, p; a >= 0; ) r = $(t, o, e, i, a + 1, h + 1, u), r > l && (a === n ? r *= m : H.test(t.charAt(a - 1)) ? (r *= k, c = t.slice(n, a - 1).match(J), c && n > 0 && (r *= Math.pow(w, c.length))) : K.test(t.charAt(a - 1)) ? (r *= j, p = t.slice(n, a - 1).match(A), p && n > 0 && (r *= Math.pow(w, p.length))) : (r *= B, n > 0 && (r *= Math.pow(w, a - n))), t.charAt(a) !== o.charAt(h) && (r *= D)), (r < v && e.charAt(a - 1) === i.charAt(h + 1) || i.charAt(h + 1) === i.charAt(h) && e.charAt(a - 1) !== i.charAt(h)) && (g = $(t, o, e, i, a + 1, h + 2, u), g * v > r && (r = g * v)), r > l && (l = r), a = e.indexOf(d, a + 1);
-  return u[s] = l, l;
+import * as u from "react";
+import { jsx as h } from "react/jsx-runtime";
+function w(e, c) {
+  const o = u.createContext(c), a = (r) => {
+    const { children: t, ...n } = r, s = u.useMemo(() => n, Object.values(n));
+    return /* @__PURE__ */ h(o.Provider, { value: s, children: t });
+  };
+  a.displayName = e + "Provider";
+  function i(r) {
+    const t = u.useContext(o);
+    if (t) return t;
+    if (c !== void 0) return c;
+    throw new Error(`\`${r}\` must be used within \`${e}\``);
+  }
+  return [a, i];
 }
-function x(t) {
-  return t.toLowerCase().replace(A, " ");
+function _(e, c = []) {
+  let o = [];
+  function a(r, t) {
+    const n = u.createContext(t), s = o.length;
+    o = [...o, t];
+    const p = (d) => {
+      var S;
+      const { scope: x, children: C, ...m } = d, v = ((S = x == null ? void 0 : x[e]) == null ? void 0 : S[s]) || n, P = u.useMemo(() => m, Object.values(m));
+      return /* @__PURE__ */ h(v.Provider, { value: P, children: C });
+    };
+    p.displayName = r + "Provider";
+    function f(d, x) {
+      var v;
+      const C = ((v = x == null ? void 0 : x[e]) == null ? void 0 : v[s]) || n, m = u.useContext(C);
+      if (m) return m;
+      if (t !== void 0) return t;
+      throw new Error(`\`${d}\` must be used within \`${r}\``);
+    }
+    return [p, f];
+  }
+  const i = () => {
+    const r = o.map((t) => u.createContext(t));
+    return function(n) {
+      const s = (n == null ? void 0 : n[e]) || r;
+      return u.useMemo(
+        () => ({ [`__scope${e}`]: { ...n, [e]: s } }),
+        [n, s]
+      );
+    };
+  };
+  return i.scopeName = e, [a, l(i, ...c)];
 }
-function M(t, o, e) {
-  return t = e && e.length > 0 ? `${t + " " + e.join(" ")}` : t, $(t, o, x(t), x(o), 0, 0, {});
+function l(...e) {
+  const c = e[0];
+  if (e.length === 1) return c;
+  const o = () => {
+    const a = e.map((i) => ({
+      useScope: i(),
+      scopeName: i.scopeName
+    }));
+    return function(r) {
+      const t = a.reduce((n, { useScope: s, scopeName: p }) => {
+        const d = s(r)[`__scope${p}`];
+        return { ...n, ...d };
+      }, {});
+      return u.useMemo(() => ({ [`__scope${c.scopeName}`]: t }), [t]);
+    };
+  };
+  return o.scopeName = c.scopeName, o;
 }
 export {
-  M as a
+  w as createContext,
+  _ as createContextScope
 };

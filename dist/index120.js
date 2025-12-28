@@ -1,8 +1,9 @@
-import * as u from "react";
-function t(r) {
-  const e = u.useRef({ value: r, previous: r });
-  return u.useMemo(() => (e.current.value !== r && (e.current.previous = e.current.value, e.current.value = r), e.current.previous), [r]);
+function h(f, c, { checkForDefaultPrevented: p = !0 } = {}) {
+  return function(s) {
+    if (f == null || f(s), p === !1 || !s.defaultPrevented)
+      return c == null ? void 0 : c(s);
+  };
 }
 export {
-  t as usePrevious
+  h as composeEventHandlers
 };

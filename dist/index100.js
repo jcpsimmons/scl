@@ -1,32 +1,57 @@
-import * as f from "react";
-import "react-dom";
-import { createSlot as l } from "./index74.js";
-import { jsx as n } from "react/jsx-runtime";
-var u = [
-  "a",
-  "button",
-  "div",
-  "form",
-  "h2",
-  "h3",
-  "img",
-  "input",
-  "label",
-  "li",
-  "nav",
-  "ol",
-  "p",
-  "select",
-  "span",
-  "svg",
-  "ul"
-], w = u.reduce((t, i) => {
-  const o = l(`Primitive.${i}`), r = f.forwardRef((e, m) => {
-    const { asChild: a, ...p } = e, s = a ? o : i;
-    return typeof window < "u" && (window[Symbol.for("radix-ui")] = !0), /* @__PURE__ */ n(s, { ...p, ref: m });
-  });
-  return r.displayName = `Primitive.${i}`, { ...t, [i]: r };
-}, {});
+import * as i from "react";
+import { jsx as _ } from "react/jsx-runtime";
+function $(e, x = []) {
+  let o = [];
+  function f(r, n) {
+    const t = i.createContext(n);
+    t.displayName = r + "Context";
+    const c = o.length;
+    o = [...o, n];
+    const m = (a) => {
+      var l;
+      const { scope: s, children: C, ...p } = a, d = ((l = s == null ? void 0 : s[e]) == null ? void 0 : l[c]) || t, v = i.useMemo(() => p, Object.values(p));
+      return /* @__PURE__ */ _(d.Provider, { value: v, children: C });
+    };
+    m.displayName = r + "Provider";
+    function S(a, s) {
+      var d;
+      const C = ((d = s == null ? void 0 : s[e]) == null ? void 0 : d[c]) || t, p = i.useContext(C);
+      if (p) return p;
+      if (n !== void 0) return n;
+      throw new Error(`\`${a}\` must be used within \`${r}\``);
+    }
+    return [m, S];
+  }
+  const u = () => {
+    const r = o.map((n) => i.createContext(n));
+    return function(t) {
+      const c = (t == null ? void 0 : t[e]) || r;
+      return i.useMemo(
+        () => ({ [`__scope${e}`]: { ...t, [e]: c } }),
+        [t, c]
+      );
+    };
+  };
+  return u.scopeName = e, [f, h(u, ...x)];
+}
+function h(...e) {
+  const x = e[0];
+  if (e.length === 1) return x;
+  const o = () => {
+    const f = e.map((u) => ({
+      useScope: u(),
+      scopeName: u.scopeName
+    }));
+    return function(r) {
+      const n = f.reduce((t, { useScope: c, scopeName: m }) => {
+        const a = c(r)[`__scope${m}`];
+        return { ...t, ...a };
+      }, {});
+      return i.useMemo(() => ({ [`__scope${x.scopeName}`]: n }), [n]);
+    };
+  };
+  return o.scopeName = x.scopeName, o;
+}
 export {
-  w as Primitive
+  $ as createContextScope
 };

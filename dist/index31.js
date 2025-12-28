@@ -1,27 +1,27 @@
 import { jsx as e } from "react/jsx-runtime";
-import * as i from "react";
-import { Root as t, Thumb as c } from "./index84.js";
+import * as s from "react";
+import { Root as a, Thumb as n } from "./index78.js";
 import { cn as r } from "./index2.js";
-const n = i.forwardRef(({ className: a, ...o }, s) => /* @__PURE__ */ e(
-  t,
+const c = s.forwardRef(({ className: t, ...o }, i) => /* @__PURE__ */ e(
+  a,
   {
     className: r(
-      "peer inline-flex h-6 w-12 shrink-0 cursor-pointer items-center border-2 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=checked]:border-primary data-[state=unchecked]:bg-background data-[state=unchecked]:border-muted-foreground",
-      a
+      "peer inline-flex h-6 w-12 shrink-0 cursor-pointer items-center border-2 border-primary px-0.5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=unchecked]:bg-background",
+      t
     ),
     ...o,
-    ref: s,
+    ref: i,
     children: /* @__PURE__ */ e(
-      c,
+      n,
       {
         className: r(
-          "pointer-events-none block h-4 w-4 transition-transform data-[state=checked]:translate-x-6 data-[state=unchecked]:translate-x-0 data-[state=checked]:bg-primary-foreground data-[state=unchecked]:bg-muted-foreground"
+          "pointer-events-none block h-4 w-5 border-2 border-primary transition-transform data-[state=checked]:translate-x-5 data-[state=unchecked]:translate-x-0 data-[state=checked]:bg-primary-foreground data-[state=unchecked]:bg-primary"
         )
       }
     )
   }
 ));
-n.displayName = t.displayName;
+c.displayName = a.displayName;
 export {
-  n as Switch
+  c as Switch
 };

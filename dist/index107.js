@@ -1,11 +1,10 @@
-import { __assign as m } from "./index176.js";
-import * as r from "react";
-import { RemoveScroll as e } from "./index177.js";
-import t from "./index178.js";
-var s = r.forwardRef(function(a, o) {
-  return r.createElement(e, m({}, a, { ref: o, sideCar: t }));
-});
-s.classNames = e.classNames;
+import * as t from "react";
+import "react/jsx-runtime";
+var r = t.createContext(void 0);
+function n(o) {
+  const e = t.useContext(r);
+  return o || e || "ltr";
+}
 export {
-  s as default
+  n as useDirection
 };

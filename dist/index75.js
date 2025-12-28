@@ -1,256 +1,637 @@
-import u from "react";
-var z = (e) => e.type === "checkbox", k = (e) => e instanceof Date, w = (e) => e == null;
-const H = (e) => typeof e == "object";
-var p = (e) => !w(e) && !Array.isArray(e) && H(e) && !k(e), J = (e) => p(e) && e.target ? z(e.target) ? e.target.checked : e.target.value : e, Q = (e) => e.substring(0, e.search(/\.\d+(\.|$)/)) || e, X = (e, s) => e.has(Q(s)), Y = (e) => {
-  const s = e.constructor && e.constructor.prototype;
-  return p(s) && s.hasOwnProperty("isPrototypeOf");
-}, Z = typeof window < "u" && typeof window.HTMLElement < "u" && typeof document < "u";
-function W(e) {
-  if (e instanceof Date)
-    return new Date(e);
-  const s = typeof FileList < "u" && e instanceof FileList;
-  if (Z && (e instanceof Blob || s))
-    return e;
-  const t = Array.isArray(e);
-  if (!t && !(p(e) && Y(e)))
-    return e;
-  const n = t ? [] : Object.create(Object.getPrototypeOf(e));
-  for (const r in e)
-    Object.prototype.hasOwnProperty.call(e, r) && (n[r] = W(e[r]));
-  return n;
-}
-var G = (e) => /^\w*$/.test(e), R = (e) => e === void 0, j = (e) => Array.isArray(e) ? e.filter(Boolean) : [], $ = (e) => j(e.replace(/["|']|\]/g, "").split(/\.|\[/)), y = (e, s, t) => {
-  if (!s || !p(e))
+import { NodeProp as F } from "./index147.js";
+let z = 0;
+class g {
+  /**
+  @internal
+  */
+  constructor(t, a, n, i) {
+    this.name = t, this.set = a, this.base = n, this.modified = i, this.id = z++;
+  }
+  toString() {
+    let { name: t } = this;
+    for (let a of this.modified)
+      a.name && (t = `${a.name}(${t})`);
     return t;
-  const n = (G(s) ? [s] : $(s)).reduce((r, a) => w(r) ? r : r[a], e);
-  return R(n) || n === e ? R(e[s]) ? t : e[s] : n;
-}, P = (e) => typeof e == "boolean", E = (e) => typeof e == "function", D = (e, s, t) => {
-  let n = -1;
-  const r = G(s) ? [s] : $(s), a = r.length, i = a - 1;
-  for (; ++n < a; ) {
-    const l = r[n];
-    let c = t;
-    if (n !== i) {
-      const f = e[l];
-      c = p(f) || Array.isArray(f) ? f : isNaN(+r[n + 1]) ? {} : [];
-    }
-    if (l === "__proto__" || l === "constructor" || l === "prototype")
-      return;
-    e[l] = c, e = e[l];
   }
-};
-const I = {
-  BLUR: "blur",
-  CHANGE: "change"
-}, B = {
-  all: "all"
-}, L = u.createContext(null);
-L.displayName = "HookFormContext";
-const M = () => u.useContext(L), oe = (e) => {
-  const { children: s, ...t } = e;
-  return u.createElement(L.Provider, { value: t }, s);
-};
-var ee = (e, s, t, n = !0) => {
-  const r = {
-    defaultValues: s._defaultValues
-  };
-  for (const a in e)
-    Object.defineProperty(r, a, {
-      get: () => {
-        const i = a;
-        return s._proxyFormState[i] !== B.all && (s._proxyFormState[i] = !n || B.all), t && (t[i] = !0), e[i];
+  static define(t, a) {
+    let n = typeof t == "string" ? t : "?";
+    if (t instanceof g && (a = t), a != null && a.base)
+      throw new Error("Can not derive from a modified tag");
+    let i = new g(n, [], null, []);
+    if (i.set.push(i), a)
+      for (let o of a.set)
+        i.set.push(o);
+    return i;
+  }
+  /**
+  Define a tag _modifier_, which is a function that, given a tag,
+  will return a tag that is a subtag of the original. Applying the
+  same modifier to a twice tag will return the same value (`m1(t1)
+  == m1(t1)`) and applying multiple modifiers will, regardless or
+  order, produce the same tag (`m1(m2(t1)) == m2(m1(t1))`).
+  
+  When multiple modifiers are applied to a given base tag, each
+  smaller set of modifiers is registered as a parent, so that for
+  example `m1(m2(m3(t1)))` is a subtype of `m1(m2(t1))`,
+  `m1(m3(t1)`, and so on.
+  */
+  static defineModifier(t) {
+    let a = new q(t);
+    return (n) => n.modified.indexOf(a) > -1 ? n : q.get(n.base || n, n.modified.concat(a).sort((i, o) => i.id - o.id));
+  }
+}
+let G = 0;
+class q {
+  constructor(t) {
+    this.name = t, this.instances = [], this.id = G++;
+  }
+  static get(t, a) {
+    if (!a.length)
+      return t;
+    let n = a[0].instances.find((r) => r.base == t && L(a, r.modified));
+    if (n)
+      return n;
+    let i = [], o = new g(t.name, i, t, a);
+    for (let r of a)
+      r.instances.push(o);
+    let c = P(a);
+    for (let r of t.set)
+      if (!r.modified.length)
+        for (let m of c)
+          i.push(q.get(r, m));
+    return o;
+  }
+}
+function L(s, t) {
+  return s.length == t.length && s.every((a, n) => a == t[n]);
+}
+function P(s) {
+  let t = [[]];
+  for (let a = 0; a < s.length; a++)
+    for (let n = 0, i = t.length; n < i; n++)
+      t.push(t[n].concat(s[a]));
+  return t.sort((a, n) => n.length - a.length);
+}
+function Z(s) {
+  let t = /* @__PURE__ */ Object.create(null);
+  for (let a in s) {
+    let n = s[a];
+    Array.isArray(n) || (n = [n]);
+    for (let i of a.split(" "))
+      if (i) {
+        let o = [], c = 2, r = i;
+        for (let d = 0; ; ) {
+          if (r == "..." && d > 0 && d + 3 == i.length) {
+            c = 1;
+            break;
+          }
+          let f = /^"(?:[^"\\]|\\.)*?"|[^\/!]+/.exec(r);
+          if (!f)
+            throw new RangeError("Invalid path: " + i);
+          if (o.push(f[0] == "*" ? "" : f[0][0] == '"' ? JSON.parse(f[0]) : f[0]), d += f[0].length, d == i.length)
+            break;
+          let b = i[d++];
+          if (d == i.length && b == "!") {
+            c = 0;
+            break;
+          }
+          if (b != "/")
+            throw new RangeError("Invalid path: " + i);
+          r = i.slice(d);
+        }
+        let m = o.length - 1, h = o[m];
+        if (!h)
+          throw new RangeError("Invalid path: " + i);
+        let v = new R(n, c, m > 0 ? o.slice(0, m) : null);
+        t[h] = v.sort(t[h]);
       }
-    });
-  return r;
-};
-const q = typeof window < "u" ? u.useLayoutEffect : u.useEffect;
-function te(e) {
-  const s = M(), { control: t = s.control, disabled: n, name: r, exact: a } = e || {}, [i, l] = u.useState(t._formState), c = u.useRef({
-    isDirty: !1,
-    isLoading: !1,
-    dirtyFields: !1,
-    touchedFields: !1,
-    validatingFields: !1,
-    isValidating: !1,
-    isValid: !1,
-    errors: !1
-  });
-  return q(() => t._subscribe({
-    name: r,
-    formState: c.current,
-    exact: a,
-    callback: (f) => {
-      !n && l({
-        ...t._formState,
-        ...f
-      });
-    }
-  }), [r, n, a]), u.useEffect(() => {
-    c.current.isValid && t._setValid(!0);
-  }, [t]), u.useMemo(() => ee(i, t, c.current, !1), [i, t]);
+  }
+  return J.add(t);
 }
-var re = (e) => typeof e == "string", T = (e, s, t, n, r) => re(e) ? y(t, e, r) : Array.isArray(e) ? e.map((a) => y(t, a)) : t, U = (e) => w(e) || !H(e);
-function S(e, s, t = /* @__PURE__ */ new WeakSet()) {
-  if (U(e) || U(s))
-    return Object.is(e, s);
-  if (k(e) && k(s))
-    return e.getTime() === s.getTime();
-  const n = Object.keys(e), r = Object.keys(s);
-  if (n.length !== r.length)
-    return !1;
-  if (t.has(e) || t.has(s))
-    return !0;
-  t.add(e), t.add(s);
-  for (const a of n) {
-    const i = e[a];
-    if (!r.includes(a))
-      return !1;
-    if (a !== "ref") {
-      const l = s[a];
-      if (k(i) && k(l) || p(i) && p(l) || Array.isArray(i) && Array.isArray(l) ? !S(i, l, t) : !Object.is(i, l))
-        return !1;
+const J = new F({
+  combine(s, t) {
+    let a, n, i;
+    for (; s || t; ) {
+      if (!s || t && s.depth >= t.depth ? (i = t, t = t.next) : (i = s, s = s.next), a && a.mode == i.mode && !i.context && !a.context)
+        continue;
+      let o = new R(i.tags, i.mode, i.context);
+      a ? a.next = o : n = o, a = o;
+    }
+    return n;
+  }
+});
+class R {
+  constructor(t, a, n, i) {
+    this.tags = t, this.mode = a, this.context = n, this.next = i;
+  }
+  get opaque() {
+    return this.mode == 0;
+  }
+  get inherit() {
+    return this.mode == 1;
+  }
+  sort(t) {
+    return !t || t.depth < this.depth ? (this.next = t, this) : (t.next = this.sort(t.next), t);
+  }
+  get depth() {
+    return this.context ? this.context.length : 0;
+  }
+}
+R.empty = new R([], 2, null);
+function Q(s, t) {
+  let a = /* @__PURE__ */ Object.create(null);
+  for (let o of s)
+    if (!Array.isArray(o.tag))
+      a[o.tag.id] = o.class;
+    else
+      for (let c of o.tag)
+        a[c.id] = o.class;
+  let { scope: n, all: i = null } = t || {};
+  return {
+    style: (o) => {
+      let c = i;
+      for (let r of o)
+        for (let m of r.set) {
+          let h = a[m.id];
+          if (h) {
+            c = c ? c + " " + h : h;
+            break;
+          }
+        }
+      return c;
+    },
+    scope: n
+  };
+}
+function U(s, t) {
+  let a = null;
+  for (let n of s) {
+    let i = n.style(t);
+    i && (a = a ? a + " " + i : i);
+  }
+  return a;
+}
+function _(s, t, a, n = 0, i = s.length) {
+  let o = new W(n, Array.isArray(t) ? t : [t], a);
+  o.highlightRange(s.cursor(), n, i, "", o.highlighters), o.flush(i);
+}
+class W {
+  constructor(t, a, n) {
+    this.at = t, this.highlighters = a, this.span = n, this.class = "";
+  }
+  startSpan(t, a) {
+    a != this.class && (this.flush(t), t > this.at && (this.at = t), this.class = a);
+  }
+  flush(t) {
+    t > this.at && this.class && this.span(this.at, t, this.class);
+  }
+  highlightRange(t, a, n, i, o) {
+    let { type: c, from: r, to: m } = t;
+    if (r >= n || m <= a)
+      return;
+    c.isTop && (o = this.highlighters.filter((b) => !b.scope || b.scope(c)));
+    let h = i, v = X(t) || R.empty, d = U(o, v.tags);
+    if (d && (h && (h += " "), h += d, v.mode == 1 && (i += (i ? " " : "") + d)), this.startSpan(Math.max(a, r), h), v.opaque)
+      return;
+    let f = t.tree && t.tree.prop(F.mounted);
+    if (f && f.overlay) {
+      let b = t.node.enter(f.overlay[0].from + r, 1), V = this.highlighters.filter((w) => !w.scope || w.scope(f.tree.type)), B = t.firstChild();
+      for (let w = 0, M = r; ; w++) {
+        let S = w < f.overlay.length ? f.overlay[w] : null, E = S ? S.from + r : m, H = Math.max(a, M), A = Math.min(n, E);
+        if (H < A && B)
+          for (; t.from < A && (this.highlightRange(t, H, A, i, o), this.startSpan(Math.min(A, t.to), h), !(t.to >= E || !t.nextSibling())); )
+            ;
+        if (!S || E > n)
+          break;
+        M = S.to + r, M > a && (this.highlightRange(b.cursor(), Math.max(a, S.from + r), Math.min(n, M), "", V), this.startSpan(Math.min(n, M), h));
+      }
+      B && t.parent();
+    } else if (t.firstChild()) {
+      f && (i = "");
+      do
+        if (!(t.to <= a)) {
+          if (t.from >= n)
+            break;
+          this.highlightRange(t, a, n, i, o), this.startSpan(Math.min(n, t.to), h);
+        }
+      while (t.nextSibling());
+      t.parent();
     }
   }
-  return !0;
 }
-function se(e) {
-  const s = M(), { control: t = s.control, name: n, defaultValue: r, disabled: a, exact: i, compute: l } = e || {}, c = u.useRef(r), f = u.useRef(l), V = u.useRef(void 0), d = u.useRef(t), g = u.useRef(n);
-  f.current = l;
-  const [A, v] = u.useState(() => {
-    const o = t._getWatch(n, c.current);
-    return f.current ? f.current(o) : o;
-  }), C = u.useCallback((o) => {
-    const m = T(n, t._names, o || t._formValues, !1, c.current);
-    return f.current ? f.current(m) : m;
-  }, [t._formValues, t._names, n]), b = u.useCallback((o) => {
-    if (!a) {
-      const m = T(n, t._names, o || t._formValues, !1, c.current);
-      if (f.current) {
-        const _ = f.current(m);
-        S(_, V.current) || (v(_), V.current = _);
-      } else
-        v(m);
-    }
-  }, [t._formValues, t._names, a, n]);
-  q(() => ((d.current !== t || !S(g.current, n)) && (d.current = t, g.current = n, b()), t._subscribe({
-    name: n,
-    formState: {
-      values: !0
-    },
-    exact: i,
-    callback: (o) => {
-      b(o.values);
-    }
-  })), [t, i, n, b]), u.useEffect(() => t._removeUnmounted());
-  const h = d.current !== t, F = g.current, O = u.useMemo(() => {
-    if (a)
-      return null;
-    const o = !h && !S(F, n);
-    return h || o ? C() : null;
-  }, [a, h, n, F, C]);
-  return O !== null ? O : A;
+function X(s) {
+  let t = s.type.prop(J);
+  for (; t && t.context && !s.matchContext(t.context); )
+    t = t.next;
+  return t || null;
 }
-function ne(e) {
-  const s = M(), { name: t, disabled: n, control: r = s.control, shouldUnregister: a, defaultValue: i, exact: l = !0 } = e, c = X(r._names.array, t), f = u.useMemo(() => y(r._formValues, t, y(r._defaultValues, t, i)), [r, t, i]), V = se({
-    control: r,
-    name: t,
-    defaultValue: f,
-    exact: l
-  }), d = te({
-    control: r,
-    name: t,
-    exact: l
-  }), g = u.useRef(e), A = u.useRef(void 0), v = u.useRef(r.register(t, {
-    ...e.rules,
-    value: V,
-    ...P(e.disabled) ? { disabled: e.disabled } : {}
-  }));
-  g.current = e;
-  const C = u.useMemo(() => Object.defineProperties({}, {
-    invalid: {
-      enumerable: !0,
-      get: () => !!y(d.errors, t)
-    },
-    isDirty: {
-      enumerable: !0,
-      get: () => !!y(d.dirtyFields, t)
-    },
-    isTouched: {
-      enumerable: !0,
-      get: () => !!y(d.touchedFields, t)
-    },
-    isValidating: {
-      enumerable: !0,
-      get: () => !!y(d.validatingFields, t)
-    },
-    error: {
-      enumerable: !0,
-      get: () => y(d.errors, t)
-    }
-  }), [d, t]), b = u.useCallback((o) => v.current.onChange({
-    target: {
-      value: J(o),
-      name: t
-    },
-    type: I.CHANGE
-  }), [t]), h = u.useCallback(() => v.current.onBlur({
-    target: {
-      value: y(r._formValues, t),
-      name: t
-    },
-    type: I.BLUR
-  }), [t, r._formValues]), F = u.useCallback((o) => {
-    const m = y(r._fields, t);
-    m && m._f && o && (m._f.ref = {
-      focus: () => E(o.focus) && o.focus(),
-      select: () => E(o.select) && o.select(),
-      setCustomValidity: (_) => E(o.setCustomValidity) && o.setCustomValidity(_),
-      reportValidity: () => E(o.reportValidity) && o.reportValidity()
-    });
-  }, [r._fields, t]), O = u.useMemo(() => ({
-    name: t,
-    value: V,
-    ...P(n) || d.disabled ? { disabled: d.disabled || n } : {},
-    onChange: b,
-    onBlur: h,
-    ref: F
-  }), [t, n, d.disabled, b, h, F, V]);
-  return u.useEffect(() => {
-    const o = r._options.shouldUnregister || a, m = A.current;
-    m && m !== t && !c && r.unregister(m), r.register(t, {
-      ...g.current.rules,
-      ...P(g.current.disabled) ? { disabled: g.current.disabled } : {}
-    });
-    const _ = (x, K) => {
-      const N = y(r._fields, x);
-      N && N._f && (N._f.mount = K);
-    };
-    if (_(t, !0), o) {
-      const x = W(y(r._options.defaultValues, t, g.current.defaultValue));
-      D(r._defaultValues, t, x), R(y(r._formValues, t)) && D(r._formValues, t, x);
-    }
-    return !c && r.register(t), A.current = t, () => {
-      (c ? o && !r._state.action : o) ? r.unregister(t) : _(t, !1);
-    };
-  }, [t, r, c, a]), u.useEffect(() => {
-    r._setDisabledField({
-      disabled: n,
-      name: t
-    });
-  }, [n, t, r]), u.useMemo(() => ({
-    field: O,
-    formState: d,
-    fieldState: C
-  }), [O, d, C]);
+const e = g.define, I = e(), y = e(), D = e(y), $ = e(y), N = e(), T = e(N), K = e(N), k = e(), x = e(k), p = e(), u = e(), j = e(), O = e(j), C = e(), l = {
+  /**
+  A comment.
+  */
+  comment: I,
+  /**
+  A line [comment](#highlight.tags.comment).
+  */
+  lineComment: e(I),
+  /**
+  A block [comment](#highlight.tags.comment).
+  */
+  blockComment: e(I),
+  /**
+  A documentation [comment](#highlight.tags.comment).
+  */
+  docComment: e(I),
+  /**
+  Any kind of identifier.
+  */
+  name: y,
+  /**
+  The [name](#highlight.tags.name) of a variable.
+  */
+  variableName: e(y),
+  /**
+  A type [name](#highlight.tags.name).
+  */
+  typeName: D,
+  /**
+  A tag name (subtag of [`typeName`](#highlight.tags.typeName)).
+  */
+  tagName: e(D),
+  /**
+  A property or field [name](#highlight.tags.name).
+  */
+  propertyName: $,
+  /**
+  An attribute name (subtag of [`propertyName`](#highlight.tags.propertyName)).
+  */
+  attributeName: e($),
+  /**
+  The [name](#highlight.tags.name) of a class.
+  */
+  className: e(y),
+  /**
+  A label [name](#highlight.tags.name).
+  */
+  labelName: e(y),
+  /**
+  A namespace [name](#highlight.tags.name).
+  */
+  namespace: e(y),
+  /**
+  The [name](#highlight.tags.name) of a macro.
+  */
+  macroName: e(y),
+  /**
+  A literal value.
+  */
+  literal: N,
+  /**
+  A string [literal](#highlight.tags.literal).
+  */
+  string: T,
+  /**
+  A documentation [string](#highlight.tags.string).
+  */
+  docString: e(T),
+  /**
+  A character literal (subtag of [string](#highlight.tags.string)).
+  */
+  character: e(T),
+  /**
+  An attribute value (subtag of [string](#highlight.tags.string)).
+  */
+  attributeValue: e(T),
+  /**
+  A number [literal](#highlight.tags.literal).
+  */
+  number: K,
+  /**
+  An integer [number](#highlight.tags.number) literal.
+  */
+  integer: e(K),
+  /**
+  A floating-point [number](#highlight.tags.number) literal.
+  */
+  float: e(K),
+  /**
+  A boolean [literal](#highlight.tags.literal).
+  */
+  bool: e(N),
+  /**
+  Regular expression [literal](#highlight.tags.literal).
+  */
+  regexp: e(N),
+  /**
+  An escape [literal](#highlight.tags.literal), for example a
+  backslash escape in a string.
+  */
+  escape: e(N),
+  /**
+  A color [literal](#highlight.tags.literal).
+  */
+  color: e(N),
+  /**
+  A URL [literal](#highlight.tags.literal).
+  */
+  url: e(N),
+  /**
+  A language keyword.
+  */
+  keyword: p,
+  /**
+  The [keyword](#highlight.tags.keyword) for the self or this
+  object.
+  */
+  self: e(p),
+  /**
+  The [keyword](#highlight.tags.keyword) for null.
+  */
+  null: e(p),
+  /**
+  A [keyword](#highlight.tags.keyword) denoting some atomic value.
+  */
+  atom: e(p),
+  /**
+  A [keyword](#highlight.tags.keyword) that represents a unit.
+  */
+  unit: e(p),
+  /**
+  A modifier [keyword](#highlight.tags.keyword).
+  */
+  modifier: e(p),
+  /**
+  A [keyword](#highlight.tags.keyword) that acts as an operator.
+  */
+  operatorKeyword: e(p),
+  /**
+  A control-flow related [keyword](#highlight.tags.keyword).
+  */
+  controlKeyword: e(p),
+  /**
+  A [keyword](#highlight.tags.keyword) that defines something.
+  */
+  definitionKeyword: e(p),
+  /**
+  A [keyword](#highlight.tags.keyword) related to defining or
+  interfacing with modules.
+  */
+  moduleKeyword: e(p),
+  /**
+  An operator.
+  */
+  operator: u,
+  /**
+  An [operator](#highlight.tags.operator) that dereferences something.
+  */
+  derefOperator: e(u),
+  /**
+  Arithmetic-related [operator](#highlight.tags.operator).
+  */
+  arithmeticOperator: e(u),
+  /**
+  Logical [operator](#highlight.tags.operator).
+  */
+  logicOperator: e(u),
+  /**
+  Bit [operator](#highlight.tags.operator).
+  */
+  bitwiseOperator: e(u),
+  /**
+  Comparison [operator](#highlight.tags.operator).
+  */
+  compareOperator: e(u),
+  /**
+  [Operator](#highlight.tags.operator) that updates its operand.
+  */
+  updateOperator: e(u),
+  /**
+  [Operator](#highlight.tags.operator) that defines something.
+  */
+  definitionOperator: e(u),
+  /**
+  Type-related [operator](#highlight.tags.operator).
+  */
+  typeOperator: e(u),
+  /**
+  Control-flow [operator](#highlight.tags.operator).
+  */
+  controlOperator: e(u),
+  /**
+  Program or markup punctuation.
+  */
+  punctuation: j,
+  /**
+  [Punctuation](#highlight.tags.punctuation) that separates
+  things.
+  */
+  separator: e(j),
+  /**
+  Bracket-style [punctuation](#highlight.tags.punctuation).
+  */
+  bracket: O,
+  /**
+  Angle [brackets](#highlight.tags.bracket) (usually `<` and `>`
+  tokens).
+  */
+  angleBracket: e(O),
+  /**
+  Square [brackets](#highlight.tags.bracket) (usually `[` and `]`
+  tokens).
+  */
+  squareBracket: e(O),
+  /**
+  Parentheses (usually `(` and `)` tokens). Subtag of
+  [bracket](#highlight.tags.bracket).
+  */
+  paren: e(O),
+  /**
+  Braces (usually `{` and `}` tokens). Subtag of
+  [bracket](#highlight.tags.bracket).
+  */
+  brace: e(O),
+  /**
+  Content, for example plain text in XML or markup documents.
+  */
+  content: k,
+  /**
+  [Content](#highlight.tags.content) that represents a heading.
+  */
+  heading: x,
+  /**
+  A level 1 [heading](#highlight.tags.heading).
+  */
+  heading1: e(x),
+  /**
+  A level 2 [heading](#highlight.tags.heading).
+  */
+  heading2: e(x),
+  /**
+  A level 3 [heading](#highlight.tags.heading).
+  */
+  heading3: e(x),
+  /**
+  A level 4 [heading](#highlight.tags.heading).
+  */
+  heading4: e(x),
+  /**
+  A level 5 [heading](#highlight.tags.heading).
+  */
+  heading5: e(x),
+  /**
+  A level 6 [heading](#highlight.tags.heading).
+  */
+  heading6: e(x),
+  /**
+  A prose [content](#highlight.tags.content) separator (such as a horizontal rule).
+  */
+  contentSeparator: e(k),
+  /**
+  [Content](#highlight.tags.content) that represents a list.
+  */
+  list: e(k),
+  /**
+  [Content](#highlight.tags.content) that represents a quote.
+  */
+  quote: e(k),
+  /**
+  [Content](#highlight.tags.content) that is emphasized.
+  */
+  emphasis: e(k),
+  /**
+  [Content](#highlight.tags.content) that is styled strong.
+  */
+  strong: e(k),
+  /**
+  [Content](#highlight.tags.content) that is part of a link.
+  */
+  link: e(k),
+  /**
+  [Content](#highlight.tags.content) that is styled as code or
+  monospace.
+  */
+  monospace: e(k),
+  /**
+  [Content](#highlight.tags.content) that has a strike-through
+  style.
+  */
+  strikethrough: e(k),
+  /**
+  Inserted text in a change-tracking format.
+  */
+  inserted: e(),
+  /**
+  Deleted text.
+  */
+  deleted: e(),
+  /**
+  Changed text.
+  */
+  changed: e(),
+  /**
+  An invalid or unsyntactic element.
+  */
+  invalid: e(),
+  /**
+  Metadata or meta-instruction.
+  */
+  meta: C,
+  /**
+  [Metadata](#highlight.tags.meta) that applies to the entire
+  document.
+  */
+  documentMeta: e(C),
+  /**
+  [Metadata](#highlight.tags.meta) that annotates or adds
+  attributes to a given syntactic element.
+  */
+  annotation: e(C),
+  /**
+  Processing instruction or preprocessor directive. Subtag of
+  [meta](#highlight.tags.meta).
+  */
+  processingInstruction: e(C),
+  /**
+  [Modifier](#highlight.Tag^defineModifier) that indicates that a
+  given element is being defined. Expected to be used with the
+  various [name](#highlight.tags.name) tags.
+  */
+  definition: g.defineModifier("definition"),
+  /**
+  [Modifier](#highlight.Tag^defineModifier) that indicates that
+  something is constant. Mostly expected to be used with
+  [variable names](#highlight.tags.variableName).
+  */
+  constant: g.defineModifier("constant"),
+  /**
+  [Modifier](#highlight.Tag^defineModifier) used to indicate that
+  a [variable](#highlight.tags.variableName) or [property
+  name](#highlight.tags.propertyName) is being called or defined
+  as a function.
+  */
+  function: g.defineModifier("function"),
+  /**
+  [Modifier](#highlight.Tag^defineModifier) that can be applied to
+  [names](#highlight.tags.name) to indicate that they belong to
+  the language's standard environment.
+  */
+  standard: g.defineModifier("standard"),
+  /**
+  [Modifier](#highlight.Tag^defineModifier) that indicates a given
+  [names](#highlight.tags.name) is local to some scope.
+  */
+  local: g.defineModifier("local"),
+  /**
+  A generic variant [modifier](#highlight.Tag^defineModifier) that
+  can be used to tag language-specific alternative variants of
+  some common tag. It is recommended for themes to define special
+  forms of at least the [string](#highlight.tags.string) and
+  [variable name](#highlight.tags.variableName) tags, since those
+  come up a lot.
+  */
+  special: g.defineModifier("special")
+};
+for (let s in l) {
+  let t = l[s];
+  t instanceof g && (t.name = s);
 }
-const ae = (e) => e.render(ne(e));
+Q([
+  { tag: l.link, class: "tok-link" },
+  { tag: l.heading, class: "tok-heading" },
+  { tag: l.emphasis, class: "tok-emphasis" },
+  { tag: l.strong, class: "tok-strong" },
+  { tag: l.keyword, class: "tok-keyword" },
+  { tag: l.atom, class: "tok-atom" },
+  { tag: l.bool, class: "tok-bool" },
+  { tag: l.url, class: "tok-url" },
+  { tag: l.labelName, class: "tok-labelName" },
+  { tag: l.inserted, class: "tok-inserted" },
+  { tag: l.deleted, class: "tok-deleted" },
+  { tag: l.literal, class: "tok-literal" },
+  { tag: l.string, class: "tok-string" },
+  { tag: l.number, class: "tok-number" },
+  { tag: [l.regexp, l.escape, l.special(l.string)], class: "tok-string2" },
+  { tag: l.variableName, class: "tok-variableName" },
+  { tag: l.local(l.variableName), class: "tok-variableName tok-local" },
+  { tag: l.definition(l.variableName), class: "tok-variableName tok-definition" },
+  { tag: l.special(l.variableName), class: "tok-variableName2" },
+  { tag: l.definition(l.propertyName), class: "tok-propertyName tok-definition" },
+  { tag: l.typeName, class: "tok-typeName" },
+  { tag: l.namespace, class: "tok-namespace" },
+  { tag: l.className, class: "tok-className" },
+  { tag: l.macroName, class: "tok-macroName" },
+  { tag: l.propertyName, class: "tok-propertyName" },
+  { tag: l.operator, class: "tok-operator" },
+  { tag: l.comment, class: "tok-comment" },
+  { tag: l.meta, class: "tok-meta" },
+  { tag: l.invalid, class: "tok-invalid" },
+  { tag: l.punctuation, class: "tok-punctuation" }
+]);
 export {
-  ae as Controller,
-  oe as FormProvider,
-  y as get,
-  D as set,
-  ne as useController,
-  M as useFormContext,
-  te as useFormState,
-  se as useWatch
+  g as Tag,
+  X as getStyleTags,
+  _ as highlightTree,
+  Z as styleTags,
+  Q as tagHighlighter,
+  l as tags
 };

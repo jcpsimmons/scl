@@ -1,243 +1,227 @@
-import * as i from "react";
-import { composeEventHandlers as P } from "./index150.js";
-import { useComposedRefs as O } from "./index95.js";
-import { createContextScope as G } from "./index97.js";
-import { DismissableLayer as H } from "./index102.js";
-import { useFocusGuards as K } from "./index106.js";
-import { FocusScope as $ } from "./index103.js";
-import { useId as j } from "./index94.js";
-import { createPopperScope as _, Root as U, Anchor as x, Content as V, Arrow as W } from "./index111.js";
-import { Portal as Z } from "./index104.js";
-import { Presence as w } from "./index105.js";
-import { Primitive as E } from "./index93.js";
-import { createSlot as q } from "./index151.js";
-import { useControllableState as z } from "./index98.js";
-import { hideOthers as B } from "./index108.js";
-import J from "./index107.js";
-import { jsx as p } from "react/jsx-runtime";
-var C = "Popover", [b] = G(C, [
-  _
-]), m = _(), [Q, f] = b(C), F = (o) => {
+import * as u from "react";
+import { composeEventHandlers as m } from "./index150.js";
+import { composeRefs as K } from "./index91.js";
+import { createContextScope as U } from "./index92.js";
+import { useControllableState as g } from "./index88.js";
+import { Primitive as B } from "./index89.js";
+import { createMenuScope as D, Root as F, Anchor as H, Group as W, Portal as $, Sub as j, RadioGroup as X, Content as q, Item as z, CheckboxItem as J, ItemIndicator as Q, RadioItem as V, Label as Y, Separator as Z, SubContent as oo, SubTrigger as eo, Arrow as ro } from "./index151.js";
+import { useId as M } from "./index94.js";
+import { jsx as t } from "react/jsx-runtime";
+var f = "DropdownMenu", [no] = U(
+  f,
+  [D]
+), i = D(), [ao, _] = no(f), h = (o) => {
   const {
-    __scopePopover: n,
-    children: t,
+    __scopeDropdownMenu: n,
+    children: r,
+    dir: e,
     open: a,
-    defaultOpen: e,
-    onOpenChange: r,
-    modal: s = !1
-  } = o, c = m(n), u = i.useRef(null), [l, g] = i.useState(!1), [h, d] = z({
+    defaultOpen: d,
+    onOpenChange: c,
+    modal: p = !0
+  } = o, s = i(n), v = u.useRef(null), [l, w] = g({
     prop: a,
-    defaultProp: e ?? !1,
-    onChange: r,
-    caller: C
+    defaultProp: d ?? !1,
+    onChange: c,
+    caller: f
   });
-  return /* @__PURE__ */ p(U, { ...c, children: /* @__PURE__ */ p(
-    Q,
+  return /* @__PURE__ */ t(
+    ao,
     {
       scope: n,
-      contentId: j(),
-      triggerRef: u,
-      open: h,
-      onOpenChange: d,
-      onOpenToggle: i.useCallback(() => d((R) => !R), [d]),
-      hasCustomAnchor: l,
-      onCustomAnchorAdd: i.useCallback(() => g(!0), []),
-      onCustomAnchorRemove: i.useCallback(() => g(!1), []),
-      modal: s,
-      children: t
+      triggerId: M(),
+      triggerRef: v,
+      contentId: M(),
+      open: l,
+      onOpenChange: w,
+      onOpenToggle: u.useCallback(() => w((L) => !L), [w]),
+      modal: p,
+      children: /* @__PURE__ */ t(F, { ...s, open: l, onOpenChange: w, dir: e, modal: p, children: r })
     }
-  ) });
+  );
 };
-F.displayName = C;
-var N = "PopoverAnchor", S = i.forwardRef(
+h.displayName = f;
+var R = "DropdownMenuTrigger", b = u.forwardRef(
   (o, n) => {
-    const { __scopePopover: t, ...a } = o, e = f(N, t), r = m(t), { onCustomAnchorAdd: s, onCustomAnchorRemove: c } = e;
-    return i.useEffect(() => (s(), () => c()), [s, c]), /* @__PURE__ */ p(x, { ...r, ...a, ref: n });
-  }
-);
-S.displayName = N;
-var y = "PopoverTrigger", D = i.forwardRef(
-  (o, n) => {
-    const { __scopePopover: t, ...a } = o, e = f(y, t), r = m(t), s = O(n, e.triggerRef), c = /* @__PURE__ */ p(
-      E.button,
+    const { __scopeDropdownMenu: r, disabled: e = !1, ...a } = o, d = _(R, r), c = i(r);
+    return /* @__PURE__ */ t(H, { asChild: !0, ...c, children: /* @__PURE__ */ t(
+      B.button,
       {
         type: "button",
-        "aria-haspopup": "dialog",
-        "aria-expanded": e.open,
-        "aria-controls": e.contentId,
-        "data-state": L(e.open),
+        id: d.triggerId,
+        "aria-haspopup": "menu",
+        "aria-expanded": d.open,
+        "aria-controls": d.open ? d.contentId : void 0,
+        "data-state": d.open ? "open" : "closed",
+        "data-disabled": e ? "" : void 0,
+        disabled: e,
         ...a,
-        ref: s,
-        onClick: P(o.onClick, e.onOpenToggle)
-      }
-    );
-    return e.hasCustomAnchor ? c : /* @__PURE__ */ p(x, { asChild: !0, ...r, children: c });
-  }
-);
-D.displayName = y;
-var A = "PopoverPortal", [X, Y] = b(A, {
-  forceMount: void 0
-}), M = (o) => {
-  const { __scopePopover: n, forceMount: t, children: a, container: e } = o, r = f(A, n);
-  return /* @__PURE__ */ p(X, { scope: n, forceMount: t, children: /* @__PURE__ */ p(w, { present: t || r.open, children: /* @__PURE__ */ p(Z, { asChild: !0, container: e, children: a }) }) });
-};
-M.displayName = A;
-var v = "PopoverContent", k = i.forwardRef(
-  (o, n) => {
-    const t = Y(v, o.__scopePopover), { forceMount: a = t.forceMount, ...e } = o, r = f(v, o.__scopePopover);
-    return /* @__PURE__ */ p(w, { present: a || r.open, children: r.modal ? /* @__PURE__ */ p(eo, { ...e, ref: n }) : /* @__PURE__ */ p(ro, { ...e, ref: n }) });
-  }
-);
-k.displayName = v;
-var oo = q("PopoverContent.RemoveScroll"), eo = i.forwardRef(
-  (o, n) => {
-    const t = f(v, o.__scopePopover), a = i.useRef(null), e = O(n, a), r = i.useRef(!1);
-    return i.useEffect(() => {
-      const s = a.current;
-      if (s) return B(s);
-    }, []), /* @__PURE__ */ p(J, { as: oo, allowPinchZoom: !0, children: /* @__PURE__ */ p(
-      I,
-      {
-        ...o,
-        ref: e,
-        trapFocus: t.open,
-        disableOutsidePointerEvents: !0,
-        onCloseAutoFocus: P(o.onCloseAutoFocus, (s) => {
-          var c;
-          s.preventDefault(), r.current || (c = t.triggerRef.current) == null || c.focus();
+        ref: K(n, d.triggerRef),
+        onPointerDown: m(o.onPointerDown, (p) => {
+          !e && p.button === 0 && p.ctrlKey === !1 && (d.onOpenToggle(), d.open || p.preventDefault());
         }),
-        onPointerDownOutside: P(
-          o.onPointerDownOutside,
-          (s) => {
-            const c = s.detail.originalEvent, u = c.button === 0 && c.ctrlKey === !0, l = c.button === 2 || u;
-            r.current = l;
-          },
-          { checkForDefaultPrevented: !1 }
-        ),
-        onFocusOutside: P(
-          o.onFocusOutside,
-          (s) => s.preventDefault(),
-          { checkForDefaultPrevented: !1 }
-        )
+        onKeyDown: m(o.onKeyDown, (p) => {
+          e || (["Enter", " "].includes(p.key) && d.onOpenToggle(), p.key === "ArrowDown" && d.onOpenChange(!0), ["Enter", " ", "ArrowDown"].includes(p.key) && p.preventDefault());
+        })
       }
     ) });
   }
-), ro = i.forwardRef(
+);
+b.displayName = R;
+var to = "DropdownMenuPortal", I = (o) => {
+  const { __scopeDropdownMenu: n, ...r } = o, e = i(n);
+  return /* @__PURE__ */ t($, { ...e, ...r });
+};
+I.displayName = to;
+var S = "DropdownMenuContent", C = u.forwardRef(
   (o, n) => {
-    const t = f(v, o.__scopePopover), a = i.useRef(!1), e = i.useRef(!1);
-    return /* @__PURE__ */ p(
-      I,
+    const { __scopeDropdownMenu: r, ...e } = o, a = _(S, r), d = i(r), c = u.useRef(!1);
+    return /* @__PURE__ */ t(
+      q,
       {
-        ...o,
+        id: a.contentId,
+        "aria-labelledby": a.triggerId,
+        ...d,
+        ...e,
         ref: n,
-        trapFocus: !1,
-        disableOutsidePointerEvents: !1,
-        onCloseAutoFocus: (r) => {
-          var s, c;
-          (s = o.onCloseAutoFocus) == null || s.call(o, r), r.defaultPrevented || (a.current || (c = t.triggerRef.current) == null || c.focus(), r.preventDefault()), a.current = !1, e.current = !1;
-        },
-        onInteractOutside: (r) => {
-          var u, l;
-          (u = o.onInteractOutside) == null || u.call(o, r), r.defaultPrevented || (a.current = !0, r.detail.originalEvent.type === "pointerdown" && (e.current = !0));
-          const s = r.target;
-          ((l = t.triggerRef.current) == null ? void 0 : l.contains(s)) && r.preventDefault(), r.detail.originalEvent.type === "focusin" && e.current && r.preventDefault();
+        onCloseAutoFocus: m(o.onCloseAutoFocus, (p) => {
+          var s;
+          c.current || (s = a.triggerRef.current) == null || s.focus(), c.current = !1, p.preventDefault();
+        }),
+        onInteractOutside: m(o.onInteractOutside, (p) => {
+          const s = p.detail.originalEvent, v = s.button === 0 && s.ctrlKey === !0, l = s.button === 2 || v;
+          (!a.modal || l) && (c.current = !0);
+        }),
+        style: {
+          ...o.style,
+          "--radix-dropdown-menu-content-transform-origin": "var(--radix-popper-transform-origin)",
+          "--radix-dropdown-menu-content-available-width": "var(--radix-popper-available-width)",
+          "--radix-dropdown-menu-content-available-height": "var(--radix-popper-available-height)",
+          "--radix-dropdown-menu-trigger-width": "var(--radix-popper-anchor-width)",
+          "--radix-dropdown-menu-trigger-height": "var(--radix-popper-anchor-height)"
         }
       }
     );
   }
-), I = i.forwardRef(
+);
+C.displayName = S;
+var po = "DropdownMenuGroup", N = u.forwardRef(
   (o, n) => {
-    const {
-      __scopePopover: t,
-      trapFocus: a,
-      onOpenAutoFocus: e,
-      onCloseAutoFocus: r,
-      disableOutsidePointerEvents: s,
-      onEscapeKeyDown: c,
-      onPointerDownOutside: u,
-      onFocusOutside: l,
-      onInteractOutside: g,
-      ...h
-    } = o, d = f(v, t), R = m(t);
-    return K(), /* @__PURE__ */ p(
-      $,
-      {
-        asChild: !0,
-        loop: !0,
-        trapped: a,
-        onMountAutoFocus: e,
-        onUnmountAutoFocus: r,
-        children: /* @__PURE__ */ p(
-          H,
-          {
-            asChild: !0,
-            disableOutsidePointerEvents: s,
-            onInteractOutside: g,
-            onEscapeKeyDown: c,
-            onPointerDownOutside: u,
-            onFocusOutside: l,
-            onDismiss: () => d.onOpenChange(!1),
-            children: /* @__PURE__ */ p(
-              V,
-              {
-                "data-state": L(d.open),
-                role: "dialog",
-                id: d.contentId,
-                ...R,
-                ...h,
-                ref: n,
-                style: {
-                  ...h.style,
-                  "--radix-popover-content-transform-origin": "var(--radix-popper-transform-origin)",
-                  "--radix-popover-content-available-width": "var(--radix-popper-available-width)",
-                  "--radix-popover-content-available-height": "var(--radix-popper-available-height)",
-                  "--radix-popover-trigger-width": "var(--radix-popper-anchor-width)",
-                  "--radix-popover-trigger-height": "var(--radix-popper-anchor-height)"
-                }
-              }
-            )
-          }
-        )
-      }
-    );
-  }
-), T = "PopoverClose", to = i.forwardRef(
-  (o, n) => {
-    const { __scopePopover: t, ...a } = o, e = f(T, t);
-    return /* @__PURE__ */ p(
-      E.button,
-      {
-        type: "button",
-        ...a,
-        ref: n,
-        onClick: P(o.onClick, () => e.onOpenChange(!1))
-      }
-    );
+    const { __scopeDropdownMenu: r, ...e } = o, a = i(r);
+    return /* @__PURE__ */ t(W, { ...a, ...e, ref: n });
   }
 );
-to.displayName = T;
-var no = "PopoverArrow", ao = i.forwardRef(
+N.displayName = po;
+var uo = "DropdownMenuLabel", x = u.forwardRef(
   (o, n) => {
-    const { __scopePopover: t, ...a } = o, e = m(t);
-    return /* @__PURE__ */ p(W, { ...e, ...a, ref: n });
+    const { __scopeDropdownMenu: r, ...e } = o, a = i(r);
+    return /* @__PURE__ */ t(Y, { ...a, ...e, ref: n });
   }
 );
-ao.displayName = no;
-function L(o) {
-  return o ? "open" : "closed";
-}
-var _o = F, xo = S, wo = D, Eo = M, bo = k;
+x.displayName = uo;
+var io = "DropdownMenuItem", A = u.forwardRef(
+  (o, n) => {
+    const { __scopeDropdownMenu: r, ...e } = o, a = i(r);
+    return /* @__PURE__ */ t(z, { ...a, ...e, ref: n });
+  }
+);
+A.displayName = io;
+var so = "DropdownMenuCheckboxItem", P = u.forwardRef((o, n) => {
+  const { __scopeDropdownMenu: r, ...e } = o, a = i(r);
+  return /* @__PURE__ */ t(J, { ...a, ...e, ref: n });
+});
+P.displayName = so;
+var co = "DropdownMenuRadioGroup", E = u.forwardRef((o, n) => {
+  const { __scopeDropdownMenu: r, ...e } = o, a = i(r);
+  return /* @__PURE__ */ t(X, { ...a, ...e, ref: n });
+});
+E.displayName = co;
+var lo = "DropdownMenuRadioItem", O = u.forwardRef((o, n) => {
+  const { __scopeDropdownMenu: r, ...e } = o, a = i(r);
+  return /* @__PURE__ */ t(V, { ...a, ...e, ref: n });
+});
+O.displayName = lo;
+var wo = "DropdownMenuItemIndicator", y = u.forwardRef((o, n) => {
+  const { __scopeDropdownMenu: r, ...e } = o, a = i(r);
+  return /* @__PURE__ */ t(Q, { ...a, ...e, ref: n });
+});
+y.displayName = wo;
+var mo = "DropdownMenuSeparator", T = u.forwardRef((o, n) => {
+  const { __scopeDropdownMenu: r, ...e } = o, a = i(r);
+  return /* @__PURE__ */ t(Z, { ...a, ...e, ref: n });
+});
+T.displayName = mo;
+var fo = "DropdownMenuArrow", vo = u.forwardRef(
+  (o, n) => {
+    const { __scopeDropdownMenu: r, ...e } = o, a = i(r);
+    return /* @__PURE__ */ t(ro, { ...a, ...e, ref: n });
+  }
+);
+vo.displayName = fo;
+var Mo = (o) => {
+  const { __scopeDropdownMenu: n, children: r, open: e, onOpenChange: a, defaultOpen: d } = o, c = i(n), [p, s] = g({
+    prop: e,
+    defaultProp: d ?? !1,
+    onChange: a,
+    caller: "DropdownMenuSub"
+  });
+  return /* @__PURE__ */ t(j, { ...c, open: p, onOpenChange: s, children: r });
+}, go = "DropdownMenuSubTrigger", G = u.forwardRef((o, n) => {
+  const { __scopeDropdownMenu: r, ...e } = o, a = i(r);
+  return /* @__PURE__ */ t(eo, { ...a, ...e, ref: n });
+});
+G.displayName = go;
+var Do = "DropdownMenuSubContent", k = u.forwardRef((o, n) => {
+  const { __scopeDropdownMenu: r, ...e } = o, a = i(r);
+  return /* @__PURE__ */ t(
+    oo,
+    {
+      ...a,
+      ...e,
+      ref: n,
+      style: {
+        ...o.style,
+        "--radix-dropdown-menu-content-transform-origin": "var(--radix-popper-transform-origin)",
+        "--radix-dropdown-menu-content-available-width": "var(--radix-popper-available-width)",
+        "--radix-dropdown-menu-content-available-height": "var(--radix-popper-available-height)",
+        "--radix-dropdown-menu-trigger-width": "var(--radix-popper-anchor-width)",
+        "--radix-dropdown-menu-trigger-height": "var(--radix-popper-anchor-height)"
+      }
+    }
+  );
+});
+k.displayName = Do;
+var xo = h, Ao = b, Po = I, Eo = C, Oo = N, yo = x, To = A, Go = P, ko = E, Lo = O, Ko = y, Uo = T, Bo = Mo, Fo = G, Ho = k;
 export {
-  xo as Anchor,
-  bo as Content,
-  F as Popover,
-  S as PopoverAnchor,
-  ao as PopoverArrow,
-  to as PopoverClose,
-  k as PopoverContent,
-  M as PopoverPortal,
-  D as PopoverTrigger,
-  Eo as Portal,
-  _o as Root,
-  wo as Trigger
+  Go as CheckboxItem,
+  Eo as Content,
+  h as DropdownMenu,
+  vo as DropdownMenuArrow,
+  P as DropdownMenuCheckboxItem,
+  C as DropdownMenuContent,
+  N as DropdownMenuGroup,
+  A as DropdownMenuItem,
+  y as DropdownMenuItemIndicator,
+  x as DropdownMenuLabel,
+  I as DropdownMenuPortal,
+  E as DropdownMenuRadioGroup,
+  O as DropdownMenuRadioItem,
+  T as DropdownMenuSeparator,
+  Mo as DropdownMenuSub,
+  k as DropdownMenuSubContent,
+  G as DropdownMenuSubTrigger,
+  b as DropdownMenuTrigger,
+  Oo as Group,
+  To as Item,
+  Ko as ItemIndicator,
+  yo as Label,
+  Po as Portal,
+  ko as RadioGroup,
+  Lo as RadioItem,
+  xo as Root,
+  Uo as Separator,
+  Bo as Sub,
+  Ho as SubContent,
+  Fo as SubTrigger,
+  Ao as Trigger
 };

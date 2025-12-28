@@ -1,13 +1,54 @@
-import * as r from "react";
-function o(t) {
-  const e = r.useRef(t);
-  return r.useEffect(() => {
-    e.current = t;
-  }), r.useMemo(() => (...n) => {
-    var u;
-    return (u = e.current) == null ? void 0 : u.call(e, ...n);
-  }, []);
+import * as n from "react";
+import { useLayoutEffect as v } from "./index102.js";
+var E = n[" useInsertionEffect ".trim().toString()] || v;
+function y({
+  prop: t,
+  defaultProp: u,
+  onChange: o = () => {
+  },
+  caller: i
+}) {
+  const [l, e, r] = w({
+    defaultProp: u,
+    onChange: o
+  }), c = t !== void 0, a = c ? t : l;
+  {
+    const s = n.useRef(t !== void 0);
+    n.useEffect(() => {
+      const f = s.current;
+      f !== c && console.warn(
+        `${i} is changing from ${f ? "controlled" : "uncontrolled"} to ${c ? "controlled" : "uncontrolled"}. Components should not switch from controlled to uncontrolled (or vice versa). Decide between using a controlled or uncontrolled value for the lifetime of the component.`
+      ), s.current = c;
+    }, [c, i]);
+  }
+  const m = n.useCallback(
+    (s) => {
+      var f;
+      if (c) {
+        const d = R(s) ? s(t) : s;
+        d !== t && ((f = r.current) == null || f.call(r, d));
+      } else
+        e(s);
+    },
+    [c, t, e, r]
+  );
+  return [a, m];
+}
+function w({
+  defaultProp: t,
+  onChange: u
+}) {
+  const [o, i] = n.useState(t), l = n.useRef(o), e = n.useRef(u);
+  return E(() => {
+    e.current = u;
+  }, [u]), n.useEffect(() => {
+    var r;
+    l.current !== o && ((r = e.current) == null || r.call(e, o), l.current = o);
+  }, [o, l]), [o, i, e];
+}
+function R(t) {
+  return typeof t == "function";
 }
 export {
-  o as useCallbackRef
+  y as useControllableState
 };

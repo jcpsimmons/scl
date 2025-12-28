@@ -1,11 +1,16 @@
-import { styleHookSingleton as o } from "./index198.js";
-var s = function() {
-  var e = o(), n = function(t) {
-    var r = t.styles, l = t.dynamic;
-    return e(r, l), null;
-  };
-  return n;
-};
+var r = !1;
+if (typeof window < "u")
+  try {
+    var e = Object.defineProperty({}, "passive", {
+      get: function() {
+        return r = !0, !0;
+      }
+    });
+    window.addEventListener("test", e, e), window.removeEventListener("test", e, e);
+  } catch {
+    r = !1;
+  }
+var a = r ? { passive: !1 } : !1;
 export {
-  s as styleSingleton
+  a as nonPassive
 };

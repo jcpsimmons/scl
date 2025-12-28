@@ -1,70 +1,71 @@
-import * as u from "react";
-import { jsx as h } from "react/jsx-runtime";
-function w(e, c) {
-  const o = u.createContext(c), a = (r) => {
-    const { children: t, ...n } = r, s = u.useMemo(() => n, Object.values(n));
-    return /* @__PURE__ */ h(o.Provider, { value: s, children: t });
-  };
-  a.displayName = e + "Provider";
-  function i(r) {
-    const t = u.useContext(o);
-    if (t) return t;
-    if (c !== void 0) return c;
-    throw new Error(`\`${r}\` must be used within \`${e}\``);
-  }
-  return [a, i];
+import * as a from "react";
+import { useComposedRefs as E } from "./index91.js";
+import { useLayoutEffect as A } from "./index102.js";
+function T(n, e) {
+  return a.useReducer((r, t) => e[r][t] ?? r, n);
 }
-function _(e, c = []) {
-  let o = [];
-  function a(r, t) {
-    const n = u.createContext(t), s = o.length;
-    o = [...o, t];
-    const p = (d) => {
-      var S;
-      const { scope: x, children: C, ...m } = d, v = ((S = x == null ? void 0 : x[e]) == null ? void 0 : S[s]) || n, P = u.useMemo(() => m, Object.values(m));
-      return /* @__PURE__ */ h(v.Provider, { value: P, children: C });
-    };
-    p.displayName = r + "Provider";
-    function f(d, x) {
-      var v;
-      const C = ((v = x == null ? void 0 : x[e]) == null ? void 0 : v[s]) || n, m = u.useContext(C);
-      if (m) return m;
-      if (t !== void 0) return t;
-      throw new Error(`\`${d}\` must be used within \`${r}\``);
+var R = (n) => {
+  const { present: e, children: r } = n, t = v(e), i = typeof r == "function" ? r({ present: t.isPresent }) : a.Children.only(r), c = E(t.ref, P(i));
+  return typeof r == "function" || t.isPresent ? a.cloneElement(i, { ref: c }) : null;
+};
+R.displayName = "Presence";
+function v(n) {
+  const [e, r] = a.useState(), t = a.useRef(null), i = a.useRef(n), c = a.useRef("none"), p = n ? "mounted" : "unmounted", [N, s] = T(p, {
+    mounted: {
+      UNMOUNT: "unmounted",
+      ANIMATION_OUT: "unmountSuspended"
+    },
+    unmountSuspended: {
+      MOUNT: "mounted",
+      ANIMATION_END: "unmounted"
+    },
+    unmounted: {
+      MOUNT: "mounted"
     }
-    return [p, f];
-  }
-  const i = () => {
-    const r = o.map((t) => u.createContext(t));
-    return function(n) {
-      const s = (n == null ? void 0 : n[e]) || r;
-      return u.useMemo(
-        () => ({ [`__scope${e}`]: { ...n, [e]: s } }),
-        [n, s]
-      );
-    };
+  });
+  return a.useEffect(() => {
+    const o = l(t.current);
+    c.current = N === "mounted" ? o : "none";
+  }, [N]), A(() => {
+    const o = t.current, m = i.current;
+    if (m !== n) {
+      const f = c.current, u = l(o);
+      n ? s("MOUNT") : u === "none" || (o == null ? void 0 : o.display) === "none" ? s("UNMOUNT") : s(m && f !== u ? "ANIMATION_OUT" : "UNMOUNT"), i.current = n;
+    }
+  }, [n, s]), A(() => {
+    if (e) {
+      let o;
+      const m = e.ownerDocument.defaultView ?? window, d = (u) => {
+        const g = l(t.current).includes(CSS.escape(u.animationName));
+        if (u.target === e && g && (s("ANIMATION_END"), !i.current)) {
+          const O = e.style.animationFillMode;
+          e.style.animationFillMode = "forwards", o = m.setTimeout(() => {
+            e.style.animationFillMode === "forwards" && (e.style.animationFillMode = O);
+          });
+        }
+      }, f = (u) => {
+        u.target === e && (c.current = l(t.current));
+      };
+      return e.addEventListener("animationstart", f), e.addEventListener("animationcancel", d), e.addEventListener("animationend", d), () => {
+        m.clearTimeout(o), e.removeEventListener("animationstart", f), e.removeEventListener("animationcancel", d), e.removeEventListener("animationend", d);
+      };
+    } else
+      s("ANIMATION_END");
+  }, [e, s]), {
+    isPresent: ["mounted", "unmountSuspended"].includes(N),
+    ref: a.useCallback((o) => {
+      t.current = o ? getComputedStyle(o) : null, r(o);
+    }, [])
   };
-  return i.scopeName = e, [a, l(i, ...c)];
 }
-function l(...e) {
-  const c = e[0];
-  if (e.length === 1) return c;
-  const o = () => {
-    const a = e.map((i) => ({
-      useScope: i(),
-      scopeName: i.scopeName
-    }));
-    return function(r) {
-      const t = a.reduce((n, { useScope: s, scopeName: p }) => {
-        const d = s(r)[`__scope${p}`];
-        return { ...n, ...d };
-      }, {});
-      return u.useMemo(() => ({ [`__scope${c.scopeName}`]: t }), [t]);
-    };
-  };
-  return o.scopeName = c.scopeName, o;
+function l(n) {
+  return (n == null ? void 0 : n.animationName) || "none";
+}
+function P(n) {
+  var t, i;
+  let e = (t = Object.getOwnPropertyDescriptor(n.props, "ref")) == null ? void 0 : t.get, r = e && "isReactWarning" in e && e.isReactWarning;
+  return r ? n.ref : (e = (i = Object.getOwnPropertyDescriptor(n, "ref")) == null ? void 0 : i.get, r = e && "isReactWarning" in e && e.isReactWarning, r ? n.props.ref : n.props.ref || n.ref);
 }
 export {
-  w as createContext,
-  _ as createContextScope
+  R as Presence
 };

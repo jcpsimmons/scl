@@ -1,16 +1,15 @@
-import * as r from "react";
-import s from "react-dom";
-import { Primitive as c } from "./index93.js";
-import { useLayoutEffect as u } from "./index89.js";
-import { jsx as l } from "react/jsx-runtime";
-var p = "Portal", d = r.forwardRef((e, a) => {
-  var o;
-  const { container: f, ...i } = e, [m, n] = r.useState(!1);
-  u(() => n(!0), []);
-  const t = f || m && ((o = globalThis == null ? void 0 : globalThis.document) == null ? void 0 : o.body);
-  return t ? s.createPortal(/* @__PURE__ */ l(c.div, { ...i, ref: a }), t) : null;
-});
-d.displayName = p;
+import { s as r } from "./index156.js";
+function s() {
+  return r.useSyncExternalStore(
+    e,
+    () => !0,
+    () => !1
+  );
+}
+function e() {
+  return () => {
+  };
+}
 export {
-  d as Portal
+  s as useIsHydrated
 };

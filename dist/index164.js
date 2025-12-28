@@ -1,23 +1,11 @@
-import { forwardRef as s, createElement as c } from "react";
-import { mergeClasses as n, toKebabCase as f } from "./index165.js";
-import l from "./index166.js";
 /**
  * @license lucide-react v0.460.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const u = (e, r) => {
-  const o = s(
-    ({ className: t, ...a }, m) => c(l, {
-      ref: m,
-      iconNode: r,
-      className: n(`lucide-${f(e)}`, t),
-      ...a
-    })
-  );
-  return o.displayName = `${e}`, o;
-};
+const n = (e) => e.replace(/([a-z0-9])([A-Z])/g, "$1-$2").toLowerCase(), i = (...e) => e.filter((o, r, t) => !!o && o.trim() !== "" && t.indexOf(o) === r).join(" ").trim();
 export {
-  u as default
+  i as mergeClasses,
+  n as toKebabCase
 };

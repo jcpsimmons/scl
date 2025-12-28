@@ -1,11 +1,17 @@
-import "react";
-import { jsx as e, Fragment as o } from "react/jsx-runtime";
-var l = Symbol("radix.slottable");
-// @__NO_SIDE_EFFECTS__
-function n(r) {
-  const t = ({ children: a }) => /* @__PURE__ */ e(o, { children: a });
-  return t.displayName = `${r}.Slottable`, t.__radixId = l, t;
+import * as r from "react";
+var t = 0;
+function a() {
+  r.useEffect(() => {
+    const e = document.querySelectorAll("[data-radix-focus-guard]");
+    return document.body.insertAdjacentElement("afterbegin", e[0] ?? n()), document.body.insertAdjacentElement("beforeend", e[1] ?? n()), t++, () => {
+      t === 1 && document.querySelectorAll("[data-radix-focus-guard]").forEach((o) => o.remove()), t--;
+    };
+  }, []);
+}
+function n() {
+  const e = document.createElement("span");
+  return e.setAttribute("data-radix-focus-guard", ""), e.tabIndex = 0, e.style.outline = "none", e.style.opacity = "0", e.style.position = "fixed", e.style.pointerEvents = "none", e;
 }
 export {
-  n as createSlottable
+  a as useFocusGuards
 };

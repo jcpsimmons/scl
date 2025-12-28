@@ -1,14 +1,20 @@
-import e from "./index164.js";
-/**
- * @license lucide-react v0.460.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const t = e("ChevronsUpDown", [
-  ["path", { d: "m7 15 5 5 5-5", key: "1hf1tw" }],
-  ["path", { d: "m7 9 5-5 5 5", key: "sgt6xg" }]
-]);
+import * as i from "react";
+import { Primitive as f } from "./index110.js";
+import { jsx as l } from "react/jsx-runtime";
+var m = "Label", r = i.forwardRef((e, o) => /* @__PURE__ */ l(
+  f.label,
+  {
+    ...e,
+    ref: o,
+    onMouseDown: (t) => {
+      var a;
+      t.target.closest("button, input, select, textarea") || ((a = e.onMouseDown) == null || a.call(e, t), !t.defaultPrevented && t.detail > 1 && t.preventDefault());
+    }
+  }
+));
+r.displayName = m;
+var b = r;
 export {
-  t as default
+  r as Label,
+  b as Root
 };

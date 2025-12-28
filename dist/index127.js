@@ -1,93 +1,48 @@
-var t = {
-  8: "Backspace",
-  9: "Tab",
-  10: "Enter",
-  12: "NumLock",
-  13: "Enter",
-  16: "Shift",
-  17: "Control",
-  18: "Alt",
-  20: "CapsLock",
-  27: "Escape",
-  32: " ",
-  33: "PageUp",
-  34: "PageDown",
-  35: "End",
-  36: "Home",
-  37: "ArrowLeft",
-  38: "ArrowUp",
-  39: "ArrowRight",
-  40: "ArrowDown",
-  44: "PrintScreen",
-  45: "Insert",
-  46: "Delete",
-  59: ";",
-  61: "=",
-  91: "Meta",
-  92: "Meta",
-  106: "*",
-  107: "+",
-  108: ",",
-  109: "-",
-  110: ".",
-  111: "/",
-  144: "NumLock",
-  145: "ScrollLock",
-  160: "Shift",
-  161: "Shift",
-  162: "Control",
-  163: "Control",
-  164: "Alt",
-  165: "Alt",
-  173: "-",
-  186: ";",
-  187: "=",
-  188: ",",
-  189: "-",
-  190: ".",
-  191: "/",
-  192: "`",
-  219: "[",
-  220: "\\",
-  221: "]",
-  222: "'"
-}, a = {
-  48: ")",
-  49: "!",
-  50: "@",
-  51: "#",
-  52: "$",
-  53: "%",
-  54: "^",
-  55: "&",
-  56: "*",
-  57: "(",
-  59: ":",
-  61: "+",
-  173: "_",
-  186: ":",
-  187: "+",
-  188: "<",
-  189: "_",
-  190: ">",
-  191: "?",
-  192: "~",
-  219: "{",
-  220: "|",
-  221: "}",
-  222: '"'
-}, n = typeof navigator < "u" && /Mac/.test(navigator.platform), y = typeof navigator < "u" && /MSIE \d|Trident\/(?:[7-9]|\d{2,})\..*rv:(\d+)/.exec(navigator.userAgent);
-for (var r = 0; r < 10; r++) t[48 + r] = t[96 + r] = String(r);
-for (var r = 1; r <= 24; r++) t[r + 111] = "F" + r;
-for (var r = 65; r <= 90; r++)
-  t[r] = String.fromCharCode(r + 32), a[r] = String.fromCharCode(r);
-for (var i in t) a.hasOwnProperty(i) || (a[i] = t[i]);
-function g(o) {
-  var f = n && o.metaKey && o.shiftKey && !o.ctrlKey && !o.altKey || y && o.shiftKey && o.key && o.key.length == 1 || o.key == "Unidentified", e = !f && o.key || (o.shiftKey ? a : t)[o.keyCode] || o.key || "Unidentified";
-  return e == "Esc" && (e = "Escape"), e == "Del" && (e = "Delete"), e == "Left" && (e = "ArrowLeft"), e == "Up" && (e = "ArrowUp"), e == "Right" && (e = "ArrowRight"), e == "Down" && (e = "ArrowDown"), e;
+import r from "react";
+import { createContextScope as y } from "./index92.js";
+import { useComposedRefs as M } from "./index91.js";
+import { createSlot as x } from "./index167.js";
+import { jsx as u } from "react/jsx-runtime";
+function g(s) {
+  const m = s + "CollectionProvider", [A, N] = y(m), [_, f] = A(
+    m,
+    { collectionRef: { current: null }, itemMap: /* @__PURE__ */ new Map() }
+  ), p = (c) => {
+    const { scope: e, children: l } = c, o = r.useRef(null), t = r.useRef(/* @__PURE__ */ new Map()).current;
+    return /* @__PURE__ */ u(_, { scope: e, itemMap: t, collectionRef: o, children: l });
+  };
+  p.displayName = m;
+  const a = s + "CollectionSlot", E = x(a), C = r.forwardRef(
+    (c, e) => {
+      const { scope: l, children: o } = c, t = f(a, l), n = M(e, t.collectionRef);
+      return /* @__PURE__ */ u(E, { ref: n, children: o });
+    }
+  );
+  C.displayName = a;
+  const d = s + "CollectionItemSlot", R = "data-radix-collection-item", T = x(d), I = r.forwardRef(
+    (c, e) => {
+      const { scope: l, children: o, ...t } = c, n = r.useRef(null), S = M(e, n), i = f(d, l);
+      return r.useEffect(() => (i.itemMap.set(n, { ref: n, ...t }), () => void i.itemMap.delete(n))), /* @__PURE__ */ u(T, { [R]: "", ref: S, children: o });
+    }
+  );
+  I.displayName = d;
+  function O(c) {
+    const e = f(s + "CollectionConsumer", c);
+    return r.useCallback(() => {
+      const o = e.collectionRef.current;
+      if (!o) return [];
+      const t = Array.from(o.querySelectorAll(`[${R}]`));
+      return Array.from(e.itemMap.values()).sort(
+        (i, v) => t.indexOf(i.ref.current) - t.indexOf(v.ref.current)
+      );
+    }, [e.collectionRef, e.itemMap]);
+  }
+  return [
+    { Provider: p, Slot: C, ItemSlot: I },
+    O,
+    N
+  ];
 }
 export {
-  t as base,
-  g as keyName,
-  a as shift
+  g as createCollection
 };
