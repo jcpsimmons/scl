@@ -1,15 +1,19 @@
 import { cn } from '@/lib/utils'
 
+interface SkeletonProps extends React.HTMLAttributes<HTMLDivElement> {
+  blink?: boolean
+}
+
 function Skeleton({
   className,
+  blink = true,
   ...props
-}: React.HTMLAttributes<HTMLDivElement>) {
+}: SkeletonProps) {
   return (
     <div
       className={cn(
-        'relative overflow-hidden border border-primary/30 bg-primary/10',
-        // Scanline animation effect
-        'after:absolute after:inset-0 after:bg-gradient-to-b after:from-transparent after:via-primary/20 after:to-transparent after:animate-scanline',
+        'border border-primary/30 bg-primary/10',
+        blink && 'animate-blink',
         className
       )}
       {...props}
