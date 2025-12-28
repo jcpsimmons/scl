@@ -4,6 +4,30 @@ import tailwindcssAnimate from 'tailwindcss-animate'
 export default {
   darkMode: ['class'],
   content: ['./src/**/*.{ts,tsx}', './.storybook/**/*.{ts,tsx}'],
+  safelist: [
+    'bg-primary',
+    'bg-secondary',
+    'bg-destructive',
+    'bg-accent',
+    'bg-muted',
+    'bg-card',
+    'bg-popover',
+    'bg-background',
+    'text-primary',
+    'text-secondary',
+    'text-destructive',
+    'text-primary-foreground',
+    'text-secondary-foreground',
+    'text-destructive-foreground',
+    'text-muted-foreground',
+    'text-card-foreground',
+    'text-popover-foreground',
+    'border-primary',
+    'border-secondary',
+    'border-destructive',
+    'ring-primary',
+    'ring-secondary',
+  ],
   theme: {
     extend: {
       fontFamily: {
