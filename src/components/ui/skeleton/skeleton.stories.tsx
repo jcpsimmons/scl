@@ -4,7 +4,20 @@ import { Skeleton } from './skeleton'
 const meta: Meta<typeof Skeleton> = {
   title: 'Components/Skeleton',
   component: Skeleton,
+  parameters: {
+    layout: 'centered',
+  },
   tags: ['autodocs'],
+  argTypes: {
+    blink: {
+      control: 'boolean',
+      description: 'Enable blinking animation',
+    },
+    className: {
+      control: 'text',
+      description: 'Additional CSS classes for sizing',
+    },
+  },
 }
 
 export default meta
