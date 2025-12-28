@@ -9,7 +9,7 @@ function Skeleton({
       className={cn(
         'relative overflow-hidden border border-primary/30 bg-primary/10',
         // Scanline animation effect
-        'after:absolute after:inset-0 after:bg-gradient-to-b after:from-transparent after:via-primary/20 after:to-transparent after:animate-[scanline_1.5s_ease-in-out_infinite]',
+        'after:absolute after:inset-0 after:bg-gradient-to-b after:from-transparent after:via-primary/20 after:to-transparent after:animate-scanline',
         className
       )}
       {...props}
