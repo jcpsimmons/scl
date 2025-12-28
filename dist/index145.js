@@ -1,52 +1,34 @@
-var S = function(r) {
-  if (typeof document > "u")
-    return null;
-  var u = Array.isArray(r) ? r[0] : r;
-  return u.ownerDocument.body;
-}, f = /* @__PURE__ */ new WeakMap(), v = /* @__PURE__ */ new WeakMap(), p = {}, h = 0, W = function(r) {
-  return r && (r.host || W(r.parentNode));
-}, D = function(r, u) {
-  return u.map(function(e) {
-    if (r.contains(e))
-      return e;
-    var n = W(e);
-    return n && r.contains(n) ? n : (console.error("aria-hidden", e, "in not contained inside", r, ". Doing nothing"), null);
-  }).filter(function(e) {
-    return !!e;
-  });
-}, E = function(r, u, e, n) {
-  var i = D(u, Array.isArray(r) ? r : [r]);
-  p[e] || (p[e] = /* @__PURE__ */ new WeakMap());
-  var s = p[e], l = [], o = /* @__PURE__ */ new Set(), b = new Set(i), y = function(t) {
-    !t || o.has(t) || (o.add(t), y(t.parentNode));
-  };
-  i.forEach(y);
-  var A = function(t) {
-    !t || b.has(t) || Array.prototype.forEach.call(t.children, function(a) {
-      if (o.has(a))
-        A(a);
-      else
-        try {
-          var c = a.getAttribute(n), w = c !== null && c !== "false", d = (f.get(a) || 0) + 1, M = (s.get(a) || 0) + 1;
-          f.set(a, d), s.set(a, M), l.push(a), d === 1 && w && v.set(a, !0), M === 1 && a.setAttribute(e, "true"), w || a.setAttribute(n, "true");
-        } catch (k) {
-          console.error("aria-hidden: cannot operate on ", a, k);
-        }
-    });
-  };
-  return A(u), o.clear(), h++, function() {
-    l.forEach(function(t) {
-      var a = f.get(t) - 1, c = s.get(t) - 1;
-      f.set(t, a), s.set(t, c), a || (v.has(t) || t.removeAttribute(n), v.delete(t)), c || t.removeAttribute(e);
-    }), h--, h || (f = /* @__PURE__ */ new WeakMap(), f = /* @__PURE__ */ new WeakMap(), v = /* @__PURE__ */ new WeakMap(), p = {});
-  };
-}, C = function(r, u, e) {
-  e === void 0 && (e = "data-aria-hidden");
-  var n = Array.from(Array.isArray(r) ? r : [r]), i = S(r);
-  return i ? (n.push.apply(n, Array.from(i.querySelectorAll("[aria-live], script"))), E(n, i, e, "aria-hidden")) : function() {
-    return null;
-  };
-};
+import { LRParser as P } from "./index170.js";
+import { styleTags as e, tags as O } from "./index85.js";
+const Q = e({
+  String: O.string,
+  Number: O.number,
+  "True False": O.bool,
+  PropertyName: O.propertyName,
+  Null: O.null,
+  ", :": O.separator,
+  "[ ]": O.squareBracket,
+  "{ }": O.brace
+}), o = P.deserialize({
+  version: 14,
+  states: "$bOVQPOOOOQO'#Cb'#CbOnQPO'#CeOvQPO'#ClOOQO'#Cr'#CrQOQPOOOOQO'#Cg'#CgO}QPO'#CfO!SQPO'#CtOOQO,59P,59PO![QPO,59PO!aQPO'#CuOOQO,59W,59WO!iQPO,59WOVQPO,59QOqQPO'#CmO!nQPO,59`OOQO1G.k1G.kOVQPO'#CnO!vQPO,59aOOQO1G.r1G.rOOQO1G.l1G.lOOQO,59X,59XOOQO-E6k-E6kOOQO,59Y,59YOOQO-E6l-E6l",
+  stateData: "#O~OeOS~OQSORSOSSOTSOWQO_ROgPO~OVXOgUO~O^[O~PVO[^O~O]_OVhX~OVaO~O]bO^iX~O^dO~O]_OVha~O]bO^ia~O",
+  goto: "!kjPPPPPPkPPkqwPPPPk{!RPPP!XP!e!hXSOR^bQWQRf_TVQ_Q`WRg`QcZRicQTOQZRQe^RhbRYQR]R",
+  nodeNames: "⚠ JsonText True False Null Number String } { Object Property PropertyName : , ] [ Array",
+  maxTerm: 25,
+  nodeProps: [
+    ["isolate", -2, 6, 11, ""],
+    ["openedBy", 7, "{", 14, "["],
+    ["closedBy", 8, "}", 15, "]"]
+  ],
+  propSources: [Q],
+  skippedNodes: [0],
+  repeatNodeCount: 2,
+  tokenData: "(|~RaXY!WYZ!W]^!Wpq!Wrs!]|}$u}!O$z!Q!R%T!R![&c![!]&t!}#O&y#P#Q'O#Y#Z'T#b#c'r#h#i(Z#o#p(r#q#r(w~!]Oe~~!`Wpq!]qr!]rs!xs#O!]#O#P!}#P;'S!];'S;=`$o<%lO!]~!}Og~~#QXrs!]!P!Q!]#O#P!]#U#V!]#Y#Z!]#b#c!]#f#g!]#h#i!]#i#j#m~#pR!Q![#y!c!i#y#T#Z#y~#|R!Q![$V!c!i$V#T#Z$V~$YR!Q![$c!c!i$c#T#Z$c~$fR!Q![!]!c!i!]#T#Z!]~$rP;=`<%l!]~$zO]~~$}Q!Q!R%T!R![&c~%YRT~!O!P%c!g!h%w#X#Y%w~%fP!Q![%i~%nRT~!Q![%i!g!h%w#X#Y%w~%zR{|&T}!O&T!Q![&Z~&WP!Q![&Z~&`PT~!Q![&Z~&hST~!O!P%c!Q![&c!g!h%w#X#Y%w~&yO[~~'OO_~~'TO^~~'WP#T#U'Z~'^P#`#a'a~'dP#g#h'g~'jP#X#Y'm~'rOR~~'uP#i#j'x~'{P#`#a(O~(RP#`#a(U~(ZOS~~(^P#f#g(a~(dP#i#j(g~(jP#X#Y(m~(rOQ~~(wOW~~(|OV~",
+  tokenizers: [0],
+  topRules: { JsonText: [0, 1] },
+  tokenPrec: 0
+});
 export {
-  C as hideOthers
+  o as parser
 };

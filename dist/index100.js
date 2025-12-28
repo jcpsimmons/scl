@@ -1,6 +1,32 @@
-function m(t, [a, n]) {
-  return Math.min(n, Math.max(a, t));
-}
+import * as f from "react";
+import "react-dom";
+import { createSlot as l } from "./index67.js";
+import { jsx as n } from "react/jsx-runtime";
+var u = [
+  "a",
+  "button",
+  "div",
+  "form",
+  "h2",
+  "h3",
+  "img",
+  "input",
+  "label",
+  "li",
+  "nav",
+  "ol",
+  "p",
+  "select",
+  "span",
+  "svg",
+  "ul"
+], w = u.reduce((t, i) => {
+  const o = l(`Primitive.${i}`), r = f.forwardRef((e, m) => {
+    const { asChild: a, ...p } = e, s = a ? o : i;
+    return typeof window < "u" && (window[Symbol.for("radix-ui")] = !0), /* @__PURE__ */ n(s, { ...p, ref: m });
+  });
+  return r.displayName = `Primitive.${i}`, { ...t, [i]: r };
+}, {});
 export {
-  m as clamp
+  w as Primitive
 };

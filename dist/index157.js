@@ -1,23 +1,20 @@
-import { forwardRef as s, createElement as c } from "react";
-import { mergeClasses as n, toKebabCase as f } from "./index158.js";
-import l from "./index159.js";
 /**
  * @license lucide-react v0.460.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const u = (e, r) => {
-  const o = s(
-    ({ className: t, ...a }, m) => c(l, {
-      ref: m,
-      iconNode: r,
-      className: n(`lucide-${f(e)}`, t),
-      ...a
-    })
-  );
-  return o.displayName = `${e}`, o;
+var t = {
+  xmlns: "http://www.w3.org/2000/svg",
+  width: 24,
+  height: 24,
+  viewBox: "0 0 24 24",
+  fill: "none",
+  stroke: "currentColor",
+  strokeWidth: 2,
+  strokeLinecap: "round",
+  strokeLinejoin: "round"
 };
 export {
-  u as default
+  t as default
 };

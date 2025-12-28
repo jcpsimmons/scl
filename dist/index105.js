@@ -1,15 +1,6 @@
-import { s as r } from "./index156.js";
-function s() {
-  return r.useSyncExternalStore(
-    e,
-    () => !0,
-    () => !1
-  );
-}
-function e() {
-  return () => {
-  };
+function m(t, [a, n]) {
+  return Math.min(n, Math.max(a, t));
 }
 export {
-  s as useIsHydrated
+  m as clamp
 };

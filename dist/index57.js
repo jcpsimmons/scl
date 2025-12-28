@@ -1,62 +1,127 @@
-import * as o from "react";
-import { composeRefs as S } from "./index88.js";
-import { jsx as y } from "react/jsx-runtime";
-var E = Symbol.for("react.lazy"), p = o[" use ".trim().toString()];
-function g(t) {
-  return typeof t == "object" && t !== null && "then" in t;
-}
-function d(t) {
-  return t != null && typeof t == "object" && "$$typeof" in t && t.$$typeof === E && "_payload" in t && g(t._payload);
-}
-// @__NO_SIDE_EFFECTS__
-function C(t) {
-  const n = /* @__PURE__ */ R(t), i = o.forwardRef((e, r) => {
-    let { children: l, ...a } = e;
-    d(l) && typeof p == "function" && (l = p(l._payload));
-    const s = o.Children.toArray(l), f = s.find(b);
-    if (f) {
-      const c = f.props.children, m = s.map((u) => u === f ? o.Children.count(c) > 1 ? o.Children.only(null) : o.isValidElement(c) ? c.props.children : null : u);
-      return /* @__PURE__ */ y(n, { ...a, ref: r, children: o.isValidElement(c) ? o.cloneElement(c, void 0, m) : null });
-    }
-    return /* @__PURE__ */ y(n, { ...a, ref: r, children: l });
-  });
-  return i.displayName = `${t}.Slot`, i;
-}
-var V = /* @__PURE__ */ C("Slot");
-// @__NO_SIDE_EFFECTS__
-function R(t) {
-  const n = o.forwardRef((i, e) => {
-    let { children: r, ...l } = i;
-    if (d(r) && typeof p == "function" && (r = p(r._payload)), o.isValidElement(r)) {
-      const a = P(r), s = h(l, r.props);
-      return r.type !== o.Fragment && (s.ref = e ? S(e, a) : a), o.cloneElement(r, s);
-    }
-    return o.Children.count(r) > 1 ? o.Children.only(null) : null;
-  });
-  return n.displayName = `${t}.SlotClone`, n;
-}
-var _ = Symbol("radix.slottable");
-function b(t) {
-  return o.isValidElement(t) && typeof t.type == "function" && "__radixId" in t.type && t.type.__radixId === _;
-}
-function h(t, n) {
-  const i = { ...n };
-  for (const e in n) {
-    const r = t[e], l = n[e];
-    /^on[A-Z]/.test(e) ? r && l ? i[e] = (...s) => {
-      const f = l(...s);
-      return r(...s), f;
-    } : r && (i[e] = r) : e === "style" ? i[e] = { ...r, ...l } : e === "className" && (i[e] = [r, l].filter(Boolean).join(" "));
+import * as l from "react";
+import { createContextScope as w } from "./index88.js";
+import { useComposedRefs as v } from "./index91.js";
+import { createDialogScope as A, Root as M, Portal as x, Trigger as I, Overlay as L, WarningProvider as $, Content as F, Title as G, Description as j, Close as f } from "./index62.js";
+import { composeEventHandlers as W } from "./index118.js";
+import { createSlottable as Y } from "./index119.js";
+import { jsx as i, jsxs as q } from "react/jsx-runtime";
+var D = "AlertDialog", [B] = w(D, [
+  A
+]), n = A(), m = (e) => {
+  const { __scopeAlertDialog: o, ...r } = e, t = n(o);
+  return /* @__PURE__ */ i(M, { ...t, ...r, modal: !0 });
+};
+m.displayName = D;
+var H = "AlertDialogTrigger", y = l.forwardRef(
+  (e, o) => {
+    const { __scopeAlertDialog: r, ...t } = e, a = n(r);
+    return /* @__PURE__ */ i(I, { ...a, ...t, ref: o });
   }
-  return { ...t, ...i };
-}
-function P(t) {
-  var e, r;
-  let n = (e = Object.getOwnPropertyDescriptor(t.props, "ref")) == null ? void 0 : e.get, i = n && "isReactWarning" in n && n.isReactWarning;
-  return i ? t.ref : (n = (r = Object.getOwnPropertyDescriptor(t, "ref")) == null ? void 0 : r.get, i = n && "isReactWarning" in n && n.isReactWarning, i ? t.props.ref : t.props.ref || t.ref);
-}
+);
+y.displayName = H;
+var V = "AlertDialogPortal", _ = (e) => {
+  const { __scopeAlertDialog: o, ...r } = e, t = n(o);
+  return /* @__PURE__ */ i(x, { ...t, ...r });
+};
+_.displayName = V;
+var k = "AlertDialogOverlay", N = l.forwardRef(
+  (e, o) => {
+    const { __scopeAlertDialog: r, ...t } = e, a = n(r);
+    return /* @__PURE__ */ i(L, { ...a, ...t, ref: o });
+  }
+);
+N.displayName = k;
+var s = "AlertDialogContent", [z, J] = B(s), K = Y("AlertDialogContent"), R = l.forwardRef(
+  (e, o) => {
+    const { __scopeAlertDialog: r, children: t, ...a } = e, g = n(r), p = l.useRef(null), b = v(o, p), d = l.useRef(null);
+    return /* @__PURE__ */ i(
+      $,
+      {
+        contentName: s,
+        titleName: C,
+        docsSlug: "alert-dialog",
+        children: /* @__PURE__ */ i(z, { scope: r, cancelRef: d, children: /* @__PURE__ */ q(
+          F,
+          {
+            role: "alertdialog",
+            ...g,
+            ...a,
+            ref: b,
+            onOpenAutoFocus: W(a.onOpenAutoFocus, (c) => {
+              var u;
+              c.preventDefault(), (u = d.current) == null || u.focus({ preventScroll: !0 });
+            }),
+            onPointerDownOutside: (c) => c.preventDefault(),
+            onInteractOutside: (c) => c.preventDefault(),
+            children: [
+              /* @__PURE__ */ i(K, { children: t }),
+              /* @__PURE__ */ i(U, { contentRef: p })
+            ]
+          }
+        ) })
+      }
+    );
+  }
+);
+R.displayName = s;
+var C = "AlertDialogTitle", h = l.forwardRef(
+  (e, o) => {
+    const { __scopeAlertDialog: r, ...t } = e, a = n(r);
+    return /* @__PURE__ */ i(G, { ...a, ...t, ref: o });
+  }
+);
+h.displayName = C;
+var E = "AlertDialogDescription", P = l.forwardRef((e, o) => {
+  const { __scopeAlertDialog: r, ...t } = e, a = n(r);
+  return /* @__PURE__ */ i(j, { ...a, ...t, ref: o });
+});
+P.displayName = E;
+var Q = "AlertDialogAction", S = l.forwardRef(
+  (e, o) => {
+    const { __scopeAlertDialog: r, ...t } = e, a = n(r);
+    return /* @__PURE__ */ i(f, { ...a, ...t, ref: o });
+  }
+);
+S.displayName = Q;
+var T = "AlertDialogCancel", O = l.forwardRef(
+  (e, o) => {
+    const { __scopeAlertDialog: r, ...t } = e, { cancelRef: a } = J(T, r), g = n(r), p = v(o, a);
+    return /* @__PURE__ */ i(f, { ...g, ...t, ref: p });
+  }
+);
+O.displayName = T;
+var U = ({ contentRef: e }) => {
+  const o = `\`${s}\` requires a description for the component to be accessible for screen reader users.
+
+You can add a description to the \`${s}\` by passing a \`${E}\` component as a child, which also benefits sighted users by adding visible context to the dialog.
+
+Alternatively, you can use your own component as a description by assigning it an \`id\` and passing the same value to the \`aria-describedby\` prop in \`${s}\`. If the description is confusing or duplicative for sighted users, you can use the \`@radix-ui/react-visually-hidden\` primitive as a wrapper around your description component.
+
+For more information, see https://radix-ui.com/primitives/docs/components/alert-dialog`;
+  return l.useEffect(() => {
+    var t;
+    document.getElementById(
+      (t = e.current) == null ? void 0 : t.getAttribute("aria-describedby")
+    ) || console.warn(o);
+  }, [o, e]), null;
+}, ae = m, ie = y, le = _, ne = N, se = R, ce = S, pe = O, ge = h, de = P;
 export {
-  V as Root,
-  V as Slot,
-  C as createSlot
+  ce as Action,
+  m as AlertDialog,
+  S as AlertDialogAction,
+  O as AlertDialogCancel,
+  R as AlertDialogContent,
+  P as AlertDialogDescription,
+  N as AlertDialogOverlay,
+  _ as AlertDialogPortal,
+  h as AlertDialogTitle,
+  y as AlertDialogTrigger,
+  pe as Cancel,
+  se as Content,
+  de as Description,
+  ne as Overlay,
+  le as Portal,
+  ae as Root,
+  ge as Title,
+  ie as Trigger
 };

@@ -1,256 +1,338 @@
-import u from "react";
-var z = (e) => e.type === "checkbox", k = (e) => e instanceof Date, w = (e) => e == null;
-const H = (e) => typeof e == "object";
-var p = (e) => !w(e) && !Array.isArray(e) && H(e) && !k(e), J = (e) => p(e) && e.target ? z(e.target) ? e.target.checked : e.target.value : e, Q = (e) => e.substring(0, e.search(/\.\d+(\.|$)/)) || e, X = (e, s) => e.has(Q(s)), Y = (e) => {
-  const s = e.constructor && e.constructor.prototype;
-  return p(s) && s.hasOwnProperty("isPrototypeOf");
-}, Z = typeof window < "u" && typeof window.HTMLElement < "u" && typeof document < "u";
-function W(e) {
-  if (e instanceof Date)
-    return new Date(e);
-  const s = typeof FileList < "u" && e instanceof FileList;
-  if (Z && (e instanceof Blob || s))
-    return e;
-  const t = Array.isArray(e);
-  if (!t && !(p(e) && Y(e)))
-    return e;
-  const n = t ? [] : Object.create(Object.getPrototypeOf(e));
-  for (const r in e)
-    Object.prototype.hasOwnProperty.call(e, r) && (n[r] = W(e[r]));
+import * as s from "react";
+import { composeEventHandlers as g } from "./index159.js";
+import { useComposedRefs as N } from "./index91.js";
+import { createContextScope as K } from "./index88.js";
+import { DismissableLayer as W } from "./index107.js";
+import { useId as $ } from "./index94.js";
+import { createPopperScope as S, Root as z, Anchor as J, Content as Q, Arrow as Z } from "./index110.js";
+import { Portal as ee } from "./index111.js";
+import { Presence as G } from "./index93.js";
+import { Primitive as te } from "./index92.js";
+import { createSlottable as oe } from "./index160.js";
+import { useControllableState as re } from "./index89.js";
+import { Root as ne } from "./index113.js";
+import { jsx as f, jsxs as se } from "react/jsx-runtime";
+var [D] = K("Tooltip", [
+  S
+]), O = S(), j = "TooltipProvider", ie = 700, L = "tooltip.open", [ae, k] = D(j), F = (t) => {
+  const {
+    __scopeTooltip: o,
+    delayDuration: e = ie,
+    skipDelayDuration: r = 300,
+    disableHoverableContent: n = !1,
+    children: a
+  } = t, l = s.useRef(!0), v = s.useRef(!1), i = s.useRef(0);
+  return s.useEffect(() => {
+    const p = i.current;
+    return () => window.clearTimeout(p);
+  }, []), /* @__PURE__ */ f(
+    ae,
+    {
+      scope: o,
+      isOpenDelayedRef: l,
+      delayDuration: e,
+      onOpen: s.useCallback(() => {
+        window.clearTimeout(i.current), l.current = !1;
+      }, []),
+      onClose: s.useCallback(() => {
+        window.clearTimeout(i.current), i.current = window.setTimeout(
+          () => l.current = !0,
+          r
+        );
+      }, [r]),
+      isPointerInTransitRef: v,
+      onPointerInTransitChange: s.useCallback((p) => {
+        v.current = p;
+      }, []),
+      disableHoverableContent: n,
+      children: a
+    }
+  );
+};
+F.displayName = j;
+var R = "Tooltip", [le, _] = D(R), B = (t) => {
+  const {
+    __scopeTooltip: o,
+    children: e,
+    open: r,
+    defaultOpen: n,
+    onOpenChange: a,
+    disableHoverableContent: l,
+    delayDuration: v
+  } = t, i = k(R, t.__scopeTooltip), p = O(o), [c, d] = s.useState(null), h = $(), u = s.useRef(0), m = l ?? i.disableHoverableContent, y = v ?? i.delayDuration, T = s.useRef(!1), [x, C] = re({
+    prop: r,
+    defaultProp: n ?? !1,
+    onChange: (H) => {
+      H ? (i.onOpen(), document.dispatchEvent(new CustomEvent(L))) : i.onClose(), a == null || a(H);
+    },
+    caller: R
+  }), w = s.useMemo(() => x ? T.current ? "delayed-open" : "instant-open" : "closed", [x]), P = s.useCallback(() => {
+    window.clearTimeout(u.current), u.current = 0, T.current = !1, C(!0);
+  }, [C]), E = s.useCallback(() => {
+    window.clearTimeout(u.current), u.current = 0, C(!1);
+  }, [C]), I = s.useCallback(() => {
+    window.clearTimeout(u.current), u.current = window.setTimeout(() => {
+      T.current = !0, C(!0), u.current = 0;
+    }, y);
+  }, [y, C]);
+  return s.useEffect(() => () => {
+    u.current && (window.clearTimeout(u.current), u.current = 0);
+  }, []), /* @__PURE__ */ f(z, { ...p, children: /* @__PURE__ */ f(
+    le,
+    {
+      scope: o,
+      contentId: h,
+      open: x,
+      stateAttribute: w,
+      trigger: c,
+      onTriggerChange: d,
+      onTriggerEnter: s.useCallback(() => {
+        i.isOpenDelayedRef.current ? I() : P();
+      }, [i.isOpenDelayedRef, I, P]),
+      onTriggerLeave: s.useCallback(() => {
+        m ? E() : (window.clearTimeout(u.current), u.current = 0);
+      }, [E, m]),
+      onOpen: P,
+      onClose: E,
+      disableHoverableContent: m,
+      children: e
+    }
+  ) });
+};
+B.displayName = R;
+var A = "TooltipTrigger", U = s.forwardRef(
+  (t, o) => {
+    const { __scopeTooltip: e, ...r } = t, n = _(A, e), a = k(A, e), l = O(e), v = s.useRef(null), i = N(o, v, n.onTriggerChange), p = s.useRef(!1), c = s.useRef(!1), d = s.useCallback(() => p.current = !1, []);
+    return s.useEffect(() => () => document.removeEventListener("pointerup", d), [d]), /* @__PURE__ */ f(J, { asChild: !0, ...l, children: /* @__PURE__ */ f(
+      te.button,
+      {
+        "aria-describedby": n.open ? n.contentId : void 0,
+        "data-state": n.stateAttribute,
+        ...r,
+        ref: i,
+        onPointerMove: g(t.onPointerMove, (h) => {
+          h.pointerType !== "touch" && !c.current && !a.isPointerInTransitRef.current && (n.onTriggerEnter(), c.current = !0);
+        }),
+        onPointerLeave: g(t.onPointerLeave, () => {
+          n.onTriggerLeave(), c.current = !1;
+        }),
+        onPointerDown: g(t.onPointerDown, () => {
+          n.open && n.onClose(), p.current = !0, document.addEventListener("pointerup", d, { once: !0 });
+        }),
+        onFocus: g(t.onFocus, () => {
+          p.current || n.onOpen();
+        }),
+        onBlur: g(t.onBlur, n.onClose),
+        onClick: g(t.onClick, n.onClose)
+      }
+    ) });
+  }
+);
+U.displayName = A;
+var M = "TooltipPortal", [ce, ue] = D(M, {
+  forceMount: void 0
+}), V = (t) => {
+  const { __scopeTooltip: o, forceMount: e, children: r, container: n } = t, a = _(M, o);
+  return /* @__PURE__ */ f(ce, { scope: o, forceMount: e, children: /* @__PURE__ */ f(G, { present: e || a.open, children: /* @__PURE__ */ f(ee, { asChild: !0, container: n, children: r }) }) });
+};
+V.displayName = M;
+var b = "TooltipContent", Y = s.forwardRef(
+  (t, o) => {
+    const e = ue(b, t.__scopeTooltip), { forceMount: r = e.forceMount, side: n = "top", ...a } = t, l = _(b, t.__scopeTooltip);
+    return /* @__PURE__ */ f(G, { present: r || l.open, children: l.disableHoverableContent ? /* @__PURE__ */ f(q, { side: n, ...a, ref: o }) : /* @__PURE__ */ f(pe, { side: n, ...a, ref: o }) });
+  }
+), pe = s.forwardRef((t, o) => {
+  const e = _(b, t.__scopeTooltip), r = k(b, t.__scopeTooltip), n = s.useRef(null), a = N(o, n), [l, v] = s.useState(null), { trigger: i, onClose: p } = e, c = n.current, { onPointerInTransitChange: d } = r, h = s.useCallback(() => {
+    v(null), d(!1);
+  }, [d]), u = s.useCallback(
+    (m, y) => {
+      const T = m.currentTarget, x = { x: m.clientX, y: m.clientY }, C = me(x, T.getBoundingClientRect()), w = Te(x, C), P = ye(y.getBoundingClientRect()), E = xe([...w, ...P]);
+      v(E), d(!0);
+    },
+    [d]
+  );
+  return s.useEffect(() => () => h(), [h]), s.useEffect(() => {
+    if (i && c) {
+      const m = (T) => u(T, c), y = (T) => u(T, i);
+      return i.addEventListener("pointerleave", m), c.addEventListener("pointerleave", y), () => {
+        i.removeEventListener("pointerleave", m), c.removeEventListener("pointerleave", y);
+      };
+    }
+  }, [i, c, u, h]), s.useEffect(() => {
+    if (l) {
+      const m = (y) => {
+        const T = y.target, x = { x: y.clientX, y: y.clientY }, C = (i == null ? void 0 : i.contains(T)) || (c == null ? void 0 : c.contains(T)), w = !Ce(x, l);
+        C ? h() : w && (h(), p());
+      };
+      return document.addEventListener("pointermove", m), () => document.removeEventListener("pointermove", m);
+    }
+  }, [i, c, l, p, h]), /* @__PURE__ */ f(q, { ...t, ref: a });
+}), [de, fe] = D(R, { isInside: !1 }), ve = oe("TooltipContent"), q = s.forwardRef(
+  (t, o) => {
+    const {
+      __scopeTooltip: e,
+      children: r,
+      "aria-label": n,
+      onEscapeKeyDown: a,
+      onPointerDownOutside: l,
+      ...v
+    } = t, i = _(b, e), p = O(e), { onClose: c } = i;
+    return s.useEffect(() => (document.addEventListener(L, c), () => document.removeEventListener(L, c)), [c]), s.useEffect(() => {
+      if (i.trigger) {
+        const d = (h) => {
+          const u = h.target;
+          u != null && u.contains(i.trigger) && c();
+        };
+        return window.addEventListener("scroll", d, { capture: !0 }), () => window.removeEventListener("scroll", d, { capture: !0 });
+      }
+    }, [i.trigger, c]), /* @__PURE__ */ f(
+      W,
+      {
+        asChild: !0,
+        disableOutsidePointerEvents: !1,
+        onEscapeKeyDown: a,
+        onPointerDownOutside: l,
+        onFocusOutside: (d) => d.preventDefault(),
+        onDismiss: c,
+        children: /* @__PURE__ */ se(
+          Q,
+          {
+            "data-state": i.stateAttribute,
+            ...p,
+            ...v,
+            ref: o,
+            style: {
+              ...v.style,
+              "--radix-tooltip-content-transform-origin": "var(--radix-popper-transform-origin)",
+              "--radix-tooltip-content-available-width": "var(--radix-popper-available-width)",
+              "--radix-tooltip-content-available-height": "var(--radix-popper-available-height)",
+              "--radix-tooltip-trigger-width": "var(--radix-popper-anchor-width)",
+              "--radix-tooltip-trigger-height": "var(--radix-popper-anchor-height)"
+            },
+            children: [
+              /* @__PURE__ */ f(ve, { children: r }),
+              /* @__PURE__ */ f(de, { scope: e, isInside: !0, children: /* @__PURE__ */ f(ne, { id: i.contentId, role: "tooltip", children: n || r }) })
+            ]
+          }
+        )
+      }
+    );
+  }
+);
+Y.displayName = b;
+var X = "TooltipArrow", he = s.forwardRef(
+  (t, o) => {
+    const { __scopeTooltip: e, ...r } = t, n = O(e);
+    return fe(
+      X,
+      e
+    ).isInside ? null : /* @__PURE__ */ f(Z, { ...n, ...r, ref: o });
+  }
+);
+he.displayName = X;
+function me(t, o) {
+  const e = Math.abs(o.top - t.y), r = Math.abs(o.bottom - t.y), n = Math.abs(o.right - t.x), a = Math.abs(o.left - t.x);
+  switch (Math.min(e, r, n, a)) {
+    case a:
+      return "left";
+    case n:
+      return "right";
+    case e:
+      return "top";
+    case r:
+      return "bottom";
+    default:
+      throw new Error("unreachable");
+  }
+}
+function Te(t, o, e = 5) {
+  const r = [];
+  switch (o) {
+    case "top":
+      r.push(
+        { x: t.x - e, y: t.y + e },
+        { x: t.x + e, y: t.y + e }
+      );
+      break;
+    case "bottom":
+      r.push(
+        { x: t.x - e, y: t.y - e },
+        { x: t.x + e, y: t.y - e }
+      );
+      break;
+    case "left":
+      r.push(
+        { x: t.x + e, y: t.y - e },
+        { x: t.x + e, y: t.y + e }
+      );
+      break;
+    case "right":
+      r.push(
+        { x: t.x - e, y: t.y - e },
+        { x: t.x - e, y: t.y + e }
+      );
+      break;
+  }
+  return r;
+}
+function ye(t) {
+  const { top: o, right: e, bottom: r, left: n } = t;
+  return [
+    { x: n, y: o },
+    { x: e, y: o },
+    { x: e, y: r },
+    { x: n, y: r }
+  ];
+}
+function Ce(t, o) {
+  const { x: e, y: r } = t;
+  let n = !1;
+  for (let a = 0, l = o.length - 1; a < o.length; l = a++) {
+    const v = o[a], i = o[l], p = v.x, c = v.y, d = i.x, h = i.y;
+    c > r != h > r && e < (d - p) * (r - c) / (h - c) + p && (n = !n);
+  }
   return n;
 }
-var G = (e) => /^\w*$/.test(e), R = (e) => e === void 0, j = (e) => Array.isArray(e) ? e.filter(Boolean) : [], $ = (e) => j(e.replace(/["|']|\]/g, "").split(/\.|\[/)), y = (e, s, t) => {
-  if (!s || !p(e))
-    return t;
-  const n = (G(s) ? [s] : $(s)).reduce((r, a) => w(r) ? r : r[a], e);
-  return R(n) || n === e ? R(e[s]) ? t : e[s] : n;
-}, P = (e) => typeof e == "boolean", E = (e) => typeof e == "function", D = (e, s, t) => {
-  let n = -1;
-  const r = G(s) ? [s] : $(s), a = r.length, i = a - 1;
-  for (; ++n < a; ) {
-    const l = r[n];
-    let c = t;
-    if (n !== i) {
-      const f = e[l];
-      c = p(f) || Array.isArray(f) ? f : isNaN(+r[n + 1]) ? {} : [];
+function xe(t) {
+  const o = t.slice();
+  return o.sort((e, r) => e.x < r.x ? -1 : e.x > r.x ? 1 : e.y < r.y ? -1 : e.y > r.y ? 1 : 0), ge(o);
+}
+function ge(t) {
+  if (t.length <= 1) return t.slice();
+  const o = [];
+  for (let r = 0; r < t.length; r++) {
+    const n = t[r];
+    for (; o.length >= 2; ) {
+      const a = o[o.length - 1], l = o[o.length - 2];
+      if ((a.x - l.x) * (n.y - l.y) >= (a.y - l.y) * (n.x - l.x)) o.pop();
+      else break;
     }
-    if (l === "__proto__" || l === "constructor" || l === "prototype")
-      return;
-    e[l] = c, e = e[l];
+    o.push(n);
   }
-};
-const I = {
-  BLUR: "blur",
-  CHANGE: "change"
-}, B = {
-  all: "all"
-}, L = u.createContext(null);
-L.displayName = "HookFormContext";
-const M = () => u.useContext(L), oe = (e) => {
-  const { children: s, ...t } = e;
-  return u.createElement(L.Provider, { value: t }, s);
-};
-var ee = (e, s, t, n = !0) => {
-  const r = {
-    defaultValues: s._defaultValues
-  };
-  for (const a in e)
-    Object.defineProperty(r, a, {
-      get: () => {
-        const i = a;
-        return s._proxyFormState[i] !== B.all && (s._proxyFormState[i] = !n || B.all), t && (t[i] = !0), e[i];
-      }
-    });
-  return r;
-};
-const q = typeof window < "u" ? u.useLayoutEffect : u.useEffect;
-function te(e) {
-  const s = M(), { control: t = s.control, disabled: n, name: r, exact: a } = e || {}, [i, l] = u.useState(t._formState), c = u.useRef({
-    isDirty: !1,
-    isLoading: !1,
-    dirtyFields: !1,
-    touchedFields: !1,
-    validatingFields: !1,
-    isValidating: !1,
-    isValid: !1,
-    errors: !1
-  });
-  return q(() => t._subscribe({
-    name: r,
-    formState: c.current,
-    exact: a,
-    callback: (f) => {
-      !n && l({
-        ...t._formState,
-        ...f
-      });
+  o.pop();
+  const e = [];
+  for (let r = t.length - 1; r >= 0; r--) {
+    const n = t[r];
+    for (; e.length >= 2; ) {
+      const a = e[e.length - 1], l = e[e.length - 2];
+      if ((a.x - l.x) * (n.y - l.y) >= (a.y - l.y) * (n.x - l.x)) e.pop();
+      else break;
     }
-  }), [r, n, a]), u.useEffect(() => {
-    c.current.isValid && t._setValid(!0);
-  }, [t]), u.useMemo(() => ee(i, t, c.current, !1), [i, t]);
-}
-var re = (e) => typeof e == "string", T = (e, s, t, n, r) => re(e) ? y(t, e, r) : Array.isArray(e) ? e.map((a) => y(t, a)) : t, U = (e) => w(e) || !H(e);
-function S(e, s, t = /* @__PURE__ */ new WeakSet()) {
-  if (U(e) || U(s))
-    return Object.is(e, s);
-  if (k(e) && k(s))
-    return e.getTime() === s.getTime();
-  const n = Object.keys(e), r = Object.keys(s);
-  if (n.length !== r.length)
-    return !1;
-  if (t.has(e) || t.has(s))
-    return !0;
-  t.add(e), t.add(s);
-  for (const a of n) {
-    const i = e[a];
-    if (!r.includes(a))
-      return !1;
-    if (a !== "ref") {
-      const l = s[a];
-      if (k(i) && k(l) || p(i) && p(l) || Array.isArray(i) && Array.isArray(l) ? !S(i, l, t) : !Object.is(i, l))
-        return !1;
-    }
+    e.push(n);
   }
-  return !0;
+  return e.pop(), o.length === 1 && e.length === 1 && o[0].x === e[0].x && o[0].y === e[0].y ? o : o.concat(e);
 }
-function se(e) {
-  const s = M(), { control: t = s.control, name: n, defaultValue: r, disabled: a, exact: i, compute: l } = e || {}, c = u.useRef(r), f = u.useRef(l), V = u.useRef(void 0), d = u.useRef(t), g = u.useRef(n);
-  f.current = l;
-  const [A, v] = u.useState(() => {
-    const o = t._getWatch(n, c.current);
-    return f.current ? f.current(o) : o;
-  }), C = u.useCallback((o) => {
-    const m = T(n, t._names, o || t._formValues, !1, c.current);
-    return f.current ? f.current(m) : m;
-  }, [t._formValues, t._names, n]), b = u.useCallback((o) => {
-    if (!a) {
-      const m = T(n, t._names, o || t._formValues, !1, c.current);
-      if (f.current) {
-        const _ = f.current(m);
-        S(_, V.current) || (v(_), V.current = _);
-      } else
-        v(m);
-    }
-  }, [t._formValues, t._names, a, n]);
-  q(() => ((d.current !== t || !S(g.current, n)) && (d.current = t, g.current = n, b()), t._subscribe({
-    name: n,
-    formState: {
-      values: !0
-    },
-    exact: i,
-    callback: (o) => {
-      b(o.values);
-    }
-  })), [t, i, n, b]), u.useEffect(() => t._removeUnmounted());
-  const h = d.current !== t, F = g.current, O = u.useMemo(() => {
-    if (a)
-      return null;
-    const o = !h && !S(F, n);
-    return h || o ? C() : null;
-  }, [a, h, n, F, C]);
-  return O !== null ? O : A;
-}
-function ne(e) {
-  const s = M(), { name: t, disabled: n, control: r = s.control, shouldUnregister: a, defaultValue: i, exact: l = !0 } = e, c = X(r._names.array, t), f = u.useMemo(() => y(r._formValues, t, y(r._defaultValues, t, i)), [r, t, i]), V = se({
-    control: r,
-    name: t,
-    defaultValue: f,
-    exact: l
-  }), d = te({
-    control: r,
-    name: t,
-    exact: l
-  }), g = u.useRef(e), A = u.useRef(void 0), v = u.useRef(r.register(t, {
-    ...e.rules,
-    value: V,
-    ...P(e.disabled) ? { disabled: e.disabled } : {}
-  }));
-  g.current = e;
-  const C = u.useMemo(() => Object.defineProperties({}, {
-    invalid: {
-      enumerable: !0,
-      get: () => !!y(d.errors, t)
-    },
-    isDirty: {
-      enumerable: !0,
-      get: () => !!y(d.dirtyFields, t)
-    },
-    isTouched: {
-      enumerable: !0,
-      get: () => !!y(d.touchedFields, t)
-    },
-    isValidating: {
-      enumerable: !0,
-      get: () => !!y(d.validatingFields, t)
-    },
-    error: {
-      enumerable: !0,
-      get: () => y(d.errors, t)
-    }
-  }), [d, t]), b = u.useCallback((o) => v.current.onChange({
-    target: {
-      value: J(o),
-      name: t
-    },
-    type: I.CHANGE
-  }), [t]), h = u.useCallback(() => v.current.onBlur({
-    target: {
-      value: y(r._formValues, t),
-      name: t
-    },
-    type: I.BLUR
-  }), [t, r._formValues]), F = u.useCallback((o) => {
-    const m = y(r._fields, t);
-    m && m._f && o && (m._f.ref = {
-      focus: () => E(o.focus) && o.focus(),
-      select: () => E(o.select) && o.select(),
-      setCustomValidity: (_) => E(o.setCustomValidity) && o.setCustomValidity(_),
-      reportValidity: () => E(o.reportValidity) && o.reportValidity()
-    });
-  }, [r._fields, t]), O = u.useMemo(() => ({
-    name: t,
-    value: V,
-    ...P(n) || d.disabled ? { disabled: d.disabled || n } : {},
-    onChange: b,
-    onBlur: h,
-    ref: F
-  }), [t, n, d.disabled, b, h, F, V]);
-  return u.useEffect(() => {
-    const o = r._options.shouldUnregister || a, m = A.current;
-    m && m !== t && !c && r.unregister(m), r.register(t, {
-      ...g.current.rules,
-      ...P(g.current.disabled) ? { disabled: g.current.disabled } : {}
-    });
-    const _ = (x, K) => {
-      const N = y(r._fields, x);
-      N && N._f && (N._f.mount = K);
-    };
-    if (_(t, !0), o) {
-      const x = W(y(r._options.defaultValues, t, g.current.defaultValue));
-      D(r._defaultValues, t, x), R(y(r._formValues, t)) && D(r._formValues, t, x);
-    }
-    return !c && r.register(t), A.current = t, () => {
-      (c ? o && !r._state.action : o) ? r.unregister(t) : _(t, !1);
-    };
-  }, [t, r, c, a]), u.useEffect(() => {
-    r._setDisabledField({
-      disabled: n,
-      name: t
-    });
-  }, [n, t, r]), u.useMemo(() => ({
-    field: O,
-    formState: d,
-    fieldState: C
-  }), [O, d, C]);
-}
-const ae = (e) => e.render(ne(e));
+var He = F, Ne = B, Se = U, Ge = V, je = Y;
 export {
-  ae as Controller,
-  oe as FormProvider,
-  y as get,
-  D as set,
-  ne as useController,
-  M as useFormContext,
-  te as useFormState,
-  se as useWatch
+  je as Content,
+  Ge as Portal,
+  He as Provider,
+  Ne as Root,
+  B as Tooltip,
+  he as TooltipArrow,
+  Y as TooltipContent,
+  V as TooltipPortal,
+  F as TooltipProvider,
+  U as TooltipTrigger,
+  Se as Trigger
 };

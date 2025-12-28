@@ -1,32 +1,11 @@
-import * as a from "react";
-import { Primitive as o } from "./index93.js";
-import { jsx as t } from "react/jsx-runtime";
-var d = Object.freeze({
-  // See: https://github.com/twbs/bootstrap/blob/main/scss/mixins/_visually-hidden.scss
-  position: "absolute",
-  border: 0,
-  width: 1,
-  height: 1,
-  padding: 0,
-  margin: -1,
-  overflow: "hidden",
-  clip: "rect(0, 0, 0, 0)",
-  whiteSpace: "nowrap",
-  wordWrap: "normal"
-}), l = "VisuallyHidden", e = a.forwardRef(
-  (r, i) => /* @__PURE__ */ t(
-    o.span,
-    {
-      ...r,
-      ref: i,
-      style: { ...d, ...r.style }
-    }
-  )
-);
-e.displayName = l;
-var p = e;
+import { __assign as m } from "./index176.js";
+import * as r from "react";
+import { RemoveScroll as e } from "./index177.js";
+import t from "./index178.js";
+var s = r.forwardRef(function(a, o) {
+  return r.createElement(e, m({}, a, { ref: o, sideCar: t }));
+});
+s.classNames = e.classNames;
 export {
-  p as Root,
-  d as VISUALLY_HIDDEN_STYLES,
-  e as VisuallyHidden
+  s as default
 };

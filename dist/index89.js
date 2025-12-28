@@ -1,70 +1,54 @@
-import * as u from "react";
-import { jsx as h } from "react/jsx-runtime";
-function w(e, c) {
-  const o = u.createContext(c), a = (r) => {
-    const { children: t, ...n } = r, s = u.useMemo(() => n, Object.values(n));
-    return /* @__PURE__ */ h(o.Provider, { value: s, children: t });
-  };
-  a.displayName = e + "Provider";
-  function i(r) {
-    const t = u.useContext(o);
-    if (t) return t;
-    if (c !== void 0) return c;
-    throw new Error(`\`${r}\` must be used within \`${e}\``);
+import * as n from "react";
+import { useLayoutEffect as v } from "./index90.js";
+var E = n[" useInsertionEffect ".trim().toString()] || v;
+function y({
+  prop: t,
+  defaultProp: u,
+  onChange: o = () => {
+  },
+  caller: i
+}) {
+  const [l, e, r] = w({
+    defaultProp: u,
+    onChange: o
+  }), c = t !== void 0, a = c ? t : l;
+  {
+    const s = n.useRef(t !== void 0);
+    n.useEffect(() => {
+      const f = s.current;
+      f !== c && console.warn(
+        `${i} is changing from ${f ? "controlled" : "uncontrolled"} to ${c ? "controlled" : "uncontrolled"}. Components should not switch from controlled to uncontrolled (or vice versa). Decide between using a controlled or uncontrolled value for the lifetime of the component.`
+      ), s.current = c;
+    }, [c, i]);
   }
-  return [a, i];
+  const m = n.useCallback(
+    (s) => {
+      var f;
+      if (c) {
+        const d = R(s) ? s(t) : s;
+        d !== t && ((f = r.current) == null || f.call(r, d));
+      } else
+        e(s);
+    },
+    [c, t, e, r]
+  );
+  return [a, m];
 }
-function _(e, c = []) {
-  let o = [];
-  function a(r, t) {
-    const n = u.createContext(t), s = o.length;
-    o = [...o, t];
-    const p = (d) => {
-      var S;
-      const { scope: x, children: C, ...m } = d, v = ((S = x == null ? void 0 : x[e]) == null ? void 0 : S[s]) || n, P = u.useMemo(() => m, Object.values(m));
-      return /* @__PURE__ */ h(v.Provider, { value: P, children: C });
-    };
-    p.displayName = r + "Provider";
-    function f(d, x) {
-      var v;
-      const C = ((v = x == null ? void 0 : x[e]) == null ? void 0 : v[s]) || n, m = u.useContext(C);
-      if (m) return m;
-      if (t !== void 0) return t;
-      throw new Error(`\`${d}\` must be used within \`${r}\``);
-    }
-    return [p, f];
-  }
-  const i = () => {
-    const r = o.map((t) => u.createContext(t));
-    return function(n) {
-      const s = (n == null ? void 0 : n[e]) || r;
-      return u.useMemo(
-        () => ({ [`__scope${e}`]: { ...n, [e]: s } }),
-        [n, s]
-      );
-    };
-  };
-  return i.scopeName = e, [a, l(i, ...c)];
+function w({
+  defaultProp: t,
+  onChange: u
+}) {
+  const [o, i] = n.useState(t), l = n.useRef(o), e = n.useRef(u);
+  return E(() => {
+    e.current = u;
+  }, [u]), n.useEffect(() => {
+    var r;
+    l.current !== o && ((r = e.current) == null || r.call(e, o), l.current = o);
+  }, [o, l]), [o, i, e];
 }
-function l(...e) {
-  const c = e[0];
-  if (e.length === 1) return c;
-  const o = () => {
-    const a = e.map((i) => ({
-      useScope: i(),
-      scopeName: i.scopeName
-    }));
-    return function(r) {
-      const t = a.reduce((n, { useScope: s, scopeName: p }) => {
-        const d = s(r)[`__scope${p}`];
-        return { ...n, ...d };
-      }, {});
-      return u.useMemo(() => ({ [`__scope${c.scopeName}`]: t }), [t]);
-    };
-  };
-  return o.scopeName = c.scopeName, o;
+function R(t) {
+  return typeof t == "function";
 }
 export {
-  w as createContext,
-  _ as createContextScope
+  y as useControllableState
 };

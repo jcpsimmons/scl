@@ -1,6 +1,6 @@
 import { jsx as l } from "react/jsx-runtime";
 import * as f from "react";
-import { Root as o } from "./index56.js";
+import { Root as o } from "./index60.js";
 import { cn as i } from "./index2.js";
 const s = f.forwardRef(
   ({ className: a, orientation: r = "horizontal", decorative: m = !0, ...p }, t) => /* @__PURE__ */ l(

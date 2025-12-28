@@ -1,862 +1,330 @@
-import * as t from "react";
-import * as be from "react-dom";
-import { clamp as Re } from "./index100.js";
-import { composeEventHandlers as E } from "./index147.js";
-import { createCollection as st } from "./index135.js";
-import { useComposedRefs as B } from "./index88.js";
-import { createContextScope as lt } from "./index89.js";
-import { useDirection as ct } from "./index98.js";
-import { DismissableLayer as it } from "./index111.js";
-import { useFocusGuards as at } from "./index143.js";
-import { FocusScope as dt } from "./index142.js";
-import { useId as Ie } from "./index95.js";
-import { createPopperScope as _e, Root as ut, Anchor as pt, Content as ft, Arrow as mt } from "./index112.js";
-import { Portal as ht } from "./index113.js";
-import { Primitive as M } from "./index93.js";
-import { createSlot as vt } from "./index148.js";
-import { useCallbackRef as gt } from "./index97.js";
-import { useControllableState as Ee } from "./index90.js";
-import { useLayoutEffect as Y } from "./index99.js";
-import { usePrevious as St } from "./index91.js";
-import { VISUALLY_HIDDEN_STYLES as wt } from "./index115.js";
-import { hideOthers as Ct } from "./index145.js";
-import yt from "./index144.js";
-import { jsx as m, jsxs as ce, Fragment as Te } from "react/jsx-runtime";
-var xt = [" ", "Enter", "ArrowUp", "ArrowDown"], It = [" ", "Enter"], J = "Select", [ae, de, Tt] = st(J), [te] = lt(J, [
-  Tt,
-  _e
-]), ue = _e(), [Pt, j] = te(J), [Rt, Et] = te(J), Ne = (n) => {
-  const {
-    __scopeSelect: c,
-    children: e,
-    open: i,
-    defaultOpen: l,
-    onOpenChange: u,
-    value: r,
-    defaultValue: s,
-    onValueChange: o,
-    dir: p,
-    name: g,
-    autoComplete: C,
-    disabled: P,
-    required: R,
-    form: T
-  } = n, a = ue(c), [v, y] = t.useState(null), [d, h] = t.useState(null), [A, O] = t.useState(!1), oe = ct(p), [b, L] = Ee({
-    prop: i,
-    defaultProp: l ?? !1,
-    onChange: u,
-    caller: J
-  }), [K, X] = Ee({
-    prop: r,
-    defaultProp: s,
-    onChange: o,
-    caller: J
-  }), V = t.useRef(null), H = v ? T || !!v.closest("form") : !0, [G, U] = t.useState(/* @__PURE__ */ new Set()), W = Array.from(G).map((_) => _.props.value).join(";");
-  return /* @__PURE__ */ m(ut, { ...a, children: /* @__PURE__ */ ce(
-    Pt,
-    {
-      required: R,
-      scope: c,
-      trigger: v,
-      onTriggerChange: y,
-      valueNode: d,
-      onValueNodeChange: h,
-      valueNodeHasChildren: A,
-      onValueNodeHasChildrenChange: O,
-      contentId: Ie(),
-      value: K,
-      onValueChange: X,
-      open: b,
-      onOpenChange: L,
-      dir: oe,
-      triggerPointerDownPosRef: V,
-      disabled: P,
-      children: [
-        /* @__PURE__ */ m(ae.Provider, { scope: c, children: /* @__PURE__ */ m(
-          Rt,
-          {
-            scope: n.__scopeSelect,
-            onNativeOptionAdd: t.useCallback((_) => {
-              U((k) => new Set(k).add(_));
-            }, []),
-            onNativeOptionRemove: t.useCallback((_) => {
-              U((k) => {
-                const F = new Set(k);
-                return F.delete(_), F;
-              });
-            }, []),
-            children: e
-          }
-        ) }),
-        H ? /* @__PURE__ */ ce(
-          tt,
-          {
-            "aria-hidden": !0,
-            required: R,
-            tabIndex: -1,
-            name: g,
-            autoComplete: C,
-            value: K,
-            onChange: (_) => X(_.target.value),
-            disabled: P,
-            form: T,
-            children: [
-              K === void 0 ? /* @__PURE__ */ m("option", { value: "" }) : null,
-              Array.from(G)
-            ]
-          },
-          W
-        ) : null
-      ]
+import { Prec as z, EditorSelection as x, countColumn as w, EditorState as K } from "./index76.js";
+import { keymap as _, EditorView as j } from "./index75.js";
+import { foldService as G, LanguageSupport as N, Language as Q, defineLanguageFacet as J, syntaxTree as A, indentUnit as Y, foldNodeProp as R, indentNodeProp as Z, languageDataProp as W, LanguageDescription as D, ParseContext as ee } from "./index84.js";
+import { CompletionContext as te } from "./index146.js";
+import { MarkdownParser as re, parseCode as ne, parser as oe, GFM as ie, Subscript as le, Superscript as se, Emoji as fe } from "./index147.js";
+import { html as ae, htmlCompletionSource as me } from "./index78.js";
+import { NodeProp as ue } from "./index148.js";
+const $ = /* @__PURE__ */ J({ commentTokens: { block: { open: "<!--", close: "-->" } } }), q = /* @__PURE__ */ new ue(), H = /* @__PURE__ */ oe.configure({
+  props: [
+    /* @__PURE__ */ R.add((r) => !r.is("Block") || r.is("Document") || P(r) != null || ce(r) ? void 0 : (n, o) => ({ from: o.doc.lineAt(n.from).to, to: n.to })),
+    /* @__PURE__ */ q.add(P),
+    /* @__PURE__ */ Z.add({
+      Document: () => null
+    }),
+    /* @__PURE__ */ W.add({
+      Document: $
+    })
+  ]
+});
+function P(r) {
+  let n = /^(?:ATX|Setext)Heading(\d)$/.exec(r.name);
+  return n ? +n[1] : void 0;
+}
+function ce(r) {
+  return r.name == "OrderedList" || r.name == "BulletList";
+}
+function pe(r, n) {
+  let o = r;
+  for (; ; ) {
+    let t = o.nextSibling, e;
+    if (!t || (e = P(t.type)) != null && e <= n)
+      break;
+    o = t;
+  }
+  return o.to;
+}
+const de = /* @__PURE__ */ G.of((r, n, o) => {
+  for (let t = A(r).resolveInner(o, -1); t && !(t.from < n); t = t.parent) {
+    let e = t.type.prop(q);
+    if (e == null)
+      continue;
+    let i = pe(t, e);
+    if (i > o)
+      return { from: o, to: i };
+  }
+  return null;
+});
+function T(r) {
+  return new Q($, r, [], "markdown");
+}
+const he = /* @__PURE__ */ T(H), ge = /* @__PURE__ */ H.configure([ie, le, se, fe, {
+  props: [
+    /* @__PURE__ */ R.add({
+      Table: (r, n) => ({ from: n.doc.lineAt(r.from).to, to: r.to })
+    })
+  ]
+}]), b = /* @__PURE__ */ T(ge);
+function ke(r, n) {
+  return (o) => {
+    if (o && r) {
+      let t = null;
+      if (o = /\S*/.exec(o)[0], typeof r == "function" ? t = r(o) : t = D.matchLanguageName(r, o, !0), t instanceof D)
+        return t.support ? t.support.language.parser : ee.getSkippingParser(t.load());
+      if (t)
+        return t.parser;
     }
-  ) });
-};
-Ne.displayName = J;
-var Me = "SelectTrigger", Ae = t.forwardRef(
-  (n, c) => {
-    const { __scopeSelect: e, disabled: i = !1, ...l } = n, u = ue(e), r = j(Me, e), s = r.disabled || i, o = B(c, r.onTriggerChange), p = de(e), g = t.useRef("touch"), [C, P, R] = nt((a) => {
-      const v = p().filter((h) => !h.disabled), y = v.find((h) => h.value === r.value), d = rt(v, a, y);
-      d !== void 0 && r.onValueChange(d.value);
-    }), T = (a) => {
-      s || (r.onOpenChange(!0), R()), a && (r.triggerPointerDownPosRef.current = {
-        x: Math.round(a.pageX),
-        y: Math.round(a.pageY)
-      });
-    };
-    return /* @__PURE__ */ m(pt, { asChild: !0, ...u, children: /* @__PURE__ */ m(
-      M.button,
-      {
-        type: "button",
-        role: "combobox",
-        "aria-controls": r.contentId,
-        "aria-expanded": r.open,
-        "aria-required": r.required,
-        "aria-autocomplete": "none",
-        dir: r.dir,
-        "data-state": r.open ? "open" : "closed",
-        disabled: s,
-        "data-disabled": s ? "" : void 0,
-        "data-placeholder": ot(r.value) ? "" : void 0,
-        ...l,
-        ref: o,
-        onClick: E(l.onClick, (a) => {
-          a.currentTarget.focus(), g.current !== "mouse" && T(a);
-        }),
-        onPointerDown: E(l.onPointerDown, (a) => {
-          g.current = a.pointerType;
-          const v = a.target;
-          v.hasPointerCapture(a.pointerId) && v.releasePointerCapture(a.pointerId), a.button === 0 && a.ctrlKey === !1 && a.pointerType === "mouse" && (T(a), a.preventDefault());
-        }),
-        onKeyDown: E(l.onKeyDown, (a) => {
-          const v = C.current !== "";
-          !(a.ctrlKey || a.altKey || a.metaKey) && a.key.length === 1 && P(a.key), !(v && a.key === " ") && xt.includes(a.key) && (T(), a.preventDefault());
-        })
-      }
-    ) });
+    return n ? n.parser : null;
+  };
+}
+class v {
+  constructor(n, o, t, e, i, a, m) {
+    this.node = n, this.from = o, this.to = t, this.spaceBefore = e, this.spaceAfter = i, this.type = a, this.item = m;
   }
-);
-Ae.displayName = Me;
-var Oe = "SelectValue", De = t.forwardRef(
-  (n, c) => {
-    const { __scopeSelect: e, className: i, style: l, children: u, placeholder: r = "", ...s } = n, o = j(Oe, e), { onValueNodeHasChildrenChange: p } = o, g = u !== void 0, C = B(c, o.onValueNodeChange);
-    return Y(() => {
-      p(g);
-    }, [p, g]), /* @__PURE__ */ m(
-      M.span,
-      {
-        ...s,
-        ref: C,
-        style: { pointerEvents: "none" },
-        children: ot(o.value) ? /* @__PURE__ */ m(Te, { children: r }) : u
-      }
-    );
-  }
-);
-De.displayName = Oe;
-var bt = "SelectIcon", Le = t.forwardRef(
-  (n, c) => {
-    const { __scopeSelect: e, children: i, ...l } = n;
-    return /* @__PURE__ */ m(M.span, { "aria-hidden": !0, ...l, ref: c, children: i || "▼" });
-  }
-);
-Le.displayName = bt;
-var _t = "SelectPortal", ke = (n) => /* @__PURE__ */ m(ht, { asChild: !0, ...n });
-ke.displayName = _t;
-var Q = "SelectContent", Be = t.forwardRef(
-  (n, c) => {
-    const e = j(Q, n.__scopeSelect), [i, l] = t.useState();
-    if (Y(() => {
-      l(new DocumentFragment());
-    }, []), !e.open) {
-      const u = i;
-      return u ? be.createPortal(
-        /* @__PURE__ */ m(Ve, { scope: n.__scopeSelect, children: /* @__PURE__ */ m(ae.Slot, { scope: n.__scopeSelect, children: /* @__PURE__ */ m("div", { children: n.children }) }) }),
-        u
-      ) : null;
+  blank(n, o = !0) {
+    let t = this.spaceBefore + (this.node.name == "Blockquote" ? ">" : "");
+    if (n != null) {
+      for (; t.length < n; )
+        t += " ";
+      return t;
+    } else {
+      for (let e = this.to - this.from - t.length - this.spaceAfter.length; e > 0; e--)
+        t += " ";
+      return t + (o ? this.spaceAfter : "");
     }
-    return /* @__PURE__ */ m(He, { ...n, ref: c });
   }
-);
-Be.displayName = Q;
-var D = 10, [Ve, q] = te(Q), Nt = "SelectContentImpl", Mt = vt("SelectContent.RemoveScroll"), He = t.forwardRef(
-  (n, c) => {
-    const {
-      __scopeSelect: e,
-      position: i = "item-aligned",
-      onCloseAutoFocus: l,
-      onEscapeKeyDown: u,
-      onPointerDownOutside: r,
-      //
-      // PopperContent props
-      side: s,
-      sideOffset: o,
-      align: p,
-      alignOffset: g,
-      arrowPadding: C,
-      collisionBoundary: P,
-      collisionPadding: R,
-      sticky: T,
-      hideWhenDetached: a,
-      avoidCollisions: v,
-      //
-      ...y
-    } = n, d = j(Q, e), [h, A] = t.useState(null), [O, oe] = t.useState(null), b = B(c, (f) => A(f)), [L, K] = t.useState(null), [X, V] = t.useState(
-      null
-    ), H = de(e), [G, U] = t.useState(!1), W = t.useRef(!1);
-    t.useEffect(() => {
-      if (h) return Ct(h);
-    }, [h]), at();
-    const _ = t.useCallback(
-      (f) => {
-        const [I, ...N] = H().map((w) => w.ref.current), [x] = N.slice(-1), S = document.activeElement;
-        for (const w of f)
-          if (w === S || (w == null || w.scrollIntoView({ block: "nearest" }), w === I && O && (O.scrollTop = 0), w === x && O && (O.scrollTop = O.scrollHeight), w == null || w.focus(), document.activeElement !== S)) return;
-      },
-      [H, O]
-    ), k = t.useCallback(
-      () => _([L, h]),
-      [_, L, h]
-    );
-    t.useEffect(() => {
-      G && k();
-    }, [G, k]);
-    const { onOpenChange: F, triggerPointerDownPosRef: z } = d;
-    t.useEffect(() => {
-      if (h) {
-        let f = { x: 0, y: 0 };
-        const I = (x) => {
-          var S, w;
-          f = {
-            x: Math.abs(Math.round(x.pageX) - (((S = z.current) == null ? void 0 : S.x) ?? 0)),
-            y: Math.abs(Math.round(x.pageY) - (((w = z.current) == null ? void 0 : w.y) ?? 0))
+  marker(n, o) {
+    let t = this.node.name == "OrderedList" ? String(+V(this.item, n)[2] + o) : "";
+    return this.spaceBefore + t + this.type + this.spaceAfter;
+  }
+}
+function U(r, n) {
+  let o = [], t = [];
+  for (let e = r; e; e = e.parent) {
+    if (e.name == "FencedCode")
+      return t;
+    (e.name == "ListItem" || e.name == "Blockquote") && o.push(e);
+  }
+  for (let e = o.length - 1; e >= 0; e--) {
+    let i = o[e], a, m = n.lineAt(i.from), s = i.from - m.from;
+    if (i.name == "Blockquote" && (a = /^ *>( ?)/.exec(m.text.slice(s))))
+      t.push(new v(i, s, s + a[0].length, "", a[1], ">", null));
+    else if (i.name == "ListItem" && i.parent.name == "OrderedList" && (a = /^( *)\d+([.)])( *)/.exec(m.text.slice(s)))) {
+      let f = a[3], l = a[0].length;
+      f.length >= 4 && (f = f.slice(0, f.length - 4), l -= 4), t.push(new v(i.parent, s, s + l, a[1], f, a[2], i));
+    } else if (i.name == "ListItem" && i.parent.name == "BulletList" && (a = /^( *)([-+*])( {1,4}\[[ xX]\])?( +)/.exec(m.text.slice(s)))) {
+      let f = a[4], l = a[0].length;
+      f.length > 4 && (f = f.slice(0, f.length - 4), l -= 4);
+      let u = a[2];
+      a[3] && (u += a[3].replace(/[xX]/, " ")), t.push(new v(i.parent, s, s + l, a[1], f, u, i));
+    }
+  }
+  return t;
+}
+function V(r, n) {
+  return /^(\s*)(\d+)(?=[.)])/.exec(n.sliceString(r.from, r.from + 10));
+}
+function I(r, n, o, t = 0) {
+  for (let e = -1, i = r; ; ) {
+    if (i.name == "ListItem") {
+      let m = V(i, n), s = +m[2];
+      if (e >= 0) {
+        if (s != e + 1)
+          return;
+        o.push({ from: i.from + m[1].length, to: i.from + m[0].length, insert: String(e + 2 + t) });
+      }
+      e = s;
+    }
+    let a = i.nextSibling;
+    if (!a)
+      break;
+    i = a;
+  }
+}
+function E(r, n) {
+  let o = /^[ \t]*/.exec(r)[0].length;
+  if (!o || n.facet(Y) != "	")
+    return r;
+  let t = w(r, 4, o), e = "";
+  for (let i = t; i > 0; )
+    i >= 4 ? (e += "	", i -= 4) : (e += " ", i--);
+  return e + r.slice(o);
+}
+const xe = (r = {}) => ({ state: n, dispatch: o }) => {
+  let t = A(n), { doc: e } = n, i = null, a = n.changeByRange((m) => {
+    if (!m.empty || !b.isActiveAt(n, m.from, -1) && !b.isActiveAt(n, m.from, 1))
+      return i = { range: m };
+    let s = m.from, f = e.lineAt(s), l = U(t.resolveInner(s, -1), e);
+    for (; l.length && l[l.length - 1].from > s - f.from; )
+      l.pop();
+    if (!l.length)
+      return i = { range: m };
+    let u = l[l.length - 1];
+    if (u.to - u.spaceAfter.length > s - f.from)
+      return i = { range: m };
+    let d = s >= u.to - u.spaceAfter.length && !/\S/.test(f.text.slice(u.to));
+    if (u.item && d) {
+      let p = u.node.firstChild, h = u.node.getChild("ListItem", "ListItem");
+      if (p.to >= s || h && h.to < s || f.from > 0 && !/[^\s>]/.test(e.lineAt(f.from - 1).text) || r.nonTightLists === !1) {
+        let c = l.length > 1 ? l[l.length - 2] : null, C, B = "";
+        c && c.item ? (C = f.from + c.from, B = c.marker(e, 1)) : C = f.from + (c ? c.to : 0);
+        let S = [{ from: C, to: s, insert: B }];
+        return u.node.name == "OrderedList" && I(u.item, e, S, -2), c && c.node.name == "OrderedList" && I(c.item, e, S), { range: x.cursor(C + B.length), changes: S };
+      } else {
+        let c = F(l, n, f);
+        return {
+          range: x.cursor(s + c.length + 1),
+          changes: { from: f.from, insert: c + n.lineBreak }
+        };
+      }
+    }
+    if (u.node.name == "Blockquote" && d && f.from) {
+      let p = e.lineAt(f.from - 1), h = />\s*$/.exec(p.text);
+      if (h && h.index == u.from) {
+        let c = n.changes([
+          { from: p.from + h.index, to: p.to },
+          { from: f.from + u.from, to: f.to }
+        ]);
+        return { range: m.map(c), changes: c };
+      }
+    }
+    let g = [];
+    u.node.name == "OrderedList" && I(u.item, e, g);
+    let M = u.item && u.item.from < f.from, k = "";
+    if (!M || /^[\s\d.)\-+*>]*/.exec(f.text)[0].length >= u.to)
+      for (let p = 0, h = l.length - 1; p <= h; p++)
+        k += p == h && !M ? l[p].marker(e, 1) : l[p].blank(p < h ? w(f.text, 4, l[p + 1].from) - k.length : null);
+    let L = s;
+    for (; L > f.from && /\s/.test(f.text.charAt(L - f.from - 1)); )
+      L--;
+    return k = E(k, n), we(u.node, n.doc) && (k = F(l, n, f) + n.lineBreak + k), g.push({ from: L, to: s, insert: n.lineBreak + k }), { range: x.cursor(L + k.length + 1), changes: g };
+  });
+  return i ? !1 : (o(n.update(a, { scrollIntoView: !0, userEvent: "input" })), !0);
+}, Le = /* @__PURE__ */ xe();
+function O(r) {
+  return r.name == "QuoteMark" || r.name == "ListMark";
+}
+function we(r, n) {
+  if (r.name != "OrderedList" && r.name != "BulletList")
+    return !1;
+  let o = r.firstChild, t = r.getChild("ListItem", "ListItem");
+  if (!t)
+    return !1;
+  let e = n.lineAt(o.to), i = n.lineAt(t.from), a = /^[\s>]*$/.test(e.text);
+  return e.number + (a ? 0 : 1) < i.number;
+}
+function F(r, n, o) {
+  let t = "";
+  for (let e = 0, i = r.length - 2; e <= i; e++)
+    t += r[e].blank(e < i ? w(o.text, 4, r[e + 1].from) - t.length : null, e < i);
+  return E(t, n);
+}
+function Ae(r, n) {
+  let o = r.resolveInner(n, -1), t = n;
+  O(o) && (t = o.from, o = o.parent);
+  for (let e; e = o.childBefore(t); )
+    if (O(e))
+      t = e.from;
+    else if (e.name == "OrderedList" || e.name == "BulletList")
+      o = e.lastChild, t = o.to;
+    else
+      break;
+  return o;
+}
+const Ce = ({ state: r, dispatch: n }) => {
+  let o = A(r), t = null, e = r.changeByRange((i) => {
+    let a = i.from, { doc: m } = r;
+    if (i.empty && b.isActiveAt(r, i.from)) {
+      let s = m.lineAt(a), f = U(Ae(o, a), m);
+      if (f.length) {
+        let l = f[f.length - 1], u = l.to - l.spaceAfter.length + (l.spaceAfter ? 1 : 0);
+        if (a - s.from > u && !/\S/.test(s.text.slice(u, a - s.from)))
+          return {
+            range: x.cursor(s.from + u),
+            changes: { from: s.from + u, to: a }
           };
-        }, N = (x) => {
-          f.x <= 10 && f.y <= 10 ? x.preventDefault() : h.contains(x.target) || F(!1), document.removeEventListener("pointermove", I), z.current = null;
-        };
-        return z.current !== null && (document.addEventListener("pointermove", I), document.addEventListener("pointerup", N, { capture: !0, once: !0 })), () => {
-          document.removeEventListener("pointermove", I), document.removeEventListener("pointerup", N, { capture: !0 });
-        };
-      }
-    }, [h, F, z]), t.useEffect(() => {
-      const f = () => F(!1);
-      return window.addEventListener("blur", f), window.addEventListener("resize", f), () => {
-        window.removeEventListener("blur", f), window.removeEventListener("resize", f);
-      };
-    }, [F]);
-    const [pe, se] = nt((f) => {
-      const I = H().filter((S) => !S.disabled), N = I.find((S) => S.ref.current === document.activeElement), x = rt(I, f, N);
-      x && setTimeout(() => x.ref.current.focus());
-    }), fe = t.useCallback(
-      (f, I, N) => {
-        const x = !W.current && !N;
-        (d.value !== void 0 && d.value === I || x) && (K(f), x && (W.current = !0));
-      },
-      [d.value]
-    ), me = t.useCallback(() => h == null ? void 0 : h.focus(), [h]), ee = t.useCallback(
-      (f, I, N) => {
-        const x = !W.current && !N;
-        (d.value !== void 0 && d.value === I || x) && V(f);
-      },
-      [d.value]
-    ), le = i === "popper" ? Se : Ue, ne = le === Se ? {
-      side: s,
-      sideOffset: o,
-      align: p,
-      alignOffset: g,
-      arrowPadding: C,
-      collisionBoundary: P,
-      collisionPadding: R,
-      sticky: T,
-      hideWhenDetached: a,
-      avoidCollisions: v
-    } : {};
-    return /* @__PURE__ */ m(
-      Ve,
-      {
-        scope: e,
-        content: h,
-        viewport: O,
-        onViewportChange: oe,
-        itemRefCallback: fe,
-        selectedItem: L,
-        onItemLeave: me,
-        itemTextRefCallback: ee,
-        focusSelectedItem: k,
-        selectedItemText: X,
-        position: i,
-        isPositioned: G,
-        searchRef: pe,
-        children: /* @__PURE__ */ m(yt, { as: Mt, allowPinchZoom: !0, children: /* @__PURE__ */ m(
-          dt,
-          {
-            asChild: !0,
-            trapped: d.open,
-            onMountAutoFocus: (f) => {
-              f.preventDefault();
-            },
-            onUnmountAutoFocus: E(l, (f) => {
-              var I;
-              (I = d.trigger) == null || I.focus({ preventScroll: !0 }), f.preventDefault();
-            }),
-            children: /* @__PURE__ */ m(
-              it,
-              {
-                asChild: !0,
-                disableOutsidePointerEvents: !0,
-                onEscapeKeyDown: u,
-                onPointerDownOutside: r,
-                onFocusOutside: (f) => f.preventDefault(),
-                onDismiss: () => d.onOpenChange(!1),
-                children: /* @__PURE__ */ m(
-                  le,
-                  {
-                    role: "listbox",
-                    id: d.contentId,
-                    "data-state": d.open ? "open" : "closed",
-                    dir: d.dir,
-                    onContextMenu: (f) => f.preventDefault(),
-                    ...y,
-                    ...ne,
-                    onPlaced: () => U(!0),
-                    ref: b,
-                    style: {
-                      // flex layout so we can place the scroll buttons properly
-                      display: "flex",
-                      flexDirection: "column",
-                      // reset the outline by default as the content MAY get focused
-                      outline: "none",
-                      ...y.style
-                    },
-                    onKeyDown: E(y.onKeyDown, (f) => {
-                      const I = f.ctrlKey || f.altKey || f.metaKey;
-                      if (f.key === "Tab" && f.preventDefault(), !I && f.key.length === 1 && se(f.key), ["ArrowUp", "ArrowDown", "Home", "End"].includes(f.key)) {
-                        let x = H().filter((S) => !S.disabled).map((S) => S.ref.current);
-                        if (["ArrowUp", "End"].includes(f.key) && (x = x.slice().reverse()), ["ArrowUp", "ArrowDown"].includes(f.key)) {
-                          const S = f.target, w = x.indexOf(S);
-                          x = x.slice(w + 1);
-                        }
-                        setTimeout(() => _(x)), f.preventDefault();
-                      }
-                    })
-                  }
-                )
-              }
-            )
+        if (a - s.from == u && // Only apply this if we're on the line that has the
+        // construct's syntax, or there's only indentation in the
+        // target range
+        (!l.item || s.from <= l.item.from || !/\S/.test(s.text.slice(0, l.to)))) {
+          let d = s.from + l.from;
+          if (l.item && l.node.from < l.item.from && /\S/.test(s.text.slice(l.from, l.to))) {
+            let g = l.blank(w(s.text, 4, l.to) - w(s.text, 4, l.from));
+            return d == s.from && (g = E(g, r)), {
+              range: x.cursor(d + g.length),
+              changes: { from: d, to: s.from + l.to, insert: g }
+            };
           }
-        ) })
-      }
-    );
-  }
-);
-He.displayName = Nt;
-var At = "SelectItemAlignedPosition", Ue = t.forwardRef((n, c) => {
-  const { __scopeSelect: e, onPlaced: i, ...l } = n, u = j(Q, e), r = q(Q, e), [s, o] = t.useState(null), [p, g] = t.useState(null), C = B(c, (b) => g(b)), P = de(e), R = t.useRef(!1), T = t.useRef(!0), { viewport: a, selectedItem: v, selectedItemText: y, focusSelectedItem: d } = r, h = t.useCallback(() => {
-    if (u.trigger && u.valueNode && s && p && a && v && y) {
-      const b = u.trigger.getBoundingClientRect(), L = p.getBoundingClientRect(), K = u.valueNode.getBoundingClientRect(), X = y.getBoundingClientRect();
-      if (u.dir !== "rtl") {
-        const S = X.left - L.left, w = K.left - S, Z = b.left - w, $ = b.width + Z, he = Math.max($, L.width), ve = window.innerWidth - D, ge = Re(w, [
-          D,
-          // Prevents the content from going off the starting edge of the
-          // viewport. It may still go off the ending edge, but this can be
-          // controlled by the user since they may want to manage overflow in a
-          // specific way.
-          // https://github.com/radix-ui/primitives/issues/2049
-          Math.max(D, ve - he)
-        ]);
-        s.style.minWidth = $ + "px", s.style.left = ge + "px";
-      } else {
-        const S = L.right - X.right, w = window.innerWidth - K.right - S, Z = window.innerWidth - b.right - w, $ = b.width + Z, he = Math.max($, L.width), ve = window.innerWidth - D, ge = Re(w, [
-          D,
-          Math.max(D, ve - he)
-        ]);
-        s.style.minWidth = $ + "px", s.style.right = ge + "px";
-      }
-      const V = P(), H = window.innerHeight - D * 2, G = a.scrollHeight, U = window.getComputedStyle(p), W = parseInt(U.borderTopWidth, 10), _ = parseInt(U.paddingTop, 10), k = parseInt(U.borderBottomWidth, 10), F = parseInt(U.paddingBottom, 10), z = W + _ + G + F + k, pe = Math.min(v.offsetHeight * 5, z), se = window.getComputedStyle(a), fe = parseInt(se.paddingTop, 10), me = parseInt(se.paddingBottom, 10), ee = b.top + b.height / 2 - D, le = H - ee, ne = v.offsetHeight / 2, f = v.offsetTop + ne, I = W + _ + f, N = z - I;
-      if (I <= ee) {
-        const S = V.length > 0 && v === V[V.length - 1].ref.current;
-        s.style.bottom = "0px";
-        const w = p.clientHeight - a.offsetTop - a.offsetHeight, Z = Math.max(
-          le,
-          ne + // viewport might have padding bottom, include it to avoid a scrollable viewport
-          (S ? me : 0) + w + k
-        ), $ = I + Z;
-        s.style.height = $ + "px";
-      } else {
-        const S = V.length > 0 && v === V[0].ref.current;
-        s.style.top = "0px";
-        const Z = Math.max(
-          ee,
-          W + a.offsetTop + // viewport might have padding top, include it to avoid a scrollable viewport
-          (S ? fe : 0) + ne
-        ) + N;
-        s.style.height = Z + "px", a.scrollTop = I - ee + a.offsetTop;
-      }
-      s.style.margin = `${D}px 0`, s.style.minHeight = pe + "px", s.style.maxHeight = H + "px", i == null || i(), requestAnimationFrame(() => R.current = !0);
-    }
-  }, [
-    P,
-    u.trigger,
-    u.valueNode,
-    s,
-    p,
-    a,
-    v,
-    y,
-    u.dir,
-    i
-  ]);
-  Y(() => h(), [h]);
-  const [A, O] = t.useState();
-  Y(() => {
-    p && O(window.getComputedStyle(p).zIndex);
-  }, [p]);
-  const oe = t.useCallback(
-    (b) => {
-      b && T.current === !0 && (h(), d == null || d(), T.current = !1);
-    },
-    [h, d]
-  );
-  return /* @__PURE__ */ m(
-    Dt,
-    {
-      scope: e,
-      contentWrapper: s,
-      shouldExpandOnScrollRef: R,
-      onScrollButtonChange: oe,
-      children: /* @__PURE__ */ m(
-        "div",
-        {
-          ref: o,
-          style: {
-            display: "flex",
-            flexDirection: "column",
-            position: "fixed",
-            zIndex: A
-          },
-          children: /* @__PURE__ */ m(
-            M.div,
-            {
-              ...l,
-              ref: C,
-              style: {
-                // When we get the height of the content, it includes borders. If we were to set
-                // the height without having `boxSizing: 'border-box'` it would be too big.
-                boxSizing: "border-box",
-                // We need to ensure the content doesn't get taller than the wrapper
-                maxHeight: "100%",
-                ...l.style
-              }
-            }
-          )
+          if (d < a)
+            return { range: x.cursor(d), changes: { from: d, to: a } };
         }
-      )
-    }
-  );
-});
-Ue.displayName = At;
-var Ot = "SelectPopperPosition", Se = t.forwardRef((n, c) => {
-  const {
-    __scopeSelect: e,
-    align: i = "start",
-    collisionPadding: l = D,
-    ...u
-  } = n, r = ue(e);
-  return /* @__PURE__ */ m(
-    ft,
-    {
-      ...r,
-      ...u,
-      ref: c,
-      align: i,
-      collisionPadding: l,
-      style: {
-        // Ensure border-box for floating-ui calculations
-        boxSizing: "border-box",
-        ...u.style,
-        "--radix-select-content-transform-origin": "var(--radix-popper-transform-origin)",
-        "--radix-select-content-available-width": "var(--radix-popper-available-width)",
-        "--radix-select-content-available-height": "var(--radix-popper-available-height)",
-        "--radix-select-trigger-width": "var(--radix-popper-anchor-width)",
-        "--radix-select-trigger-height": "var(--radix-popper-anchor-height)"
       }
     }
-  );
-});
-Se.displayName = Ot;
-var [Dt, Pe] = te(Q, {}), we = "SelectViewport", We = t.forwardRef(
-  (n, c) => {
-    const { __scopeSelect: e, nonce: i, ...l } = n, u = q(we, e), r = Pe(we, e), s = B(c, u.onViewportChange), o = t.useRef(0);
-    return /* @__PURE__ */ ce(Te, { children: [
-      /* @__PURE__ */ m(
-        "style",
-        {
-          dangerouslySetInnerHTML: {
-            __html: "[data-radix-select-viewport]{scrollbar-width:none;-ms-overflow-style:none;-webkit-overflow-scrolling:touch;}[data-radix-select-viewport]::-webkit-scrollbar{display:none}"
-          },
-          nonce: i
-        }
-      ),
-      /* @__PURE__ */ m(ae.Slot, { scope: e, children: /* @__PURE__ */ m(
-        M.div,
-        {
-          "data-radix-select-viewport": "",
-          role: "presentation",
-          ...l,
-          ref: s,
-          style: {
-            // we use position: 'relative' here on the `viewport` so that when we call
-            // `selectedItem.offsetTop` in calculations, the offset is relative to the viewport
-            // (independent of the scrollUpButton).
-            position: "relative",
-            flex: 1,
-            // Viewport should only be scrollable in the vertical direction.
-            // This won't work in vertical writing modes, so we'll need to
-            // revisit this if/when that is supported
-            // https://developer.chrome.com/blog/vertical-form-controls
-            overflow: "hidden auto",
-            ...l.style
-          },
-          onScroll: E(l.onScroll, (p) => {
-            const g = p.currentTarget, { contentWrapper: C, shouldExpandOnScrollRef: P } = r;
-            if (P != null && P.current && C) {
-              const R = Math.abs(o.current - g.scrollTop);
-              if (R > 0) {
-                const T = window.innerHeight - D * 2, a = parseFloat(C.style.minHeight), v = parseFloat(C.style.height), y = Math.max(a, v);
-                if (y < T) {
-                  const d = y + R, h = Math.min(T, d), A = d - h;
-                  C.style.height = h + "px", C.style.bottom === "0px" && (g.scrollTop = A > 0 ? A : 0, C.style.justifyContent = "flex-end");
-                }
-              }
-            }
-            o.current = g.scrollTop;
-          })
-        }
-      ) })
-    ] });
-  }
-);
-We.displayName = we;
-var Fe = "SelectGroup", [Lt, kt] = te(Fe), Ke = t.forwardRef(
-  (n, c) => {
-    const { __scopeSelect: e, ...i } = n, l = Ie();
-    return /* @__PURE__ */ m(Lt, { scope: e, id: l, children: /* @__PURE__ */ m(M.div, { role: "group", "aria-labelledby": l, ...i, ref: c }) });
-  }
-);
-Ke.displayName = Fe;
-var Ge = "SelectLabel", ze = t.forwardRef(
-  (n, c) => {
-    const { __scopeSelect: e, ...i } = n, l = kt(Ge, e);
-    return /* @__PURE__ */ m(M.div, { id: l.id, ...i, ref: c });
-  }
-);
-ze.displayName = Ge;
-var ie = "SelectItem", [Bt, Ye] = te(ie), je = t.forwardRef(
-  (n, c) => {
-    const {
-      __scopeSelect: e,
-      value: i,
-      disabled: l = !1,
-      textValue: u,
-      ...r
-    } = n, s = j(ie, e), o = q(ie, e), p = s.value === i, [g, C] = t.useState(u ?? ""), [P, R] = t.useState(!1), T = B(
-      c,
-      (d) => {
-        var h;
-        return (h = o.itemRefCallback) == null ? void 0 : h.call(o, d, i, l);
-      }
-    ), a = Ie(), v = t.useRef("touch"), y = () => {
-      l || (s.onValueChange(i), s.onOpenChange(!1));
-    };
-    if (i === "")
-      throw new Error(
-        "A <Select.Item /> must have a value prop that is not an empty string. This is because the Select value can be set to an empty string to clear the selection and show the placeholder."
-      );
-    return /* @__PURE__ */ m(
-      Bt,
-      {
-        scope: e,
-        value: i,
-        disabled: l,
-        textId: a,
-        isSelected: p,
-        onItemTextChange: t.useCallback((d) => {
-          C((h) => h || ((d == null ? void 0 : d.textContent) ?? "").trim());
-        }, []),
-        children: /* @__PURE__ */ m(
-          ae.ItemSlot,
-          {
-            scope: e,
-            value: i,
-            disabled: l,
-            textValue: g,
-            children: /* @__PURE__ */ m(
-              M.div,
-              {
-                role: "option",
-                "aria-labelledby": a,
-                "data-highlighted": P ? "" : void 0,
-                "aria-selected": p && P,
-                "data-state": p ? "checked" : "unchecked",
-                "aria-disabled": l || void 0,
-                "data-disabled": l ? "" : void 0,
-                tabIndex: l ? void 0 : -1,
-                ...r,
-                ref: T,
-                onFocus: E(r.onFocus, () => R(!0)),
-                onBlur: E(r.onBlur, () => R(!1)),
-                onClick: E(r.onClick, () => {
-                  v.current !== "mouse" && y();
-                }),
-                onPointerUp: E(r.onPointerUp, () => {
-                  v.current === "mouse" && y();
-                }),
-                onPointerDown: E(r.onPointerDown, (d) => {
-                  v.current = d.pointerType;
-                }),
-                onPointerMove: E(r.onPointerMove, (d) => {
-                  var h;
-                  v.current = d.pointerType, l ? (h = o.onItemLeave) == null || h.call(o) : v.current === "mouse" && d.currentTarget.focus({ preventScroll: !0 });
-                }),
-                onPointerLeave: E(r.onPointerLeave, (d) => {
-                  var h;
-                  d.currentTarget === document.activeElement && ((h = o.onItemLeave) == null || h.call(o));
-                }),
-                onKeyDown: E(r.onKeyDown, (d) => {
-                  var A;
-                  ((A = o.searchRef) == null ? void 0 : A.current) !== "" && d.key === " " || (It.includes(d.key) && y(), d.key === " " && d.preventDefault());
-                })
-              }
-            )
-          }
-        )
-      }
-    );
-  }
-);
-je.displayName = ie;
-var re = "SelectItemText", qe = t.forwardRef(
-  (n, c) => {
-    const { __scopeSelect: e, className: i, style: l, ...u } = n, r = j(re, e), s = q(re, e), o = Ye(re, e), p = Et(re, e), [g, C] = t.useState(null), P = B(
-      c,
-      (y) => C(y),
-      o.onItemTextChange,
-      (y) => {
-        var d;
-        return (d = s.itemTextRefCallback) == null ? void 0 : d.call(s, y, o.value, o.disabled);
-      }
-    ), R = g == null ? void 0 : g.textContent, T = t.useMemo(
-      () => /* @__PURE__ */ m("option", { value: o.value, disabled: o.disabled, children: R }, o.value),
-      [o.disabled, o.value, R]
-    ), { onNativeOptionAdd: a, onNativeOptionRemove: v } = p;
-    return Y(() => (a(T), () => v(T)), [a, v, T]), /* @__PURE__ */ ce(Te, { children: [
-      /* @__PURE__ */ m(M.span, { id: o.textId, ...u, ref: P }),
-      o.isSelected && r.valueNode && !r.valueNodeHasChildren ? be.createPortal(u.children, r.valueNode) : null
-    ] });
-  }
-);
-qe.displayName = re;
-var Xe = "SelectItemIndicator", Ze = t.forwardRef(
-  (n, c) => {
-    const { __scopeSelect: e, ...i } = n;
-    return Ye(Xe, e).isSelected ? /* @__PURE__ */ m(M.span, { "aria-hidden": !0, ...i, ref: c }) : null;
-  }
-);
-Ze.displayName = Xe;
-var Ce = "SelectScrollUpButton", $e = t.forwardRef((n, c) => {
-  const e = q(Ce, n.__scopeSelect), i = Pe(Ce, n.__scopeSelect), [l, u] = t.useState(!1), r = B(c, i.onScrollButtonChange);
-  return Y(() => {
-    if (e.viewport && e.isPositioned) {
-      let s = function() {
-        const p = o.scrollTop > 0;
-        u(p);
-      };
-      const o = e.viewport;
-      return s(), o.addEventListener("scroll", s), () => o.removeEventListener("scroll", s);
-    }
-  }, [e.viewport, e.isPositioned]), l ? /* @__PURE__ */ m(
-    Qe,
-    {
-      ...n,
-      ref: r,
-      onAutoScroll: () => {
-        const { viewport: s, selectedItem: o } = e;
-        s && o && (s.scrollTop = s.scrollTop - o.offsetHeight);
-      }
-    }
-  ) : null;
-});
-$e.displayName = Ce;
-var ye = "SelectScrollDownButton", Je = t.forwardRef((n, c) => {
-  const e = q(ye, n.__scopeSelect), i = Pe(ye, n.__scopeSelect), [l, u] = t.useState(!1), r = B(c, i.onScrollButtonChange);
-  return Y(() => {
-    if (e.viewport && e.isPositioned) {
-      let s = function() {
-        const p = o.scrollHeight - o.clientHeight, g = Math.ceil(o.scrollTop) < p;
-        u(g);
-      };
-      const o = e.viewport;
-      return s(), o.addEventListener("scroll", s), () => o.removeEventListener("scroll", s);
-    }
-  }, [e.viewport, e.isPositioned]), l ? /* @__PURE__ */ m(
-    Qe,
-    {
-      ...n,
-      ref: r,
-      onAutoScroll: () => {
-        const { viewport: s, selectedItem: o } = e;
-        s && o && (s.scrollTop = s.scrollTop + o.offsetHeight);
-      }
-    }
-  ) : null;
-});
-Je.displayName = ye;
-var Qe = t.forwardRef((n, c) => {
-  const { __scopeSelect: e, onAutoScroll: i, ...l } = n, u = q("SelectScrollButton", e), r = t.useRef(null), s = de(e), o = t.useCallback(() => {
-    r.current !== null && (window.clearInterval(r.current), r.current = null);
-  }, []);
-  return t.useEffect(() => () => o(), [o]), Y(() => {
-    var g;
-    const p = s().find((C) => C.ref.current === document.activeElement);
-    (g = p == null ? void 0 : p.ref.current) == null || g.scrollIntoView({ block: "nearest" });
-  }, [s]), /* @__PURE__ */ m(
-    M.div,
-    {
-      "aria-hidden": !0,
-      ...l,
-      ref: c,
-      style: { flexShrink: 0, ...l.style },
-      onPointerDown: E(l.onPointerDown, () => {
-        r.current === null && (r.current = window.setInterval(i, 50));
-      }),
-      onPointerMove: E(l.onPointerMove, () => {
-        var p;
-        (p = u.onItemLeave) == null || p.call(u), r.current === null && (r.current = window.setInterval(i, 50));
-      }),
-      onPointerLeave: E(l.onPointerLeave, () => {
-        o();
-      })
-    }
-  );
-}), Vt = "SelectSeparator", et = t.forwardRef(
-  (n, c) => {
-    const { __scopeSelect: e, ...i } = n;
-    return /* @__PURE__ */ m(M.div, { "aria-hidden": !0, ...i, ref: c });
-  }
-);
-et.displayName = Vt;
-var xe = "SelectArrow", Ht = t.forwardRef(
-  (n, c) => {
-    const { __scopeSelect: e, ...i } = n, l = ue(e), u = j(xe, e), r = q(xe, e);
-    return u.open && r.position === "popper" ? /* @__PURE__ */ m(mt, { ...l, ...i, ref: c }) : null;
-  }
-);
-Ht.displayName = xe;
-var Ut = "SelectBubbleInput", tt = t.forwardRef(
-  ({ __scopeSelect: n, value: c, ...e }, i) => {
-    const l = t.useRef(null), u = B(i, l), r = St(c);
-    return t.useEffect(() => {
-      const s = l.current;
-      if (!s) return;
-      const o = window.HTMLSelectElement.prototype, g = Object.getOwnPropertyDescriptor(
-        o,
-        "value"
-      ).set;
-      if (r !== c && g) {
-        const C = new Event("change", { bubbles: !0 });
-        g.call(s, c), s.dispatchEvent(C);
-      }
-    }, [r, c]), /* @__PURE__ */ m(
-      M.select,
-      {
-        ...e,
-        style: { ...wt, ...e.style },
-        ref: u,
-        defaultValue: c
-      }
-    );
-  }
-);
-tt.displayName = Ut;
-function ot(n) {
-  return n === "" || n === void 0;
+    return t = { range: i };
+  });
+  return t ? !1 : (n(r.update(e, { scrollIntoView: !0, userEvent: "delete" })), !0);
+}, be = [
+  { key: "Enter", run: Le },
+  { key: "Backspace", run: Ce }
+], X = /* @__PURE__ */ ae({ matchClosingTags: !1 });
+function Oe(r = {}) {
+  let { codeLanguages: n, defaultCodeLanguage: o, addKeymap: t = !0, base: { parser: e } = he, completeHTMLTags: i = !0, pasteURLAsLink: a = !0, htmlTagLanguage: m = X } = r;
+  if (!(e instanceof re))
+    throw new RangeError("Base parser provided to `markdown` should be a Markdown parser");
+  let s = r.extensions ? [r.extensions] : [], f = [m.support, de], l;
+  a && f.push(Ie), o instanceof N ? (f.push(o.support), l = o.language) : o && (l = o);
+  let u = n || l ? ke(n, l) : void 0;
+  s.push(ne({ codeParser: u, htmlParser: m.language.parser })), t && f.push(z.high(_.of(be)));
+  let d = T(e.configure(s));
+  return i && f.push(d.data.of({ autocomplete: Be })), new N(d, f);
 }
-function nt(n) {
-  const c = gt(n), e = t.useRef(""), i = t.useRef(0), l = t.useCallback(
-    (r) => {
-      const s = e.current + r;
-      c(s), function o(p) {
-        e.current = p, window.clearTimeout(i.current), p !== "" && (i.current = window.setTimeout(() => o(""), 1e3));
-      }(s);
-    },
-    [c]
-  ), u = t.useCallback(() => {
-    e.current = "", window.clearTimeout(i.current);
-  }, []);
-  return t.useEffect(() => () => window.clearTimeout(i.current), []), [e, l, u];
+function Be(r) {
+  let { state: n, pos: o } = r, t = /<[:\-\.\w\u00b7-\uffff]*$/.exec(n.sliceDoc(o - 25, o));
+  if (!t)
+    return null;
+  let e = A(n).resolveInner(o, -1);
+  for (; e && !e.type.isTop; ) {
+    if (e.name == "CodeBlock" || e.name == "FencedCode" || e.name == "ProcessingInstructionBlock" || e.name == "CommentBlock" || e.name == "Link" || e.name == "Image")
+      return null;
+    e = e.parent;
+  }
+  return {
+    from: o - t[0].length,
+    to: o,
+    options: Se(),
+    validFor: /^<[:\-\.\w\u00b7-\uffff]*$/
+  };
 }
-function rt(n, c, e) {
-  const l = c.length > 1 && Array.from(c).every((p) => p === c[0]) ? c[0] : c, u = e ? n.indexOf(e) : -1;
-  let r = Wt(n, Math.max(u, 0));
-  l.length === 1 && (r = r.filter((p) => p !== e));
-  const o = r.find(
-    (p) => p.textValue.toLowerCase().startsWith(l.toLowerCase())
-  );
-  return o !== e ? o : void 0;
+let y = null;
+function Se() {
+  if (y)
+    return y;
+  let r = me(new te(K.create({ extensions: X }), 0, !0));
+  return y = r ? r.options : [];
 }
-function Wt(n, c) {
-  return n.map((e, i) => n[(c + i) % n.length]);
-}
-var uo = Ne, po = Ae, fo = De, mo = Le, ho = ke, vo = Be, go = We, So = Ke, wo = ze, Co = je, yo = qe, xo = Ze, Io = $e, To = Je, Po = et;
+const ve = /code|horizontalrule|html|link|comment|processing|escape|entity|image|mark|url/i, Ie = /* @__PURE__ */ j.domEventHandlers({
+  paste: (r, n) => {
+    var o;
+    let { main: t } = n.state.selection;
+    if (t.empty)
+      return !1;
+    let e = (o = r.clipboardData) === null || o === void 0 ? void 0 : o.getData("text/plain");
+    if (!e || !/^(https?:\/\/|mailto:|xmpp:|www\.)/.test(e) || (/^www\./.test(e) && (e = "https://" + e), !b.isActiveAt(n.state, t.from, 1)))
+      return !1;
+    let i = A(n.state), a = !1;
+    return i.iterate({
+      from: t.from,
+      to: t.to,
+      enter: (m) => {
+        (m.from > t.from || ve.test(m.name)) && (a = !0);
+      },
+      leave: (m) => {
+        m.to < t.to && (a = !0);
+      }
+    }), a ? !1 : (n.dispatch({
+      changes: [{ from: t.from, insert: "[" }, { from: t.to, insert: `](${e})` }],
+      userEvent: "input.paste",
+      scrollIntoView: !0
+    }), !0);
+  }
+});
 export {
-  vo as Content,
-  So as Group,
-  mo as Icon,
-  Co as Item,
-  xo as ItemIndicator,
-  yo as ItemText,
-  wo as Label,
-  ho as Portal,
-  uo as Root,
-  To as ScrollDownButton,
-  Io as ScrollUpButton,
-  Ne as Select,
-  Ht as SelectArrow,
-  Be as SelectContent,
-  Ke as SelectGroup,
-  Le as SelectIcon,
-  je as SelectItem,
-  Ze as SelectItemIndicator,
-  qe as SelectItemText,
-  ze as SelectLabel,
-  ke as SelectPortal,
-  Je as SelectScrollDownButton,
-  $e as SelectScrollUpButton,
-  et as SelectSeparator,
-  Ae as SelectTrigger,
-  De as SelectValue,
-  We as SelectViewport,
-  Po as Separator,
-  po as Trigger,
-  fo as Value,
-  go as Viewport
+  he as commonmarkLanguage,
+  Ce as deleteMarkupBackward,
+  Le as insertNewlineContinueMarkup,
+  xe as insertNewlineContinueMarkupCommand,
+  Oe as markdown,
+  be as markdownKeymap,
+  b as markdownLanguage,
+  Ie as pasteURLAsLink
 };

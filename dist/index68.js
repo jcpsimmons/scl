@@ -1,637 +1,312 @@
-import { NodeProp as F } from "./index134.js";
-let z = 0;
-class g {
-  /**
-  @internal
-  */
-  constructor(t, a, n, i) {
-    this.name = t, this.set = a, this.base = n, this.modified = i, this.id = z++;
-  }
-  toString() {
-    let { name: t } = this;
-    for (let a of this.modified)
-      a.name && (t = `${a.name}(${t})`);
-    return t;
-  }
-  static define(t, a) {
-    let n = typeof t == "string" ? t : "?";
-    if (t instanceof g && (a = t), a != null && a.base)
-      throw new Error("Can not derive from a modified tag");
-    let i = new g(n, [], null, []);
-    if (i.set.push(i), a)
-      for (let o of a.set)
-        i.set.push(o);
-    return i;
-  }
-  /**
-  Define a tag _modifier_, which is a function that, given a tag,
-  will return a tag that is a subtag of the original. Applying the
-  same modifier to a twice tag will return the same value (`m1(t1)
-  == m1(t1)`) and applying multiple modifiers will, regardless or
-  order, produce the same tag (`m1(m2(t1)) == m2(m1(t1))`).
-  
-  When multiple modifiers are applied to a given base tag, each
-  smaller set of modifiers is registered as a parent, so that for
-  example `m1(m2(m3(t1)))` is a subtype of `m1(m2(t1))`,
-  `m1(m3(t1)`, and so on.
-  */
-  static defineModifier(t) {
-    let a = new q(t);
-    return (n) => n.modified.indexOf(a) > -1 ? n : q.get(n.base || n, n.modified.concat(a).sort((i, o) => i.id - o.id));
-  }
-}
-let G = 0;
-class q {
-  constructor(t) {
-    this.name = t, this.instances = [], this.id = G++;
-  }
-  static get(t, a) {
-    if (!a.length)
-      return t;
-    let n = a[0].instances.find((r) => r.base == t && L(a, r.modified));
-    if (n)
-      return n;
-    let i = [], o = new g(t.name, i, t, a);
-    for (let r of a)
-      r.instances.push(o);
-    let c = P(a);
-    for (let r of t.set)
-      if (!r.modified.length)
-        for (let m of c)
-          i.push(q.get(r, m));
-    return o;
-  }
-}
-function L(s, t) {
-  return s.length == t.length && s.every((a, n) => a == t[n]);
-}
-function P(s) {
-  let t = [[]];
-  for (let a = 0; a < s.length; a++)
-    for (let n = 0, i = t.length; n < i; n++)
-      t.push(t[n].concat(s[a]));
-  return t.sort((a, n) => n.length - a.length);
-}
-function Z(s) {
-  let t = /* @__PURE__ */ Object.create(null);
-  for (let a in s) {
-    let n = s[a];
-    Array.isArray(n) || (n = [n]);
-    for (let i of a.split(" "))
-      if (i) {
-        let o = [], c = 2, r = i;
-        for (let d = 0; ; ) {
-          if (r == "..." && d > 0 && d + 3 == i.length) {
-            c = 1;
-            break;
-          }
-          let f = /^"(?:[^"\\]|\\.)*?"|[^\/!]+/.exec(r);
-          if (!f)
-            throw new RangeError("Invalid path: " + i);
-          if (o.push(f[0] == "*" ? "" : f[0][0] == '"' ? JSON.parse(f[0]) : f[0]), d += f[0].length, d == i.length)
-            break;
-          let b = i[d++];
-          if (d == i.length && b == "!") {
-            c = 0;
-            break;
-          }
-          if (b != "/")
-            throw new RangeError("Invalid path: " + i);
-          r = i.slice(d);
-        }
-        let m = o.length - 1, h = o[m];
-        if (!h)
-          throw new RangeError("Invalid path: " + i);
-        let v = new R(n, c, m > 0 ? o.slice(0, m) : null);
-        t[h] = v.sort(t[h]);
-      }
-  }
-  return J.add(t);
-}
-const J = new F({
-  combine(s, t) {
-    let a, n, i;
-    for (; s || t; ) {
-      if (!s || t && s.depth >= t.depth ? (i = t, t = t.next) : (i = s, s = s.next), a && a.mode == i.mode && !i.context && !a.context)
-        continue;
-      let o = new R(i.tags, i.mode, i.context);
-      a ? a.next = o : n = o, a = o;
+import { a as pe } from "./index135.js";
+import { Root as ge, Portal as he, Overlay as be, Content as Ee } from "./index62.js";
+import * as n from "react";
+import { Primitive as I } from "./index92.js";
+import { useId as K } from "./index94.js";
+import { composeRefs as q } from "./index91.js";
+var $ = '[cmdk-group=""]', X = '[cmdk-group-items=""]', ye = '[cmdk-group-heading=""]', oe = '[cmdk-item=""]', ie = `${oe}:not([aria-disabled="true"])`, Y = "cmdk-item-select", D = "data-value", Ce = (t, a, r) => pe(t, a, r), ce = n.createContext(void 0), O = () => n.useContext(ce), de = n.createContext(void 0), Z = () => n.useContext(de), se = n.createContext(void 0), fe = n.forwardRef((t, a) => {
+  let r = F(() => {
+    var e, u;
+    return { search: "", value: (u = (e = t.value) != null ? e : t.defaultValue) != null ? u : "", selectedItemId: void 0, filtered: { count: 0, items: /* @__PURE__ */ new Map(), groups: /* @__PURE__ */ new Set() } };
+  }), v = F(() => /* @__PURE__ */ new Set()), i = F(() => /* @__PURE__ */ new Map()), c = F(() => /* @__PURE__ */ new Map()), d = F(() => /* @__PURE__ */ new Set()), m = me(t), { label: b, children: s, value: h, onValueChange: R, filter: k, shouldFilter: w, loop: V, disablePointerSelection: B = !1, vimBindings: x = !0, ...j } = t, U = K(), ee = K(), W = K(), A = n.useRef(null), g = Fe();
+  M(() => {
+    if (h !== void 0) {
+      let e = h.trim();
+      r.current.value = e, y.emit();
     }
-    return n;
-  }
-});
-class R {
-  constructor(t, a, n, i) {
-    this.tags = t, this.mode = a, this.context = n, this.next = i;
-  }
-  get opaque() {
-    return this.mode == 0;
-  }
-  get inherit() {
-    return this.mode == 1;
-  }
-  sort(t) {
-    return !t || t.depth < this.depth ? (this.next = t, this) : (t.next = this.sort(t.next), t);
-  }
-  get depth() {
-    return this.context ? this.context.length : 0;
-  }
-}
-R.empty = new R([], 2, null);
-function Q(s, t) {
-  let a = /* @__PURE__ */ Object.create(null);
-  for (let o of s)
-    if (!Array.isArray(o.tag))
-      a[o.tag.id] = o.class;
-    else
-      for (let c of o.tag)
-        a[c.id] = o.class;
-  let { scope: n, all: i = null } = t || {};
-  return {
-    style: (o) => {
-      let c = i;
-      for (let r of o)
-        for (let m of r.set) {
-          let h = a[m.id];
-          if (h) {
-            c = c ? c + " " + h : h;
-            break;
-          }
+  }, [h]), M(() => {
+    g(6, re);
+  }, []);
+  let y = n.useMemo(() => ({ subscribe: (e) => (d.current.add(e), () => d.current.delete(e)), snapshot: () => r.current, setState: (e, u, o) => {
+    var l, f, p, C;
+    if (!Object.is(r.current[e], u)) {
+      if (r.current[e] = u, e === "search") T(), G(), g(1, H);
+      else if (e === "value") {
+        if (document.activeElement.hasAttribute("cmdk-input") || document.activeElement.hasAttribute("cmdk-root")) {
+          let E = document.getElementById(W);
+          E ? E.focus() : (l = document.getElementById(U)) == null || l.focus();
         }
-      return c;
-    },
-    scope: n
+        if (g(7, () => {
+          var E;
+          r.current.selectedItemId = (E = P()) == null ? void 0 : E.id, y.emit();
+        }), o || g(5, re), ((f = m.current) == null ? void 0 : f.value) !== void 0) {
+          let E = u ?? "";
+          (C = (p = m.current).onValueChange) == null || C.call(p, E);
+          return;
+        }
+      }
+      y.emit();
+    }
+  }, emit: () => {
+    d.current.forEach((e) => e());
+  } }), []), _ = n.useMemo(() => ({ value: (e, u, o) => {
+    var l;
+    u !== ((l = c.current.get(e)) == null ? void 0 : l.value) && (c.current.set(e, { value: u, keywords: o }), r.current.filtered.items.set(e, te(u, o)), g(2, () => {
+      G(), y.emit();
+    }));
+  }, item: (e, u) => (v.current.add(e), u && (i.current.has(u) ? i.current.get(u).add(e) : i.current.set(u, /* @__PURE__ */ new Set([e]))), g(3, () => {
+    T(), G(), r.current.value || H(), y.emit();
+  }), () => {
+    c.current.delete(e), v.current.delete(e), r.current.filtered.items.delete(e);
+    let o = P();
+    g(4, () => {
+      T(), (o == null ? void 0 : o.getAttribute("id")) === e && H(), y.emit();
+    });
+  }), group: (e) => (i.current.has(e) || i.current.set(e, /* @__PURE__ */ new Set()), () => {
+    c.current.delete(e), i.current.delete(e);
+  }), filter: () => m.current.shouldFilter, label: b || t["aria-label"], getDisablePointerSelection: () => m.current.disablePointerSelection, listId: U, inputId: W, labelId: ee, listInnerRef: A }), []);
+  function te(e, u) {
+    var o, l;
+    let f = (l = (o = m.current) == null ? void 0 : o.filter) != null ? l : Ce;
+    return e ? f(e, r.current.search, u) : 0;
+  }
+  function G() {
+    if (!r.current.search || m.current.shouldFilter === !1) return;
+    let e = r.current.filtered.items, u = [];
+    r.current.filtered.groups.forEach((l) => {
+      let f = i.current.get(l), p = 0;
+      f.forEach((C) => {
+        let E = e.get(C);
+        p = Math.max(E, p);
+      }), u.push([l, p]);
+    });
+    let o = A.current;
+    L().sort((l, f) => {
+      var p, C;
+      let E = l.getAttribute("id"), N = f.getAttribute("id");
+      return ((p = e.get(N)) != null ? p : 0) - ((C = e.get(E)) != null ? C : 0);
+    }).forEach((l) => {
+      let f = l.closest(X);
+      f ? f.appendChild(l.parentElement === f ? l : l.closest(`${X} > *`)) : o.appendChild(l.parentElement === o ? l : l.closest(`${X} > *`));
+    }), u.sort((l, f) => f[1] - l[1]).forEach((l) => {
+      var f;
+      let p = (f = A.current) == null ? void 0 : f.querySelector(`${$}[${D}="${encodeURIComponent(l[0])}"]`);
+      p == null || p.parentElement.appendChild(p);
+    });
+  }
+  function H() {
+    let e = L().find((o) => o.getAttribute("aria-disabled") !== "true"), u = e == null ? void 0 : e.getAttribute(D);
+    y.setState("value", u || void 0);
+  }
+  function T() {
+    var e, u, o, l;
+    if (!r.current.search || m.current.shouldFilter === !1) {
+      r.current.filtered.count = v.current.size;
+      return;
+    }
+    r.current.filtered.groups = /* @__PURE__ */ new Set();
+    let f = 0;
+    for (let p of v.current) {
+      let C = (u = (e = c.current.get(p)) == null ? void 0 : e.value) != null ? u : "", E = (l = (o = c.current.get(p)) == null ? void 0 : o.keywords) != null ? l : [], N = te(C, E);
+      r.current.filtered.items.set(p, N), N > 0 && f++;
+    }
+    for (let [p, C] of i.current) for (let E of C) if (r.current.filtered.items.get(E) > 0) {
+      r.current.filtered.groups.add(p);
+      break;
+    }
+    r.current.filtered.count = f;
+  }
+  function re() {
+    var e, u, o;
+    let l = P();
+    l && (((e = l.parentElement) == null ? void 0 : e.firstChild) === l && ((o = (u = l.closest($)) == null ? void 0 : u.querySelector(ye)) == null || o.scrollIntoView({ block: "nearest" })), l.scrollIntoView({ block: "nearest" }));
+  }
+  function P() {
+    var e;
+    return (e = A.current) == null ? void 0 : e.querySelector(`${oe}[aria-selected="true"]`);
+  }
+  function L() {
+    var e;
+    return Array.from(((e = A.current) == null ? void 0 : e.querySelectorAll(ie)) || []);
+  }
+  function J(e) {
+    let u = L()[e];
+    u && y.setState("value", u.getAttribute(D));
+  }
+  function Q(e) {
+    var u;
+    let o = P(), l = L(), f = l.findIndex((C) => C === o), p = l[f + e];
+    (u = m.current) != null && u.loop && (p = f + e < 0 ? l[l.length - 1] : f + e === l.length ? l[0] : l[f + e]), p && y.setState("value", p.getAttribute(D));
+  }
+  function ne(e) {
+    let u = P(), o = u == null ? void 0 : u.closest($), l;
+    for (; o && !l; ) o = e > 0 ? Pe(o, $) : De(o, $), l = o == null ? void 0 : o.querySelector(ie);
+    l ? y.setState("value", l.getAttribute(D)) : Q(e);
+  }
+  let le = () => J(L().length - 1), ae = (e) => {
+    e.preventDefault(), e.metaKey ? le() : e.altKey ? ne(1) : Q(1);
+  }, ue = (e) => {
+    e.preventDefault(), e.metaKey ? J(0) : e.altKey ? ne(-1) : Q(-1);
   };
-}
-function U(s, t) {
-  let a = null;
-  for (let n of s) {
-    let i = n.style(t);
-    i && (a = a ? a + " " + i : i);
-  }
-  return a;
-}
-function _(s, t, a, n = 0, i = s.length) {
-  let o = new W(n, Array.isArray(t) ? t : [t], a);
-  o.highlightRange(s.cursor(), n, i, "", o.highlighters), o.flush(i);
-}
-class W {
-  constructor(t, a, n) {
-    this.at = t, this.highlighters = a, this.span = n, this.class = "";
-  }
-  startSpan(t, a) {
-    a != this.class && (this.flush(t), t > this.at && (this.at = t), this.class = a);
-  }
-  flush(t) {
-    t > this.at && this.class && this.span(this.at, t, this.class);
-  }
-  highlightRange(t, a, n, i, o) {
-    let { type: c, from: r, to: m } = t;
-    if (r >= n || m <= a)
-      return;
-    c.isTop && (o = this.highlighters.filter((b) => !b.scope || b.scope(c)));
-    let h = i, v = X(t) || R.empty, d = U(o, v.tags);
-    if (d && (h && (h += " "), h += d, v.mode == 1 && (i += (i ? " " : "") + d)), this.startSpan(Math.max(a, r), h), v.opaque)
-      return;
-    let f = t.tree && t.tree.prop(F.mounted);
-    if (f && f.overlay) {
-      let b = t.node.enter(f.overlay[0].from + r, 1), V = this.highlighters.filter((w) => !w.scope || w.scope(f.tree.type)), B = t.firstChild();
-      for (let w = 0, M = r; ; w++) {
-        let S = w < f.overlay.length ? f.overlay[w] : null, E = S ? S.from + r : m, H = Math.max(a, M), A = Math.min(n, E);
-        if (H < A && B)
-          for (; t.from < A && (this.highlightRange(t, H, A, i, o), this.startSpan(Math.min(A, t.to), h), !(t.to >= E || !t.nextSibling())); )
-            ;
-        if (!S || E > n)
-          break;
-        M = S.to + r, M > a && (this.highlightRange(b.cursor(), Math.max(a, S.from + r), Math.min(n, M), "", V), this.startSpan(Math.min(n, M), h));
+  return n.createElement(I.div, { ref: a, tabIndex: -1, ...j, "cmdk-root": "", onKeyDown: (e) => {
+    var u;
+    (u = j.onKeyDown) == null || u.call(j, e);
+    let o = e.nativeEvent.isComposing || e.keyCode === 229;
+    if (!(e.defaultPrevented || o)) switch (e.key) {
+      case "n":
+      case "j": {
+        x && e.ctrlKey && ae(e);
+        break;
       }
-      B && t.parent();
-    } else if (t.firstChild()) {
-      f && (i = "");
-      do
-        if (!(t.to <= a)) {
-          if (t.from >= n)
-            break;
-          this.highlightRange(t, a, n, i, o), this.startSpan(Math.min(n, t.to), h);
+      case "ArrowDown": {
+        ae(e);
+        break;
+      }
+      case "p":
+      case "k": {
+        x && e.ctrlKey && ue(e);
+        break;
+      }
+      case "ArrowUp": {
+        ue(e);
+        break;
+      }
+      case "Home": {
+        e.preventDefault(), J(0);
+        break;
+      }
+      case "End": {
+        e.preventDefault(), le();
+        break;
+      }
+      case "Enter": {
+        e.preventDefault();
+        let l = P();
+        if (l) {
+          let f = new Event(Y);
+          l.dispatchEvent(f);
         }
-      while (t.nextSibling());
-      t.parent();
+      }
     }
+  } }, n.createElement("label", { "cmdk-label": "", htmlFor: _.inputId, id: _.labelId, style: Le }, b), z(t, (e) => n.createElement(de.Provider, { value: y }, n.createElement(ce.Provider, { value: _ }, e))));
+}), we = n.forwardRef((t, a) => {
+  var r, v;
+  let i = K(), c = n.useRef(null), d = n.useContext(se), m = O(), b = me(t), s = (v = (r = b.current) == null ? void 0 : r.forceMount) != null ? v : d == null ? void 0 : d.forceMount;
+  M(() => {
+    if (!s) return m.item(i, d == null ? void 0 : d.id);
+  }, [s]);
+  let h = ve(i, c, [t.value, t.children, c], t.keywords), R = Z(), k = S((g) => g.value && g.value === h.current), w = S((g) => s || m.filter() === !1 ? !0 : g.search ? g.filtered.items.get(i) > 0 : !0);
+  n.useEffect(() => {
+    let g = c.current;
+    if (!(!g || t.disabled)) return g.addEventListener(Y, V), () => g.removeEventListener(Y, V);
+  }, [w, t.onSelect, t.disabled]);
+  function V() {
+    var g, y;
+    B(), (y = (g = b.current).onSelect) == null || y.call(g, h.current);
+  }
+  function B() {
+    R.setState("value", h.current, !0);
+  }
+  if (!w) return null;
+  let { disabled: x, value: j, onSelect: U, forceMount: ee, keywords: W, ...A } = t;
+  return n.createElement(I.div, { ref: q(c, a), ...A, id: i, "cmdk-item": "", role: "option", "aria-disabled": !!x, "aria-selected": !!k, "data-disabled": !!x, "data-selected": !!k, onPointerMove: x || m.getDisablePointerSelection() ? void 0 : B, onClick: x ? void 0 : V }, t.children);
+}), ke = n.forwardRef((t, a) => {
+  let { heading: r, children: v, forceMount: i, ...c } = t, d = K(), m = n.useRef(null), b = n.useRef(null), s = K(), h = O(), R = S((w) => i || h.filter() === !1 ? !0 : w.search ? w.filtered.groups.has(d) : !0);
+  M(() => h.group(d), []), ve(d, m, [t.value, t.heading, b]);
+  let k = n.useMemo(() => ({ id: d, forceMount: i }), [i]);
+  return n.createElement(I.div, { ref: q(m, a), ...c, "cmdk-group": "", role: "presentation", hidden: R ? void 0 : !0 }, r && n.createElement("div", { ref: b, "cmdk-group-heading": "", "aria-hidden": !0, id: s }, r), z(t, (w) => n.createElement("div", { "cmdk-group-items": "", role: "group", "aria-labelledby": r ? s : void 0 }, n.createElement(se.Provider, { value: k }, w))));
+}), Se = n.forwardRef((t, a) => {
+  let { alwaysRender: r, ...v } = t, i = n.useRef(null), c = S((d) => !d.search);
+  return !r && !c ? null : n.createElement(I.div, { ref: q(i, a), ...v, "cmdk-separator": "", role: "separator" });
+}), Ie = n.forwardRef((t, a) => {
+  let { onValueChange: r, ...v } = t, i = t.value != null, c = Z(), d = S((s) => s.search), m = S((s) => s.selectedItemId), b = O();
+  return n.useEffect(() => {
+    t.value != null && c.setState("search", t.value);
+  }, [t.value]), n.createElement(I.input, { ref: a, ...v, "cmdk-input": "", autoComplete: "off", autoCorrect: "off", spellCheck: !1, "aria-autocomplete": "list", role: "combobox", "aria-expanded": !0, "aria-controls": b.listId, "aria-labelledby": b.labelId, "aria-activedescendant": m, id: b.inputId, type: "text", value: i ? t.value : d, onChange: (s) => {
+    i || c.setState("search", s.target.value), r == null || r(s.target.value);
+  } });
+}), Re = n.forwardRef((t, a) => {
+  let { children: r, label: v = "Suggestions", ...i } = t, c = n.useRef(null), d = n.useRef(null), m = S((s) => s.selectedItemId), b = O();
+  return n.useEffect(() => {
+    if (d.current && c.current) {
+      let s = d.current, h = c.current, R, k = new ResizeObserver(() => {
+        R = requestAnimationFrame(() => {
+          let w = s.offsetHeight;
+          h.style.setProperty("--cmdk-list-height", w.toFixed(1) + "px");
+        });
+      });
+      return k.observe(s), () => {
+        cancelAnimationFrame(R), k.unobserve(s);
+      };
+    }
+  }, []), n.createElement(I.div, { ref: q(c, a), ...i, "cmdk-list": "", role: "listbox", tabIndex: -1, "aria-activedescendant": m, "aria-label": v, id: b.listId }, z(t, (s) => n.createElement("div", { ref: q(d, b.listInnerRef), "cmdk-list-sizer": "" }, s)));
+}), xe = n.forwardRef((t, a) => {
+  let { open: r, onOpenChange: v, overlayClassName: i, contentClassName: c, container: d, ...m } = t;
+  return n.createElement(ge, { open: r, onOpenChange: v }, n.createElement(he, { container: d }, n.createElement(be, { "cmdk-overlay": "", className: i }), n.createElement(Ee, { "aria-label": t.label, "cmdk-dialog": "", className: c }, n.createElement(fe, { ref: a, ...m }))));
+}), Ae = n.forwardRef((t, a) => S((r) => r.filtered.count === 0) ? n.createElement(I.div, { ref: a, ...t, "cmdk-empty": "", role: "presentation" }) : null), Me = n.forwardRef((t, a) => {
+  let { progress: r, children: v, label: i = "Loading...", ...c } = t;
+  return n.createElement(I.div, { ref: a, ...c, "cmdk-loading": "", role: "progressbar", "aria-valuenow": r, "aria-valuemin": 0, "aria-valuemax": 100, "aria-label": i }, z(t, (d) => n.createElement("div", { "aria-hidden": !0 }, d)));
+}), Ne = Object.assign(fe, { List: Re, Item: we, Input: Ie, Group: ke, Separator: Se, Dialog: xe, Empty: Ae, Loading: Me });
+function Pe(t, a) {
+  let r = t.nextElementSibling;
+  for (; r; ) {
+    if (r.matches(a)) return r;
+    r = r.nextElementSibling;
   }
 }
-function X(s) {
-  let t = s.type.prop(J);
-  for (; t && t.context && !s.matchContext(t.context); )
-    t = t.next;
-  return t || null;
+function De(t, a) {
+  let r = t.previousElementSibling;
+  for (; r; ) {
+    if (r.matches(a)) return r;
+    r = r.previousElementSibling;
+  }
 }
-const e = g.define, I = e(), y = e(), D = e(y), $ = e(y), N = e(), T = e(N), K = e(N), k = e(), x = e(k), p = e(), u = e(), j = e(), O = e(j), C = e(), l = {
-  /**
-  A comment.
-  */
-  comment: I,
-  /**
-  A line [comment](#highlight.tags.comment).
-  */
-  lineComment: e(I),
-  /**
-  A block [comment](#highlight.tags.comment).
-  */
-  blockComment: e(I),
-  /**
-  A documentation [comment](#highlight.tags.comment).
-  */
-  docComment: e(I),
-  /**
-  Any kind of identifier.
-  */
-  name: y,
-  /**
-  The [name](#highlight.tags.name) of a variable.
-  */
-  variableName: e(y),
-  /**
-  A type [name](#highlight.tags.name).
-  */
-  typeName: D,
-  /**
-  A tag name (subtag of [`typeName`](#highlight.tags.typeName)).
-  */
-  tagName: e(D),
-  /**
-  A property or field [name](#highlight.tags.name).
-  */
-  propertyName: $,
-  /**
-  An attribute name (subtag of [`propertyName`](#highlight.tags.propertyName)).
-  */
-  attributeName: e($),
-  /**
-  The [name](#highlight.tags.name) of a class.
-  */
-  className: e(y),
-  /**
-  A label [name](#highlight.tags.name).
-  */
-  labelName: e(y),
-  /**
-  A namespace [name](#highlight.tags.name).
-  */
-  namespace: e(y),
-  /**
-  The [name](#highlight.tags.name) of a macro.
-  */
-  macroName: e(y),
-  /**
-  A literal value.
-  */
-  literal: N,
-  /**
-  A string [literal](#highlight.tags.literal).
-  */
-  string: T,
-  /**
-  A documentation [string](#highlight.tags.string).
-  */
-  docString: e(T),
-  /**
-  A character literal (subtag of [string](#highlight.tags.string)).
-  */
-  character: e(T),
-  /**
-  An attribute value (subtag of [string](#highlight.tags.string)).
-  */
-  attributeValue: e(T),
-  /**
-  A number [literal](#highlight.tags.literal).
-  */
-  number: K,
-  /**
-  An integer [number](#highlight.tags.number) literal.
-  */
-  integer: e(K),
-  /**
-  A floating-point [number](#highlight.tags.number) literal.
-  */
-  float: e(K),
-  /**
-  A boolean [literal](#highlight.tags.literal).
-  */
-  bool: e(N),
-  /**
-  Regular expression [literal](#highlight.tags.literal).
-  */
-  regexp: e(N),
-  /**
-  An escape [literal](#highlight.tags.literal), for example a
-  backslash escape in a string.
-  */
-  escape: e(N),
-  /**
-  A color [literal](#highlight.tags.literal).
-  */
-  color: e(N),
-  /**
-  A URL [literal](#highlight.tags.literal).
-  */
-  url: e(N),
-  /**
-  A language keyword.
-  */
-  keyword: p,
-  /**
-  The [keyword](#highlight.tags.keyword) for the self or this
-  object.
-  */
-  self: e(p),
-  /**
-  The [keyword](#highlight.tags.keyword) for null.
-  */
-  null: e(p),
-  /**
-  A [keyword](#highlight.tags.keyword) denoting some atomic value.
-  */
-  atom: e(p),
-  /**
-  A [keyword](#highlight.tags.keyword) that represents a unit.
-  */
-  unit: e(p),
-  /**
-  A modifier [keyword](#highlight.tags.keyword).
-  */
-  modifier: e(p),
-  /**
-  A [keyword](#highlight.tags.keyword) that acts as an operator.
-  */
-  operatorKeyword: e(p),
-  /**
-  A control-flow related [keyword](#highlight.tags.keyword).
-  */
-  controlKeyword: e(p),
-  /**
-  A [keyword](#highlight.tags.keyword) that defines something.
-  */
-  definitionKeyword: e(p),
-  /**
-  A [keyword](#highlight.tags.keyword) related to defining or
-  interfacing with modules.
-  */
-  moduleKeyword: e(p),
-  /**
-  An operator.
-  */
-  operator: u,
-  /**
-  An [operator](#highlight.tags.operator) that dereferences something.
-  */
-  derefOperator: e(u),
-  /**
-  Arithmetic-related [operator](#highlight.tags.operator).
-  */
-  arithmeticOperator: e(u),
-  /**
-  Logical [operator](#highlight.tags.operator).
-  */
-  logicOperator: e(u),
-  /**
-  Bit [operator](#highlight.tags.operator).
-  */
-  bitwiseOperator: e(u),
-  /**
-  Comparison [operator](#highlight.tags.operator).
-  */
-  compareOperator: e(u),
-  /**
-  [Operator](#highlight.tags.operator) that updates its operand.
-  */
-  updateOperator: e(u),
-  /**
-  [Operator](#highlight.tags.operator) that defines something.
-  */
-  definitionOperator: e(u),
-  /**
-  Type-related [operator](#highlight.tags.operator).
-  */
-  typeOperator: e(u),
-  /**
-  Control-flow [operator](#highlight.tags.operator).
-  */
-  controlOperator: e(u),
-  /**
-  Program or markup punctuation.
-  */
-  punctuation: j,
-  /**
-  [Punctuation](#highlight.tags.punctuation) that separates
-  things.
-  */
-  separator: e(j),
-  /**
-  Bracket-style [punctuation](#highlight.tags.punctuation).
-  */
-  bracket: O,
-  /**
-  Angle [brackets](#highlight.tags.bracket) (usually `<` and `>`
-  tokens).
-  */
-  angleBracket: e(O),
-  /**
-  Square [brackets](#highlight.tags.bracket) (usually `[` and `]`
-  tokens).
-  */
-  squareBracket: e(O),
-  /**
-  Parentheses (usually `(` and `)` tokens). Subtag of
-  [bracket](#highlight.tags.bracket).
-  */
-  paren: e(O),
-  /**
-  Braces (usually `{` and `}` tokens). Subtag of
-  [bracket](#highlight.tags.bracket).
-  */
-  brace: e(O),
-  /**
-  Content, for example plain text in XML or markup documents.
-  */
-  content: k,
-  /**
-  [Content](#highlight.tags.content) that represents a heading.
-  */
-  heading: x,
-  /**
-  A level 1 [heading](#highlight.tags.heading).
-  */
-  heading1: e(x),
-  /**
-  A level 2 [heading](#highlight.tags.heading).
-  */
-  heading2: e(x),
-  /**
-  A level 3 [heading](#highlight.tags.heading).
-  */
-  heading3: e(x),
-  /**
-  A level 4 [heading](#highlight.tags.heading).
-  */
-  heading4: e(x),
-  /**
-  A level 5 [heading](#highlight.tags.heading).
-  */
-  heading5: e(x),
-  /**
-  A level 6 [heading](#highlight.tags.heading).
-  */
-  heading6: e(x),
-  /**
-  A prose [content](#highlight.tags.content) separator (such as a horizontal rule).
-  */
-  contentSeparator: e(k),
-  /**
-  [Content](#highlight.tags.content) that represents a list.
-  */
-  list: e(k),
-  /**
-  [Content](#highlight.tags.content) that represents a quote.
-  */
-  quote: e(k),
-  /**
-  [Content](#highlight.tags.content) that is emphasized.
-  */
-  emphasis: e(k),
-  /**
-  [Content](#highlight.tags.content) that is styled strong.
-  */
-  strong: e(k),
-  /**
-  [Content](#highlight.tags.content) that is part of a link.
-  */
-  link: e(k),
-  /**
-  [Content](#highlight.tags.content) that is styled as code or
-  monospace.
-  */
-  monospace: e(k),
-  /**
-  [Content](#highlight.tags.content) that has a strike-through
-  style.
-  */
-  strikethrough: e(k),
-  /**
-  Inserted text in a change-tracking format.
-  */
-  inserted: e(),
-  /**
-  Deleted text.
-  */
-  deleted: e(),
-  /**
-  Changed text.
-  */
-  changed: e(),
-  /**
-  An invalid or unsyntactic element.
-  */
-  invalid: e(),
-  /**
-  Metadata or meta-instruction.
-  */
-  meta: C,
-  /**
-  [Metadata](#highlight.tags.meta) that applies to the entire
-  document.
-  */
-  documentMeta: e(C),
-  /**
-  [Metadata](#highlight.tags.meta) that annotates or adds
-  attributes to a given syntactic element.
-  */
-  annotation: e(C),
-  /**
-  Processing instruction or preprocessor directive. Subtag of
-  [meta](#highlight.tags.meta).
-  */
-  processingInstruction: e(C),
-  /**
-  [Modifier](#highlight.Tag^defineModifier) that indicates that a
-  given element is being defined. Expected to be used with the
-  various [name](#highlight.tags.name) tags.
-  */
-  definition: g.defineModifier("definition"),
-  /**
-  [Modifier](#highlight.Tag^defineModifier) that indicates that
-  something is constant. Mostly expected to be used with
-  [variable names](#highlight.tags.variableName).
-  */
-  constant: g.defineModifier("constant"),
-  /**
-  [Modifier](#highlight.Tag^defineModifier) used to indicate that
-  a [variable](#highlight.tags.variableName) or [property
-  name](#highlight.tags.propertyName) is being called or defined
-  as a function.
-  */
-  function: g.defineModifier("function"),
-  /**
-  [Modifier](#highlight.Tag^defineModifier) that can be applied to
-  [names](#highlight.tags.name) to indicate that they belong to
-  the language's standard environment.
-  */
-  standard: g.defineModifier("standard"),
-  /**
-  [Modifier](#highlight.Tag^defineModifier) that indicates a given
-  [names](#highlight.tags.name) is local to some scope.
-  */
-  local: g.defineModifier("local"),
-  /**
-  A generic variant [modifier](#highlight.Tag^defineModifier) that
-  can be used to tag language-specific alternative variants of
-  some common tag. It is recommended for themes to define special
-  forms of at least the [string](#highlight.tags.string) and
-  [variable name](#highlight.tags.variableName) tags, since those
-  come up a lot.
-  */
-  special: g.defineModifier("special")
+function me(t) {
+  let a = n.useRef(t);
+  return M(() => {
+    a.current = t;
+  }), a;
+}
+var M = typeof window > "u" ? n.useEffect : n.useLayoutEffect;
+function F(t) {
+  let a = n.useRef();
+  return a.current === void 0 && (a.current = t()), a;
+}
+function S(t) {
+  let a = Z(), r = () => t(a.snapshot());
+  return n.useSyncExternalStore(a.subscribe, r, r);
+}
+function ve(t, a, r, v = []) {
+  let i = n.useRef(), c = O();
+  return M(() => {
+    var d;
+    let m = (() => {
+      var s;
+      for (let h of r) {
+        if (typeof h == "string") return h.trim();
+        if (typeof h == "object" && "current" in h) return h.current ? (s = h.current.textContent) == null ? void 0 : s.trim() : i.current;
+      }
+    })(), b = v.map((s) => s.trim());
+    c.value(t, m, b), (d = a.current) == null || d.setAttribute(D, m), i.current = m;
+  }), i;
+}
+var Fe = () => {
+  let [t, a] = n.useState(), r = F(() => /* @__PURE__ */ new Map());
+  return M(() => {
+    r.current.forEach((v) => v()), r.current = /* @__PURE__ */ new Map();
+  }, [t]), (v, i) => {
+    r.current.set(v, i), a({});
+  };
 };
-for (let s in l) {
-  let t = l[s];
-  t instanceof g && (t.name = s);
+function Ke(t) {
+  let a = t.type;
+  return typeof a == "function" ? a(t.props) : "render" in a ? a.render(t.props) : t;
 }
-Q([
-  { tag: l.link, class: "tok-link" },
-  { tag: l.heading, class: "tok-heading" },
-  { tag: l.emphasis, class: "tok-emphasis" },
-  { tag: l.strong, class: "tok-strong" },
-  { tag: l.keyword, class: "tok-keyword" },
-  { tag: l.atom, class: "tok-atom" },
-  { tag: l.bool, class: "tok-bool" },
-  { tag: l.url, class: "tok-url" },
-  { tag: l.labelName, class: "tok-labelName" },
-  { tag: l.inserted, class: "tok-inserted" },
-  { tag: l.deleted, class: "tok-deleted" },
-  { tag: l.literal, class: "tok-literal" },
-  { tag: l.string, class: "tok-string" },
-  { tag: l.number, class: "tok-number" },
-  { tag: [l.regexp, l.escape, l.special(l.string)], class: "tok-string2" },
-  { tag: l.variableName, class: "tok-variableName" },
-  { tag: l.local(l.variableName), class: "tok-variableName tok-local" },
-  { tag: l.definition(l.variableName), class: "tok-variableName tok-definition" },
-  { tag: l.special(l.variableName), class: "tok-variableName2" },
-  { tag: l.definition(l.propertyName), class: "tok-propertyName tok-definition" },
-  { tag: l.typeName, class: "tok-typeName" },
-  { tag: l.namespace, class: "tok-namespace" },
-  { tag: l.className, class: "tok-className" },
-  { tag: l.macroName, class: "tok-macroName" },
-  { tag: l.propertyName, class: "tok-propertyName" },
-  { tag: l.operator, class: "tok-operator" },
-  { tag: l.comment, class: "tok-comment" },
-  { tag: l.meta, class: "tok-meta" },
-  { tag: l.invalid, class: "tok-invalid" },
-  { tag: l.punctuation, class: "tok-punctuation" }
-]);
+function z({ asChild: t, children: a }, r) {
+  return t && n.isValidElement(a) ? n.cloneElement(Ke(a), { ref: a.ref }, r(a.props.children)) : r(a);
+}
+var Le = { position: "absolute", width: "1px", height: "1px", padding: "0", margin: "-1px", overflow: "hidden", clip: "rect(0, 0, 0, 0)", whiteSpace: "nowrap", borderWidth: "0" };
 export {
-  g as Tag,
-  X as getStyleTags,
-  _ as highlightTree,
-  Z as styleTags,
-  Q as tagHighlighter,
-  l as tags
+  Ne as Command,
+  xe as CommandDialog,
+  Ae as CommandEmpty,
+  ke as CommandGroup,
+  Ie as CommandInput,
+  we as CommandItem,
+  Re as CommandList,
+  Me as CommandLoading,
+  fe as CommandRoot,
+  Se as CommandSeparator,
+  Ce as defaultFilter,
+  S as useCommandState
 };

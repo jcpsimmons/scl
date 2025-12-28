@@ -1,50 +1,70 @@
-import * as l from "react";
-import { composeRefs as m } from "./index88.js";
-import { jsx as u } from "react/jsx-runtime";
-// @__NO_SIDE_EFFECTS__
-function b(e) {
-  const n = /* @__PURE__ */ y(e), o = l.forwardRef((t, r) => {
-    const { children: i, ...c } = t, s = l.Children.toArray(i), a = s.find(E);
-    if (a) {
-      const f = a.props.children, d = s.map((p) => p === a ? l.Children.count(f) > 1 ? l.Children.only(null) : l.isValidElement(f) ? f.props.children : null : p);
-      return /* @__PURE__ */ u(n, { ...c, ref: r, children: l.isValidElement(f) ? l.cloneElement(f, void 0, d) : null });
-    }
-    return /* @__PURE__ */ u(n, { ...c, ref: r, children: i });
-  });
-  return o.displayName = `${e}.Slot`, o;
-}
-// @__NO_SIDE_EFFECTS__
-function y(e) {
-  const n = l.forwardRef((o, t) => {
-    const { children: r, ...i } = o;
-    if (l.isValidElement(r)) {
-      const c = S(r), s = C(i, r.props);
-      return r.type !== l.Fragment && (s.ref = t ? m(t, c) : c), l.cloneElement(r, s);
-    }
-    return l.Children.count(r) > 1 ? l.Children.only(null) : null;
-  });
-  return n.displayName = `${e}.SlotClone`, n;
-}
-var g = Symbol("radix.slottable");
-function E(e) {
-  return l.isValidElement(e) && typeof e.type == "function" && "__radixId" in e.type && e.type.__radixId === g;
-}
-function C(e, n) {
-  const o = { ...n };
-  for (const t in n) {
-    const r = e[t], i = n[t];
-    /^on[A-Z]/.test(t) ? r && i ? o[t] = (...s) => {
-      const a = i(...s);
-      return r(...s), a;
-    } : r && (o[t] = r) : t === "style" ? o[t] = { ...r, ...i } : t === "className" && (o[t] = [r, i].filter(Boolean).join(" "));
+import { RangeValue as a } from "./index76.js";
+import { syntaxTree as l } from "./index84.js";
+class u {
+  /**
+  Create a new completion context. (Mostly useful for testing
+  completion sources—in the editor, the extension will create
+  these for you.)
+  */
+  constructor(s, t, e, o) {
+    this.state = s, this.pos = t, this.explicit = e, this.view = o, this.abortListeners = [], this.abortOnDocChange = !1;
   }
-  return { ...e, ...o };
+  /**
+  Get the extent, content, and (if there is a token) type of the
+  token before `this.pos`.
+  */
+  tokenBefore(s) {
+    let t = l(this.state).resolveInner(this.pos, -1);
+    for (; t && s.indexOf(t.name) < 0; )
+      t = t.parent;
+    return t ? {
+      from: t.from,
+      to: this.pos,
+      text: this.state.sliceDoc(t.from, this.pos),
+      type: t.type
+    } : null;
+  }
+  /**
+  Get the match of the given expression directly before the
+  cursor.
+  */
+  matchBefore(s) {
+    let t = this.state.doc.lineAt(this.pos), e = Math.max(t.from, this.pos - 250), o = t.text.slice(e - t.from, this.pos - t.from), n = o.search(h(s));
+    return n < 0 ? null : { from: e + n, to: this.pos, text: o.slice(n) };
+  }
+  /**
+  Yields true when the query has been aborted. Can be useful in
+  asynchronous queries to avoid doing work that will be ignored.
+  */
+  get aborted() {
+    return this.abortListeners == null;
+  }
+  /**
+  Allows you to register abort handlers, which will be called when
+  the query is
+  [aborted](https://codemirror.net/6/docs/ref/#autocomplete.CompletionContext.aborted).
+  
+  By default, running queries will not be aborted for regular
+  typing or backspacing, on the assumption that they are likely to
+  return a result with a
+  [`validFor`](https://codemirror.net/6/docs/ref/#autocomplete.CompletionResult.validFor) field that
+  allows the result to be used after all. Passing `onDocChange:
+  true` will cause this query to be aborted for any document
+  change.
+  */
+  addEventListener(s, t, e) {
+    s == "abort" && this.abortListeners && (this.abortListeners.push(t), e && e.onDocChange && (this.abortOnDocChange = !0));
+  }
 }
-function S(e) {
-  var t, r;
-  let n = (t = Object.getOwnPropertyDescriptor(e.props, "ref")) == null ? void 0 : t.get, o = n && "isReactWarning" in n && n.isReactWarning;
-  return o ? e.ref : (n = (r = Object.getOwnPropertyDescriptor(e, "ref")) == null ? void 0 : r.get, o = n && "isReactWarning" in n && n.isReactWarning, o ? e.props.ref : e.props.ref || e.ref);
+function h(r, s) {
+  var t;
+  let { source: e } = r, o = e[e.length - 1] != "$";
+  return o ? new RegExp(`(?:${e})${o ? "$" : ""}`, (t = r.flags) !== null && t !== void 0 ? t : r.ignoreCase ? "i" : "") : r;
 }
+const i = /* @__PURE__ */ new class extends a {
+}();
+i.startSide = 1;
+i.endSide = -1;
 export {
-  b as createSlot
+  u as CompletionContext
 };
