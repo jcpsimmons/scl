@@ -84,7 +84,10 @@ const TerminalTextarea = React.forwardRef<HTMLDivElement, TerminalTextareaProps>
             {Array.from({ length: Math.max(lineCount, visibleLines) }, (_, i) => (
               <div
                 key={i}
-                className="px-2 leading-6"
+                className={cn(
+                  'px-2 leading-6',
+                  i >= lineCount && 'text-blue-500'
+                )}
                 style={{ height: `${lineHeight}rem` }}
               >
                 {i < lineCount ? i + 1 : '~'}
