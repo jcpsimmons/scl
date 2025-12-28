@@ -33,9 +33,9 @@ const Progress = React.forwardRef<
     const filledSegments = Math.floor((value / 100) * segments)
 
     return (
-      <div className="w-full">
+      <div className="w-full min-w-[200px]">
         {(label || showPercentage) && (
-          <div className="flex justify-between items-center mb-2 font-mono text-xs text-primary">
+          <div className="flex justify-center items-center gap-2 mb-2 font-mono text-sm font-bold text-primary">
             {label && <span>{label}</span>}
             {showPercentage && <span>{Math.round(value)}%</span>}
           </div>
@@ -45,22 +45,10 @@ const Progress = React.forwardRef<
           className={cn('relative h-6 w-full overflow-hidden bg-background border-2 border-primary', className)}
           {...props}
         >
-          <div className="flex h-full gap-[2px] p-[2px]">
-            {Array.from({ length: segments }).map((_, index) => {
-              const isFilled = index < filledSegments
-              return (
-                <div
-                  key={index}
-                  className={cn(
-                    'flex-1 transition-colors duration-200',
-                    isFilled
-                      ? 'bg-primary'
-                      : 'bg-primary/10'
-                  )}
-                />
-              )
-            })}
-          </div>
+          <ProgressPrimitive.Indicator
+            className="h-full bg-primary transition-all duration-200"
+            style={{ width: `${value}%` }}
+          />
         </ProgressPrimitive.Root>
       </div>
     )
