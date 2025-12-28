@@ -1,15 +1,15 @@
 import { jsx as t, jsxs as i } from "react/jsx-runtime";
 import * as o from "react";
-import { Command as r } from "./index68.js";
+import { Command as r } from "./index46.js";
 import { cn as d } from "./index2.js";
 import { Dialog as s, DialogContent as n } from "./index15.js";
-import l from "./index69.js";
+import l from "./index47.js";
 const p = o.forwardRef(({ className: e, ...a }, m) => /* @__PURE__ */ t(
   r,
   {
     ref: m,
     className: d(
-      "flex h-full w-full flex-col overflow-hidden bg-background text-primary",
+      "flex h-full w-full flex-col overflow-hidden bg-black bg-background text-primary",
       e
     ),
     ...a

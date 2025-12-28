@@ -1,26 +1,18 @@
-import * as f from "react";
-import { assignRef as o } from "./index195.js";
-import { useCallbackRef as l } from "./index196.js";
-var s = typeof window < "u" ? f.useLayoutEffect : f.useEffect, c = /* @__PURE__ */ new WeakMap();
-function v(e, m) {
-  var t = l(null, function(n) {
-    return e.forEach(function(u) {
-      return o(u, n);
-    });
-  });
-  return s(function() {
-    var n = c.get(t);
-    if (n) {
-      var u = new Set(n), r = new Set(e), i = t.current;
-      u.forEach(function(a) {
-        r.has(a) || o(a, null);
-      }), r.forEach(function(a) {
-        u.has(a) || o(a, i);
-      });
-    }
-    c.set(t, e);
-  }, [e]), t;
+import { __rest as o, __assign as d } from "./index173.js";
+import * as n from "react";
+var i = function(r) {
+  var e = r.sideCar, a = o(r, ["sideCar"]);
+  if (!e)
+    throw new Error("Sidecar: please provide `sideCar` property to import the right car");
+  var t = e.read();
+  if (!t)
+    throw new Error("Sidecar medium not found");
+  return n.createElement(t, d({}, a));
+};
+i.isSideCarExport = !0;
+function p(r, e) {
+  return r.useMedium(e), i;
 }
 export {
-  v as useMergeRefs
+  p as exportSidecar
 };

@@ -1,50 +1,41 @@
-import { jsxs as o, jsx as r } from "react/jsx-runtime";
-import * as p from "react";
-import { Root as h } from "./index71.js";
-import { cn as l } from "./index2.js";
-const x = p.forwardRef(
+import { jsxs as e, jsx as o } from "react/jsx-runtime";
+import * as m from "react";
+import { Root as d, Indicator as l } from "./index72.js";
+import { cn as c } from "./index2.js";
+const f = m.forwardRef(
   ({
-    className: m,
+    className: i,
     value: s = 0,
-    segments: i = 20,
-    showPercentage: a = !1,
-    label: e,
-    ...n
-  }, d) => {
-    const f = Math.floor(s / 100 * i);
-    return /* @__PURE__ */ o("div", { className: "w-full", children: [
-      (e || a) && /* @__PURE__ */ o("div", { className: "flex justify-between items-center mb-2 font-mono text-xs text-primary", children: [
-        e && /* @__PURE__ */ r("span", { children: e }),
-        a && /* @__PURE__ */ o("span", { children: [
-          Math.round(s),
-          "%"
-        ] })
-      ] }),
-      /* @__PURE__ */ r(
-        h,
-        {
-          ref: d,
-          className: l("relative h-6 w-full overflow-hidden bg-background border-2 border-primary", m),
-          ...n,
-          children: /* @__PURE__ */ r("div", { className: "flex h-full gap-[2px] p-[2px]", children: Array.from({ length: i }).map((u, t) => {
-            const c = t < f;
-            return /* @__PURE__ */ r(
-              "div",
-              {
-                className: l(
-                  "flex-1 transition-colors duration-200",
-                  c ? "bg-primary" : "bg-primary/10"
-                )
-              },
-              t
-            );
-          }) })
-        }
-      )
-    ] });
-  }
+    segments: p = 20,
+    showPercentage: t = !1,
+    label: r,
+    ...a
+  }, n) => /* @__PURE__ */ e("div", { className: "w-full min-w-[200px]", children: [
+    (r || t) && /* @__PURE__ */ e("div", { className: "flex justify-center items-center gap-2 mb-2 font-mono text-sm font-bold text-primary", children: [
+      r && /* @__PURE__ */ o("span", { children: r }),
+      t && /* @__PURE__ */ e("span", { children: [
+        Math.round(s),
+        "%"
+      ] })
+    ] }),
+    /* @__PURE__ */ o(
+      d,
+      {
+        ref: n,
+        className: c("relative h-6 w-full overflow-hidden bg-background border-2 border-primary", i),
+        ...a,
+        children: /* @__PURE__ */ o(
+          l,
+          {
+            className: "h-full bg-primary transition-all duration-200",
+            style: { width: `${s}%` }
+          }
+        )
+      }
+    )
+  ] })
 );
-x.displayName = "Progress";
+f.displayName = "Progress";
 export {
-  x as Progress
+  f as Progress
 };

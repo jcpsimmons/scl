@@ -17,7 +17,7 @@ const i = o.forwardRef(({ className: a, ...r }, e) => /* @__PURE__ */ d(
   "div",
   {
     ref: e,
-    className: t("flex flex-col space-y-1.5", a),
+    className: t("flex flex-col space-y-1.5 p-6 pb-0", a),
     ...r
   }
 ));

@@ -1,69 +1,146 @@
-let a = [], d = [];
-(() => {
-  let t = "lc,34,7n,7,7b,19,,,,2,,2,,,20,b,1c,l,g,,2t,7,2,6,2,2,,4,z,,u,r,2j,b,1m,9,9,,o,4,,9,,3,,5,17,3,3b,f,,w,1j,,,,4,8,4,,3,7,a,2,t,,1m,,,,2,4,8,,9,,a,2,q,,2,2,1l,,4,2,4,2,2,3,3,,u,2,3,,b,2,1l,,4,5,,2,4,,k,2,m,6,,,1m,,,2,,4,8,,7,3,a,2,u,,1n,,,,c,,9,,14,,3,,1l,3,5,3,,4,7,2,b,2,t,,1m,,2,,2,,3,,5,2,7,2,b,2,s,2,1l,2,,,2,4,8,,9,,a,2,t,,20,,4,,2,3,,,8,,29,,2,7,c,8,2q,,2,9,b,6,22,2,r,,,,,,1j,e,,5,,2,5,b,,10,9,,2u,4,,6,,2,2,2,p,2,4,3,g,4,d,,2,2,6,,f,,jj,3,qa,3,t,3,t,2,u,2,1s,2,,7,8,,2,b,9,,19,3,3b,2,y,,3a,3,4,2,9,,6,3,63,2,2,,1m,,,7,,,,,2,8,6,a,2,,1c,h,1r,4,1c,7,,,5,,14,9,c,2,w,4,2,2,,3,1k,,,2,3,,,3,1m,8,2,2,48,3,,d,,7,4,,6,,3,2,5i,1m,,5,ek,,5f,x,2da,3,3x,,2o,w,fe,6,2x,2,n9w,4,,a,w,2,28,2,7k,,3,,4,,p,2,5,,47,2,q,i,d,,12,8,p,b,1a,3,1c,,2,4,2,2,13,,1v,6,2,2,2,2,c,,8,,1b,,1f,,,3,2,2,5,2,,,16,2,8,,6m,,2,,4,,fn4,,kh,g,g,g,a6,2,gt,,6a,,45,5,1ae,3,,2,5,4,14,3,4,,4l,2,fx,4,ar,2,49,b,4w,,1i,f,1k,3,1d,4,2,2,1x,3,10,5,,8,1q,,c,2,1g,9,a,4,2,,2n,3,2,,,2,6,,4g,,3,8,l,2,1l,2,,,,,m,,e,7,3,5,5f,8,2,3,,,n,,29,,2,6,,,2,,,2,,2,6j,,2,4,6,2,,2,r,2,2d,8,2,,,2,2y,,,,2,6,,,2t,3,2,4,,5,77,9,,2,6t,,a,2,,,4,,40,4,2,2,4,,w,a,14,6,2,4,8,,9,6,2,3,1a,d,,2,ba,7,,6,,,2a,m,2,7,,2,,2,3e,6,3,,,2,,7,,,20,2,3,,,,9n,2,f0b,5,1n,7,t4,,1r,4,29,,f5k,2,43q,,,3,4,5,8,8,2,7,u,4,44,3,1iz,1j,4,1e,8,,e,,m,5,,f,11s,7,,h,2,7,,2,,5,79,7,c5,4,15s,7,31,7,240,5,gx7k,2o,3k,6o".split(",").map((e) => e ? parseInt(e, 36) : 1);
-  for (let e = 0, n = 0; e < t.length; e++)
-    (e % 2 ? d : a).push(n = n + t[e]);
-})();
-function h(t) {
-  if (t < 768) return !1;
-  for (let e = 0, n = a.length; ; ) {
-    let r = e + n >> 1;
-    if (t < a[r]) n = r;
-    else if (t >= d[r]) e = r + 1;
-    else return !0;
-    if (e == n) return !1;
+let d = 0;
+class t {
+  /**
+  Create a new node prop type.
+  */
+  constructor(e = {}) {
+    this.id = d++, this.perNode = !!e.perNode, this.deserialize = e.deserialize || (() => {
+      throw new Error("This node type doesn't define a deserialize function");
+    }), this.combine = e.combine || null;
+  }
+  /**
+  This is meant to be used with
+  [`NodeSet.extend`](#common.NodeSet.extend) or
+  [`LRParser.configure`](#lr.ParserConfig.props) to compute
+  prop values for each node type in the set. Takes a [match
+  object](#common.NodeType^match) or function that returns undefined
+  if the node type doesn't get this prop, and the prop's value if
+  it does.
+  */
+  add(e) {
+    if (this.perNode)
+      throw new RangeError("Can't add per-node props to node types");
+    return typeof e != "function" && (e = l.match(e)), (n) => {
+      let o = e(n);
+      return o === void 0 ? null : [this, o];
+    };
   }
 }
-function c(t) {
-  return t >= 127462 && t <= 127487;
-}
-const g = 8205;
-function w(t, e, n = !0, r = !0) {
-  return (n ? b : k)(t, e, r);
-}
-function b(t, e, n) {
-  if (e == t.length) return e;
-  e && o(t.charCodeAt(e)) && m(t.charCodeAt(e - 1)) && e--;
-  let r = f(t, e);
-  for (e += x(r); e < t.length; ) {
-    let i = f(t, e);
-    if (r == g || i == g || n && h(i))
-      e += x(i), r = i;
-    else if (c(i)) {
-      let l = 0, u = e - 2;
-      for (; u >= 0 && c(f(t, u)); )
-        l++, u -= 2;
-      if (l % 2 == 0) break;
-      e += 2;
-    } else
-      break;
+t.closedBy = new t({ deserialize: (r) => r.split(" ") });
+t.openedBy = new t({ deserialize: (r) => r.split(" ") });
+t.group = new t({ deserialize: (r) => r.split(" ") });
+t.isolate = new t({ deserialize: (r) => {
+  if (r && r != "rtl" && r != "ltr" && r != "auto")
+    throw new RangeError("Invalid value for isolate: " + r);
+  return r || "auto";
+} });
+t.contextHash = new t({ perNode: !0 });
+t.lookAhead = new t({ perNode: !0 });
+t.mounted = new t({ perNode: !0 });
+const a = /* @__PURE__ */ Object.create(null);
+class l {
+  /**
+  @internal
+  */
+  constructor(e, n, o, s = 0) {
+    this.name = e, this.props = n, this.id = o, this.flags = s;
   }
-  return e;
-}
-function k(t, e, n) {
-  for (; e > 0; ) {
-    let r = b(t, e - 2, n);
-    if (r < e) return r;
-    e--;
+  /**
+  Define a node type.
+  */
+  static define(e) {
+    let n = e.props && e.props.length ? /* @__PURE__ */ Object.create(null) : a, o = (e.top ? 1 : 0) | (e.skipped ? 2 : 0) | (e.error ? 4 : 0) | (e.name == null ? 8 : 0), s = new l(e.name || "", n, e.id, o);
+    if (e.props) {
+      for (let i of e.props)
+        if (Array.isArray(i) || (i = i(s)), i) {
+          if (i[0].perNode)
+            throw new RangeError("Can't store a per-node prop on a node type");
+          n[i[0].id] = i[1];
+        }
+    }
+    return s;
   }
-  return 0;
+  /**
+  Retrieves a node prop for this type. Will return `undefined` if
+  the prop isn't present on this node.
+  */
+  prop(e) {
+    return this.props[e.id];
+  }
+  /**
+  True when this is the top node of a grammar.
+  */
+  get isTop() {
+    return (this.flags & 1) > 0;
+  }
+  /**
+  True when this node is produced by a skip rule.
+  */
+  get isSkipped() {
+    return (this.flags & 2) > 0;
+  }
+  /**
+  Indicates whether this is an error node.
+  */
+  get isError() {
+    return (this.flags & 4) > 0;
+  }
+  /**
+  When true, this node type doesn't correspond to a user-declared
+  named node, for example because it is used to cache repetition.
+  */
+  get isAnonymous() {
+    return (this.flags & 8) > 0;
+  }
+  /**
+  Returns true when this node's name or one of its
+  [groups](#common.NodeProp^group) matches the given string.
+  */
+  is(e) {
+    if (typeof e == "string") {
+      if (this.name == e)
+        return !0;
+      let n = this.prop(t.group);
+      return n ? n.indexOf(e) > -1 : !1;
+    }
+    return this.id == e;
+  }
+  /**
+  Create a function from node types to arbitrary values by
+  specifying an object whose property names are node or
+  [group](#common.NodeProp^group) names. Often useful with
+  [`NodeProp.add`](#common.NodeProp.add). You can put multiple
+  names, separated by spaces, in a single property name to map
+  multiple node names to a single value.
+  */
+  static match(e) {
+    let n = /* @__PURE__ */ Object.create(null);
+    for (let o in e)
+      for (let s of o.split(" "))
+        n[s] = e[o];
+    return (o) => {
+      for (let s = o.prop(t.group), i = -1; i < (s ? s.length : 0); i++) {
+        let p = n[i < 0 ? o.name : s[i]];
+        if (p)
+          return p;
+      }
+    };
+  }
 }
-function f(t, e) {
-  let n = t.charCodeAt(e);
-  if (!m(n) || e + 1 == t.length) return n;
-  let r = t.charCodeAt(e + 1);
-  return o(r) ? (n - 55296 << 10) + (r - 56320) + 65536 : n;
-}
-function o(t) {
-  return t >= 56320 && t < 57344;
-}
-function m(t) {
-  return t >= 55296 && t < 56320;
-}
-function x(t) {
-  return t < 65536 ? 1 : 2;
-}
+l.none = new l(
+  "",
+  /* @__PURE__ */ Object.create(null),
+  0,
+  8
+  /* NodeFlag.Anonymous */
+);
+var u;
+(function(r) {
+  r[r.ExcludeBuffers = 1] = "ExcludeBuffers", r[r.IncludeAnonymous = 2] = "IncludeAnonymous", r[r.IgnoreMounts = 4] = "IgnoreMounts", r[r.IgnoreOverlays = 8] = "IgnoreOverlays";
+})(u || (u = {}));
+new t({ perNode: !0 });
 export {
-  w as findClusterBreak,
-  h as isExtendingChar
+  u as IterMode,
+  t as NodeProp,
+  l as NodeType
 };

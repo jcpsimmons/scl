@@ -1,227 +1,262 @@
-import * as u from "react";
-import { composeEventHandlers as m } from "./index116.js";
-import { composeRefs as K } from "./index91.js";
-import { createContextScope as U } from "./index88.js";
-import { useControllableState as g } from "./index89.js";
-import { Primitive as B } from "./index92.js";
-import { createMenuScope as D, Root as F, Anchor as H, Group as W, Portal as $, Sub as j, RadioGroup as X, Content as q, Item as z, CheckboxItem as J, ItemIndicator as Q, RadioItem as V, Label as Y, Separator as Z, SubContent as oo, SubTrigger as eo, Arrow as ro } from "./index117.js";
-import { useId as M } from "./index94.js";
-import { jsx as t } from "react/jsx-runtime";
-var f = "DropdownMenu", [no] = U(
-  f,
-  [D]
-), i = D(), [ao, _] = no(f), h = (o) => {
+import * as s from "react";
+import { composeEventHandlers as p } from "./index101.js";
+import { useComposedRefs as _ } from "./index90.js";
+import { createContextScope as V, createContext as q } from "./index91.js";
+import { useId as R } from "./index89.js";
+import { useControllableState as K } from "./index93.js";
+import { DismissableLayer as U } from "./index102.js";
+import { FocusScope as Y } from "./index103.js";
+import { Portal as Z } from "./index104.js";
+import { Presence as h } from "./index96.js";
+import { Primitive as m } from "./index88.js";
+import { useFocusGuards as z } from "./index105.js";
+import J from "./index106.js";
+import { hideOthers as Q } from "./index107.js";
+import { createSlot as X } from "./index108.js";
+import { jsx as i, jsxs as P, Fragment as O } from "react/jsx-runtime";
+var v = "Dialog", [I, Ne] = V(v), [ee, u] = I(v), x = (e) => {
   const {
-    __scopeDropdownMenu: n,
-    children: r,
-    dir: e,
+    __scopeDialog: o,
+    children: n,
     open: a,
-    defaultOpen: d,
-    onOpenChange: c,
-    modal: p = !0
-  } = o, s = i(n), v = u.useRef(null), [l, w] = g({
+    defaultOpen: r,
+    onOpenChange: t,
+    modal: c = !0
+  } = e, l = s.useRef(null), d = s.useRef(null), [g, C] = K({
     prop: a,
-    defaultProp: d ?? !1,
-    onChange: c,
-    caller: f
+    defaultProp: r ?? !1,
+    onChange: t,
+    caller: v
   });
-  return /* @__PURE__ */ t(
-    ao,
+  return /* @__PURE__ */ i(
+    ee,
     {
-      scope: n,
-      triggerId: M(),
-      triggerRef: v,
-      contentId: M(),
-      open: l,
-      onOpenChange: w,
-      onOpenToggle: u.useCallback(() => w((L) => !L), [w]),
-      modal: p,
-      children: /* @__PURE__ */ t(F, { ...s, open: l, onOpenChange: w, dir: e, modal: p, children: r })
+      scope: o,
+      triggerRef: l,
+      contentRef: d,
+      contentId: R(),
+      titleId: R(),
+      descriptionId: R(),
+      open: g,
+      onOpenChange: C,
+      onOpenToggle: s.useCallback(() => C((H) => !H), [C]),
+      modal: c,
+      children: n
     }
   );
 };
-h.displayName = f;
-var R = "DropdownMenuTrigger", b = u.forwardRef(
-  (o, n) => {
-    const { __scopeDropdownMenu: r, disabled: e = !1, ...a } = o, d = _(R, r), c = i(r);
-    return /* @__PURE__ */ t(H, { asChild: !0, ...c, children: /* @__PURE__ */ t(
-      B.button,
+x.displayName = v;
+var A = "DialogTrigger", T = s.forwardRef(
+  (e, o) => {
+    const { __scopeDialog: n, ...a } = e, r = u(A, n), t = _(o, r.triggerRef);
+    return /* @__PURE__ */ i(
+      m.button,
       {
         type: "button",
-        id: d.triggerId,
-        "aria-haspopup": "menu",
-        "aria-expanded": d.open,
-        "aria-controls": d.open ? d.contentId : void 0,
-        "data-state": d.open ? "open" : "closed",
-        "data-disabled": e ? "" : void 0,
-        disabled: e,
+        "aria-haspopup": "dialog",
+        "aria-expanded": r.open,
+        "aria-controls": r.contentId,
+        "data-state": N(r.open),
         ...a,
-        ref: K(n, d.triggerRef),
-        onPointerDown: m(o.onPointerDown, (p) => {
-          !e && p.button === 0 && p.ctrlKey === !1 && (d.onOpenToggle(), d.open || p.preventDefault());
-        }),
-        onKeyDown: m(o.onKeyDown, (p) => {
-          e || (["Enter", " "].includes(p.key) && d.onOpenToggle(), p.key === "ArrowDown" && d.onOpenChange(!0), ["Enter", " ", "ArrowDown"].includes(p.key) && p.preventDefault());
-        })
-      }
-    ) });
-  }
-);
-b.displayName = R;
-var to = "DropdownMenuPortal", I = (o) => {
-  const { __scopeDropdownMenu: n, ...r } = o, e = i(n);
-  return /* @__PURE__ */ t($, { ...e, ...r });
-};
-I.displayName = to;
-var S = "DropdownMenuContent", C = u.forwardRef(
-  (o, n) => {
-    const { __scopeDropdownMenu: r, ...e } = o, a = _(S, r), d = i(r), c = u.useRef(!1);
-    return /* @__PURE__ */ t(
-      q,
-      {
-        id: a.contentId,
-        "aria-labelledby": a.triggerId,
-        ...d,
-        ...e,
-        ref: n,
-        onCloseAutoFocus: m(o.onCloseAutoFocus, (p) => {
-          var s;
-          c.current || (s = a.triggerRef.current) == null || s.focus(), c.current = !1, p.preventDefault();
-        }),
-        onInteractOutside: m(o.onInteractOutside, (p) => {
-          const s = p.detail.originalEvent, v = s.button === 0 && s.ctrlKey === !0, l = s.button === 2 || v;
-          (!a.modal || l) && (c.current = !0);
-        }),
-        style: {
-          ...o.style,
-          "--radix-dropdown-menu-content-transform-origin": "var(--radix-popper-transform-origin)",
-          "--radix-dropdown-menu-content-available-width": "var(--radix-popper-available-width)",
-          "--radix-dropdown-menu-content-available-height": "var(--radix-popper-available-height)",
-          "--radix-dropdown-menu-trigger-width": "var(--radix-popper-anchor-width)",
-          "--radix-dropdown-menu-trigger-height": "var(--radix-popper-anchor-height)"
-        }
+        ref: t,
+        onClick: p(e.onClick, r.onOpenToggle)
       }
     );
   }
 );
-C.displayName = S;
-var po = "DropdownMenuGroup", N = u.forwardRef(
-  (o, n) => {
-    const { __scopeDropdownMenu: r, ...e } = o, a = i(r);
-    return /* @__PURE__ */ t(W, { ...a, ...e, ref: n });
+T.displayName = A;
+var E = "DialogPortal", [te, b] = I(E, {
+  forceMount: void 0
+}), M = (e) => {
+  const { __scopeDialog: o, forceMount: n, children: a, container: r } = e, t = u(E, o);
+  return /* @__PURE__ */ i(te, { scope: o, forceMount: n, children: s.Children.map(a, (c) => /* @__PURE__ */ i(h, { present: n || t.open, children: /* @__PURE__ */ i(Z, { asChild: !0, container: r, children: c }) })) });
+};
+M.displayName = E;
+var D = "DialogOverlay", w = s.forwardRef(
+  (e, o) => {
+    const n = b(D, e.__scopeDialog), { forceMount: a = n.forceMount, ...r } = e, t = u(D, e.__scopeDialog);
+    return t.modal ? /* @__PURE__ */ i(h, { present: a || t.open, children: /* @__PURE__ */ i(re, { ...r, ref: o }) }) : null;
   }
 );
-N.displayName = po;
-var uo = "DropdownMenuLabel", x = u.forwardRef(
-  (o, n) => {
-    const { __scopeDropdownMenu: r, ...e } = o, a = i(r);
-    return /* @__PURE__ */ t(Y, { ...a, ...e, ref: n });
+w.displayName = D;
+var oe = X("DialogOverlay.RemoveScroll"), re = s.forwardRef(
+  (e, o) => {
+    const { __scopeDialog: n, ...a } = e, r = u(D, n);
+    return (
+      // Make sure `Content` is scrollable even when it doesn't live inside `RemoveScroll`
+      // ie. when `Overlay` and `Content` are siblings
+      /* @__PURE__ */ i(J, { as: oe, allowPinchZoom: !0, shards: [r.contentRef], children: /* @__PURE__ */ i(
+        m.div,
+        {
+          "data-state": N(r.open),
+          ...a,
+          ref: o,
+          style: { pointerEvents: "auto", ...a.style }
+        }
+      ) })
+    );
+  }
+), f = "DialogContent", S = s.forwardRef(
+  (e, o) => {
+    const n = b(f, e.__scopeDialog), { forceMount: a = n.forceMount, ...r } = e, t = u(f, e.__scopeDialog);
+    return /* @__PURE__ */ i(h, { present: a || t.open, children: t.modal ? /* @__PURE__ */ i(ne, { ...r, ref: o }) : /* @__PURE__ */ i(ae, { ...r, ref: o }) });
   }
 );
-x.displayName = uo;
-var io = "DropdownMenuItem", A = u.forwardRef(
-  (o, n) => {
-    const { __scopeDropdownMenu: r, ...e } = o, a = i(r);
-    return /* @__PURE__ */ t(z, { ...a, ...e, ref: n });
-  }
-);
-A.displayName = io;
-var so = "DropdownMenuCheckboxItem", P = u.forwardRef((o, n) => {
-  const { __scopeDropdownMenu: r, ...e } = o, a = i(r);
-  return /* @__PURE__ */ t(J, { ...a, ...e, ref: n });
-});
-P.displayName = so;
-var co = "DropdownMenuRadioGroup", E = u.forwardRef((o, n) => {
-  const { __scopeDropdownMenu: r, ...e } = o, a = i(r);
-  return /* @__PURE__ */ t(X, { ...a, ...e, ref: n });
-});
-E.displayName = co;
-var lo = "DropdownMenuRadioItem", O = u.forwardRef((o, n) => {
-  const { __scopeDropdownMenu: r, ...e } = o, a = i(r);
-  return /* @__PURE__ */ t(V, { ...a, ...e, ref: n });
-});
-O.displayName = lo;
-var wo = "DropdownMenuItemIndicator", y = u.forwardRef((o, n) => {
-  const { __scopeDropdownMenu: r, ...e } = o, a = i(r);
-  return /* @__PURE__ */ t(Q, { ...a, ...e, ref: n });
-});
-y.displayName = wo;
-var mo = "DropdownMenuSeparator", T = u.forwardRef((o, n) => {
-  const { __scopeDropdownMenu: r, ...e } = o, a = i(r);
-  return /* @__PURE__ */ t(Z, { ...a, ...e, ref: n });
-});
-T.displayName = mo;
-var fo = "DropdownMenuArrow", vo = u.forwardRef(
-  (o, n) => {
-    const { __scopeDropdownMenu: r, ...e } = o, a = i(r);
-    return /* @__PURE__ */ t(ro, { ...a, ...e, ref: n });
-  }
-);
-vo.displayName = fo;
-var Mo = (o) => {
-  const { __scopeDropdownMenu: n, children: r, open: e, onOpenChange: a, defaultOpen: d } = o, c = i(n), [p, s] = g({
-    prop: e,
-    defaultProp: d ?? !1,
-    onChange: a,
-    caller: "DropdownMenuSub"
-  });
-  return /* @__PURE__ */ t(j, { ...c, open: p, onOpenChange: s, children: r });
-}, go = "DropdownMenuSubTrigger", G = u.forwardRef((o, n) => {
-  const { __scopeDropdownMenu: r, ...e } = o, a = i(r);
-  return /* @__PURE__ */ t(eo, { ...a, ...e, ref: n });
-});
-G.displayName = go;
-var Do = "DropdownMenuSubContent", k = u.forwardRef((o, n) => {
-  const { __scopeDropdownMenu: r, ...e } = o, a = i(r);
-  return /* @__PURE__ */ t(
-    oo,
-    {
-      ...a,
-      ...e,
-      ref: n,
-      style: {
-        ...o.style,
-        "--radix-dropdown-menu-content-transform-origin": "var(--radix-popper-transform-origin)",
-        "--radix-dropdown-menu-content-available-width": "var(--radix-popper-available-width)",
-        "--radix-dropdown-menu-content-available-height": "var(--radix-popper-available-height)",
-        "--radix-dropdown-menu-trigger-width": "var(--radix-popper-anchor-width)",
-        "--radix-dropdown-menu-trigger-height": "var(--radix-popper-anchor-height)"
+S.displayName = f;
+var ne = s.forwardRef(
+  (e, o) => {
+    const n = u(f, e.__scopeDialog), a = s.useRef(null), r = _(o, n.contentRef, a);
+    return s.useEffect(() => {
+      const t = a.current;
+      if (t) return Q(t);
+    }, []), /* @__PURE__ */ i(
+      F,
+      {
+        ...e,
+        ref: r,
+        trapFocus: n.open,
+        disableOutsidePointerEvents: !0,
+        onCloseAutoFocus: p(e.onCloseAutoFocus, (t) => {
+          var c;
+          t.preventDefault(), (c = n.triggerRef.current) == null || c.focus();
+        }),
+        onPointerDownOutside: p(e.onPointerDownOutside, (t) => {
+          const c = t.detail.originalEvent, l = c.button === 0 && c.ctrlKey === !0;
+          (c.button === 2 || l) && t.preventDefault();
+        }),
+        onFocusOutside: p(
+          e.onFocusOutside,
+          (t) => t.preventDefault()
+        )
       }
-    }
-  );
-});
-k.displayName = Do;
-var xo = h, Ao = b, Po = I, Eo = C, Oo = N, yo = x, To = A, Go = P, ko = E, Lo = O, Ko = y, Uo = T, Bo = Mo, Fo = G, Ho = k;
+    );
+  }
+), ae = s.forwardRef(
+  (e, o) => {
+    const n = u(f, e.__scopeDialog), a = s.useRef(!1), r = s.useRef(!1);
+    return /* @__PURE__ */ i(
+      F,
+      {
+        ...e,
+        ref: o,
+        trapFocus: !1,
+        disableOutsidePointerEvents: !1,
+        onCloseAutoFocus: (t) => {
+          var c, l;
+          (c = e.onCloseAutoFocus) == null || c.call(e, t), t.defaultPrevented || (a.current || (l = n.triggerRef.current) == null || l.focus(), t.preventDefault()), a.current = !1, r.current = !1;
+        },
+        onInteractOutside: (t) => {
+          var d, g;
+          (d = e.onInteractOutside) == null || d.call(e, t), t.defaultPrevented || (a.current = !0, t.detail.originalEvent.type === "pointerdown" && (r.current = !0));
+          const c = t.target;
+          ((g = n.triggerRef.current) == null ? void 0 : g.contains(c)) && t.preventDefault(), t.detail.originalEvent.type === "focusin" && r.current && t.preventDefault();
+        }
+      }
+    );
+  }
+), F = s.forwardRef(
+  (e, o) => {
+    const { __scopeDialog: n, trapFocus: a, onOpenAutoFocus: r, onCloseAutoFocus: t, ...c } = e, l = u(f, n), d = s.useRef(null), g = _(o, d);
+    return z(), /* @__PURE__ */ P(O, { children: [
+      /* @__PURE__ */ i(
+        Y,
+        {
+          asChild: !0,
+          loop: !0,
+          trapped: a,
+          onMountAutoFocus: r,
+          onUnmountAutoFocus: t,
+          children: /* @__PURE__ */ i(
+            U,
+            {
+              role: "dialog",
+              id: l.contentId,
+              "aria-describedby": l.descriptionId,
+              "aria-labelledby": l.titleId,
+              "data-state": N(l.open),
+              ...c,
+              ref: g,
+              onDismiss: () => l.onOpenChange(!1)
+            }
+          )
+        }
+      ),
+      /* @__PURE__ */ P(O, { children: [
+        /* @__PURE__ */ i(ie, { titleId: l.titleId }),
+        /* @__PURE__ */ i(ce, { contentRef: d, descriptionId: l.descriptionId })
+      ] })
+    ] });
+  }
+), y = "DialogTitle", W = s.forwardRef(
+  (e, o) => {
+    const { __scopeDialog: n, ...a } = e, r = u(y, n);
+    return /* @__PURE__ */ i(m.h2, { id: r.titleId, ...a, ref: o });
+  }
+);
+W.displayName = y;
+var k = "DialogDescription", G = s.forwardRef(
+  (e, o) => {
+    const { __scopeDialog: n, ...a } = e, r = u(k, n);
+    return /* @__PURE__ */ i(m.p, { id: r.descriptionId, ...a, ref: o });
+  }
+);
+G.displayName = k;
+var L = "DialogClose", $ = s.forwardRef(
+  (e, o) => {
+    const { __scopeDialog: n, ...a } = e, r = u(L, n);
+    return /* @__PURE__ */ i(
+      m.button,
+      {
+        type: "button",
+        ...a,
+        ref: o,
+        onClick: p(e.onClick, () => r.onOpenChange(!1))
+      }
+    );
+  }
+);
+$.displayName = L;
+function N(e) {
+  return e ? "open" : "closed";
+}
+var B = "DialogTitleWarning", [Pe, j] = q(B, {
+  contentName: f,
+  titleName: y,
+  docsSlug: "dialog"
+}), ie = ({ titleId: e }) => {
+  const o = j(B), n = `\`${o.contentName}\` requires a \`${o.titleName}\` for the component to be accessible for screen reader users.
+
+If you want to hide the \`${o.titleName}\`, you can wrap it with our VisuallyHidden component.
+
+For more information, see https://radix-ui.com/primitives/docs/components/${o.docsSlug}`;
+  return s.useEffect(() => {
+    e && (document.getElementById(e) || console.error(n));
+  }, [n, e]), null;
+}, se = "DialogDescriptionWarning", ce = ({ contentRef: e, descriptionId: o }) => {
+  const a = `Warning: Missing \`Description\` or \`aria-describedby={undefined}\` for {${j(se).contentName}}.`;
+  return s.useEffect(() => {
+    var t;
+    const r = (t = e.current) == null ? void 0 : t.getAttribute("aria-describedby");
+    o && r && (document.getElementById(o) || console.warn(a));
+  }, [a, e, o]), null;
+}, Oe = x, Ie = T, xe = M, Ae = w, Te = S, be = W, Me = G, we = $;
 export {
-  Go as CheckboxItem,
-  Eo as Content,
-  h as DropdownMenu,
-  vo as DropdownMenuArrow,
-  P as DropdownMenuCheckboxItem,
-  C as DropdownMenuContent,
-  N as DropdownMenuGroup,
-  A as DropdownMenuItem,
-  y as DropdownMenuItemIndicator,
-  x as DropdownMenuLabel,
-  I as DropdownMenuPortal,
-  E as DropdownMenuRadioGroup,
-  O as DropdownMenuRadioItem,
-  T as DropdownMenuSeparator,
-  Mo as DropdownMenuSub,
-  k as DropdownMenuSubContent,
-  G as DropdownMenuSubTrigger,
-  b as DropdownMenuTrigger,
-  Oo as Group,
-  To as Item,
-  Ko as ItemIndicator,
-  yo as Label,
-  Po as Portal,
-  ko as RadioGroup,
-  Lo as RadioItem,
-  xo as Root,
-  Uo as Separator,
-  Bo as Sub,
-  Ho as SubContent,
-  Fo as SubTrigger,
-  Ao as Trigger
+  we as Close,
+  Te as Content,
+  Me as Description,
+  x as Dialog,
+  $ as DialogClose,
+  S as DialogContent,
+  G as DialogDescription,
+  w as DialogOverlay,
+  M as DialogPortal,
+  W as DialogTitle,
+  T as DialogTrigger,
+  Ae as Overlay,
+  xe as Portal,
+  Oe as Root,
+  be as Title,
+  Ie as Trigger,
+  Pe as WarningProvider,
+  Ne as createDialogScope
 };

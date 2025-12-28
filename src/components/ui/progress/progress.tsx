@@ -22,16 +22,12 @@ const Progress = React.forwardRef<
     {
       className,
       value = 0,
-      segments = 20,
       showPercentage = false,
       label,
       ...props
     },
     ref
   ) => {
-    // Calculate how many segments should be filled
-    const filledSegments = Math.floor((value / 100) * segments)
-
     return (
       <div className="w-full min-w-[200px]">
         {(label || showPercentage) && (

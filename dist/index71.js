@@ -1,83 +1,75 @@
-import * as m from "react";
-import { createContextScope as $ } from "./index130.js";
-import { Primitive as c } from "./index131.js";
+import * as i from "react";
+import { createContextScope as C } from "./index112.js";
+import { useCallbackRef as h } from "./index113.js";
+import { useLayoutEffect as f } from "./index110.js";
+import { Primitive as m } from "./index114.js";
+import { useIsHydrated as _ } from "./index115.js";
 import { jsx as l } from "react/jsx-runtime";
-var u = "Progress", d = 100, [I] = $(u), [h, R] = I(u), f = m.forwardRef(
-  (r, e) => {
-    const {
-      __scopeProgress: i,
-      value: o = null,
-      max: a,
-      getValueLabel: P = E,
-      ...N
-    } = r;
-    (a || a === 0) && !v(a) && console.error(M(`${a}`, "Progress"));
-    const t = v(a) ? a : d;
-    o !== null && !p(o, t) && console.error(V(`${o}`, "Progress"));
-    const n = p(o, t) ? o : null, b = s(n) ? P(n, t) : void 0;
-    return /* @__PURE__ */ l(h, { scope: i, value: n, max: t, children: /* @__PURE__ */ l(
-      c.div,
-      {
-        "aria-valuemax": t,
-        "aria-valuemin": 0,
-        "aria-valuenow": s(n) ? n : void 0,
-        "aria-valuetext": b,
-        role: "progressbar",
-        "data-state": x(n, t),
-        "data-value": n ?? void 0,
-        "data-max": t,
-        ...N,
-        ref: e
-      }
-    ) });
-  }
-);
-f.displayName = u;
-var g = "ProgressIndicator", _ = m.forwardRef(
-  (r, e) => {
-    const { __scopeProgress: i, ...o } = r, a = R(g, i);
+var v = "Avatar", [y] = C(v), [x, A] = y(v), L = i.forwardRef(
+  (t, e) => {
+    const { __scopeAvatar: o, ...r } = t, [n, a] = i.useState("idle");
     return /* @__PURE__ */ l(
-      c.div,
+      x,
       {
-        "data-state": x(a.value, a.max),
-        "data-value": a.value ?? void 0,
-        "data-max": a.max,
-        ...o,
-        ref: e
+        scope: o,
+        imageLoadingStatus: n,
+        onImageLoadingStatusChange: a,
+        children: /* @__PURE__ */ l(m.span, { ...r, ref: e })
       }
     );
   }
 );
-_.displayName = g;
-function E(r, e) {
-  return `${Math.round(r / e * 100)}%`;
+L.displayName = v;
+var S = "AvatarImage", E = i.forwardRef(
+  (t, e) => {
+    const { __scopeAvatar: o, src: r, onLoadingStatusChange: n = () => {
+    }, ...a } = t, u = A(S, o), s = N(r, a), d = h((c) => {
+      n(c), u.onImageLoadingStatusChange(c);
+    });
+    return f(() => {
+      s !== "idle" && d(s);
+    }, [s, d]), s === "loaded" ? /* @__PURE__ */ l(m.img, { ...a, ref: e, src: r }) : null;
+  }
+);
+E.displayName = S;
+var I = "AvatarFallback", R = i.forwardRef(
+  (t, e) => {
+    const { __scopeAvatar: o, delayMs: r, ...n } = t, a = A(I, o), [u, s] = i.useState(r === void 0);
+    return i.useEffect(() => {
+      if (r !== void 0) {
+        const d = window.setTimeout(() => s(!0), r);
+        return () => window.clearTimeout(d);
+      }
+    }, [r]), u && a.imageLoadingStatus !== "loaded" ? /* @__PURE__ */ l(m.span, { ...n, ref: e }) : null;
+  }
+);
+R.displayName = I;
+function p(t, e) {
+  return t ? e ? (t.src !== e && (t.src = e), t.complete && t.naturalWidth > 0 ? "loaded" : "loading") : "error" : "idle";
 }
-function x(r, e) {
-  return r == null ? "indeterminate" : r === e ? "complete" : "loading";
+function N(t, { referrerPolicy: e, crossOrigin: o }) {
+  const r = _(), n = i.useRef(null), a = r ? (n.current || (n.current = new window.Image()), n.current) : null, [u, s] = i.useState(
+    () => p(a, t)
+  );
+  return f(() => {
+    s(p(a, t));
+  }, [a, t]), f(() => {
+    const d = (w) => () => {
+      s(w);
+    };
+    if (!a) return;
+    const c = d("loaded"), g = d("error");
+    return a.addEventListener("load", c), a.addEventListener("error", g), e && (a.referrerPolicy = e), typeof o == "string" && (a.crossOrigin = o), () => {
+      a.removeEventListener("load", c), a.removeEventListener("error", g);
+    };
+  }, [a, o, e]), u;
 }
-function s(r) {
-  return typeof r == "number";
-}
-function v(r) {
-  return s(r) && !isNaN(r) && r > 0;
-}
-function p(r, e) {
-  return s(r) && !isNaN(r) && r <= e && r >= 0;
-}
-function M(r, e) {
-  return `Invalid prop \`max\` of value \`${r}\` supplied to \`${e}\`. Only numbers greater than 0 are valid max values. Defaulting to \`${d}\`.`;
-}
-function V(r, e) {
-  return `Invalid prop \`value\` of value \`${r}\` supplied to \`${e}\`. The \`value\` prop must be:
-  - a positive number
-  - less than the value passed to \`max\` (or ${d} if no \`max\` prop is set)
-  - \`null\` or \`undefined\` if the progress is indeterminate.
-
-Defaulting to \`null\`.`;
-}
-var D = f;
+var H = L, j = E, B = R;
 export {
-  f as Progress,
-  _ as ProgressIndicator,
-  D as Root
+  L as Avatar,
+  R as AvatarFallback,
+  E as AvatarImage,
+  B as Fallback,
+  j as Image,
+  H as Root
 };

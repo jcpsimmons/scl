@@ -1,243 +1,300 @@
-import * as i from "react";
-import { composeEventHandlers as P } from "./index123.js";
-import { useComposedRefs as O } from "./index91.js";
-import { createContextScope as G } from "./index88.js";
-import { DismissableLayer as H } from "./index107.js";
-import { useFocusGuards as K } from "./index108.js";
-import { FocusScope as $ } from "./index109.js";
-import { useId as j } from "./index94.js";
-import { createPopperScope as _, Root as U, Anchor as x, Content as V, Arrow as W } from "./index110.js";
-import { Portal as Z } from "./index111.js";
-import { Presence as w } from "./index93.js";
-import { Primitive as E } from "./index92.js";
-import { createSlot as q } from "./index124.js";
-import { useControllableState as z } from "./index89.js";
-import { hideOthers as B } from "./index114.js";
-import J from "./index115.js";
-import { jsx as p } from "react/jsx-runtime";
-var C = "Popover", [b] = G(C, [
-  _
-]), m = _(), [Q, f] = b(C), F = (o) => {
-  const {
-    __scopePopover: n,
-    children: t,
-    open: a,
-    defaultOpen: e,
-    onOpenChange: r,
-    modal: s = !1
-  } = o, c = m(n), u = i.useRef(null), [l, g] = i.useState(!1), [h, d] = z({
-    prop: a,
-    defaultProp: e ?? !1,
-    onChange: r,
-    caller: C
-  });
-  return /* @__PURE__ */ p(U, { ...c, children: /* @__PURE__ */ p(
-    Q,
-    {
-      scope: n,
-      contentId: j(),
-      triggerRef: u,
-      open: h,
-      onOpenChange: d,
-      onOpenToggle: i.useCallback(() => d((R) => !R), [d]),
-      hasCustomAnchor: l,
-      onCustomAnchorAdd: i.useCallback(() => g(!0), []),
-      onCustomAnchorRemove: i.useCallback(() => g(!1), []),
-      modal: s,
-      children: t
-    }
-  ) });
-};
-F.displayName = C;
-var N = "PopoverAnchor", S = i.forwardRef(
-  (o, n) => {
-    const { __scopePopover: t, ...a } = o, e = f(N, t), r = m(t), { onCustomAnchorAdd: s, onCustomAnchorRemove: c } = e;
-    return i.useEffect(() => (s(), () => c()), [s, c]), /* @__PURE__ */ p(x, { ...r, ...a, ref: n });
-  }
-);
-S.displayName = N;
-var y = "PopoverTrigger", D = i.forwardRef(
-  (o, n) => {
-    const { __scopePopover: t, ...a } = o, e = f(y, t), r = m(t), s = O(n, e.triggerRef), c = /* @__PURE__ */ p(
-      E.button,
-      {
-        type: "button",
-        "aria-haspopup": "dialog",
-        "aria-expanded": e.open,
-        "aria-controls": e.contentId,
-        "data-state": L(e.open),
-        ...a,
-        ref: s,
-        onClick: P(o.onClick, e.onOpenToggle)
-      }
-    );
-    return e.hasCustomAnchor ? c : /* @__PURE__ */ p(x, { asChild: !0, ...r, children: c });
-  }
-);
-D.displayName = y;
-var A = "PopoverPortal", [X, Y] = b(A, {
-  forceMount: void 0
-}), M = (o) => {
-  const { __scopePopover: n, forceMount: t, children: a, container: e } = o, r = f(A, n);
-  return /* @__PURE__ */ p(X, { scope: n, forceMount: t, children: /* @__PURE__ */ p(w, { present: t || r.open, children: /* @__PURE__ */ p(Z, { asChild: !0, container: e, children: a }) }) });
-};
-M.displayName = A;
-var v = "PopoverContent", k = i.forwardRef(
-  (o, n) => {
-    const t = Y(v, o.__scopePopover), { forceMount: a = t.forceMount, ...e } = o, r = f(v, o.__scopePopover);
-    return /* @__PURE__ */ p(w, { present: a || r.open, children: r.modal ? /* @__PURE__ */ p(eo, { ...e, ref: n }) : /* @__PURE__ */ p(ro, { ...e, ref: n }) });
-  }
-);
-k.displayName = v;
-var oo = q("PopoverContent.RemoveScroll"), eo = i.forwardRef(
-  (o, n) => {
-    const t = f(v, o.__scopePopover), a = i.useRef(null), e = O(n, a), r = i.useRef(!1);
-    return i.useEffect(() => {
-      const s = a.current;
-      if (s) return B(s);
-    }, []), /* @__PURE__ */ p(J, { as: oo, allowPinchZoom: !0, children: /* @__PURE__ */ p(
-      I,
-      {
-        ...o,
-        ref: e,
-        trapFocus: t.open,
-        disableOutsidePointerEvents: !0,
-        onCloseAutoFocus: P(o.onCloseAutoFocus, (s) => {
-          var c;
-          s.preventDefault(), r.current || (c = t.triggerRef.current) == null || c.focus();
-        }),
-        onPointerDownOutside: P(
-          o.onPointerDownOutside,
-          (s) => {
-            const c = s.detail.originalEvent, u = c.button === 0 && c.ctrlKey === !0, l = c.button === 2 || u;
-            r.current = l;
-          },
-          { checkForDefaultPrevented: !1 }
-        ),
-        onFocusOutside: P(
-          o.onFocusOutside,
-          (s) => s.preventDefault(),
-          { checkForDefaultPrevented: !1 }
-        )
-      }
-    ) });
-  }
-), ro = i.forwardRef(
-  (o, n) => {
-    const t = f(v, o.__scopePopover), a = i.useRef(!1), e = i.useRef(!1);
-    return /* @__PURE__ */ p(
-      I,
-      {
-        ...o,
-        ref: n,
-        trapFocus: !1,
-        disableOutsidePointerEvents: !1,
-        onCloseAutoFocus: (r) => {
-          var s, c;
-          (s = o.onCloseAutoFocus) == null || s.call(o, r), r.defaultPrevented || (a.current || (c = t.triggerRef.current) == null || c.focus(), r.preventDefault()), a.current = !1, e.current = !1;
-        },
-        onInteractOutside: (r) => {
-          var u, l;
-          (u = o.onInteractOutside) == null || u.call(o, r), r.defaultPrevented || (a.current = !0, r.detail.originalEvent.type === "pointerdown" && (e.current = !0));
-          const s = r.target;
-          ((l = t.triggerRef.current) == null ? void 0 : l.contains(s)) && r.preventDefault(), r.detail.originalEvent.type === "focusin" && e.current && r.preventDefault();
-        }
-      }
-    );
-  }
-), I = i.forwardRef(
-  (o, n) => {
-    const {
-      __scopePopover: t,
-      trapFocus: a,
-      onOpenAutoFocus: e,
-      onCloseAutoFocus: r,
-      disableOutsidePointerEvents: s,
-      onEscapeKeyDown: c,
-      onPointerDownOutside: u,
-      onFocusOutside: l,
-      onInteractOutside: g,
-      ...h
-    } = o, d = f(v, t), R = m(t);
-    return K(), /* @__PURE__ */ p(
-      $,
-      {
-        asChild: !0,
-        loop: !0,
-        trapped: a,
-        onMountAutoFocus: e,
-        onUnmountAutoFocus: r,
-        children: /* @__PURE__ */ p(
-          H,
-          {
-            asChild: !0,
-            disableOutsidePointerEvents: s,
-            onInteractOutside: g,
-            onEscapeKeyDown: c,
-            onPointerDownOutside: u,
-            onFocusOutside: l,
-            onDismiss: () => d.onOpenChange(!1),
-            children: /* @__PURE__ */ p(
-              V,
-              {
-                "data-state": L(d.open),
-                role: "dialog",
-                id: d.contentId,
-                ...R,
-                ...h,
-                ref: n,
-                style: {
-                  ...h.style,
-                  "--radix-popover-content-transform-origin": "var(--radix-popper-transform-origin)",
-                  "--radix-popover-content-available-width": "var(--radix-popper-available-width)",
-                  "--radix-popover-content-available-height": "var(--radix-popper-available-height)",
-                  "--radix-popover-trigger-width": "var(--radix-popper-anchor-width)",
-                  "--radix-popover-trigger-height": "var(--radix-popper-anchor-height)"
-                }
-              }
-            )
-          }
-        )
-      }
-    );
-  }
-), T = "PopoverClose", to = i.forwardRef(
-  (o, n) => {
-    const { __scopePopover: t, ...a } = o, e = f(T, t);
-    return /* @__PURE__ */ p(
-      E.button,
-      {
-        type: "button",
-        ...a,
-        ref: n,
-        onClick: P(o.onClick, () => e.onOpenChange(!1))
-      }
-    );
-  }
-);
-to.displayName = T;
-var no = "PopoverArrow", ao = i.forwardRef(
-  (o, n) => {
-    const { __scopePopover: t, ...a } = o, e = m(t);
-    return /* @__PURE__ */ p(W, { ...e, ...a, ref: n });
-  }
-);
-ao.displayName = no;
-function L(o) {
-  return o ? "open" : "closed";
+import { parser as x } from "./index129.js";
+import { LRLanguage as B, LanguageSupport as F, indentNodeProp as j, foldNodeProp as L, continuedIndent as b, delimitedIndent as N, flatIndent as O, foldInside as P, sublanguageProp as T, defineLanguageFacet as V, syntaxTree as C } from "./index68.js";
+import { EditorSelection as M } from "./index60.js";
+import { EditorView as _ } from "./index59.js";
+import { snippetCompletion as r, ifNotIn as R, completeFromList as W } from "./index130.js";
+import { NodeWeakMap as H, IterMode as K } from "./index131.js";
+const J = [
+  /* @__PURE__ */ r("function ${name}(${params}) {\n	${}\n}", {
+    label: "function",
+    detail: "definition",
+    type: "keyword"
+  }),
+  /* @__PURE__ */ r("for (let ${index} = 0; ${index} < ${bound}; ${index}++) {\n	${}\n}", {
+    label: "for",
+    detail: "loop",
+    type: "keyword"
+  }),
+  /* @__PURE__ */ r("for (let ${name} of ${collection}) {\n	${}\n}", {
+    label: "for",
+    detail: "of loop",
+    type: "keyword"
+  }),
+  /* @__PURE__ */ r("do {\n	${}\n} while (${})", {
+    label: "do",
+    detail: "loop",
+    type: "keyword"
+  }),
+  /* @__PURE__ */ r("while (${}) {\n	${}\n}", {
+    label: "while",
+    detail: "loop",
+    type: "keyword"
+  }),
+  /* @__PURE__ */ r(`try {
+	\${}
+} catch (\${error}) {
+	\${}
+}`, {
+    label: "try",
+    detail: "/ catch block",
+    type: "keyword"
+  }),
+  /* @__PURE__ */ r("if (${}) {\n	${}\n}", {
+    label: "if",
+    detail: "block",
+    type: "keyword"
+  }),
+  /* @__PURE__ */ r(`if (\${}) {
+	\${}
+} else {
+	\${}
+}`, {
+    label: "if",
+    detail: "/ else block",
+    type: "keyword"
+  }),
+  /* @__PURE__ */ r(`class \${name} {
+	constructor(\${params}) {
+		\${}
+	}
+}`, {
+    label: "class",
+    detail: "definition",
+    type: "keyword"
+  }),
+  /* @__PURE__ */ r('import {${names}} from "${module}"\n${}', {
+    label: "import",
+    detail: "named",
+    type: "keyword"
+  }),
+  /* @__PURE__ */ r('import ${name} from "${module}"\n${}', {
+    label: "import",
+    detail: "default",
+    type: "keyword"
+  })
+], q = /* @__PURE__ */ J.concat([
+  /* @__PURE__ */ r("interface ${name} {\n	${}\n}", {
+    label: "interface",
+    detail: "definition",
+    type: "keyword"
+  }),
+  /* @__PURE__ */ r("type ${name} = ${type}", {
+    label: "type",
+    detail: "definition",
+    type: "keyword"
+  }),
+  /* @__PURE__ */ r("enum ${name} {\n	${}\n}", {
+    label: "enum",
+    detail: "definition",
+    type: "keyword"
+  })
+]), h = /* @__PURE__ */ new H(), X = /* @__PURE__ */ new Set([
+  "Script",
+  "Block",
+  "FunctionExpression",
+  "FunctionDeclaration",
+  "ArrowFunction",
+  "MethodDeclaration",
+  "ForStatement"
+]);
+function d(e) {
+  return (t, o) => {
+    let n = t.node.getChild("VariableDefinition");
+    return n && o(n, e), !0;
+  };
 }
-var _o = F, xo = S, wo = D, Eo = M, bo = k;
+const z = ["FunctionDeclaration"], G = {
+  FunctionDeclaration: /* @__PURE__ */ d("function"),
+  ClassDeclaration: /* @__PURE__ */ d("class"),
+  ClassExpression: () => !0,
+  EnumDeclaration: /* @__PURE__ */ d("constant"),
+  TypeAliasDeclaration: /* @__PURE__ */ d("type"),
+  NamespaceDeclaration: /* @__PURE__ */ d("namespace"),
+  VariableDefinition(e, t) {
+    e.matchContext(z) || t(e, "variable");
+  },
+  TypeDefinition(e, t) {
+    t(e, "type");
+  },
+  __proto__: null
+};
+function I(e, t) {
+  let o = h.get(t);
+  if (o)
+    return o;
+  let n = [], l = !0;
+  function u(a, s) {
+    let f = e.sliceString(a.from, a.to);
+    n.push({ label: f, type: s });
+  }
+  return t.cursor(K.IncludeAnonymous).iterate((a) => {
+    if (l)
+      l = !1;
+    else if (a.name) {
+      let s = G[a.name];
+      if (s && s(a, u) || X.has(a.name))
+        return !1;
+    } else if (a.to - a.from > 8192) {
+      for (let s of I(e, a.node))
+        n.push(s);
+      return !1;
+    }
+  }), h.set(t, n), n;
+}
+const k = /^[\w$\xa1-\uffff][\w$\d\xa1-\uffff]*$/, D = [
+  "TemplateString",
+  "String",
+  "RegExp",
+  "LineComment",
+  "BlockComment",
+  "VariableDefinition",
+  "TypeDefinition",
+  "Label",
+  "PropertyDefinition",
+  "PropertyName",
+  "PrivatePropertyDefinition",
+  "PrivatePropertyName",
+  "JSXText",
+  "JSXAttributeValue",
+  "JSXOpenTag",
+  "JSXCloseTag",
+  "JSXSelfClosingTag",
+  ".",
+  "?."
+];
+function Q(e) {
+  let t = C(e.state).resolveInner(e.pos, -1);
+  if (D.indexOf(t.name) > -1)
+    return null;
+  let o = t.name == "VariableName" || t.to - t.from < 20 && k.test(e.state.sliceDoc(t.from, t.to));
+  if (!o && !e.explicit)
+    return null;
+  let n = [];
+  for (let l = t; l; l = l.parent)
+    X.has(l.name) && (n = n.concat(I(e.state.doc, l)));
+  return {
+    options: n,
+    from: o ? t.from : e.pos,
+    validFor: k
+  };
+}
+const c = /* @__PURE__ */ B.define({
+  name: "javascript",
+  parser: /* @__PURE__ */ x.configure({
+    props: [
+      /* @__PURE__ */ j.add({
+        IfStatement: /* @__PURE__ */ b({ except: /^\s*({|else\b)/ }),
+        TryStatement: /* @__PURE__ */ b({ except: /^\s*({|catch\b|finally\b)/ }),
+        LabeledStatement: O,
+        SwitchBody: (e) => {
+          let t = e.textAfter, o = /^\s*\}/.test(t), n = /^\s*(case|default)\b/.test(t);
+          return e.baseIndent + (o ? 0 : n ? 1 : 2) * e.unit;
+        },
+        Block: /* @__PURE__ */ N({ closing: "}" }),
+        ArrowFunction: (e) => e.baseIndent + e.unit,
+        "TemplateString BlockComment": () => null,
+        "Statement Property": /* @__PURE__ */ b({ except: /^\s*{/ }),
+        JSXElement(e) {
+          let t = /^\s*<\//.test(e.textAfter);
+          return e.lineIndent(e.node.from) + (t ? 0 : e.unit);
+        },
+        JSXEscape(e) {
+          let t = /\s*\}/.test(e.textAfter);
+          return e.lineIndent(e.node.from) + (t ? 0 : e.unit);
+        },
+        "JSXOpenTag JSXSelfClosingTag"(e) {
+          return e.column(e.node.from) + e.unit;
+        }
+      }),
+      /* @__PURE__ */ L.add({
+        "Block ClassBody SwitchBody EnumBody ObjectExpression ArrayExpression ObjectType": P,
+        BlockComment(e) {
+          return { from: e.from + 2, to: e.to - 2 };
+        }
+      })
+    ]
+  }),
+  languageData: {
+    closeBrackets: { brackets: ["(", "[", "{", "'", '"', "`"] },
+    commentTokens: { line: "//", block: { open: "/*", close: "*/" } },
+    indentOnInput: /^\s*(?:case |default:|\{|\}|<\/)$/,
+    wordChars: "$"
+  }
+}), v = {
+  test: (e) => /^JSX/.test(e.name),
+  facet: /* @__PURE__ */ V({ commentTokens: { block: { open: "{/*", close: "*/}" } } })
+}, U = /* @__PURE__ */ c.configure({ dialect: "ts" }, "typescript"), Y = /* @__PURE__ */ c.configure({
+  dialect: "jsx",
+  props: [/* @__PURE__ */ T.add((e) => e.isTop ? [v] : void 0)]
+}), Z = /* @__PURE__ */ c.configure({
+  dialect: "jsx ts",
+  props: [/* @__PURE__ */ T.add((e) => e.isTop ? [v] : void 0)]
+}, "typescript");
+let A = (e) => ({ label: e, type: "keyword" });
+const E = /* @__PURE__ */ "break case const continue default delete export extends false finally in instanceof let new return static super switch this throw true typeof var yield".split(" ").map(A), ee = /* @__PURE__ */ E.concat(/* @__PURE__ */ ["declare", "implements", "private", "protected", "public"].map(A));
+function ce(e = {}) {
+  let t = e.jsx ? e.typescript ? Z : Y : e.typescript ? U : c, o = e.typescript ? q.concat(ee) : J.concat(E);
+  return new F(t, [
+    c.data.of({
+      autocomplete: R(D, W(o))
+    }),
+    c.data.of({
+      autocomplete: Q
+    }),
+    e.jsx ? ae : []
+  ]);
+}
+function te(e) {
+  for (; ; ) {
+    if (e.name == "JSXOpenTag" || e.name == "JSXSelfClosingTag" || e.name == "JSXFragmentTag")
+      return e;
+    if (e.name == "JSXEscape" || !e.parent)
+      return null;
+    e = e.parent;
+  }
+}
+function w(e, t, o = e.length) {
+  for (let n = t == null ? void 0 : t.firstChild; n; n = n.nextSibling)
+    if (n.name == "JSXIdentifier" || n.name == "JSXBuiltin" || n.name == "JSXNamespacedName" || n.name == "JSXMemberExpression")
+      return e.sliceString(n.from, Math.min(n.to, o));
+  return "";
+}
+const ne = typeof navigator == "object" && /* @__PURE__ */ /Android\b/.test(navigator.userAgent), ae = /* @__PURE__ */ _.inputHandler.of((e, t, o, n, l) => {
+  if ((ne ? e.composing : e.compositionStarted) || e.state.readOnly || t != o || n != ">" && n != "/" || !c.isActiveAt(e.state, t, -1))
+    return !1;
+  let u = l(), { state: a } = u, s = a.changeByRange((f) => {
+    var g;
+    let { head: i } = f, p = C(a).resolveInner(i - 1, -1), y;
+    if (p.name == "JSXStartTag" && (p = p.parent), !(a.doc.sliceString(i - 1, i) != n || p.name == "JSXAttributeValue" && p.to > i)) {
+      if (n == ">" && p.name == "JSXFragmentTag")
+        return { range: f, changes: { from: i, insert: "</>" } };
+      if (n == "/" && p.name == "JSXStartCloseTag") {
+        let m = p.parent, S = m.parent;
+        if (S && m.from == i - 2 && ((y = w(a.doc, S.firstChild, i)) || ((g = S.firstChild) === null || g === void 0 ? void 0 : g.name) == "JSXFragmentTag")) {
+          let $ = `${y}>`;
+          return { range: M.cursor(i + $.length, -1), changes: { from: i, insert: $ } };
+        }
+      } else if (n == ">") {
+        let m = te(p);
+        if (m && m.name == "JSXOpenTag" && !/^\/?>|^<\//.test(a.doc.sliceString(i, i + 2)) && (y = w(a.doc, m, i)))
+          return { range: f, changes: { from: i, insert: `</${y}>` } };
+      }
+    }
+    return { range: f };
+  });
+  return s.changes.empty ? !1 : (e.dispatch([
+    u,
+    a.update(s, { userEvent: "input.complete", scrollIntoView: !0 })
+  ]), !0);
+});
 export {
-  xo as Anchor,
-  bo as Content,
-  F as Popover,
-  S as PopoverAnchor,
-  ao as PopoverArrow,
-  to as PopoverClose,
-  k as PopoverContent,
-  M as PopoverPortal,
-  D as PopoverTrigger,
-  Eo as Portal,
-  _o as Root,
-  wo as Trigger
+  ae as autoCloseTags,
+  ce as javascript,
+  c as javascriptLanguage,
+  Y as jsxLanguage,
+  Q as localCompletionSource,
+  J as snippets,
+  Z as tsxLanguage,
+  U as typescriptLanguage,
+  q as typescriptSnippets
 };

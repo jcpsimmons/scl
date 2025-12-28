@@ -1,532 +1,330 @@
-import * as c from "react";
-import { Primitive as L } from "./index92.js";
-import { Presence as I } from "./index93.js";
-import { createContextScope as te } from "./index88.js";
-import { useComposedRefs as A } from "./index91.js";
-import { useCallbackRef as C } from "./index99.js";
-import { useDirection as ne } from "./index104.js";
-import { useLayoutEffect as le } from "./index90.js";
-import { clamp as ce } from "./index105.js";
-import { composeEventHandlers as R } from "./index129.js";
-import { jsx as b, jsxs as ie, Fragment as se } from "react/jsx-runtime";
-function ae(e, t) {
-  return c.useReducer((r, l) => t[r][l] ?? r, e);
-}
-var V = "ScrollArea", [j] = te(V), [de, v] = j(V), q = c.forwardRef(
-  (e, t) => {
-    const {
-      __scopeScrollArea: r,
-      type: l = "hover",
-      dir: o,
-      scrollHideDelay: n = 600,
-      ...i
-    } = e, [s, a] = c.useState(null), [f, d] = c.useState(null), [h, u] = c.useState(null), [S, p] = c.useState(null), [y, M] = c.useState(null), [P, _] = c.useState(0), [U, D] = c.useState(0), [W, x] = c.useState(!1), [H, z] = c.useState(!1), m = A(t, (E) => a(E)), w = ne(o);
-    return /* @__PURE__ */ b(
-      de,
-      {
-        scope: r,
-        type: l,
-        dir: w,
-        scrollHideDelay: n,
-        scrollArea: s,
-        viewport: f,
-        onViewportChange: d,
-        content: h,
-        onContentChange: u,
-        scrollbarX: S,
-        onScrollbarXChange: p,
-        scrollbarXEnabled: W,
-        onScrollbarXEnabledChange: x,
-        scrollbarY: y,
-        onScrollbarYChange: M,
-        scrollbarYEnabled: H,
-        onScrollbarYEnabledChange: z,
-        onCornerWidthChange: _,
-        onCornerHeightChange: D,
-        children: /* @__PURE__ */ b(
-          L.div,
-          {
-            dir: w,
-            ...i,
-            ref: m,
-            style: {
-              position: "relative",
-              // Pass corner sizes as CSS vars to reduce re-renders of context consumers
-              "--radix-scroll-area-corner-width": P + "px",
-              "--radix-scroll-area-corner-height": U + "px",
-              ...e.style
-            }
-          }
-        )
-      }
-    );
-  }
-);
-q.displayName = V;
-var $ = "ScrollAreaViewport", G = c.forwardRef(
-  (e, t) => {
-    const { __scopeScrollArea: r, children: l, nonce: o, ...n } = e, i = v($, r), s = c.useRef(null), a = A(t, s, i.onViewportChange);
-    return /* @__PURE__ */ ie(se, { children: [
-      /* @__PURE__ */ b(
-        "style",
-        {
-          dangerouslySetInnerHTML: {
-            __html: "[data-radix-scroll-area-viewport]{scrollbar-width:none;-ms-overflow-style:none;-webkit-overflow-scrolling:touch;}[data-radix-scroll-area-viewport]::-webkit-scrollbar{display:none}"
-          },
-          nonce: o
-        }
-      ),
-      /* @__PURE__ */ b(
-        L.div,
-        {
-          "data-radix-scroll-area-viewport": "",
-          ...n,
-          ref: a,
-          style: {
-            /**
-             * We don't support `visible` because the intention is to have at least one scrollbar
-             * if this component is used and `visible` will behave like `auto` in that case
-             * https://developer.mozilla.org/en-US/docs/Web/CSS/overflow#description
-             *
-             * We don't handle `auto` because the intention is for the native implementation
-             * to be hidden if using this component. We just want to ensure the node is scrollable
-             * so could have used either `scroll` or `auto` here. We picked `scroll` to prevent
-             * the browser from having to work out whether to render native scrollbars or not,
-             * we tell it to with the intention of hiding them in CSS.
-             */
-            overflowX: i.scrollbarXEnabled ? "scroll" : "hidden",
-            overflowY: i.scrollbarYEnabled ? "scroll" : "hidden",
-            ...e.style
-          },
-          children: /* @__PURE__ */ b("div", { ref: i.onContentChange, style: { minWidth: "100%", display: "table" }, children: l })
-        }
-      )
-    ] });
-  }
-);
-G.displayName = $;
-var g = "ScrollAreaScrollbar", ue = c.forwardRef(
-  (e, t) => {
-    const { forceMount: r, ...l } = e, o = v(g, e.__scopeScrollArea), { onScrollbarXEnabledChange: n, onScrollbarYEnabledChange: i } = o, s = e.orientation === "horizontal";
-    return c.useEffect(() => (s ? n(!0) : i(!0), () => {
-      s ? n(!1) : i(!1);
-    }), [s, n, i]), o.type === "hover" ? /* @__PURE__ */ b(fe, { ...l, ref: t, forceMount: r }) : o.type === "scroll" ? /* @__PURE__ */ b(he, { ...l, ref: t, forceMount: r }) : o.type === "auto" ? /* @__PURE__ */ b(J, { ...l, ref: t, forceMount: r }) : o.type === "always" ? /* @__PURE__ */ b(k, { ...l, ref: t }) : null;
-  }
-);
-ue.displayName = g;
-var fe = c.forwardRef((e, t) => {
-  const { forceMount: r, ...l } = e, o = v(g, e.__scopeScrollArea), [n, i] = c.useState(!1);
-  return c.useEffect(() => {
-    const s = o.scrollArea;
-    let a = 0;
-    if (s) {
-      const f = () => {
-        window.clearTimeout(a), i(!0);
-      }, d = () => {
-        a = window.setTimeout(() => i(!1), o.scrollHideDelay);
-      };
-      return s.addEventListener("pointerenter", f), s.addEventListener("pointerleave", d), () => {
-        window.clearTimeout(a), s.removeEventListener("pointerenter", f), s.removeEventListener("pointerleave", d);
-      };
-    }
-  }, [o.scrollArea, o.scrollHideDelay]), /* @__PURE__ */ b(I, { present: r || n, children: /* @__PURE__ */ b(
-    J,
-    {
-      "data-state": n ? "visible" : "hidden",
-      ...l,
-      ref: t
-    }
-  ) });
-}), he = c.forwardRef((e, t) => {
-  const { forceMount: r, ...l } = e, o = v(g, e.__scopeScrollArea), n = e.orientation === "horizontal", i = Y(() => a("SCROLL_END"), 100), [s, a] = ae("hidden", {
-    hidden: {
-      SCROLL: "scrolling"
-    },
-    scrolling: {
-      SCROLL_END: "idle",
-      POINTER_ENTER: "interacting"
-    },
-    interacting: {
-      SCROLL: "interacting",
-      POINTER_LEAVE: "idle"
-    },
-    idle: {
-      HIDE: "hidden",
-      SCROLL: "scrolling",
-      POINTER_ENTER: "interacting"
-    }
-  });
-  return c.useEffect(() => {
-    if (s === "idle") {
-      const f = window.setTimeout(() => a("HIDE"), o.scrollHideDelay);
-      return () => window.clearTimeout(f);
-    }
-  }, [s, o.scrollHideDelay, a]), c.useEffect(() => {
-    const f = o.viewport, d = n ? "scrollLeft" : "scrollTop";
-    if (f) {
-      let h = f[d];
-      const u = () => {
-        const S = f[d];
-        h !== S && (a("SCROLL"), i()), h = S;
-      };
-      return f.addEventListener("scroll", u), () => f.removeEventListener("scroll", u);
-    }
-  }, [o.viewport, n, a, i]), /* @__PURE__ */ b(I, { present: r || s !== "hidden", children: /* @__PURE__ */ b(
-    k,
-    {
-      "data-state": s === "hidden" ? "hidden" : "visible",
-      ...l,
-      ref: t,
-      onPointerEnter: R(e.onPointerEnter, () => a("POINTER_ENTER")),
-      onPointerLeave: R(e.onPointerLeave, () => a("POINTER_LEAVE"))
-    }
-  ) });
-}), J = c.forwardRef((e, t) => {
-  const r = v(g, e.__scopeScrollArea), { forceMount: l, ...o } = e, [n, i] = c.useState(!1), s = e.orientation === "horizontal", a = Y(() => {
-    if (r.viewport) {
-      const f = r.viewport.offsetWidth < r.viewport.scrollWidth, d = r.viewport.offsetHeight < r.viewport.scrollHeight;
-      i(s ? f : d);
-    }
-  }, 10);
-  return T(r.viewport, a), T(r.content, a), /* @__PURE__ */ b(I, { present: l || n, children: /* @__PURE__ */ b(
-    k,
-    {
-      "data-state": n ? "visible" : "hidden",
-      ...o,
-      ref: t
-    }
-  ) });
-}), k = c.forwardRef((e, t) => {
-  const { orientation: r = "vertical", ...l } = e, o = v(g, e.__scopeScrollArea), n = c.useRef(null), i = c.useRef(0), [s, a] = c.useState({
-    content: 0,
-    viewport: 0,
-    scrollbar: { size: 0, paddingStart: 0, paddingEnd: 0 }
-  }), f = ee(s.viewport, s.content), d = {
-    ...l,
-    sizes: s,
-    onSizesChange: a,
-    hasThumb: f > 0 && f < 1,
-    onThumbChange: (u) => n.current = u,
-    onThumbPointerUp: () => i.current = 0,
-    onThumbPointerDown: (u) => i.current = u
-  };
-  function h(u, S) {
-    return ge(u, i.current, s, S);
-  }
-  return r === "horizontal" ? /* @__PURE__ */ b(
-    be,
-    {
-      ...d,
-      ref: t,
-      onThumbPositionChange: () => {
-        if (o.viewport && n.current) {
-          const u = o.viewport.scrollLeft, S = F(u, s, o.dir);
-          n.current.style.transform = `translate3d(${S}px, 0, 0)`;
-        }
-      },
-      onWheelScroll: (u) => {
-        o.viewport && (o.viewport.scrollLeft = u);
-      },
-      onDragScroll: (u) => {
-        o.viewport && (o.viewport.scrollLeft = h(u, o.dir));
-      }
-    }
-  ) : r === "vertical" ? /* @__PURE__ */ b(
-    Se,
-    {
-      ...d,
-      ref: t,
-      onThumbPositionChange: () => {
-        if (o.viewport && n.current) {
-          const u = o.viewport.scrollTop, S = F(u, s);
-          n.current.style.transform = `translate3d(0, ${S}px, 0)`;
-        }
-      },
-      onWheelScroll: (u) => {
-        o.viewport && (o.viewport.scrollTop = u);
-      },
-      onDragScroll: (u) => {
-        o.viewport && (o.viewport.scrollTop = h(u));
-      }
-    }
-  ) : null;
-}), be = c.forwardRef((e, t) => {
-  const { sizes: r, onSizesChange: l, ...o } = e, n = v(g, e.__scopeScrollArea), [i, s] = c.useState(), a = c.useRef(null), f = A(t, a, n.onScrollbarXChange);
-  return c.useEffect(() => {
-    a.current && s(getComputedStyle(a.current));
-  }, [a]), /* @__PURE__ */ b(
-    Q,
-    {
-      "data-orientation": "horizontal",
-      ...o,
-      ref: f,
-      sizes: r,
-      style: {
-        bottom: 0,
-        left: n.dir === "rtl" ? "var(--radix-scroll-area-corner-width)" : 0,
-        right: n.dir === "ltr" ? "var(--radix-scroll-area-corner-width)" : 0,
-        "--radix-scroll-area-thumb-width": X(r) + "px",
-        ...e.style
-      },
-      onThumbPointerDown: (d) => e.onThumbPointerDown(d.x),
-      onDragScroll: (d) => e.onDragScroll(d.x),
-      onWheelScroll: (d, h) => {
-        if (n.viewport) {
-          const u = n.viewport.scrollLeft + d.deltaX;
-          e.onWheelScroll(u), oe(u, h) && d.preventDefault();
-        }
-      },
-      onResize: () => {
-        a.current && n.viewport && i && l({
-          content: n.viewport.scrollWidth,
-          viewport: n.viewport.offsetWidth,
-          scrollbar: {
-            size: a.current.clientWidth,
-            paddingStart: O(i.paddingLeft),
-            paddingEnd: O(i.paddingRight)
-          }
-        });
-      }
-    }
-  );
-}), Se = c.forwardRef((e, t) => {
-  const { sizes: r, onSizesChange: l, ...o } = e, n = v(g, e.__scopeScrollArea), [i, s] = c.useState(), a = c.useRef(null), f = A(t, a, n.onScrollbarYChange);
-  return c.useEffect(() => {
-    a.current && s(getComputedStyle(a.current));
-  }, [a]), /* @__PURE__ */ b(
-    Q,
-    {
-      "data-orientation": "vertical",
-      ...o,
-      ref: f,
-      sizes: r,
-      style: {
-        top: 0,
-        right: n.dir === "ltr" ? 0 : void 0,
-        left: n.dir === "rtl" ? 0 : void 0,
-        bottom: "var(--radix-scroll-area-corner-height)",
-        "--radix-scroll-area-thumb-height": X(r) + "px",
-        ...e.style
-      },
-      onThumbPointerDown: (d) => e.onThumbPointerDown(d.y),
-      onDragScroll: (d) => e.onDragScroll(d.y),
-      onWheelScroll: (d, h) => {
-        if (n.viewport) {
-          const u = n.viewport.scrollTop + d.deltaY;
-          e.onWheelScroll(u), oe(u, h) && d.preventDefault();
-        }
-      },
-      onResize: () => {
-        a.current && n.viewport && i && l({
-          content: n.viewport.scrollHeight,
-          viewport: n.viewport.offsetHeight,
-          scrollbar: {
-            size: a.current.clientHeight,
-            paddingStart: O(i.paddingTop),
-            paddingEnd: O(i.paddingBottom)
-          }
-        });
-      }
-    }
-  );
-}), [me, K] = j(g), Q = c.forwardRef((e, t) => {
-  const {
-    __scopeScrollArea: r,
-    sizes: l,
-    hasThumb: o,
-    onThumbChange: n,
-    onThumbPointerUp: i,
-    onThumbPointerDown: s,
-    onThumbPositionChange: a,
-    onDragScroll: f,
-    onWheelScroll: d,
-    onResize: h,
-    ...u
-  } = e, S = v(g, r), [p, y] = c.useState(null), M = A(t, (m) => y(m)), P = c.useRef(null), _ = c.useRef(""), U = S.viewport, D = l.content - l.viewport, W = C(d), x = C(a), H = Y(h, 10);
-  function z(m) {
-    if (P.current) {
-      const w = m.clientX - P.current.left, E = m.clientY - P.current.top;
-      f({ x: w, y: E });
-    }
-  }
-  return c.useEffect(() => {
-    const m = (w) => {
-      const E = w.target;
-      (p == null ? void 0 : p.contains(E)) && W(w, D);
-    };
-    return document.addEventListener("wheel", m, { passive: !1 }), () => document.removeEventListener("wheel", m, { passive: !1 });
-  }, [U, p, D, W]), c.useEffect(x, [l, x]), T(p, H), T(S.content, H), /* @__PURE__ */ b(
-    me,
-    {
-      scope: r,
-      scrollbar: p,
-      hasThumb: o,
-      onThumbChange: C(n),
-      onThumbPointerUp: C(i),
-      onThumbPositionChange: x,
-      onThumbPointerDown: C(s),
-      children: /* @__PURE__ */ b(
-        L.div,
-        {
-          ...u,
-          ref: M,
-          style: { position: "absolute", ...u.style },
-          onPointerDown: R(e.onPointerDown, (m) => {
-            m.button === 0 && (m.target.setPointerCapture(m.pointerId), P.current = p.getBoundingClientRect(), _.current = document.body.style.webkitUserSelect, document.body.style.webkitUserSelect = "none", S.viewport && (S.viewport.style.scrollBehavior = "auto"), z(m));
-          }),
-          onPointerMove: R(e.onPointerMove, z),
-          onPointerUp: R(e.onPointerUp, (m) => {
-            const w = m.target;
-            w.hasPointerCapture(m.pointerId) && w.releasePointerCapture(m.pointerId), document.body.style.webkitUserSelect = _.current, S.viewport && (S.viewport.style.scrollBehavior = ""), P.current = null;
-          })
-        }
-      )
-    }
-  );
-}), N = "ScrollAreaThumb", pe = c.forwardRef(
-  (e, t) => {
-    const { forceMount: r, ...l } = e, o = K(N, e.__scopeScrollArea);
-    return /* @__PURE__ */ b(I, { present: r || o.hasThumb, children: /* @__PURE__ */ b(ve, { ref: t, ...l }) });
-  }
-), ve = c.forwardRef(
-  (e, t) => {
-    const { __scopeScrollArea: r, style: l, ...o } = e, n = v(N, r), i = K(N, r), { onThumbPositionChange: s } = i, a = A(
-      t,
-      (h) => i.onThumbChange(h)
-    ), f = c.useRef(void 0), d = Y(() => {
-      f.current && (f.current(), f.current = void 0);
-    }, 100);
-    return c.useEffect(() => {
-      const h = n.viewport;
-      if (h) {
-        const u = () => {
-          if (d(), !f.current) {
-            const S = Pe(h, s);
-            f.current = S, s();
-          }
-        };
-        return s(), h.addEventListener("scroll", u), () => h.removeEventListener("scroll", u);
-      }
-    }, [n.viewport, d, s]), /* @__PURE__ */ b(
-      L.div,
-      {
-        "data-state": i.hasThumb ? "visible" : "hidden",
-        ...o,
-        ref: a,
-        style: {
-          width: "var(--radix-scroll-area-thumb-width)",
-          height: "var(--radix-scroll-area-thumb-height)",
-          ...l
-        },
-        onPointerDownCapture: R(e.onPointerDownCapture, (h) => {
-          const S = h.target.getBoundingClientRect(), p = h.clientX - S.left, y = h.clientY - S.top;
-          i.onThumbPointerDown({ x: p, y });
-        }),
-        onPointerUp: R(e.onPointerUp, i.onThumbPointerUp)
-      }
-    );
-  }
-);
-pe.displayName = N;
-var B = "ScrollAreaCorner", Z = c.forwardRef(
-  (e, t) => {
-    const r = v(B, e.__scopeScrollArea), l = !!(r.scrollbarX && r.scrollbarY);
-    return r.type !== "scroll" && l ? /* @__PURE__ */ b(we, { ...e, ref: t }) : null;
-  }
-);
-Z.displayName = B;
-var we = c.forwardRef((e, t) => {
-  const { __scopeScrollArea: r, ...l } = e, o = v(B, r), [n, i] = c.useState(0), [s, a] = c.useState(0), f = !!(n && s);
-  return T(o.scrollbarX, () => {
-    var h;
-    const d = ((h = o.scrollbarX) == null ? void 0 : h.offsetHeight) || 0;
-    o.onCornerHeightChange(d), a(d);
-  }), T(o.scrollbarY, () => {
-    var h;
-    const d = ((h = o.scrollbarY) == null ? void 0 : h.offsetWidth) || 0;
-    o.onCornerWidthChange(d), i(d);
-  }), f ? /* @__PURE__ */ b(
-    L.div,
-    {
-      ...l,
-      ref: t,
-      style: {
-        width: n,
-        height: s,
-        position: "absolute",
-        right: o.dir === "ltr" ? 0 : void 0,
-        left: o.dir === "rtl" ? 0 : void 0,
-        bottom: 0,
-        ...e.style
-      }
-    }
-  ) : null;
+import { Prec as z, EditorSelection as x, countColumn as w, EditorState as K } from "./index60.js";
+import { keymap as _, EditorView as j } from "./index59.js";
+import { foldService as G, LanguageSupport as N, Language as Q, defineLanguageFacet as J, syntaxTree as A, indentUnit as Y, foldNodeProp as R, indentNodeProp as Z, languageDataProp as W, LanguageDescription as D, ParseContext as ee } from "./index68.js";
+import { CompletionContext as te } from "./index136.js";
+import { MarkdownParser as re, parseCode as ne, parser as oe, GFM as ie, Subscript as le, Superscript as se, Emoji as fe } from "./index137.js";
+import { html as ae, htmlCompletionSource as me } from "./index62.js";
+import { NodeProp as ue } from "./index138.js";
+const $ = /* @__PURE__ */ J({ commentTokens: { block: { open: "<!--", close: "-->" } } }), q = /* @__PURE__ */ new ue(), H = /* @__PURE__ */ oe.configure({
+  props: [
+    /* @__PURE__ */ R.add((r) => !r.is("Block") || r.is("Document") || P(r) != null || ce(r) ? void 0 : (n, o) => ({ from: o.doc.lineAt(n.from).to, to: n.to })),
+    /* @__PURE__ */ q.add(P),
+    /* @__PURE__ */ Z.add({
+      Document: () => null
+    }),
+    /* @__PURE__ */ W.add({
+      Document: $
+    })
+  ]
 });
-function O(e) {
-  return e ? parseInt(e, 10) : 0;
+function P(r) {
+  let n = /^(?:ATX|Setext)Heading(\d)$/.exec(r.name);
+  return n ? +n[1] : void 0;
 }
-function ee(e, t) {
-  const r = e / t;
-  return isNaN(r) ? 0 : r;
+function ce(r) {
+  return r.name == "OrderedList" || r.name == "BulletList";
 }
-function X(e) {
-  const t = ee(e.viewport, e.content), r = e.scrollbar.paddingStart + e.scrollbar.paddingEnd, l = (e.scrollbar.size - r) * t;
-  return Math.max(l, 18);
+function pe(r, n) {
+  let o = r;
+  for (; ; ) {
+    let t = o.nextSibling, e;
+    if (!t || (e = P(t.type)) != null && e <= n)
+      break;
+    o = t;
+  }
+  return o.to;
 }
-function ge(e, t, r, l = "ltr") {
-  const o = X(r), n = o / 2, i = t || n, s = o - i, a = r.scrollbar.paddingStart + i, f = r.scrollbar.size - r.scrollbar.paddingEnd - s, d = r.content - r.viewport, h = l === "ltr" ? [0, d] : [d * -1, 0];
-  return re([a, f], h)(e);
+const de = /* @__PURE__ */ G.of((r, n, o) => {
+  for (let t = A(r).resolveInner(o, -1); t && !(t.from < n); t = t.parent) {
+    let e = t.type.prop(q);
+    if (e == null)
+      continue;
+    let i = pe(t, e);
+    if (i > o)
+      return { from: o, to: i };
+  }
+  return null;
+});
+function T(r) {
+  return new Q($, r, [], "markdown");
 }
-function F(e, t, r = "ltr") {
-  const l = X(t), o = t.scrollbar.paddingStart + t.scrollbar.paddingEnd, n = t.scrollbar.size - o, i = t.content - t.viewport, s = n - l, a = r === "ltr" ? [0, i] : [i * -1, 0], f = ce(e, a);
-  return re([0, i], [0, s])(f);
-}
-function re(e, t) {
-  return (r) => {
-    if (e[0] === e[1] || t[0] === t[1]) return t[0];
-    const l = (t[1] - t[0]) / (e[1] - e[0]);
-    return t[0] + l * (r - e[0]);
+const he = /* @__PURE__ */ T(H), ge = /* @__PURE__ */ H.configure([ie, le, se, fe, {
+  props: [
+    /* @__PURE__ */ R.add({
+      Table: (r, n) => ({ from: n.doc.lineAt(r.from).to, to: r.to })
+    })
+  ]
+}]), b = /* @__PURE__ */ T(ge);
+function ke(r, n) {
+  return (o) => {
+    if (o && r) {
+      let t = null;
+      if (o = /\S*/.exec(o)[0], typeof r == "function" ? t = r(o) : t = D.matchLanguageName(r, o, !0), t instanceof D)
+        return t.support ? t.support.language.parser : ee.getSkippingParser(t.load());
+      if (t)
+        return t.parser;
+    }
+    return n ? n.parser : null;
   };
 }
-function oe(e, t) {
-  return e > 0 && e < t;
-}
-var Pe = (e, t = () => {
-}) => {
-  let r = { left: e.scrollLeft, top: e.scrollTop }, l = 0;
-  return function o() {
-    const n = { left: e.scrollLeft, top: e.scrollTop }, i = r.left !== n.left, s = r.top !== n.top;
-    (i || s) && t(), r = n, l = window.requestAnimationFrame(o);
-  }(), () => window.cancelAnimationFrame(l);
-};
-function Y(e, t) {
-  const r = C(e), l = c.useRef(0);
-  return c.useEffect(() => () => window.clearTimeout(l.current), []), c.useCallback(() => {
-    window.clearTimeout(l.current), l.current = window.setTimeout(r, t);
-  }, [r, t]);
-}
-function T(e, t) {
-  const r = C(t);
-  le(() => {
-    let l = 0;
-    if (e) {
-      const o = new ResizeObserver(() => {
-        cancelAnimationFrame(l), l = window.requestAnimationFrame(r);
-      });
-      return o.observe(e), () => {
-        window.cancelAnimationFrame(l), o.unobserve(e);
-      };
+class v {
+  constructor(n, o, t, e, i, a, m) {
+    this.node = n, this.from = o, this.to = t, this.spaceBefore = e, this.spaceAfter = i, this.type = a, this.item = m;
+  }
+  blank(n, o = !0) {
+    let t = this.spaceBefore + (this.node.name == "Blockquote" ? ">" : "");
+    if (n != null) {
+      for (; t.length < n; )
+        t += " ";
+      return t;
+    } else {
+      for (let e = this.to - this.from - t.length - this.spaceAfter.length; e > 0; e--)
+        t += " ";
+      return t + (o ? this.spaceAfter : "");
     }
-  }, [e, r]);
+  }
+  marker(n, o) {
+    let t = this.node.name == "OrderedList" ? String(+V(this.item, n)[2] + o) : "";
+    return this.spaceBefore + t + this.type + this.spaceAfter;
+  }
 }
-var He = q, ze = G, Ne = Z;
+function U(r, n) {
+  let o = [], t = [];
+  for (let e = r; e; e = e.parent) {
+    if (e.name == "FencedCode")
+      return t;
+    (e.name == "ListItem" || e.name == "Blockquote") && o.push(e);
+  }
+  for (let e = o.length - 1; e >= 0; e--) {
+    let i = o[e], a, m = n.lineAt(i.from), s = i.from - m.from;
+    if (i.name == "Blockquote" && (a = /^ *>( ?)/.exec(m.text.slice(s))))
+      t.push(new v(i, s, s + a[0].length, "", a[1], ">", null));
+    else if (i.name == "ListItem" && i.parent.name == "OrderedList" && (a = /^( *)\d+([.)])( *)/.exec(m.text.slice(s)))) {
+      let f = a[3], l = a[0].length;
+      f.length >= 4 && (f = f.slice(0, f.length - 4), l -= 4), t.push(new v(i.parent, s, s + l, a[1], f, a[2], i));
+    } else if (i.name == "ListItem" && i.parent.name == "BulletList" && (a = /^( *)([-+*])( {1,4}\[[ xX]\])?( +)/.exec(m.text.slice(s)))) {
+      let f = a[4], l = a[0].length;
+      f.length > 4 && (f = f.slice(0, f.length - 4), l -= 4);
+      let u = a[2];
+      a[3] && (u += a[3].replace(/[xX]/, " ")), t.push(new v(i.parent, s, s + l, a[1], f, u, i));
+    }
+  }
+  return t;
+}
+function V(r, n) {
+  return /^(\s*)(\d+)(?=[.)])/.exec(n.sliceString(r.from, r.from + 10));
+}
+function I(r, n, o, t = 0) {
+  for (let e = -1, i = r; ; ) {
+    if (i.name == "ListItem") {
+      let m = V(i, n), s = +m[2];
+      if (e >= 0) {
+        if (s != e + 1)
+          return;
+        o.push({ from: i.from + m[1].length, to: i.from + m[0].length, insert: String(e + 2 + t) });
+      }
+      e = s;
+    }
+    let a = i.nextSibling;
+    if (!a)
+      break;
+    i = a;
+  }
+}
+function E(r, n) {
+  let o = /^[ \t]*/.exec(r)[0].length;
+  if (!o || n.facet(Y) != "	")
+    return r;
+  let t = w(r, 4, o), e = "";
+  for (let i = t; i > 0; )
+    i >= 4 ? (e += "	", i -= 4) : (e += " ", i--);
+  return e + r.slice(o);
+}
+const xe = (r = {}) => ({ state: n, dispatch: o }) => {
+  let t = A(n), { doc: e } = n, i = null, a = n.changeByRange((m) => {
+    if (!m.empty || !b.isActiveAt(n, m.from, -1) && !b.isActiveAt(n, m.from, 1))
+      return i = { range: m };
+    let s = m.from, f = e.lineAt(s), l = U(t.resolveInner(s, -1), e);
+    for (; l.length && l[l.length - 1].from > s - f.from; )
+      l.pop();
+    if (!l.length)
+      return i = { range: m };
+    let u = l[l.length - 1];
+    if (u.to - u.spaceAfter.length > s - f.from)
+      return i = { range: m };
+    let d = s >= u.to - u.spaceAfter.length && !/\S/.test(f.text.slice(u.to));
+    if (u.item && d) {
+      let p = u.node.firstChild, h = u.node.getChild("ListItem", "ListItem");
+      if (p.to >= s || h && h.to < s || f.from > 0 && !/[^\s>]/.test(e.lineAt(f.from - 1).text) || r.nonTightLists === !1) {
+        let c = l.length > 1 ? l[l.length - 2] : null, C, B = "";
+        c && c.item ? (C = f.from + c.from, B = c.marker(e, 1)) : C = f.from + (c ? c.to : 0);
+        let S = [{ from: C, to: s, insert: B }];
+        return u.node.name == "OrderedList" && I(u.item, e, S, -2), c && c.node.name == "OrderedList" && I(c.item, e, S), { range: x.cursor(C + B.length), changes: S };
+      } else {
+        let c = F(l, n, f);
+        return {
+          range: x.cursor(s + c.length + 1),
+          changes: { from: f.from, insert: c + n.lineBreak }
+        };
+      }
+    }
+    if (u.node.name == "Blockquote" && d && f.from) {
+      let p = e.lineAt(f.from - 1), h = />\s*$/.exec(p.text);
+      if (h && h.index == u.from) {
+        let c = n.changes([
+          { from: p.from + h.index, to: p.to },
+          { from: f.from + u.from, to: f.to }
+        ]);
+        return { range: m.map(c), changes: c };
+      }
+    }
+    let g = [];
+    u.node.name == "OrderedList" && I(u.item, e, g);
+    let M = u.item && u.item.from < f.from, k = "";
+    if (!M || /^[\s\d.)\-+*>]*/.exec(f.text)[0].length >= u.to)
+      for (let p = 0, h = l.length - 1; p <= h; p++)
+        k += p == h && !M ? l[p].marker(e, 1) : l[p].blank(p < h ? w(f.text, 4, l[p + 1].from) - k.length : null);
+    let L = s;
+    for (; L > f.from && /\s/.test(f.text.charAt(L - f.from - 1)); )
+      L--;
+    return k = E(k, n), we(u.node, n.doc) && (k = F(l, n, f) + n.lineBreak + k), g.push({ from: L, to: s, insert: n.lineBreak + k }), { range: x.cursor(L + k.length + 1), changes: g };
+  });
+  return i ? !1 : (o(n.update(a, { scrollIntoView: !0, userEvent: "input" })), !0);
+}, Le = /* @__PURE__ */ xe();
+function O(r) {
+  return r.name == "QuoteMark" || r.name == "ListMark";
+}
+function we(r, n) {
+  if (r.name != "OrderedList" && r.name != "BulletList")
+    return !1;
+  let o = r.firstChild, t = r.getChild("ListItem", "ListItem");
+  if (!t)
+    return !1;
+  let e = n.lineAt(o.to), i = n.lineAt(t.from), a = /^[\s>]*$/.test(e.text);
+  return e.number + (a ? 0 : 1) < i.number;
+}
+function F(r, n, o) {
+  let t = "";
+  for (let e = 0, i = r.length - 2; e <= i; e++)
+    t += r[e].blank(e < i ? w(o.text, 4, r[e + 1].from) - t.length : null, e < i);
+  return E(t, n);
+}
+function Ae(r, n) {
+  let o = r.resolveInner(n, -1), t = n;
+  O(o) && (t = o.from, o = o.parent);
+  for (let e; e = o.childBefore(t); )
+    if (O(e))
+      t = e.from;
+    else if (e.name == "OrderedList" || e.name == "BulletList")
+      o = e.lastChild, t = o.to;
+    else
+      break;
+  return o;
+}
+const Ce = ({ state: r, dispatch: n }) => {
+  let o = A(r), t = null, e = r.changeByRange((i) => {
+    let a = i.from, { doc: m } = r;
+    if (i.empty && b.isActiveAt(r, i.from)) {
+      let s = m.lineAt(a), f = U(Ae(o, a), m);
+      if (f.length) {
+        let l = f[f.length - 1], u = l.to - l.spaceAfter.length + (l.spaceAfter ? 1 : 0);
+        if (a - s.from > u && !/\S/.test(s.text.slice(u, a - s.from)))
+          return {
+            range: x.cursor(s.from + u),
+            changes: { from: s.from + u, to: a }
+          };
+        if (a - s.from == u && // Only apply this if we're on the line that has the
+        // construct's syntax, or there's only indentation in the
+        // target range
+        (!l.item || s.from <= l.item.from || !/\S/.test(s.text.slice(0, l.to)))) {
+          let d = s.from + l.from;
+          if (l.item && l.node.from < l.item.from && /\S/.test(s.text.slice(l.from, l.to))) {
+            let g = l.blank(w(s.text, 4, l.to) - w(s.text, 4, l.from));
+            return d == s.from && (g = E(g, r)), {
+              range: x.cursor(d + g.length),
+              changes: { from: d, to: s.from + l.to, insert: g }
+            };
+          }
+          if (d < a)
+            return { range: x.cursor(d), changes: { from: d, to: a } };
+        }
+      }
+    }
+    return t = { range: i };
+  });
+  return t ? !1 : (n(r.update(e, { scrollIntoView: !0, userEvent: "delete" })), !0);
+}, be = [
+  { key: "Enter", run: Le },
+  { key: "Backspace", run: Ce }
+], X = /* @__PURE__ */ ae({ matchClosingTags: !1 });
+function Oe(r = {}) {
+  let { codeLanguages: n, defaultCodeLanguage: o, addKeymap: t = !0, base: { parser: e } = he, completeHTMLTags: i = !0, pasteURLAsLink: a = !0, htmlTagLanguage: m = X } = r;
+  if (!(e instanceof re))
+    throw new RangeError("Base parser provided to `markdown` should be a Markdown parser");
+  let s = r.extensions ? [r.extensions] : [], f = [m.support, de], l;
+  a && f.push(Ie), o instanceof N ? (f.push(o.support), l = o.language) : o && (l = o);
+  let u = n || l ? ke(n, l) : void 0;
+  s.push(ne({ codeParser: u, htmlParser: m.language.parser })), t && f.push(z.high(_.of(be)));
+  let d = T(e.configure(s));
+  return i && f.push(d.data.of({ autocomplete: Be })), new N(d, f);
+}
+function Be(r) {
+  let { state: n, pos: o } = r, t = /<[:\-\.\w\u00b7-\uffff]*$/.exec(n.sliceDoc(o - 25, o));
+  if (!t)
+    return null;
+  let e = A(n).resolveInner(o, -1);
+  for (; e && !e.type.isTop; ) {
+    if (e.name == "CodeBlock" || e.name == "FencedCode" || e.name == "ProcessingInstructionBlock" || e.name == "CommentBlock" || e.name == "Link" || e.name == "Image")
+      return null;
+    e = e.parent;
+  }
+  return {
+    from: o - t[0].length,
+    to: o,
+    options: Se(),
+    validFor: /^<[:\-\.\w\u00b7-\uffff]*$/
+  };
+}
+let y = null;
+function Se() {
+  if (y)
+    return y;
+  let r = me(new te(K.create({ extensions: X }), 0, !0));
+  return y = r ? r.options : [];
+}
+const ve = /code|horizontalrule|html|link|comment|processing|escape|entity|image|mark|url/i, Ie = /* @__PURE__ */ j.domEventHandlers({
+  paste: (r, n) => {
+    var o;
+    let { main: t } = n.state.selection;
+    if (t.empty)
+      return !1;
+    let e = (o = r.clipboardData) === null || o === void 0 ? void 0 : o.getData("text/plain");
+    if (!e || !/^(https?:\/\/|mailto:|xmpp:|www\.)/.test(e) || (/^www\./.test(e) && (e = "https://" + e), !b.isActiveAt(n.state, t.from, 1)))
+      return !1;
+    let i = A(n.state), a = !1;
+    return i.iterate({
+      from: t.from,
+      to: t.to,
+      enter: (m) => {
+        (m.from > t.from || ve.test(m.name)) && (a = !0);
+      },
+      leave: (m) => {
+        m.to < t.to && (a = !0);
+      }
+    }), a ? !1 : (n.dispatch({
+      changes: [{ from: t.from, insert: "[" }, { from: t.to, insert: `](${e})` }],
+      userEvent: "input.paste",
+      scrollIntoView: !0
+    }), !0);
+  }
+});
 export {
-  Ne as Corner,
-  He as Root,
-  q as ScrollArea,
-  Z as ScrollAreaCorner,
-  ue as ScrollAreaScrollbar,
-  pe as ScrollAreaThumb,
-  G as ScrollAreaViewport,
-  ze as Viewport
+  he as commonmarkLanguage,
+  Ce as deleteMarkupBackward,
+  Le as insertNewlineContinueMarkup,
+  xe as insertNewlineContinueMarkupCommand,
+  Oe as markdown,
+  be as markdownKeymap,
+  b as markdownLanguage,
+  Ie as pasteURLAsLink
 };

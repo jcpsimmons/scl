@@ -1,6 +1,6 @@
 import { jsx as e } from "react/jsx-runtime";
 import * as i from "react";
-import { Root as t, Thumb as c } from "./index73.js";
+import { Root as t, Thumb as c } from "./index84.js";
 import { cn as r } from "./index2.js";
 const n = i.forwardRef(({ className: a, ...o }, s) => /* @__PURE__ */ e(
   t,

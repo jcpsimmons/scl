@@ -1,4 +1,5 @@
-var e = {};
+import { createSidecarMedium as e } from "./index194.js";
+var a = e();
 export {
-  e as __exports
+  a as effectCar
 };

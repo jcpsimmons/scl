@@ -1,71 +1,54 @@
-import * as a from "react";
-import { useComposedRefs as E } from "./index91.js";
-import { useLayoutEffect as A } from "./index90.js";
-function T(n, e) {
-  return a.useReducer((r, t) => e[r][t] ?? r, n);
-}
-var R = (n) => {
-  const { present: e, children: r } = n, t = v(e), i = typeof r == "function" ? r({ present: t.isPresent }) : a.Children.only(r), c = E(t.ref, P(i));
-  return typeof r == "function" || t.isPresent ? a.cloneElement(i, { ref: c }) : null;
-};
-R.displayName = "Presence";
-function v(n) {
-  const [e, r] = a.useState(), t = a.useRef(null), i = a.useRef(n), c = a.useRef("none"), p = n ? "mounted" : "unmounted", [N, s] = T(p, {
-    mounted: {
-      UNMOUNT: "unmounted",
-      ANIMATION_OUT: "unmountSuspended"
+import * as n from "react";
+import { useLayoutEffect as v } from "./index110.js";
+var E = n[" useInsertionEffect ".trim().toString()] || v;
+function y({
+  prop: t,
+  defaultProp: u,
+  onChange: o = () => {
+  },
+  caller: i
+}) {
+  const [l, e, r] = w({
+    defaultProp: u,
+    onChange: o
+  }), c = t !== void 0, a = c ? t : l;
+  {
+    const s = n.useRef(t !== void 0);
+    n.useEffect(() => {
+      const f = s.current;
+      f !== c && console.warn(
+        `${i} is changing from ${f ? "controlled" : "uncontrolled"} to ${c ? "controlled" : "uncontrolled"}. Components should not switch from controlled to uncontrolled (or vice versa). Decide between using a controlled or uncontrolled value for the lifetime of the component.`
+      ), s.current = c;
+    }, [c, i]);
+  }
+  const m = n.useCallback(
+    (s) => {
+      var f;
+      if (c) {
+        const d = R(s) ? s(t) : s;
+        d !== t && ((f = r.current) == null || f.call(r, d));
+      } else
+        e(s);
     },
-    unmountSuspended: {
-      MOUNT: "mounted",
-      ANIMATION_END: "unmounted"
-    },
-    unmounted: {
-      MOUNT: "mounted"
-    }
-  });
-  return a.useEffect(() => {
-    const o = l(t.current);
-    c.current = N === "mounted" ? o : "none";
-  }, [N]), A(() => {
-    const o = t.current, m = i.current;
-    if (m !== n) {
-      const f = c.current, u = l(o);
-      n ? s("MOUNT") : u === "none" || (o == null ? void 0 : o.display) === "none" ? s("UNMOUNT") : s(m && f !== u ? "ANIMATION_OUT" : "UNMOUNT"), i.current = n;
-    }
-  }, [n, s]), A(() => {
-    if (e) {
-      let o;
-      const m = e.ownerDocument.defaultView ?? window, d = (u) => {
-        const g = l(t.current).includes(CSS.escape(u.animationName));
-        if (u.target === e && g && (s("ANIMATION_END"), !i.current)) {
-          const O = e.style.animationFillMode;
-          e.style.animationFillMode = "forwards", o = m.setTimeout(() => {
-            e.style.animationFillMode === "forwards" && (e.style.animationFillMode = O);
-          });
-        }
-      }, f = (u) => {
-        u.target === e && (c.current = l(t.current));
-      };
-      return e.addEventListener("animationstart", f), e.addEventListener("animationcancel", d), e.addEventListener("animationend", d), () => {
-        m.clearTimeout(o), e.removeEventListener("animationstart", f), e.removeEventListener("animationcancel", d), e.removeEventListener("animationend", d);
-      };
-    } else
-      s("ANIMATION_END");
-  }, [e, s]), {
-    isPresent: ["mounted", "unmountSuspended"].includes(N),
-    ref: a.useCallback((o) => {
-      t.current = o ? getComputedStyle(o) : null, r(o);
-    }, [])
-  };
+    [c, t, e, r]
+  );
+  return [a, m];
 }
-function l(n) {
-  return (n == null ? void 0 : n.animationName) || "none";
+function w({
+  defaultProp: t,
+  onChange: u
+}) {
+  const [o, i] = n.useState(t), l = n.useRef(o), e = n.useRef(u);
+  return E(() => {
+    e.current = u;
+  }, [u]), n.useEffect(() => {
+    var r;
+    l.current !== o && ((r = e.current) == null || r.call(e, o), l.current = o);
+  }, [o, l]), [o, i, e];
 }
-function P(n) {
-  var t, i;
-  let e = (t = Object.getOwnPropertyDescriptor(n.props, "ref")) == null ? void 0 : t.get, r = e && "isReactWarning" in e && e.isReactWarning;
-  return r ? n.ref : (e = (i = Object.getOwnPropertyDescriptor(n, "ref")) == null ? void 0 : i.get, r = e && "isReactWarning" in e && e.isReactWarning, r ? n.props.ref : n.props.ref || n.ref);
+function R(t) {
+  return typeof t == "function";
 }
 export {
-  R as Presence
+  y as useControllableState
 };

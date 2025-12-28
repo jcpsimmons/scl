@@ -1,9 +1,11 @@
-function h(f, c, { checkForDefaultPrevented: p = !0 } = {}) {
-  return function(s) {
-    if (f == null || f(s), p === !1 || !s.defaultPrevented)
-      return c == null ? void 0 : c(s);
-  };
-}
+import { __assign as m } from "./index173.js";
+import * as r from "react";
+import { RemoveScroll as e } from "./index174.js";
+import t from "./index175.js";
+var s = r.forwardRef(function(a, o) {
+  return r.createElement(e, m({}, a, { ref: o, sideCar: t }));
+});
+s.classNames = e.classNames;
 export {
-  h as composeEventHandlers
+  s as default
 };

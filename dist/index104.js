@@ -1,10 +1,16 @@
-import * as t from "react";
-import "react/jsx-runtime";
-var r = t.createContext(void 0);
-function n(o) {
-  const e = t.useContext(r);
-  return o || e || "ltr";
-}
+import * as r from "react";
+import s from "react-dom";
+import { Primitive as c } from "./index88.js";
+import { useLayoutEffect as u } from "./index110.js";
+import { jsx as l } from "react/jsx-runtime";
+var p = "Portal", d = r.forwardRef((e, a) => {
+  var o;
+  const { container: f, ...i } = e, [m, n] = r.useState(!1);
+  u(() => n(!0), []);
+  const t = f || m && ((o = globalThis == null ? void 0 : globalThis.document) == null ? void 0 : o.body);
+  return t ? s.createPortal(/* @__PURE__ */ l(c.div, { ...i, ref: a }), t) : null;
+});
+d.displayName = p;
 export {
-  n as useDirection
+  d as Portal
 };

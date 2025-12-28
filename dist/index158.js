@@ -1,8 +1,14 @@
-import { __module as r } from "./index173.js";
-import { __require as e } from "./index174.js";
-import { __require as o } from "./index175.js";
-process.env.NODE_ENV === "production" ? r.exports = e() : r.exports = o();
-var m = r.exports;
+import * as r from "react";
+import { useCallbackRef as s } from "./index113.js";
+function p(n, e = globalThis == null ? void 0 : globalThis.document) {
+  const t = s(n);
+  r.useEffect(() => {
+    const o = (a) => {
+      a.key === "Escape" && t(a);
+    };
+    return e.addEventListener("keydown", o, { capture: !0 }), () => e.removeEventListener("keydown", o, { capture: !0 });
+  }, [t, e]);
+}
 export {
-  m as s
+  p as useEscapeKeydown
 };

@@ -1,11 +1,15 @@
-import { __assign as m } from "./index176.js";
-import * as r from "react";
-import { RemoveScroll as e } from "./index177.js";
-import t from "./index178.js";
-var s = r.forwardRef(function(a, o) {
-  return r.createElement(e, m({}, a, { ref: o, sideCar: t }));
-});
-s.classNames = e.classNames;
+import { s as r } from "./index163.js";
+function s() {
+  return r.useSyncExternalStore(
+    e,
+    () => !0,
+    () => !1
+  );
+}
+function e() {
+  return () => {
+  };
+}
 export {
-  s as default
+  s as useIsHydrated
 };
