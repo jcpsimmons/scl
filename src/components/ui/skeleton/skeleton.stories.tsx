@@ -30,6 +30,13 @@ export const Default: Story = {
   },
 }
 
+export const Static: Story = {
+  args: {
+    blink: false,
+    className: 'h-4 w-[250px]',
+  },
+}
+
 export const Card: Story = {
   render: () => (
     <div className="flex flex-col space-y-3">
