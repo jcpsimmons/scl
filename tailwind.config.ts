@@ -27,6 +27,7 @@ export default {
     'border-destructive',
     'ring-primary',
     'ring-secondary',
+    'animate-blink',
   ],
   theme: {
     extend: {
