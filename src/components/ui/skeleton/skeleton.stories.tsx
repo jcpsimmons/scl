@@ -42,7 +42,7 @@ export const Avatar: Story = {
 
 export const Text: Story = {
   render: () => (
-    <div className="space-y-2">
+    <div className="space-y-2 w-[400px]">
       <Skeleton className="h-4 w-full" />
       <Skeleton className="h-4 w-full" />
       <Skeleton className="h-4 w-3/4" />
@@ -52,7 +52,7 @@ export const Text: Story = {
 
 export const LoadingTable: Story = {
   render: () => (
-    <div className="space-y-2 w-full">
+    <div className="space-y-2 w-[500px]">
       <div className="flex gap-4">
         <Skeleton className="h-8 flex-1" />
         <Skeleton className="h-8 flex-1" />
