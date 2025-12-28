@@ -1,67 +1,27 @@
-import { __exports as s } from "./index181.js";
-import h from "react";
-/**
- * @license React
- * use-sync-external-store-shim.development.js
- *
- * Copyright (c) Meta Platforms, Inc. and affiliates.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
- */
-var l;
-function A() {
-  return l ? s : (l = 1, process.env.NODE_ENV !== "production" && function() {
-    function d(e, t) {
-      return e === t && (e !== 0 || 1 / e === 1 / t) || e !== e && t !== t;
+var p = function() {
+  return p = Object.assign || function(e) {
+    for (var n, r = 1, o = arguments.length; r < o; r++) {
+      n = arguments[r];
+      for (var a in n) Object.prototype.hasOwnProperty.call(n, a) && (e[a] = n[a]);
     }
-    function S(e, t) {
-      f || o.startTransition === void 0 || (f = !0, console.error(
-        "You are using an outdated, pre-release alpha of React 18 that does not support useSyncExternalStore. The use-sync-external-store shim will not work correctly. Upgrade to a newer pre-release."
-      ));
-      var r = t();
-      if (!c) {
-        var u = t();
-        _(r, u) || (console.error(
-          "The result of getSnapshot should be cached to avoid an infinite loop"
-        ), c = !0);
-      }
-      u = p({
-        inst: { value: r, getSnapshot: t }
-      });
-      var n = u[0].inst, i = u[1];
-      return L(
-        function() {
-          n.value = r, n.getSnapshot = t, a(n) && i({ inst: n });
-        },
-        [e, r, t]
-      ), E(
-        function() {
-          return a(n) && i({ inst: n }), e(function() {
-            a(n) && i({ inst: n });
-          });
-        },
-        [e]
-      ), y(r), r;
-    }
-    function a(e) {
-      var t = e.getSnapshot;
-      e = e.value;
-      try {
-        var r = t();
-        return !_(e, r);
-      } catch {
-        return !0;
-      }
-    }
-    function O(e, t) {
-      return t();
-    }
-    typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ < "u" && typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart == "function" && __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart(Error());
-    var o = h, _ = typeof Object.is == "function" ? Object.is : d, p = o.useState, E = o.useEffect, L = o.useLayoutEffect, y = o.useDebugValue, f = !1, c = !1, v = typeof window > "u" || typeof window.document > "u" || typeof window.document.createElement > "u" ? O : S;
-    s.useSyncExternalStore = o.useSyncExternalStore !== void 0 ? o.useSyncExternalStore : v, typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ < "u" && typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStop == "function" && __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStop(Error());
-  }(), s);
+    return e;
+  }, p.apply(this, arguments);
+};
+function c(t, e) {
+  var n = {};
+  for (var r in t) Object.prototype.hasOwnProperty.call(t, r) && e.indexOf(r) < 0 && (n[r] = t[r]);
+  if (t != null && typeof Object.getOwnPropertySymbols == "function")
+    for (var o = 0, r = Object.getOwnPropertySymbols(t); o < r.length; o++)
+      e.indexOf(r[o]) < 0 && Object.prototype.propertyIsEnumerable.call(t, r[o]) && (n[r[o]] = t[r[o]]);
+  return n;
+}
+function l(t, e, n) {
+  if (n || arguments.length === 2) for (var r = 0, o = e.length, a; r < o; r++)
+    (a || !(r in e)) && (a || (a = Array.prototype.slice.call(e, 0, r)), a[r] = e[r]);
+  return t.concat(a || Array.prototype.slice.call(e));
 }
 export {
-  A as __require
+  p as __assign,
+  c as __rest,
+  l as __spreadArray
 };

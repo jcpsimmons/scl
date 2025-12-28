@@ -1,9 +1,11 @@
-function h(f, c, { checkForDefaultPrevented: p = !0 } = {}) {
-  return function(s) {
-    if (f == null || f(s), p === !1 || !s.defaultPrevented)
-      return c == null ? void 0 : c(s);
-  };
+import "react";
+import { jsx as e, Fragment as o } from "react/jsx-runtime";
+var l = Symbol("radix.slottable");
+// @__NO_SIDE_EFFECTS__
+function n(r) {
+  const t = ({ children: a }) => /* @__PURE__ */ e(o, { children: a });
+  return t.displayName = `${r}.Slottable`, t.__radixId = l, t;
 }
 export {
-  h as composeEventHandlers
+  n as createSlottable
 };

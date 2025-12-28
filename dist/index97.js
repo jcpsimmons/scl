@@ -1,9 +1,13 @@
-function h(f, c, { checkForDefaultPrevented: p = !0 } = {}) {
-  return function(s) {
-    if (f == null || f(s), p === !1 || !s.defaultPrevented)
-      return c == null ? void 0 : c(s);
-  };
+import * as r from "react";
+function o(t) {
+  const e = r.useRef(t);
+  return r.useEffect(() => {
+    e.current = t;
+  }), r.useMemo(() => (...n) => {
+    var u;
+    return (u = e.current) == null ? void 0 : u.call(e, ...n);
+  }, []);
 }
 export {
-  h as composeEventHandlers
+  o as useCallbackRef
 };

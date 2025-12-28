@@ -1,11 +1,6 @@
-import "react";
-import { jsx as e, Fragment as o } from "react/jsx-runtime";
-var l = Symbol("radix.slottable");
-// @__NO_SIDE_EFFECTS__
-function n(r) {
-  const t = ({ children: a }) => /* @__PURE__ */ e(o, { children: a });
-  return t.displayName = `${r}.Slottable`, t.__radixId = l, t;
-}
+import * as t from "react";
+var e = globalThis != null && globalThis.document ? t.useLayoutEffect : () => {
+};
 export {
-  n as createSlottable
+  e as useLayoutEffect
 };

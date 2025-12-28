@@ -1,11 +1,16 @@
-import { __assign as m } from "./index173.js";
 import * as r from "react";
-import { RemoveScroll as e } from "./index174.js";
-import t from "./index175.js";
-var s = r.forwardRef(function(a, o) {
-  return r.createElement(e, m({}, a, { ref: o, sideCar: t }));
+import s from "react-dom";
+import { Primitive as c } from "./index93.js";
+import { useLayoutEffect as u } from "./index99.js";
+import { jsx as l } from "react/jsx-runtime";
+var p = "Portal", d = r.forwardRef((e, a) => {
+  var o;
+  const { container: f, ...i } = e, [m, n] = r.useState(!1);
+  u(() => n(!0), []);
+  const t = f || m && ((o = globalThis == null ? void 0 : globalThis.document) == null ? void 0 : o.body);
+  return t ? s.createPortal(/* @__PURE__ */ l(c.div, { ...i, ref: a }), t) : null;
 });
-s.classNames = e.classNames;
+d.displayName = p;
 export {
-  s as default
+  d as Portal
 };

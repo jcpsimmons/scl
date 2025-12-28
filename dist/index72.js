@@ -1,62 +1,83 @@
-import * as o from "react";
-import { composeRefs as S } from "./index89.js";
-import { jsx as y } from "react/jsx-runtime";
-var E = Symbol.for("react.lazy"), p = o[" use ".trim().toString()];
-function g(t) {
-  return typeof t == "object" && t !== null && "then" in t;
-}
-function d(t) {
-  return t != null && typeof t == "object" && "$$typeof" in t && t.$$typeof === E && "_payload" in t && g(t._payload);
-}
-// @__NO_SIDE_EFFECTS__
-function C(t) {
-  const n = /* @__PURE__ */ R(t), i = o.forwardRef((e, r) => {
-    let { children: l, ...a } = e;
-    d(l) && typeof p == "function" && (l = p(l._payload));
-    const s = o.Children.toArray(l), f = s.find(b);
-    if (f) {
-      const c = f.props.children, m = s.map((u) => u === f ? o.Children.count(c) > 1 ? o.Children.only(null) : o.isValidElement(c) ? c.props.children : null : u);
-      return /* @__PURE__ */ y(n, { ...a, ref: r, children: o.isValidElement(c) ? o.cloneElement(c, void 0, m) : null });
-    }
-    return /* @__PURE__ */ y(n, { ...a, ref: r, children: l });
-  });
-  return i.displayName = `${t}.Slot`, i;
-}
-var V = /* @__PURE__ */ C("Slot");
-// @__NO_SIDE_EFFECTS__
-function R(t) {
-  const n = o.forwardRef((i, e) => {
-    let { children: r, ...l } = i;
-    if (d(r) && typeof p == "function" && (r = p(r._payload)), o.isValidElement(r)) {
-      const a = P(r), s = h(l, r.props);
-      return r.type !== o.Fragment && (s.ref = e ? S(e, a) : a), o.cloneElement(r, s);
-    }
-    return o.Children.count(r) > 1 ? o.Children.only(null) : null;
-  });
-  return n.displayName = `${t}.SlotClone`, n;
-}
-var _ = Symbol("radix.slottable");
-function b(t) {
-  return o.isValidElement(t) && typeof t.type == "function" && "__radixId" in t.type && t.type.__radixId === _;
-}
-function h(t, n) {
-  const i = { ...n };
-  for (const e in n) {
-    const r = t[e], l = n[e];
-    /^on[A-Z]/.test(e) ? r && l ? i[e] = (...s) => {
-      const f = l(...s);
-      return r(...s), f;
-    } : r && (i[e] = r) : e === "style" ? i[e] = { ...r, ...l } : e === "className" && (i[e] = [r, l].filter(Boolean).join(" "));
+import * as m from "react";
+import { createContextScope as $ } from "./index116.js";
+import { Primitive as c } from "./index117.js";
+import { jsx as l } from "react/jsx-runtime";
+var u = "Progress", d = 100, [I] = $(u), [h, R] = I(u), f = m.forwardRef(
+  (r, e) => {
+    const {
+      __scopeProgress: i,
+      value: o = null,
+      max: a,
+      getValueLabel: P = E,
+      ...N
+    } = r;
+    (a || a === 0) && !v(a) && console.error(M(`${a}`, "Progress"));
+    const t = v(a) ? a : d;
+    o !== null && !p(o, t) && console.error(V(`${o}`, "Progress"));
+    const n = p(o, t) ? o : null, b = s(n) ? P(n, t) : void 0;
+    return /* @__PURE__ */ l(h, { scope: i, value: n, max: t, children: /* @__PURE__ */ l(
+      c.div,
+      {
+        "aria-valuemax": t,
+        "aria-valuemin": 0,
+        "aria-valuenow": s(n) ? n : void 0,
+        "aria-valuetext": b,
+        role: "progressbar",
+        "data-state": x(n, t),
+        "data-value": n ?? void 0,
+        "data-max": t,
+        ...N,
+        ref: e
+      }
+    ) });
   }
-  return { ...t, ...i };
+);
+f.displayName = u;
+var g = "ProgressIndicator", _ = m.forwardRef(
+  (r, e) => {
+    const { __scopeProgress: i, ...o } = r, a = R(g, i);
+    return /* @__PURE__ */ l(
+      c.div,
+      {
+        "data-state": x(a.value, a.max),
+        "data-value": a.value ?? void 0,
+        "data-max": a.max,
+        ...o,
+        ref: e
+      }
+    );
+  }
+);
+_.displayName = g;
+function E(r, e) {
+  return `${Math.round(r / e * 100)}%`;
 }
-function P(t) {
-  var e, r;
-  let n = (e = Object.getOwnPropertyDescriptor(t.props, "ref")) == null ? void 0 : e.get, i = n && "isReactWarning" in n && n.isReactWarning;
-  return i ? t.ref : (n = (r = Object.getOwnPropertyDescriptor(t, "ref")) == null ? void 0 : r.get, i = n && "isReactWarning" in n && n.isReactWarning, i ? t.props.ref : t.props.ref || t.ref);
+function x(r, e) {
+  return r == null ? "indeterminate" : r === e ? "complete" : "loading";
 }
+function s(r) {
+  return typeof r == "number";
+}
+function v(r) {
+  return s(r) && !isNaN(r) && r > 0;
+}
+function p(r, e) {
+  return s(r) && !isNaN(r) && r <= e && r >= 0;
+}
+function M(r, e) {
+  return `Invalid prop \`max\` of value \`${r}\` supplied to \`${e}\`. Only numbers greater than 0 are valid max values. Defaulting to \`${d}\`.`;
+}
+function V(r, e) {
+  return `Invalid prop \`value\` of value \`${r}\` supplied to \`${e}\`. The \`value\` prop must be:
+  - a positive number
+  - less than the value passed to \`max\` (or ${d} if no \`max\` prop is set)
+  - \`null\` or \`undefined\` if the progress is indeterminate.
+
+Defaulting to \`null\`.`;
+}
+var D = f;
 export {
-  V as Root,
-  V as Slot,
-  C as createSlot
+  f as Progress,
+  _ as ProgressIndicator,
+  D as Root
 };

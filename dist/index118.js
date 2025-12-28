@@ -1,183 +1,109 @@
-import * as c from "react";
-import { composeEventHandlers as p } from "./index166.js";
-import { createCollection as V } from "./index88.js";
-import { useComposedRefs as j } from "./index89.js";
-import { createContextScope as z } from "./index87.js";
-import { useId as q } from "./index93.js";
-import { Primitive as G } from "./index92.js";
-import { useCallbackRef as J } from "./index108.js";
-import { useControllableState as Q } from "./index91.js";
-import { useDirection as W } from "./index94.js";
-import { jsx as d } from "react/jsx-runtime";
-var y = "rovingFocusGroup.onEntryFocus", X = { bubbles: !1, cancelable: !0 }, I = "RovingFocusGroup", [D, N, Z] = V(I), [$, Fe] = z(
-  I,
-  [Z]
-), [ee, oe] = $(I), O = c.forwardRef(
-  (e, r) => /* @__PURE__ */ d(D.Provider, { scope: e.__scopeRovingFocusGroup, children: /* @__PURE__ */ d(D.Slot, { scope: e.__scopeRovingFocusGroup, children: /* @__PURE__ */ d(te, { ...e, ref: r }) }) })
-);
-O.displayName = I;
-var te = c.forwardRef((e, r) => {
-  const {
-    __scopeRovingFocusGroup: s,
-    orientation: o,
-    loop: T = !1,
-    dir: w,
-    currentTabStopId: v,
-    defaultCurrentTabStopId: C,
-    onCurrentTabStopIdChange: S,
-    onEntryFocus: m,
-    preventScrollOnEntryFocus: u = !1,
-    ...b
-  } = e, F = c.useRef(null), g = j(r, F), R = W(w), [E, t] = Q({
-    prop: v,
-    defaultProp: C ?? null,
-    onChange: S,
-    caller: I
-  }), [i, h] = c.useState(!1), a = J(m), l = N(s), A = c.useRef(!1), [L, P] = c.useState(0);
-  return c.useEffect(() => {
-    const n = F.current;
-    if (n)
-      return n.addEventListener(y, a), () => n.removeEventListener(y, a);
-  }, [a]), /* @__PURE__ */ d(
-    ee,
-    {
-      scope: s,
-      orientation: o,
-      dir: R,
-      loop: T,
-      currentTabStopId: E,
-      onItemFocus: c.useCallback(
-        (n) => t(n),
-        [t]
-      ),
-      onItemShiftTab: c.useCallback(() => h(!0), []),
-      onFocusableItemAdd: c.useCallback(
-        () => P((n) => n + 1),
-        []
-      ),
-      onFocusableItemRemove: c.useCallback(
-        () => P((n) => n - 1),
-        []
-      ),
-      children: /* @__PURE__ */ d(
-        G.div,
-        {
-          tabIndex: i || L === 0 ? -1 : 0,
-          "data-orientation": o,
-          ...b,
-          ref: g,
-          style: { outline: "none", ...e.style },
-          onMouseDown: p(e.onMouseDown, () => {
-            A.current = !0;
-          }),
-          onFocus: p(e.onFocus, (n) => {
-            const U = !A.current;
-            if (n.target === n.currentTarget && U && !i) {
-              const x = new CustomEvent(y, X);
-              if (n.currentTarget.dispatchEvent(x), !x.defaultPrevented) {
-                const _ = l().filter((f) => f.focusable), B = _.find((f) => f.active), Y = _.find((f) => f.id === E), H = [B, Y, ..._].filter(
-                  Boolean
-                ).map((f) => f.ref.current);
-                k(H, u);
-              }
-            }
-            A.current = !1;
-          }),
-          onBlur: p(e.onBlur, () => h(!1))
-        }
-      )
+const S = "ͼ", m = typeof Symbol > "u" ? "__" + S : Symbol.for(S), c = typeof Symbol > "u" ? "__styleSet" + Math.floor(Math.random() * 1e8) : Symbol("styleSet"), w = typeof globalThis < "u" ? globalThis : typeof window < "u" ? window : {};
+class A {
+  // :: (Object<Style>, ?{finish: ?(string) → string})
+  // Create a style module from the given spec.
+  //
+  // When `finish` is given, it is called on regular (non-`@`)
+  // selectors (after `&` expansion) to compute the final selector.
+  constructor(e, s) {
+    this.rules = [];
+    let { finish: i } = s || {};
+    function n(t) {
+      return /^@/.test(t) ? [t] : t.split(/,\s*/);
     }
-  );
-}), K = "RovingFocusGroupItem", M = c.forwardRef(
-  (e, r) => {
-    const {
-      __scopeRovingFocusGroup: s,
-      focusable: o = !0,
-      active: T = !1,
-      tabStopId: w,
-      children: v,
-      ...C
-    } = e, S = q(), m = w || S, u = oe(K, s), b = u.currentTabStopId === m, F = N(s), { onFocusableItemAdd: g, onFocusableItemRemove: R, currentTabStopId: E } = u;
-    return c.useEffect(() => {
-      if (o)
-        return g(), () => R();
-    }, [o, g, R]), /* @__PURE__ */ d(
-      D.ItemSlot,
-      {
-        scope: s,
-        id: m,
-        focusable: o,
-        active: T,
-        children: /* @__PURE__ */ d(
-          G.span,
-          {
-            tabIndex: b ? 0 : -1,
-            "data-orientation": u.orientation,
-            ...C,
-            ref: r,
-            onMouseDown: p(e.onMouseDown, (t) => {
-              o ? u.onItemFocus(m) : t.preventDefault();
-            }),
-            onFocus: p(e.onFocus, () => u.onItemFocus(m)),
-            onKeyDown: p(e.onKeyDown, (t) => {
-              if (t.key === "Tab" && t.shiftKey) {
-                u.onItemShiftTab();
-                return;
-              }
-              if (t.target !== t.currentTarget) return;
-              const i = ce(t, u.orientation, u.dir);
-              if (i !== void 0) {
-                if (t.metaKey || t.ctrlKey || t.altKey || t.shiftKey) return;
-                t.preventDefault();
-                let a = F().filter((l) => l.focusable).map((l) => l.ref.current);
-                if (i === "last") a.reverse();
-                else if (i === "prev" || i === "next") {
-                  i === "prev" && a.reverse();
-                  const l = a.indexOf(t.currentTarget);
-                  a = u.loop ? se(a, l + 1) : a.slice(l + 1);
-                }
-                setTimeout(() => k(a));
-              }
-            }),
-            children: typeof v == "function" ? v({ isCurrentTabStop: b, hasTabStop: E != null }) : v
-          }
-        )
+    function l(t, a, h, r) {
+      let p = [], f = /^@(\w+)\b/.exec(t[0]), g = f && f[1] == "keyframes";
+      if (f && a == null) return h.push(t[0] + ";");
+      for (let o in a) {
+        let u = a[o];
+        if (/&/.test(o))
+          l(
+            o.split(/,\s*/).map((d) => t.map((y) => d.replace(/&/, y))).reduce((d, y) => d.concat(y)),
+            u,
+            h
+          );
+        else if (u && typeof u == "object") {
+          if (!f) throw new RangeError("The value of a property (" + o + ") should be a primitive value.");
+          l(n(o), u, p, g);
+        } else u != null && p.push(o.replace(/_.*/, "").replace(/[A-Z]/g, (d) => "-" + d.toLowerCase()) + ": " + u + ";");
       }
-    );
+      (p.length || g) && h.push((i && !f && !r ? t.map(i) : t).join(", ") + " {" + p.join(" ") + "}");
+    }
+    for (let t in e) l(n(t), e[t], this.rules);
   }
-);
-M.displayName = K;
-var re = {
-  ArrowLeft: "prev",
-  ArrowUp: "prev",
-  ArrowRight: "next",
-  ArrowDown: "next",
-  PageUp: "first",
-  Home: "first",
-  PageDown: "last",
-  End: "last"
-};
-function ne(e, r) {
-  return r !== "rtl" ? e : e === "ArrowLeft" ? "ArrowRight" : e === "ArrowRight" ? "ArrowLeft" : e;
+  // :: () → string
+  // Returns a string containing the module's CSS rules.
+  getRules() {
+    return this.rules.join(`
+`);
+  }
+  // :: () → string
+  // Generate a new unique CSS class name.
+  static newName() {
+    let e = w[m] || 1;
+    return w[m] = e + 1, S + e.toString(36);
+  }
+  // :: (union<Document, ShadowRoot>, union<[StyleModule], StyleModule>, ?{nonce: ?string})
+  //
+  // Mount the given set of modules in the given DOM root, which ensures
+  // that the CSS rules defined by the module are available in that
+  // context.
+  //
+  // Rules are only added to the document once per root.
+  //
+  // Rule order will follow the order of the modules, so that rules from
+  // modules later in the array take precedence of those from earlier
+  // modules. If you call this function multiple times for the same root
+  // in a way that changes the order of already mounted modules, the old
+  // order will be changed.
+  //
+  // If a Content Security Policy nonce is provided, it is added to
+  // the `<style>` tag generated by the library.
+  static mount(e, s, i) {
+    let n = e[c], l = i && i.nonce;
+    n ? l && n.setNonce(l) : n = new x(e, l), n.mount(Array.isArray(s) ? s : [s], e);
+  }
 }
-function ce(e, r, s) {
-  const o = ne(e.key, s);
-  if (!(r === "vertical" && ["ArrowLeft", "ArrowRight"].includes(o)) && !(r === "horizontal" && ["ArrowUp", "ArrowDown"].includes(o)))
-    return re[o];
+let T = /* @__PURE__ */ new Map();
+class x {
+  constructor(e, s) {
+    let i = e.ownerDocument || e, n = i.defaultView;
+    if (!e.head && e.adoptedStyleSheets && n.CSSStyleSheet) {
+      let l = T.get(i);
+      if (l) return e[c] = l;
+      this.sheet = new n.CSSStyleSheet(), T.set(i, this);
+    } else
+      this.styleTag = i.createElement("style"), s && this.styleTag.setAttribute("nonce", s);
+    this.modules = [], e[c] = this;
+  }
+  mount(e, s) {
+    let i = this.sheet, n = 0, l = 0;
+    for (let t = 0; t < e.length; t++) {
+      let a = e[t], h = this.modules.indexOf(a);
+      if (h < l && h > -1 && (this.modules.splice(h, 1), l--, h = -1), h == -1) {
+        if (this.modules.splice(l++, 0, a), i) for (let r = 0; r < a.rules.length; r++)
+          i.insertRule(a.rules[r], n++);
+      } else {
+        for (; l < h; ) n += this.modules[l++].rules.length;
+        n += a.rules.length, l++;
+      }
+    }
+    if (i)
+      s.adoptedStyleSheets.indexOf(this.sheet) < 0 && (s.adoptedStyleSheets = [this.sheet, ...s.adoptedStyleSheets]);
+    else {
+      let t = "";
+      for (let h = 0; h < this.modules.length; h++)
+        t += this.modules[h].getRules() + `
+`;
+      this.styleTag.textContent = t;
+      let a = s.head || s;
+      this.styleTag.parentNode != a && a.insertBefore(this.styleTag, a.firstChild);
+    }
+  }
+  setNonce(e) {
+    this.styleTag && this.styleTag.getAttribute("nonce") != e && this.styleTag.setAttribute("nonce", e);
+  }
 }
-function k(e, r = !1) {
-  const s = document.activeElement;
-  for (const o of e)
-    if (o === s || (o.focus({ preventScroll: r }), document.activeElement !== s)) return;
-}
-function se(e, r) {
-  return e.map((s, o) => e[(r + o) % e.length]);
-}
-var ge = O, Re = M;
 export {
-  Re as Item,
-  ge as Root,
-  O as RovingFocusGroup,
-  M as RovingFocusGroupItem,
-  Fe as createRovingFocusGroupScope
+  A as StyleModule
 };

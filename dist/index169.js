@@ -1,6 +1,6 @@
-const Oe = 1024;
-let ke = 0;
-class M {
+const Me = 1024;
+let ve = 0;
+class L {
   constructor(e, t) {
     this.from = e, this.to = t;
   }
@@ -10,7 +10,7 @@ class k {
   Create a new node prop type.
   */
   constructor(e = {}) {
-    this.id = ke++, this.perNode = !!e.perNode, this.deserialize = e.deserialize || (() => {
+    this.id = ve++, this.perNode = !!e.perNode, this.deserialize = e.deserialize || (() => {
       throw new Error("This node type doesn't define a deserialize function");
     }), this.combine = e.combine || null;
   }
@@ -54,7 +54,7 @@ class q {
     return e && e.props && e.props[k.mounted.id];
   }
 }
-const Ce = /* @__PURE__ */ Object.create(null);
+const ke = /* @__PURE__ */ Object.create(null);
 class j {
   /**
   @internal
@@ -66,7 +66,7 @@ class j {
   Define a node type.
   */
   static define(e) {
-    let t = e.props && e.props.length ? /* @__PURE__ */ Object.create(null) : Ce, r = (e.top ? 1 : 0) | (e.skipped ? 2 : 0) | (e.error ? 4 : 0) | (e.name == null ? 8 : 0), n = new j(e.name || "", t, e.id, r);
+    let t = e.props && e.props.length ? /* @__PURE__ */ Object.create(null) : ke, r = (e.top ? 1 : 0) | (e.skipped ? 2 : 0) | (e.error ? 4 : 0) | (e.name == null ? 8 : 0), n = new j(e.name || "", t, e.id, r);
     if (e.props) {
       for (let i of e.props)
         if (Array.isArray(i) || (i = i(n)), i) {
@@ -151,39 +151,6 @@ j.none = new j(
   8
   /* NodeFlag.Anonymous */
 );
-class xe {
-  /**
-  Create a set with the given types. The `id` property of each
-  type should correspond to its position within the array.
-  */
-  constructor(e) {
-    this.types = e;
-    for (let t = 0; t < e.length; t++)
-      if (e[t].id != t)
-        throw new RangeError("Node type ids should correspond to array positions when creating a node set");
-  }
-  /**
-  Create a copy of this set with some node properties added. The
-  arguments to this method can be created with
-  [`NodeProp.add`](#common.NodeProp.add).
-  */
-  extend(...e) {
-    let t = [];
-    for (let r of this.types) {
-      let n = null;
-      for (let i of e) {
-        let s = i(r);
-        if (s) {
-          n || (n = Object.assign({}, r.props));
-          let o = s[1], h = s[0];
-          h.combine && h.id in n && (o = h.combine(n[h.id], o)), n[h.id] = o;
-        }
-      }
-      t.push(n ? new j(r.name, n, r.id, r.flags) : r);
-    }
-    return new xe(t);
-  }
-}
 const Z = /* @__PURE__ */ new WeakMap(), fe = /* @__PURE__ */ new WeakMap();
 var S;
 (function(l) {
@@ -272,7 +239,7 @@ class B {
   position.
   */
   resolveStack(e, t = 0) {
-    return _e(this, e, t);
+    return Se(this, e, t);
   }
   /**
   Iterate over the tree and its children, calling `enter` for any
@@ -329,7 +296,7 @@ class B {
   or a cursor over such a buffer.
   */
   static build(e) {
-    return Ie(e);
+    return _e(e);
   }
 }
 B.empty = new B(j.none, [], [], 0);
@@ -398,7 +365,7 @@ class H {
   */
   findChild(e, t, r, n, i) {
     let { buffer: s } = this, o = -1;
-    for (let h = e; h != t && !(be(i, n, s[h + 1], s[h + 2]) && (o = h, r > 0)); h = s[h + 3])
+    for (let h = e; h != t && !(xe(i, n, s[h + 1], s[h + 2]) && (o = h, r > 0)); h = s[h + 3])
       ;
     return o;
   }
@@ -415,7 +382,7 @@ class H {
     return new H(i, s, this.set);
   }
 }
-function be(l, e, t, r) {
+function xe(l, e, t, r) {
   switch (l) {
     case -2:
       return t < e;
@@ -449,7 +416,7 @@ function K(l, e, t, r) {
     l = s;
   }
 }
-class we {
+class be {
   cursor(e = 0) {
     return new te(this, e);
   }
@@ -486,7 +453,7 @@ class we {
     return this.parent;
   }
 }
-class z extends we {
+class z extends be {
   constructor(e, t, r, n) {
     super(), this._tree = e, this.from = t, this.index = r, this._parent = n;
   }
@@ -503,7 +470,7 @@ class z extends we {
     for (let s = this; ; ) {
       for (let { children: o, positions: h } = s._tree, u = t > 0 ? o.length : -1; e != u; e += t) {
         let f = o[e], c = h[e] + s.from;
-        if (be(n, r, c, c + f.length)) {
+        if (xe(n, r, c, c + f.length)) {
           if (f instanceof H) {
             if (i & S.ExcludeBuffers)
               continue;
@@ -645,7 +612,7 @@ class Ae {
     this.parent = e, this.buffer = t, this.index = r, this.start = n;
   }
 }
-class W extends we {
+class W extends be {
   get name() {
     return this.type.name;
   }
@@ -748,7 +715,7 @@ class W extends we {
     return this.context.buffer.childString(this.index);
   }
 }
-function ve(l) {
+function we(l) {
   if (!l.length)
     return null;
   let e = 0, t = l[0];
@@ -757,17 +724,17 @@ function ve(l) {
     (s.from > t.from || s.to < t.to) && (t = s, e = i);
   }
   let r = t instanceof z && t.index < 0 ? null : t.parent, n = l.slice();
-  return r ? n[e] = r : n.splice(e, 1), new Se(n, t);
+  return r ? n[e] = r : n.splice(e, 1), new Ce(n, t);
 }
-class Se {
+class Ce {
   constructor(e, t) {
     this.heads = e, this.node = t;
   }
   get next() {
-    return ve(this.heads);
+    return we(this.heads);
   }
 }
-function _e(l, e, t) {
+function Se(l, e, t) {
   let r = l.resolveInner(e, t), n = null;
   for (let i = r instanceof z ? r : r.context.parent; i; i = i.parent)
     if (i.index < 0) {
@@ -780,7 +747,7 @@ function _e(l, e, t) {
         (n || (n = [r])).push(K(o, e, t, !1));
       }
     }
-  return n ? ve(n) : r;
+  return n ? we(n) : r;
 }
 class te {
   /**
@@ -1083,15 +1050,15 @@ class te {
 function se(l) {
   return l.children.some((e) => e instanceof H || !e.type.isAnonymous || se(e));
 }
-function Ie(l) {
+function _e(l) {
   var e;
   let { buffer: t, nodeSet: r, maxBufferLength: n = 1024, reused: i = [], minRepeatType: s = r.types.length } = l, o = Array.isArray(t) ? new ie(t, t.length) : t, h = r.types, u = 0, f = 0;
-  function c(m, w, a, C, x, A) {
-    let { id: g, start: p, end: b, size: v } = o, P = f, U = u;
+  function c(m, w, a, A, x, C) {
+    let { id: g, start: p, end: b, size: v } = o, N = f, U = u;
     if (v < 0)
       if (o.next(), v == -1) {
-        let L = i[g];
-        a.push(L), C.push(p - m);
+        let D = i[g];
+        a.push(D), A.push(p - m);
         return;
       } else if (v == -3) {
         u = g;
@@ -1102,85 +1069,85 @@ function Ie(l) {
       } else
         throw new RangeError(`Unrecognized record size: ${v}`);
     let $ = h[g], X, J, oe = p - m;
-    if (b - p <= n && (J = O(o.pos - w, x))) {
-      let L = new Uint16Array(J.size - J.skip), T = o.pos - J.size, R = L.length;
-      for (; o.pos > T; )
-        R = F(J.start, L, R);
-      X = new H(L, b - J.start, r), oe = J.start - m;
+    if (b - p <= n && (J = T(o.pos - w, x))) {
+      let D = new Uint16Array(J.size - J.skip), M = o.pos - J.size, O = D.length;
+      for (; o.pos > M; )
+        O = F(J.start, D, O);
+      X = new H(D, b - J.start, r), oe = J.start - m;
     } else {
-      let L = o.pos - v;
+      let D = o.pos - v;
       o.next();
-      let T = [], R = [], V = g >= s ? g : -1, G = 0, Y = b;
-      for (; o.pos > L; )
-        V >= 0 && o.id == V && o.size >= 0 ? (o.end <= Y - n && (_(T, R, p, G, o.end, Y, V, P, U), G = T.length, Y = o.end), o.next()) : A > 2500 ? d(p, L, T, R) : c(p, L, T, R, V, A + 1);
-      if (V >= 0 && G > 0 && G < T.length && _(T, R, p, G, p, Y, V, P, U), T.reverse(), R.reverse(), V > -1 && G > 0) {
+      let M = [], O = [], V = g >= s ? g : -1, G = 0, Y = b;
+      for (; o.pos > D; )
+        V >= 0 && o.id == V && o.size >= 0 ? (o.end <= Y - n && (_(M, O, p, G, o.end, Y, V, N, U), G = M.length, Y = o.end), o.next()) : C > 2500 ? d(p, D, M, O) : c(p, D, M, O, V, C + 1);
+      if (V >= 0 && G > 0 && G < M.length && _(M, O, p, G, p, Y, V, N, U), M.reverse(), O.reverse(), V > -1 && G > 0) {
         let he = y($, U);
-        X = le($, T, R, 0, T.length, 0, b - p, he, he);
+        X = le($, M, O, 0, M.length, 0, b - p, he, he);
       } else
-        X = N($, T, R, b - p, P - b, U);
+        X = P($, M, O, b - p, N - b, U);
     }
-    a.push(X), C.push(oe);
+    a.push(X), A.push(oe);
   }
-  function d(m, w, a, C) {
-    let x = [], A = 0, g = -1;
+  function d(m, w, a, A) {
+    let x = [], C = 0, g = -1;
     for (; o.pos > w; ) {
-      let { id: p, start: b, end: v, size: P } = o;
-      if (P > 4)
+      let { id: p, start: b, end: v, size: N } = o;
+      if (N > 4)
         o.next();
       else {
         if (g > -1 && b < g)
           break;
-        g < 0 && (g = v - n), x.push(p, b, v), A++, o.next();
+        g < 0 && (g = v - n), x.push(p, b, v), C++, o.next();
       }
     }
-    if (A) {
-      let p = new Uint16Array(A * 4), b = x[x.length - 2];
-      for (let v = x.length - 3, P = 0; v >= 0; v -= 3)
-        p[P++] = x[v], p[P++] = x[v + 1] - b, p[P++] = x[v + 2] - b, p[P++] = P;
-      a.push(new H(p, x[2] - b, r)), C.push(b - m);
+    if (C) {
+      let p = new Uint16Array(C * 4), b = x[x.length - 2];
+      for (let v = x.length - 3, N = 0; v >= 0; v -= 3)
+        p[N++] = x[v], p[N++] = x[v + 1] - b, p[N++] = x[v + 2] - b, p[N++] = N;
+      a.push(new H(p, x[2] - b, r)), A.push(b - m);
     }
   }
   function y(m, w) {
-    return (a, C, x) => {
-      let A = 0, g = a.length - 1, p, b;
+    return (a, A, x) => {
+      let C = 0, g = a.length - 1, p, b;
       if (g >= 0 && (p = a[g]) instanceof B) {
         if (!g && p.type == m && p.length == x)
           return p;
-        (b = p.prop(k.lookAhead)) && (A = C[g] + p.length + b);
+        (b = p.prop(k.lookAhead)) && (C = A[g] + p.length + b);
       }
-      return N(m, a, C, x, A, w);
+      return P(m, a, A, x, C, w);
     };
   }
-  function _(m, w, a, C, x, A, g, p, b) {
-    let v = [], P = [];
-    for (; m.length > C; )
-      v.push(m.pop()), P.push(w.pop() + a - x);
-    m.push(N(r.types[g], v, P, A - x, p - A, b)), w.push(x - a);
+  function _(m, w, a, A, x, C, g, p, b) {
+    let v = [], N = [];
+    for (; m.length > A; )
+      v.push(m.pop()), N.push(w.pop() + a - x);
+    m.push(P(r.types[g], v, N, C - x, p - C, b)), w.push(x - a);
   }
-  function N(m, w, a, C, x, A, g) {
-    if (A) {
-      let p = [k.contextHash, A];
+  function P(m, w, a, A, x, C, g) {
+    if (C) {
+      let p = [k.contextHash, C];
       g = g ? [p].concat(g) : [p];
     }
     if (x > 25) {
       let p = [k.lookAhead, x];
       g = g ? [p].concat(g) : [p];
     }
-    return new B(m, w, a, C, g);
+    return new B(m, w, a, A, g);
   }
-  function O(m, w) {
-    let a = o.fork(), C = 0, x = 0, A = 0, g = a.end - n, p = { size: 0, start: 0, skip: 0 };
+  function T(m, w) {
+    let a = o.fork(), A = 0, x = 0, C = 0, g = a.end - n, p = { size: 0, start: 0, skip: 0 };
     e: for (let b = a.pos - m; a.pos > b; ) {
       let v = a.size;
       if (a.id == w && v >= 0) {
-        p.size = C, p.start = x, p.skip = A, A += 4, C += 4, a.next();
+        p.size = A, p.start = x, p.skip = C, C += 4, A += 4, a.next();
         continue;
       }
-      let P = a.pos - v;
-      if (v < 0 || P < b || a.start < g)
+      let N = a.pos - v;
+      if (v < 0 || N < b || a.start < g)
         break;
       let U = a.id >= s ? 4 : 0, $ = a.start;
-      for (a.next(); a.pos > P; ) {
+      for (a.next(); a.pos > N; ) {
         if (a.size < 0)
           if (a.size == -3 || a.size == -4)
             U += 4;
@@ -1189,28 +1156,28 @@ function Ie(l) {
         else a.id >= s && (U += 4);
         a.next();
       }
-      x = $, C += v, A += U;
+      x = $, A += v, C += U;
     }
-    return (w < 0 || C == m) && (p.size = C, p.start = x, p.skip = A), p.size > 4 ? p : void 0;
+    return (w < 0 || A == m) && (p.size = A, p.start = x, p.skip = C), p.size > 4 ? p : void 0;
   }
   function F(m, w, a) {
-    let { id: C, start: x, end: A, size: g } = o;
-    if (o.next(), g >= 0 && C < s) {
+    let { id: A, start: x, end: C, size: g } = o;
+    if (o.next(), g >= 0 && A < s) {
       let p = a;
       if (g > 4) {
         let b = o.pos - (g - 4);
         for (; o.pos > b; )
           a = F(m, w, a);
       }
-      w[--a] = p, w[--a] = A - m, w[--a] = x - m, w[--a] = C;
-    } else g == -3 ? u = C : g == -4 && (f = C);
+      w[--a] = p, w[--a] = C - m, w[--a] = x - m, w[--a] = A;
+    } else g == -3 ? u = A : g == -4 && (f = A);
     return a;
   }
   let E = [], I = [];
   for (; o.pos > 0; )
     c(l.start || 0, l.bufferStart || 0, E, I, -1, 0);
-  let D = (e = l.length) !== null && e !== void 0 ? e : E.length ? I[0] + E[0].length : 0;
-  return new B(h[l.topID], E.reverse(), I.reverse(), D);
+  let R = (e = l.length) !== null && e !== void 0 ? e : E.length ? I[0] + E[0].length : 0;
+  return new B(h[l.topID], E.reverse(), I.reverse(), R);
 }
 const ae = /* @__PURE__ */ new WeakMap();
 function ee(l, e) {
@@ -1238,25 +1205,25 @@ function le(l, e, t, r, n, i, s, o, h) {
     u * 1.5 / 8
     /* Balance.BranchFactor */
   ), c = [], d = [];
-  function y(_, N, O, F, E) {
-    for (let I = O; I < F; ) {
-      let D = I, m = N[I], w = ee(l, _[I]);
+  function y(_, P, T, F, E) {
+    for (let I = T; I < F; ) {
+      let R = I, m = P[I], w = ee(l, _[I]);
       for (I++; I < F; I++) {
         let a = ee(l, _[I]);
         if (w + a >= f)
           break;
         w += a;
       }
-      if (I == D + 1) {
+      if (I == R + 1) {
         if (w > f) {
-          let a = _[D];
-          y(a.children, a.positions, 0, a.children.length, N[D] + E);
+          let a = _[R];
+          y(a.children, a.positions, 0, a.children.length, P[R] + E);
           continue;
         }
-        c.push(_[D]);
+        c.push(_[R]);
       } else {
-        let a = N[I - 1] + _[I - 1].length - m;
-        c.push(le(l, _, N, D, I, m, a, null, h));
+        let a = P[I - 1] + _[I - 1].length - m;
+        c.push(le(l, _, P, R, I, m, a, null, h));
       }
       d.push(m + E - i);
     }
@@ -1332,51 +1299,8 @@ class Q {
     return n;
   }
 }
-class Fe {
-  /**
-  Start a parse, returning a [partial parse](#common.PartialParse)
-  object. [`fragments`](#common.TreeFragment) can be passed in to
-  make the parse incremental.
-  
-  By default, the entire input is parsed. You can pass `ranges`,
-  which should be a sorted array of non-empty, non-overlapping
-  ranges, to parse only those ranges. The tree returned in that
-  case will start at `ranges[0].from`.
-  */
-  startParse(e, t, r) {
-    return typeof e == "string" && (e = new Pe(e)), r = r ? r.length ? r.map((n) => new M(n.from, n.to)) : [new M(0, 0)] : [new M(0, e.length)], this.createParse(e, t || [], r);
-  }
-  /**
-  Run a full parse, returning the resulting tree.
-  */
-  parse(e, t, r) {
-    let n = this.startParse(e, t, r);
-    for (; ; ) {
-      let i = n.advance();
-      if (i)
-        return i;
-    }
-  }
-}
-class Pe {
-  constructor(e) {
-    this.string = e;
-  }
-  get length() {
-    return this.string.length;
-  }
-  chunk(e) {
-    return this.string.slice(e);
-  }
-  get lineChunks() {
-    return !1;
-  }
-  read(e, t) {
-    return this.string.slice(e, t);
-  }
-}
-function je(l) {
-  return (e, t, r, n) => new ze(e, l, t, r, n);
+function Te(l) {
+  return (e, t, r, n) => new Ne(e, l, t, r, n);
 }
 class pe {
   constructor(e, t, r, n, i) {
@@ -1387,13 +1311,13 @@ function de(l) {
   if (!l.length || l.some((e) => e.from >= e.to))
     throw new RangeError("Invalid inner parse ranges given: " + JSON.stringify(l));
 }
-class Ne {
+class Ie {
   constructor(e, t, r, n, i, s, o) {
     this.parser = e, this.predicate = t, this.mounts = r, this.index = n, this.start = i, this.target = s, this.prev = o, this.depth = 0, this.ranges = [];
   }
 }
 const ne = new k({ perNode: !0 });
-class ze {
+class Ne {
   constructor(e, t, r, n, i) {
     this.nest = t, this.input = r, this.fragments = n, this.ranges = i, this.inner = [], this.innerDone = 0, this.baseTree = null, this.stoppedAt = null, this.baseParse = e;
   }
@@ -1434,7 +1358,7 @@ class ze {
         this.inner[t].parse.stopAt(e);
   }
   startInner() {
-    let e = new Te(this.fragments), t = null, r = null, n = new te(new z(this.baseTree, this.ranges[0].from, 0, null), S.IncludeAnonymous | S.IgnoreMounts);
+    let e = new Be(this.fragments), t = null, r = null, n = new te(new z(this.baseTree, this.ranges[0].from, 0, null), S.IncludeAnonymous | S.IgnoreMounts);
     e: for (let i, s; ; ) {
       let o = !0, h;
       if (this.stoppedAt != null && n.from >= this.stoppedAt)
@@ -1449,18 +1373,18 @@ class ze {
             }
         }
         o = !1;
-      } else if (r && (s = Be(r.ranges, n.from, n.to)))
+      } else if (r && (s = Pe(r.ranges, n.from, n.to)))
         o = s != 2;
       else if (!n.type.isAnonymous && (i = this.nest(n, this.input)) && (n.from < n.to || !i.overlay)) {
-        n.tree || (Ee(n), t && t.depth++, r && r.depth++);
+        n.tree || (ze(n), t && t.depth++, r && r.depth++);
         let u = e.findMounts(n.from, i.parser);
         if (typeof i.overlay == "function")
-          t = new Ne(i.parser, i.overlay, u, this.inner.length, n.from, n.tree, t);
+          t = new Ie(i.parser, i.overlay, u, this.inner.length, n.from, n.tree, t);
         else {
-          let f = me(this.ranges, i.overlay || (n.from < n.to ? [new M(n.from, n.to)] : []));
-          f.length && de(f), (f.length || !i.overlay) && this.inner.push(new pe(i.parser, f.length ? i.parser.startParse(this.input, ye(u, f), f) : i.parser.startParse(""), i.overlay ? i.overlay.map((c) => new M(c.from - n.from, c.to - n.from)) : null, n.tree, f.length ? f[0].from : n.from)), i.overlay ? f.length && (r = { ranges: f, depth: 0, prev: r }) : o = !1;
+          let f = me(this.ranges, i.overlay || (n.from < n.to ? [new L(n.from, n.to)] : []));
+          f.length && de(f), (f.length || !i.overlay) && this.inner.push(new pe(i.parser, f.length ? i.parser.startParse(this.input, ye(u, f), f) : i.parser.startParse(""), i.overlay ? i.overlay.map((c) => new L(c.from - n.from, c.to - n.from)) : null, n.tree, f.length ? f[0].from : n.from)), i.overlay ? f.length && (r = { ranges: f, depth: 0, prev: r }) : o = !1;
         }
-      } else if (t && (h = t.predicate(n)) && (h === !0 && (h = new M(n.from, n.to)), h.from < h.to)) {
+      } else if (t && (h = t.predicate(n)) && (h === !0 && (h = new L(n.from, n.to)), h.from < h.to)) {
         let u = t.ranges.length - 1;
         u >= 0 && t.ranges[u].to == h.from ? t.ranges[u] = { from: t.ranges[u].from, to: h.to } : t.ranges.push(h);
       }
@@ -1472,14 +1396,14 @@ class ze {
             break e;
           if (t && !--t.depth) {
             let u = me(this.ranges, t.ranges);
-            u.length && (de(u), this.inner.splice(t.index, 0, new pe(t.parser, t.parser.startParse(this.input, ye(t.mounts, u), u), t.ranges.map((f) => new M(f.from - t.start, f.to - t.start)), t.target, u[0].from))), t = t.prev;
+            u.length && (de(u), this.inner.splice(t.index, 0, new pe(t.parser, t.parser.startParse(this.input, ye(t.mounts, u), u), t.ranges.map((f) => new L(f.from - t.start, f.to - t.start)), t.target, u[0].from))), t = t.prev;
           }
           r && !--r.depth && (r = r.prev);
         }
     }
   }
 }
-function Be(l, e, t) {
+function Pe(l, e, t) {
   for (let r of l) {
     if (r.from >= t)
       break;
@@ -1494,19 +1418,19 @@ function ce(l, e, t, r, n, i) {
     r.push(l.slice(e, t, s)), n.push(s - i);
   }
 }
-function Ee(l) {
+function ze(l) {
   let { node: e } = l, t = [], r = e.context.buffer;
   do
     t.push(l.index), l.parent();
   while (!l.tree);
   let n = l.tree, i = n.children.indexOf(r), s = n.children[i], o = s.buffer, h = [i];
-  function u(f, c, d, y, _, N) {
-    let O = t[N], F = [], E = [];
-    ce(s, f, O, F, E, y);
-    let I = o[O + 1], D = o[O + 2];
+  function u(f, c, d, y, _, P) {
+    let T = t[P], F = [], E = [];
+    ce(s, f, T, F, E, y);
+    let I = o[T + 1], R = o[T + 2];
     h.push(F.length);
-    let m = N ? u(O + 4, o[O + 3], s.set.types[o[O]], I, D - I, N - 1) : e.toTree();
-    return F.push(m), E.push(I - y), ce(s, o[O + 3], c, F, E, y), new B(d, F, E, _);
+    let m = P ? u(T + 4, o[T + 3], s.set.types[o[T]], I, R - I, P - 1) : e.toTree();
+    return F.push(m), E.push(I - y), ce(s, o[T + 3], c, F, E, y), new B(d, F, E, _);
   }
   n.children[i] = u(0, o.length, j.none, 0, s.length, t.length - 1);
   for (let f of h) {
@@ -1537,7 +1461,7 @@ class ge {
     return !1;
   }
 }
-class Te {
+class Be {
   constructor(e) {
     var t;
     if (this.fragments = e, this.curTo = 0, this.fragI = 0, e.length) {
@@ -1591,18 +1515,18 @@ function me(l, e) {
       let h = r[i];
       if (h.from >= o)
         break;
-      h.to <= s || (t || (r = t = e.slice()), h.from < s ? (t[i] = new M(h.from, s), h.to > o && t.splice(i + 1, 0, new M(o, h.to))) : h.to > o ? t[i--] = new M(o, h.to) : t.splice(i--, 1));
+      h.to <= s || (t || (r = t = e.slice()), h.from < s ? (t[i] = new L(h.from, s), h.to > o && t.splice(i + 1, 0, new L(o, h.to))) : h.to > o ? t[i--] = new L(o, h.to) : t.splice(i--, 1));
     }
   }
   return r;
 }
-function Me(l, e, t, r) {
+function Ee(l, e, t, r) {
   let n = 0, i = 0, s = !1, o = !1, h = -1e9, u = [];
   for (; ; ) {
     let f = n == l.length ? 1e9 : s ? l[n].to : l[n].from, c = i == e.length ? 1e9 : o ? e[i].to : e[i].from;
     if (s != o) {
       let d = Math.max(h, t), y = Math.min(f, c, r);
-      d < y && u.push(new M(d, y));
+      d < y && u.push(new L(d, y));
     }
     if (h = Math.min(f, c), h == 1e9)
       break;
@@ -1615,10 +1539,10 @@ function ye(l, e) {
   for (let { pos: r, mount: n, frag: i } of l) {
     let s = r + (n.overlay ? n.overlay[0].from : 0), o = s + n.tree.length, h = Math.max(i.from, s), u = Math.min(i.to, o);
     if (n.overlay) {
-      let f = n.overlay.map((d) => new M(d.from + r, d.to + r)), c = Me(e, f, h, u);
+      let f = n.overlay.map((d) => new L(d.from + r, d.to + r)), c = Ee(e, f, h, u);
       for (let d = 0, y = h; ; d++) {
-        let _ = d == c.length, N = _ ? u : c[d].from;
-        if (N > y && t.push(new Q(y, N, n.tree, -s, i.from >= y || i.openStart, i.to <= N || i.openEnd)), _)
+        let _ = d == c.length, P = _ ? u : c[d].from;
+        if (P > y && t.push(new Q(y, P, n.tree, -s, i.from >= y || i.openStart, i.to <= P || i.openEnd)), _)
           break;
         y = c[d].to;
       }
@@ -1628,16 +1552,14 @@ function ye(l, e) {
   return t;
 }
 export {
-  Oe as DefaultBufferLength,
+  Me as DefaultBufferLength,
   S as IterMode,
   q as MountedTree,
   k as NodeProp,
-  xe as NodeSet,
   j as NodeType,
-  Fe as Parser,
   B as Tree,
   H as TreeBuffer,
   te as TreeCursor,
   Q as TreeFragment,
-  je as parseMixed
+  Te as parseMixed
 };

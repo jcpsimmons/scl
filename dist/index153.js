@@ -1,15 +1,9 @@
-import { s as r } from "./index170.js";
-function s() {
-  return r.useSyncExternalStore(
-    e,
-    () => !0,
-    () => !1
-  );
-}
-function e() {
-  return () => {
+function h(f, c, { checkForDefaultPrevented: p = !0 } = {}) {
+  return function(s) {
+    if (f == null || f(s), p === !1 || !s.defaultPrevented)
+      return c == null ? void 0 : c(s);
   };
 }
 export {
-  s as useIsHydrated
+  h as composeEventHandlers
 };

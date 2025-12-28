@@ -1,163 +1,62 @@
-import * as v from "react";
-import { composeEventHandlers as g } from "./index117.js";
-import { createContextScope as x } from "./index87.js";
-import { createRovingFocusGroupScope as C, Root as E, Item as F } from "./index118.js";
-import { Presence as w } from "./index115.js";
-import { Primitive as b } from "./index92.js";
-import { useDirection as D } from "./index94.js";
-import { useControllableState as V } from "./index91.js";
-import { useId as G } from "./index93.js";
-import { jsx as l } from "react/jsx-runtime";
-var p = "Tabs", [L] = x(p, [
-  C
-]), h = C(), [$, T] = L(p), I = v.forwardRef(
-  (e, r) => {
-    const {
-      __scopeTabs: s,
-      value: t,
-      onValueChange: n,
-      defaultValue: c,
-      orientation: o = "horizontal",
-      dir: d,
-      activationMode: f = "automatic",
-      ...m
-    } = e, i = D(d), [a, u] = V({
-      prop: t,
-      onChange: n,
-      defaultProp: c ?? "",
-      caller: p
-    });
-    return /* @__PURE__ */ l(
-      $,
-      {
-        scope: s,
-        baseId: G(),
-        value: a,
-        onValueChange: u,
-        orientation: o,
-        dir: i,
-        activationMode: f,
-        children: /* @__PURE__ */ l(
-          b.div,
-          {
-            dir: i,
-            "data-orientation": o,
-            ...m,
-            ref: r
-          }
-        )
-      }
-    );
-  }
-);
-I.displayName = p;
-var R = "TabsList", _ = v.forwardRef(
-  (e, r) => {
-    const { __scopeTabs: s, loop: t = !0, ...n } = e, c = T(R, s), o = h(s);
-    return /* @__PURE__ */ l(
-      E,
-      {
-        asChild: !0,
-        ...o,
-        orientation: c.orientation,
-        dir: c.dir,
-        loop: t,
-        children: /* @__PURE__ */ l(
-          b.div,
-          {
-            role: "tablist",
-            "aria-orientation": c.orientation,
-            ...n,
-            ref: r
-          }
-        )
-      }
-    );
-  }
-);
-_.displayName = R;
-var y = "TabsTrigger", A = v.forwardRef(
-  (e, r) => {
-    const { __scopeTabs: s, value: t, disabled: n = !1, ...c } = e, o = T(y, s), d = h(s), f = P(o.baseId, t), m = S(o.baseId, t), i = t === o.value;
-    return /* @__PURE__ */ l(
-      F,
-      {
-        asChild: !0,
-        ...d,
-        focusable: !n,
-        active: i,
-        children: /* @__PURE__ */ l(
-          b.button,
-          {
-            type: "button",
-            role: "tab",
-            "aria-selected": i,
-            "aria-controls": m,
-            "data-state": i ? "active" : "inactive",
-            "data-disabled": n ? "" : void 0,
-            disabled: n,
-            id: f,
-            ...c,
-            ref: r,
-            onMouseDown: g(e.onMouseDown, (a) => {
-              !n && a.button === 0 && a.ctrlKey === !1 ? o.onValueChange(t) : a.preventDefault();
-            }),
-            onKeyDown: g(e.onKeyDown, (a) => {
-              [" ", "Enter"].includes(a.key) && o.onValueChange(t);
-            }),
-            onFocus: g(e.onFocus, () => {
-              const a = o.activationMode !== "manual";
-              !i && !n && a && o.onValueChange(t);
-            })
-          }
-        )
-      }
-    );
-  }
-);
-A.displayName = y;
-var M = "TabsContent", N = v.forwardRef(
-  (e, r) => {
-    const { __scopeTabs: s, value: t, forceMount: n, children: c, ...o } = e, d = T(M, s), f = P(d.baseId, t), m = S(d.baseId, t), i = t === d.value, a = v.useRef(i);
-    return v.useEffect(() => {
-      const u = requestAnimationFrame(() => a.current = !1);
-      return () => cancelAnimationFrame(u);
-    }, []), /* @__PURE__ */ l(w, { present: n || i, children: ({ present: u }) => /* @__PURE__ */ l(
-      b.div,
-      {
-        "data-state": i ? "active" : "inactive",
-        "data-orientation": d.orientation,
-        role: "tabpanel",
-        "aria-labelledby": f,
-        hidden: !u,
-        id: m,
-        tabIndex: 0,
-        ...o,
-        ref: r,
-        style: {
-          ...e.style,
-          animationDuration: a.current ? "0s" : void 0
-        },
-        children: u && c
-      }
-    ) });
-  }
-);
-N.displayName = M;
-function P(e, r) {
-  return `${e}-trigger-${r}`;
+import * as o from "react";
+import { composeRefs as S } from "./index88.js";
+import { jsx as y } from "react/jsx-runtime";
+var E = Symbol.for("react.lazy"), p = o[" use ".trim().toString()];
+function g(t) {
+  return typeof t == "object" && t !== null && "then" in t;
 }
-function S(e, r) {
-  return `${e}-content-${r}`;
+function d(t) {
+  return t != null && typeof t == "object" && "$$typeof" in t && t.$$typeof === E && "_payload" in t && g(t._payload);
 }
-var Q = I, U = _, W = A, X = N;
+// @__NO_SIDE_EFFECTS__
+function C(t) {
+  const n = /* @__PURE__ */ R(t), i = o.forwardRef((e, r) => {
+    let { children: l, ...a } = e;
+    d(l) && typeof p == "function" && (l = p(l._payload));
+    const s = o.Children.toArray(l), f = s.find(b);
+    if (f) {
+      const c = f.props.children, m = s.map((u) => u === f ? o.Children.count(c) > 1 ? o.Children.only(null) : o.isValidElement(c) ? c.props.children : null : u);
+      return /* @__PURE__ */ y(n, { ...a, ref: r, children: o.isValidElement(c) ? o.cloneElement(c, void 0, m) : null });
+    }
+    return /* @__PURE__ */ y(n, { ...a, ref: r, children: l });
+  });
+  return i.displayName = `${t}.Slot`, i;
+}
+var V = /* @__PURE__ */ C("Slot");
+// @__NO_SIDE_EFFECTS__
+function R(t) {
+  const n = o.forwardRef((i, e) => {
+    let { children: r, ...l } = i;
+    if (d(r) && typeof p == "function" && (r = p(r._payload)), o.isValidElement(r)) {
+      const a = P(r), s = h(l, r.props);
+      return r.type !== o.Fragment && (s.ref = e ? S(e, a) : a), o.cloneElement(r, s);
+    }
+    return o.Children.count(r) > 1 ? o.Children.only(null) : null;
+  });
+  return n.displayName = `${t}.SlotClone`, n;
+}
+var _ = Symbol("radix.slottable");
+function b(t) {
+  return o.isValidElement(t) && typeof t.type == "function" && "__radixId" in t.type && t.type.__radixId === _;
+}
+function h(t, n) {
+  const i = { ...n };
+  for (const e in n) {
+    const r = t[e], l = n[e];
+    /^on[A-Z]/.test(e) ? r && l ? i[e] = (...s) => {
+      const f = l(...s);
+      return r(...s), f;
+    } : r && (i[e] = r) : e === "style" ? i[e] = { ...r, ...l } : e === "className" && (i[e] = [r, l].filter(Boolean).join(" "));
+  }
+  return { ...t, ...i };
+}
+function P(t) {
+  var e, r;
+  let n = (e = Object.getOwnPropertyDescriptor(t.props, "ref")) == null ? void 0 : e.get, i = n && "isReactWarning" in n && n.isReactWarning;
+  return i ? t.ref : (n = (r = Object.getOwnPropertyDescriptor(t, "ref")) == null ? void 0 : r.get, i = n && "isReactWarning" in n && n.isReactWarning, i ? t.props.ref : t.props.ref || t.ref);
+}
 export {
-  X as Content,
-  U as List,
-  Q as Root,
-  I as Tabs,
-  N as TabsContent,
-  _ as TabsList,
-  A as TabsTrigger,
-  W as Trigger
+  V as Root,
+  V as Slot,
+  C as createSlot
 };

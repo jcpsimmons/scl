@@ -1,75 +1,238 @@
 import * as i from "react";
-import { createContextScope as C } from "./index151.js";
-import { useCallbackRef as h } from "./index108.js";
-import { useLayoutEffect as f } from "./index109.js";
-import { Primitive as m } from "./index152.js";
-import { useIsHydrated as _ } from "./index153.js";
-import { jsx as l } from "react/jsx-runtime";
-var v = "Avatar", [y] = C(v), [x, A] = y(v), L = i.forwardRef(
-  (t, e) => {
-    const { __scopeAvatar: o, ...r } = t, [n, a] = i.useState("idle");
-    return /* @__PURE__ */ l(
-      x,
+import { composeEventHandlers as I } from "./index149.js";
+import { useComposedRefs as E } from "./index88.js";
+import { createContextScope as w } from "./index89.js";
+import { Primitive as b } from "./index93.js";
+import { createRovingFocusGroupScope as P, Root as B, Item as q } from "./index108.js";
+import { useControllableState as K } from "./index90.js";
+import { useDirection as T } from "./index98.js";
+import { useSize as U } from "./index92.js";
+import { usePrevious as V } from "./index91.js";
+import { Presence as j } from "./index96.js";
+import { jsx as p, jsxs as z } from "react/jsx-runtime";
+var _ = "Radio", [H, g] = w(_), [W, X] = H(_), k = i.forwardRef(
+  (a, d) => {
+    const {
+      __scopeRadio: o,
+      name: s,
+      checked: e = !1,
+      required: r,
+      disabled: n,
+      value: f = "on",
+      onCheck: c,
+      form: m,
+      ...R
+    } = a, [l, v] = i.useState(null), t = E(d, (y) => v(y)), u = i.useRef(!1), h = l ? m || !!l.closest("form") : !0;
+    return /* @__PURE__ */ z(W, { scope: o, checked: e, disabled: n, children: [
+      /* @__PURE__ */ p(
+        b.button,
+        {
+          type: "button",
+          role: "radio",
+          "aria-checked": e,
+          "data-state": N(e),
+          "data-disabled": n ? "" : void 0,
+          disabled: n,
+          value: f,
+          ...R,
+          ref: t,
+          onClick: I(a.onClick, (y) => {
+            e || c == null || c(), h && (u.current = y.isPropagationStopped(), u.current || y.stopPropagation());
+          })
+        }
+      ),
+      h && /* @__PURE__ */ p(
+        A,
+        {
+          control: l,
+          bubbles: !u.current,
+          name: s,
+          value: f,
+          checked: e,
+          required: r,
+          disabled: n,
+          form: m,
+          style: { transform: "translateX(-100%)" }
+        }
+      )
+    ] });
+  }
+);
+k.displayName = _;
+var G = "RadioIndicator", S = i.forwardRef(
+  (a, d) => {
+    const { __scopeRadio: o, forceMount: s, ...e } = a, r = X(G, o);
+    return /* @__PURE__ */ p(j, { present: s || r.checked, children: /* @__PURE__ */ p(
+      b.span,
       {
-        scope: o,
-        imageLoadingStatus: n,
-        onImageLoadingStatusChange: a,
-        children: /* @__PURE__ */ l(m.span, { ...r, ref: e })
+        "data-state": N(r.checked),
+        "data-disabled": r.disabled ? "" : void 0,
+        ...e,
+        ref: d
+      }
+    ) });
+  }
+);
+S.displayName = G;
+var Y = "RadioBubbleInput", A = i.forwardRef(
+  ({
+    __scopeRadio: a,
+    control: d,
+    checked: o,
+    bubbles: s = !0,
+    ...e
+  }, r) => {
+    const n = i.useRef(null), f = E(n, r), c = V(o), m = U(d);
+    return i.useEffect(() => {
+      const R = n.current;
+      if (!R) return;
+      const l = window.HTMLInputElement.prototype, t = Object.getOwnPropertyDescriptor(
+        l,
+        "checked"
+      ).set;
+      if (c !== o && t) {
+        const u = new Event("click", { bubbles: s });
+        t.call(R, o), R.dispatchEvent(u);
+      }
+    }, [c, o, s]), /* @__PURE__ */ p(
+      b.input,
+      {
+        type: "radio",
+        "aria-hidden": !0,
+        defaultChecked: o,
+        ...e,
+        tabIndex: -1,
+        ref: f,
+        style: {
+          ...e.style,
+          ...m,
+          position: "absolute",
+          pointerEvents: "none",
+          opacity: 0,
+          margin: 0
+        }
       }
     );
   }
 );
-L.displayName = v;
-var S = "AvatarImage", E = i.forwardRef(
-  (t, e) => {
-    const { __scopeAvatar: o, src: r, onLoadingStatusChange: n = () => {
-    }, ...a } = t, u = A(S, o), s = N(r, a), d = h((c) => {
-      n(c), u.onImageLoadingStatusChange(c);
+A.displayName = Y;
+function N(a) {
+  return a ? "checked" : "unchecked";
+}
+var J = ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"], C = "RadioGroup", [Q] = w(C, [
+  P,
+  g
+]), x = P(), D = g(), [Z, $] = Q(C), M = i.forwardRef(
+  (a, d) => {
+    const {
+      __scopeRadioGroup: o,
+      name: s,
+      defaultValue: e,
+      value: r,
+      required: n = !1,
+      disabled: f = !1,
+      orientation: c,
+      dir: m,
+      loop: R = !0,
+      onValueChange: l,
+      ...v
+    } = a, t = x(o), u = T(m), [h, y] = K({
+      prop: r,
+      defaultProp: e ?? null,
+      onChange: l,
+      caller: C
     });
-    return f(() => {
-      s !== "idle" && d(s);
-    }, [s, d]), s === "loaded" ? /* @__PURE__ */ l(m.img, { ...a, ref: e, src: r }) : null;
-  }
-);
-E.displayName = S;
-var I = "AvatarFallback", R = i.forwardRef(
-  (t, e) => {
-    const { __scopeAvatar: o, delayMs: r, ...n } = t, a = A(I, o), [u, s] = i.useState(r === void 0);
-    return i.useEffect(() => {
-      if (r !== void 0) {
-        const d = window.setTimeout(() => s(!0), r);
-        return () => window.clearTimeout(d);
+    return /* @__PURE__ */ p(
+      Z,
+      {
+        scope: o,
+        name: s,
+        required: n,
+        disabled: f,
+        value: h,
+        onValueChange: y,
+        children: /* @__PURE__ */ p(
+          B,
+          {
+            asChild: !0,
+            ...t,
+            orientation: c,
+            dir: u,
+            loop: R,
+            children: /* @__PURE__ */ p(
+              b.div,
+              {
+                role: "radiogroup",
+                "aria-required": n,
+                "aria-orientation": c,
+                "data-disabled": f ? "" : void 0,
+                dir: u,
+                ...v,
+                ref: d
+              }
+            )
+          }
+        )
       }
-    }, [r]), u && a.imageLoadingStatus !== "loaded" ? /* @__PURE__ */ l(m.span, { ...n, ref: e }) : null;
+    );
   }
 );
-R.displayName = I;
-function p(t, e) {
-  return t ? e ? (t.src !== e && (t.src = e), t.complete && t.naturalWidth > 0 ? "loaded" : "loading") : "error" : "idle";
-}
-function N(t, { referrerPolicy: e, crossOrigin: o }) {
-  const r = _(), n = i.useRef(null), a = r ? (n.current || (n.current = new window.Image()), n.current) : null, [u, s] = i.useState(
-    () => p(a, t)
-  );
-  return f(() => {
-    s(p(a, t));
-  }, [a, t]), f(() => {
-    const d = (w) => () => {
-      s(w);
-    };
-    if (!a) return;
-    const c = d("loaded"), g = d("error");
-    return a.addEventListener("load", c), a.addEventListener("error", g), e && (a.referrerPolicy = e), typeof o == "string" && (a.crossOrigin = o), () => {
-      a.removeEventListener("load", c), a.removeEventListener("error", g);
-    };
-  }, [a, o, e]), u;
-}
-var H = L, j = E, B = R;
+M.displayName = C;
+var O = "RadioGroupItem", F = i.forwardRef(
+  (a, d) => {
+    const { __scopeRadioGroup: o, disabled: s, ...e } = a, r = $(O, o), n = r.disabled || s, f = x(o), c = D(o), m = i.useRef(null), R = E(d, m), l = r.value === e.value, v = i.useRef(!1);
+    return i.useEffect(() => {
+      const t = (h) => {
+        J.includes(h.key) && (v.current = !0);
+      }, u = () => v.current = !1;
+      return document.addEventListener("keydown", t), document.addEventListener("keyup", u), () => {
+        document.removeEventListener("keydown", t), document.removeEventListener("keyup", u);
+      };
+    }, []), /* @__PURE__ */ p(
+      q,
+      {
+        asChild: !0,
+        ...f,
+        focusable: !n,
+        active: l,
+        children: /* @__PURE__ */ p(
+          k,
+          {
+            disabled: n,
+            required: r.required,
+            checked: l,
+            ...c,
+            ...e,
+            name: r.name,
+            ref: R,
+            onCheck: () => r.onValueChange(e.value),
+            onKeyDown: I((t) => {
+              t.key === "Enter" && t.preventDefault();
+            }),
+            onFocus: I(e.onFocus, () => {
+              var t;
+              v.current && ((t = m.current) == null || t.click());
+            })
+          }
+        )
+      }
+    );
+  }
+);
+F.displayName = O;
+var ee = "RadioGroupIndicator", L = i.forwardRef(
+  (a, d) => {
+    const { __scopeRadioGroup: o, ...s } = a, e = D(o);
+    return /* @__PURE__ */ p(S, { ...e, ...s, ref: d });
+  }
+);
+L.displayName = ee;
+var le = M, fe = F, me = L;
 export {
-  L as Avatar,
-  R as AvatarFallback,
-  E as AvatarImage,
-  B as Fallback,
-  j as Image,
-  H as Root
+  me as Indicator,
+  fe as Item,
+  M as RadioGroup,
+  L as RadioGroupIndicator,
+  F as RadioGroupItem,
+  le as Root
 };

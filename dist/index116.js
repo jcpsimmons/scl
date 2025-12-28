@@ -1,50 +1,57 @@
-import * as l from "react";
-import { composeRefs as m } from "./index89.js";
-import { jsx as u } from "react/jsx-runtime";
-// @__NO_SIDE_EFFECTS__
-function b(e) {
-  const n = /* @__PURE__ */ y(e), o = l.forwardRef((t, r) => {
-    const { children: i, ...c } = t, s = l.Children.toArray(i), a = s.find(E);
-    if (a) {
-      const f = a.props.children, d = s.map((p) => p === a ? l.Children.count(f) > 1 ? l.Children.only(null) : l.isValidElement(f) ? f.props.children : null : p);
-      return /* @__PURE__ */ u(n, { ...c, ref: r, children: l.isValidElement(f) ? l.cloneElement(f, void 0, d) : null });
+import * as i from "react";
+import { jsx as _ } from "react/jsx-runtime";
+function $(e, x = []) {
+  let o = [];
+  function f(r, n) {
+    const t = i.createContext(n);
+    t.displayName = r + "Context";
+    const c = o.length;
+    o = [...o, n];
+    const m = (a) => {
+      var l;
+      const { scope: s, children: C, ...p } = a, d = ((l = s == null ? void 0 : s[e]) == null ? void 0 : l[c]) || t, v = i.useMemo(() => p, Object.values(p));
+      return /* @__PURE__ */ _(d.Provider, { value: v, children: C });
+    };
+    m.displayName = r + "Provider";
+    function S(a, s) {
+      var d;
+      const C = ((d = s == null ? void 0 : s[e]) == null ? void 0 : d[c]) || t, p = i.useContext(C);
+      if (p) return p;
+      if (n !== void 0) return n;
+      throw new Error(`\`${a}\` must be used within \`${r}\``);
     }
-    return /* @__PURE__ */ u(n, { ...c, ref: r, children: i });
-  });
-  return o.displayName = `${e}.Slot`, o;
-}
-// @__NO_SIDE_EFFECTS__
-function y(e) {
-  const n = l.forwardRef((o, t) => {
-    const { children: r, ...i } = o;
-    if (l.isValidElement(r)) {
-      const c = S(r), s = C(i, r.props);
-      return r.type !== l.Fragment && (s.ref = t ? m(t, c) : c), l.cloneElement(r, s);
-    }
-    return l.Children.count(r) > 1 ? l.Children.only(null) : null;
-  });
-  return n.displayName = `${e}.SlotClone`, n;
-}
-var g = Symbol("radix.slottable");
-function E(e) {
-  return l.isValidElement(e) && typeof e.type == "function" && "__radixId" in e.type && e.type.__radixId === g;
-}
-function C(e, n) {
-  const o = { ...n };
-  for (const t in n) {
-    const r = e[t], i = n[t];
-    /^on[A-Z]/.test(t) ? r && i ? o[t] = (...s) => {
-      const a = i(...s);
-      return r(...s), a;
-    } : r && (o[t] = r) : t === "style" ? o[t] = { ...r, ...i } : t === "className" && (o[t] = [r, i].filter(Boolean).join(" "));
+    return [m, S];
   }
-  return { ...e, ...o };
+  const u = () => {
+    const r = o.map((n) => i.createContext(n));
+    return function(t) {
+      const c = (t == null ? void 0 : t[e]) || r;
+      return i.useMemo(
+        () => ({ [`__scope${e}`]: { ...t, [e]: c } }),
+        [t, c]
+      );
+    };
+  };
+  return u.scopeName = e, [f, h(u, ...x)];
 }
-function S(e) {
-  var t, r;
-  let n = (t = Object.getOwnPropertyDescriptor(e.props, "ref")) == null ? void 0 : t.get, o = n && "isReactWarning" in n && n.isReactWarning;
-  return o ? e.ref : (n = (r = Object.getOwnPropertyDescriptor(e, "ref")) == null ? void 0 : r.get, o = n && "isReactWarning" in n && n.isReactWarning, o ? e.props.ref : e.props.ref || e.ref);
+function h(...e) {
+  const x = e[0];
+  if (e.length === 1) return x;
+  const o = () => {
+    const f = e.map((u) => ({
+      useScope: u(),
+      scopeName: u.scopeName
+    }));
+    return function(r) {
+      const n = f.reduce((t, { useScope: c, scopeName: m }) => {
+        const a = c(r)[`__scope${m}`];
+        return { ...t, ...a };
+      }, {});
+      return i.useMemo(() => ({ [`__scope${x.scopeName}`]: n }), [n]);
+    };
+  };
+  return o.scopeName = x.scopeName, o;
 }
 export {
-  b as createSlot
+  $ as createContextScope
 };

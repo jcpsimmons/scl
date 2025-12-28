@@ -1,20 +1,14 @@
-import * as i from "react";
-import { Primitive as f } from "./index95.js";
-import { jsx as l } from "react/jsx-runtime";
-var m = "Label", r = i.forwardRef((e, o) => /* @__PURE__ */ l(
-  f.label,
-  {
-    ...e,
-    ref: o,
-    onMouseDown: (t) => {
-      var a;
-      t.target.closest("button, input, select, textarea") || ((a = e.onMouseDown) == null || a.call(e, t), !t.defaultPrevented && t.detail > 1 && t.preventDefault());
-    }
-  }
-));
-r.displayName = m;
-var b = r;
+import e from "./index157.js";
+/**
+ * @license lucide-react v0.460.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const r = e("Search", [
+  ["circle", { cx: "11", cy: "11", r: "8", key: "4ej97u" }],
+  ["path", { d: "m21 21-4.3-4.3", key: "1qie3q" }]
+]);
 export {
-  r as Label,
-  b as Root
+  r as default
 };

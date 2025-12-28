@@ -6,7 +6,7 @@ const s = o.forwardRef(({ className: a, ...r }, e) => /* @__PURE__ */ d(
   {
     ref: e,
     className: t(
-      "rounded-xl border bg-card text-card-foreground shadow",
+      "border bg-card text-card-foreground",
       a
     ),
     ...r
@@ -40,9 +40,9 @@ const f = o.forwardRef(({ className: a, ...r }, e) => /* @__PURE__ */ d(
   }
 ));
 f.displayName = "CardDescription";
-const l = o.forwardRef(({ className: a, ...r }, e) => /* @__PURE__ */ d("div", { ref: e, className: t("p-6", a), ...r }));
-l.displayName = "CardContent";
-const n = o.forwardRef(({ className: a, ...r }, e) => /* @__PURE__ */ d(
+const c = o.forwardRef(({ className: a, ...r }, e) => /* @__PURE__ */ d("div", { ref: e, className: t("p-6", a), ...r }));
+c.displayName = "CardContent";
+const l = o.forwardRef(({ className: a, ...r }, e) => /* @__PURE__ */ d(
   "div",
   {
     ref: e,
@@ -50,12 +50,12 @@ const n = o.forwardRef(({ className: a, ...r }, e) => /* @__PURE__ */ d(
     ...r
   }
 ));
-n.displayName = "CardFooter";
+l.displayName = "CardFooter";
 export {
   s as Card,
-  l as CardContent,
+  c as CardContent,
   f as CardDescription,
-  n as CardFooter,
+  l as CardFooter,
   i as CardHeader,
   m as CardTitle
 };

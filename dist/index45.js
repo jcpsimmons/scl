@@ -1,239 +1,132 @@
-import s from "react";
-import { createContextScope as X } from "./index87.js";
-import { createCollection as Z } from "./index88.js";
-import { useComposedRefs as $ } from "./index89.js";
-import { composeEventHandlers as ee } from "./index90.js";
-import { useControllableState as M } from "./index91.js";
-import { Primitive as V } from "./index92.js";
-import { createCollapsibleScope as H, Root as oe, Trigger as re, Content as te } from "./index58.js";
-import { useId as ne } from "./index93.js";
-import { useDirection as ce } from "./index94.js";
-import { jsx as n } from "react/jsx-runtime";
-var d = "Accordion", ie = ["Home", "End", "ArrowDown", "ArrowUp", "ArrowLeft", "ArrowRight"], [E, ae, le] = Z(d), [b] = X(d, [
-  le,
-  H
-]), S = H(), K = s.forwardRef(
-  (o, c) => {
-    const { type: e, ...t } = o, i = t, r = t;
-    return /* @__PURE__ */ n(E.Provider, { scope: o.__scopeAccordion, children: e === "multiple" ? /* @__PURE__ */ n(fe, { ...r, ref: c }) : /* @__PURE__ */ n(pe, { ...i, ref: c }) });
-  }
-);
-K.displayName = d;
-var [L, se] = b(d), [z, de] = b(
-  d,
-  { collapsible: !1 }
-), pe = s.forwardRef(
-  (o, c) => {
+import * as r from "react";
+import { composeEventHandlers as T } from "./index87.js";
+import { useComposedRefs as P } from "./index88.js";
+import { createContextScope as I } from "./index89.js";
+import { useControllableState as M } from "./index90.js";
+import { usePrevious as H } from "./index91.js";
+import { useSize as j } from "./index92.js";
+import { Primitive as y } from "./index93.js";
+import { jsxs as A, jsx as m } from "react/jsx-runtime";
+var h = "Switch", [U] = I(h), [q, z] = U(h), R = r.forwardRef(
+  (t, a) => {
     const {
-      value: e,
-      defaultValue: t,
-      onValueChange: i = () => {
-      },
-      collapsible: r = !1,
-      ...l
-    } = o, [a, p] = M({
-      prop: e,
-      defaultProp: t ?? "",
-      onChange: i,
-      caller: d
+      __scopeSwitch: e,
+      name: c,
+      checked: o,
+      defaultChecked: v,
+      required: i,
+      disabled: n,
+      value: p = "on",
+      onCheckedChange: w,
+      form: s,
+      ...S
+    } = t, [d, u] = r.useState(null), b = P(a, (f) => u(f)), C = r.useRef(!1), k = d ? s || !!d.closest("form") : !0, [l, B] = M({
+      prop: o,
+      defaultProp: v ?? !1,
+      onChange: w,
+      caller: h
     });
-    return /* @__PURE__ */ n(
-      L,
-      {
-        scope: o.__scopeAccordion,
-        value: s.useMemo(() => a ? [a] : [], [a]),
-        onItemOpen: p,
-        onItemClose: s.useCallback(() => r && p(""), [r, p]),
-        children: /* @__PURE__ */ n(z, { scope: o.__scopeAccordion, collapsible: r, children: /* @__PURE__ */ n(G, { ...l, ref: c }) })
-      }
-    );
+    return /* @__PURE__ */ A(q, { scope: e, checked: l, disabled: n, children: [
+      /* @__PURE__ */ m(
+        y.button,
+        {
+          type: "button",
+          role: "switch",
+          "aria-checked": l,
+          "aria-required": i,
+          "data-state": g(l),
+          "data-disabled": n ? "" : void 0,
+          disabled: n,
+          value: p,
+          ...S,
+          ref: b,
+          onClick: T(t.onClick, (f) => {
+            B((N) => !N), k && (C.current = f.isPropagationStopped(), C.current || f.stopPropagation());
+          })
+        }
+      ),
+      k && /* @__PURE__ */ m(
+        x,
+        {
+          control: d,
+          bubbles: !C.current,
+          name: c,
+          value: p,
+          checked: l,
+          required: i,
+          disabled: n,
+          form: s,
+          style: { transform: "translateX(-100%)" }
+        }
+      )
+    ] });
   }
-), fe = s.forwardRef((o, c) => {
-  const {
-    value: e,
-    defaultValue: t,
-    onValueChange: i = () => {
-    },
-    ...r
-  } = o, [l, a] = M({
-    prop: e,
-    defaultProp: t ?? [],
-    onChange: i,
-    caller: d
-  }), p = s.useCallback(
-    (v) => a((u = []) => [...u, v]),
-    [a]
-  ), m = s.useCallback(
-    (v) => a((u = []) => u.filter((h) => h !== v)),
-    [a]
-  );
-  return /* @__PURE__ */ n(
-    L,
-    {
-      scope: o.__scopeAccordion,
-      value: l,
-      onItemOpen: p,
-      onItemClose: m,
-      children: /* @__PURE__ */ n(z, { scope: o.__scopeAccordion, collapsible: !0, children: /* @__PURE__ */ n(G, { ...r, ref: c }) })
-    }
-  );
-}), [ue, I] = b(d), G = s.forwardRef(
-  (o, c) => {
-    const { __scopeAccordion: e, disabled: t, dir: i, orientation: r = "vertical", ...l } = o, a = s.useRef(null), p = $(a, c), m = ae(e), u = ce(i) === "ltr", h = ee(o.onKeyDown, (C) => {
-      var O;
-      if (!ie.includes(C.key)) return;
-      const Q = C.target, x = m().filter((N) => {
-        var T;
-        return !((T = N.ref.current) != null && T.disabled);
-      }), A = x.findIndex((N) => N.ref.current === Q), D = x.length;
-      if (A === -1) return;
-      C.preventDefault();
-      let f = A;
-      const _ = 0, w = D - 1, R = () => {
-        f = A + 1, f > w && (f = _);
-      }, P = () => {
-        f = A - 1, f < _ && (f = w);
-      };
-      switch (C.key) {
-        case "Home":
-          f = _;
-          break;
-        case "End":
-          f = w;
-          break;
-        case "ArrowRight":
-          r === "horizontal" && (u ? R() : P());
-          break;
-        case "ArrowDown":
-          r === "vertical" && R();
-          break;
-        case "ArrowLeft":
-          r === "horizontal" && (u ? P() : R());
-          break;
-        case "ArrowUp":
-          r === "vertical" && P();
-          break;
-      }
-      const W = f % D;
-      (O = x[W].ref.current) == null || O.focus();
-    });
-    return /* @__PURE__ */ n(
-      ue,
+);
+R.displayName = h;
+var E = "SwitchThumb", _ = r.forwardRef(
+  (t, a) => {
+    const { __scopeSwitch: e, ...c } = t, o = z(E, e);
+    return /* @__PURE__ */ m(
+      y.span,
       {
-        scope: e,
-        disabled: t,
-        direction: i,
-        orientation: r,
-        children: /* @__PURE__ */ n(E.Slot, { scope: e, children: /* @__PURE__ */ n(
-          V.div,
-          {
-            ...l,
-            "data-orientation": r,
-            ref: p,
-            onKeyDown: t ? void 0 : h
-          }
-        ) })
-      }
-    );
-  }
-), g = "AccordionItem", [me, k] = b(g), U = s.forwardRef(
-  (o, c) => {
-    const { __scopeAccordion: e, value: t, ...i } = o, r = I(g, e), l = se(g, e), a = S(e), p = ne(), m = t && l.value.includes(t) || !1, v = r.disabled || o.disabled;
-    return /* @__PURE__ */ n(
-      me,
-      {
-        scope: e,
-        open: m,
-        disabled: v,
-        triggerId: p,
-        children: /* @__PURE__ */ n(
-          oe,
-          {
-            "data-orientation": r.orientation,
-            "data-state": J(m),
-            ...a,
-            ...i,
-            ref: c,
-            disabled: v,
-            open: m,
-            onOpenChange: (u) => {
-              u ? l.onItemOpen(t) : l.onItemClose(t);
-            }
-          }
-        )
+        "data-state": g(o.checked),
+        "data-disabled": o.disabled ? "" : void 0,
+        ...c,
+        ref: a
       }
     );
   }
 );
-U.displayName = g;
-var j = "AccordionHeader", Y = s.forwardRef(
-  (o, c) => {
-    const { __scopeAccordion: e, ...t } = o, i = I(d, e), r = k(j, e);
-    return /* @__PURE__ */ n(
-      V.h3,
-      {
-        "data-orientation": i.orientation,
-        "data-state": J(r.open),
-        "data-disabled": r.disabled ? "" : void 0,
-        ...t,
-        ref: c
+_.displayName = E;
+var L = "SwitchBubbleInput", x = r.forwardRef(
+  ({
+    __scopeSwitch: t,
+    control: a,
+    checked: e,
+    bubbles: c = !0,
+    ...o
+  }, v) => {
+    const i = r.useRef(null), n = P(i, v), p = H(e), w = j(a);
+    return r.useEffect(() => {
+      const s = i.current;
+      if (!s) return;
+      const S = window.HTMLInputElement.prototype, u = Object.getOwnPropertyDescriptor(
+        S,
+        "checked"
+      ).set;
+      if (p !== e && u) {
+        const b = new Event("click", { bubbles: c });
+        u.call(s, e), s.dispatchEvent(b);
       }
-    );
-  }
-);
-Y.displayName = j;
-var y = "AccordionTrigger", q = s.forwardRef(
-  (o, c) => {
-    const { __scopeAccordion: e, ...t } = o, i = I(d, e), r = k(y, e), l = de(y, e), a = S(e);
-    return /* @__PURE__ */ n(E.ItemSlot, { scope: e, children: /* @__PURE__ */ n(
-      re,
+    }, [p, e, c]), /* @__PURE__ */ m(
+      "input",
       {
-        "aria-disabled": r.open && !l.collapsible || void 0,
-        "data-orientation": i.orientation,
-        id: r.triggerId,
-        ...a,
-        ...t,
-        ref: c
-      }
-    ) });
-  }
-);
-q.displayName = y;
-var B = "AccordionContent", F = s.forwardRef(
-  (o, c) => {
-    const { __scopeAccordion: e, ...t } = o, i = I(d, e), r = k(B, e), l = S(e);
-    return /* @__PURE__ */ n(
-      te,
-      {
-        role: "region",
-        "aria-labelledby": r.triggerId,
-        "data-orientation": i.orientation,
-        ...l,
-        ...t,
-        ref: c,
+        type: "checkbox",
+        "aria-hidden": !0,
+        defaultChecked: e,
+        ...o,
+        tabIndex: -1,
+        ref: n,
         style: {
-          "--radix-accordion-content-height": "var(--radix-collapsible-content-height)",
-          "--radix-accordion-content-width": "var(--radix-collapsible-content-width)",
-          ...o.style
+          ...o.style,
+          ...w,
+          position: "absolute",
+          pointerEvents: "none",
+          opacity: 0,
+          margin: 0
         }
       }
     );
   }
 );
-F.displayName = B;
-function J(o) {
-  return o ? "open" : "closed";
+x.displayName = L;
+function g(t) {
+  return t ? "checked" : "unchecked";
 }
-var Pe = K, Ne = U, ye = Y, Ee = q, Se = F;
+var Q = R, V = _;
 export {
-  K as Accordion,
-  F as AccordionContent,
-  Y as AccordionHeader,
-  U as AccordionItem,
-  q as AccordionTrigger,
-  Se as Content,
-  ye as Header,
-  Ne as Item,
-  Pe as Root,
-  Ee as Trigger
+  Q as Root,
+  R as Switch,
+  _ as SwitchThumb,
+  V as Thumb
 };

@@ -1,4 +1,4 @@
-var e = { exports: {} };
+var e = {};
 export {
-  e as __module
+  e as __exports
 };

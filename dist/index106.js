@@ -1,16 +1,9 @@
-import * as r from "react";
-import s from "react-dom";
-import { Primitive as c } from "./index92.js";
-import { useLayoutEffect as u } from "./index109.js";
-import { jsx as l } from "react/jsx-runtime";
-var p = "Portal", d = r.forwardRef((e, a) => {
-  var o;
-  const { container: f, ...i } = e, [m, n] = r.useState(!1);
-  u(() => n(!0), []);
-  const t = f || m && ((o = globalThis == null ? void 0 : globalThis.document) == null ? void 0 : o.body);
-  return t ? s.createPortal(/* @__PURE__ */ l(c.div, { ...i, ref: a }), t) : null;
-});
-d.displayName = p;
+function h(f, c, { checkForDefaultPrevented: p = !0 } = {}) {
+  return function(s) {
+    if (f == null || f(s), p === !1 || !s.defaultPrevented)
+      return c == null ? void 0 : c(s);
+  };
+}
 export {
-  d as Portal
+  h as composeEventHandlers
 };

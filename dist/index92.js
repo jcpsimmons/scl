@@ -1,36 +1,27 @@
-import * as f from "react";
-import * as p from "react-dom";
-import { createSlot as c } from "./index156.js";
-import { jsx as l } from "react/jsx-runtime";
-var u = [
-  "a",
-  "button",
-  "div",
-  "form",
-  "h2",
-  "h3",
-  "img",
-  "input",
-  "label",
-  "li",
-  "nav",
-  "ol",
-  "p",
-  "select",
-  "span",
-  "svg",
-  "ul"
-], h = u.reduce((t, i) => {
-  const o = c(`Primitive.${i}`), r = f.forwardRef((e, m) => {
-    const { asChild: s, ...a } = e, n = s ? o : i;
-    return typeof window < "u" && (window[Symbol.for("radix-ui")] = !0), /* @__PURE__ */ l(n, { ...a, ref: m });
-  });
-  return r.displayName = `Primitive.${i}`, { ...t, [i]: r };
-}, {});
-function w(t, i) {
-  t && p.flushSync(() => t.dispatchEvent(i));
+import * as h from "react";
+import { useLayoutEffect as z } from "./index99.js";
+function c(r) {
+  const [d, e] = h.useState(void 0);
+  return z(() => {
+    if (r) {
+      e({ width: r.offsetWidth, height: r.offsetHeight });
+      const f = new ResizeObserver((i) => {
+        if (!Array.isArray(i) || !i.length)
+          return;
+        const b = i[0];
+        let o, t;
+        if ("borderBoxSize" in b) {
+          const s = b.borderBoxSize, u = Array.isArray(s) ? s[0] : s;
+          o = u.inlineSize, t = u.blockSize;
+        } else
+          o = r.offsetWidth, t = r.offsetHeight;
+        e({ width: o, height: t });
+      });
+      return f.observe(r, { box: "border-box" }), () => f.unobserve(r);
+    } else
+      e(void 0);
+  }, [r]), d;
 }
 export {
-  h as Primitive,
-  w as dispatchDiscreteCustomEvent
+  c as useSize
 };

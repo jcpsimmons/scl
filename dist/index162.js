@@ -1,14 +1,9 @@
-import * as r from "react";
-import { useCallbackRef as s } from "./index108.js";
-function p(n, e = globalThis == null ? void 0 : globalThis.document) {
-  const t = s(n);
-  r.useEffect(() => {
-    const o = (a) => {
-      a.key === "Escape" && t(a);
-    };
-    return e.addEventListener("keydown", o, { capture: !0 }), () => e.removeEventListener("keydown", o, { capture: !0 });
-  }, [t, e]);
+function h(f, c, { checkForDefaultPrevented: p = !0 } = {}) {
+  return function(s) {
+    if (f == null || f(s), p === !1 || !s.defaultPrevented)
+      return c == null ? void 0 : c(s);
+  };
 }
 export {
-  p as useEscapeKeydown
+  h as composeEventHandlers
 };

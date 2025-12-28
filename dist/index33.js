@@ -1,20 +1,20 @@
 import { jsx as i } from "react/jsx-runtime";
 import * as s from "react";
-import { Root as c, List as o, Trigger as n, Content as d } from "./index57.js";
+import { Root as d, List as o, Trigger as n, Content as c } from "./index55.js";
 import { cn as r } from "./index2.js";
-const p = c, f = s.forwardRef(({ className: e, ...t }, a) => /* @__PURE__ */ i(
+const u = d, f = s.forwardRef(({ className: e, ...t }, a) => /* @__PURE__ */ i(
   o,
   {
     ref: a,
     className: r(
-      "inline-flex h-9 items-center justify-center rounded-lg bg-muted p-1 text-muted-foreground",
+      "inline-flex h-9 items-center justify-center bg-muted p-1 text-muted-foreground",
       e
     ),
     ...t
   }
 ));
 f.displayName = o.displayName;
-const l = s.forwardRef(({ className: e, ...t }, a) => /* @__PURE__ */ i(
+const m = s.forwardRef(({ className: e, ...t }, a) => /* @__PURE__ */ i(
   n,
   {
     ref: a,
@@ -25,9 +25,9 @@ const l = s.forwardRef(({ className: e, ...t }, a) => /* @__PURE__ */ i(
     ...t
   }
 ));
-l.displayName = n.displayName;
-const m = s.forwardRef(({ className: e, ...t }, a) => /* @__PURE__ */ i(
-  d,
+m.displayName = n.displayName;
+const l = s.forwardRef(({ className: e, ...t }, a) => /* @__PURE__ */ i(
+  c,
   {
     ref: a,
     className: r(
@@ -37,10 +37,10 @@ const m = s.forwardRef(({ className: e, ...t }, a) => /* @__PURE__ */ i(
     ...t
   }
 ));
-m.displayName = d.displayName;
+l.displayName = c.displayName;
 export {
-  p as Tabs,
-  m as TabsContent,
+  u as Tabs,
+  l as TabsContent,
   f as TabsList,
-  l as TabsTrigger
+  m as TabsTrigger
 };

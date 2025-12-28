@@ -1,674 +1,330 @@
-import { configureNesting as O, parser as H } from "./index129.js";
-import { cssLanguage as _, css as U } from "./index65.js";
-import { typescriptLanguage as W, jsxLanguage as J, tsxLanguage as K, javascriptLanguage as $, javascript as Q } from "./index63.js";
-import { EditorView as X } from "./index61.js";
-import { EditorSelection as Y } from "./index62.js";
-import { LRLanguage as Z, LanguageSupport as ee, indentNodeProp as te, foldNodeProp as le, bracketMatchingHandle as ae, syntaxTree as z } from "./index70.js";
-const T = ["_blank", "_self", "_top", "_parent"], S = ["ascii", "utf-8", "utf-16", "latin1", "latin1"], N = ["get", "post", "put", "delete"], E = ["application/x-www-form-urlencoded", "multipart/form-data", "text/plain"], c = ["true", "false"], l = {}, ne = {
-  a: {
-    attrs: {
-      href: null,
-      ping: null,
-      type: null,
-      media: null,
-      target: T,
-      hreflang: null
-    }
-  },
-  abbr: l,
-  address: l,
-  area: {
-    attrs: {
-      alt: null,
-      coords: null,
-      href: null,
-      target: null,
-      ping: null,
-      media: null,
-      hreflang: null,
-      type: null,
-      shape: ["default", "rect", "circle", "poly"]
-    }
-  },
-  article: l,
-  aside: l,
-  audio: {
-    attrs: {
-      src: null,
-      mediagroup: null,
-      crossorigin: ["anonymous", "use-credentials"],
-      preload: ["none", "metadata", "auto"],
-      autoplay: ["autoplay"],
-      loop: ["loop"],
-      controls: ["controls"]
-    }
-  },
-  b: l,
-  base: { attrs: { href: null, target: T } },
-  bdi: l,
-  bdo: l,
-  blockquote: { attrs: { cite: null } },
-  body: l,
-  br: l,
-  button: {
-    attrs: {
-      form: null,
-      formaction: null,
-      name: null,
-      value: null,
-      autofocus: ["autofocus"],
-      disabled: ["autofocus"],
-      formenctype: E,
-      formmethod: N,
-      formnovalidate: ["novalidate"],
-      formtarget: T,
-      type: ["submit", "reset", "button"]
-    }
-  },
-  canvas: { attrs: { width: null, height: null } },
-  caption: l,
-  center: l,
-  cite: l,
-  code: l,
-  col: { attrs: { span: null } },
-  colgroup: { attrs: { span: null } },
-  command: {
-    attrs: {
-      type: ["command", "checkbox", "radio"],
-      label: null,
-      icon: null,
-      radiogroup: null,
-      command: null,
-      title: null,
-      disabled: ["disabled"],
-      checked: ["checked"]
-    }
-  },
-  data: { attrs: { value: null } },
-  datagrid: { attrs: { disabled: ["disabled"], multiple: ["multiple"] } },
-  datalist: { attrs: { data: null } },
-  dd: l,
-  del: { attrs: { cite: null, datetime: null } },
-  details: { attrs: { open: ["open"] } },
-  dfn: l,
-  div: l,
-  dl: l,
-  dt: l,
-  em: l,
-  embed: { attrs: { src: null, type: null, width: null, height: null } },
-  eventsource: { attrs: { src: null } },
-  fieldset: { attrs: { disabled: ["disabled"], form: null, name: null } },
-  figcaption: l,
-  figure: l,
-  footer: l,
-  form: {
-    attrs: {
-      action: null,
-      name: null,
-      "accept-charset": S,
-      autocomplete: ["on", "off"],
-      enctype: E,
-      method: N,
-      novalidate: ["novalidate"],
-      target: T
-    }
-  },
-  h1: l,
-  h2: l,
-  h3: l,
-  h4: l,
-  h5: l,
-  h6: l,
-  head: {
-    children: ["title", "base", "link", "style", "meta", "script", "noscript", "command"]
-  },
-  header: l,
-  hgroup: l,
-  hr: l,
-  html: {
-    attrs: { manifest: null }
-  },
-  i: l,
-  iframe: {
-    attrs: {
-      src: null,
-      srcdoc: null,
-      name: null,
-      width: null,
-      height: null,
-      sandbox: ["allow-top-navigation", "allow-same-origin", "allow-forms", "allow-scripts"],
-      seamless: ["seamless"]
-    }
-  },
-  img: {
-    attrs: {
-      alt: null,
-      src: null,
-      ismap: null,
-      usemap: null,
-      width: null,
-      height: null,
-      crossorigin: ["anonymous", "use-credentials"]
-    }
-  },
-  input: {
-    attrs: {
-      alt: null,
-      dirname: null,
-      form: null,
-      formaction: null,
-      height: null,
-      list: null,
-      max: null,
-      maxlength: null,
-      min: null,
-      name: null,
-      pattern: null,
-      placeholder: null,
-      size: null,
-      src: null,
-      step: null,
-      value: null,
-      width: null,
-      accept: ["audio/*", "video/*", "image/*"],
-      autocomplete: ["on", "off"],
-      autofocus: ["autofocus"],
-      checked: ["checked"],
-      disabled: ["disabled"],
-      formenctype: E,
-      formmethod: N,
-      formnovalidate: ["novalidate"],
-      formtarget: T,
-      multiple: ["multiple"],
-      readonly: ["readonly"],
-      required: ["required"],
-      type: [
-        "hidden",
-        "text",
-        "search",
-        "tel",
-        "url",
-        "email",
-        "password",
-        "datetime",
-        "date",
-        "month",
-        "week",
-        "time",
-        "datetime-local",
-        "number",
-        "range",
-        "color",
-        "checkbox",
-        "radio",
-        "file",
-        "submit",
-        "image",
-        "reset",
-        "button"
-      ]
-    }
-  },
-  ins: { attrs: { cite: null, datetime: null } },
-  kbd: l,
-  keygen: {
-    attrs: {
-      challenge: null,
-      form: null,
-      name: null,
-      autofocus: ["autofocus"],
-      disabled: ["disabled"],
-      keytype: ["RSA"]
-    }
-  },
-  label: { attrs: { for: null, form: null } },
-  legend: l,
-  li: { attrs: { value: null } },
-  link: {
-    attrs: {
-      href: null,
-      type: null,
-      hreflang: null,
-      media: null,
-      sizes: ["all", "16x16", "16x16 32x32", "16x16 32x32 64x64"]
-    }
-  },
-  map: { attrs: { name: null } },
-  mark: l,
-  menu: { attrs: { label: null, type: ["list", "context", "toolbar"] } },
-  meta: {
-    attrs: {
-      content: null,
-      charset: S,
-      name: ["viewport", "application-name", "author", "description", "generator", "keywords"],
-      "http-equiv": ["content-language", "content-type", "default-style", "refresh"]
-    }
-  },
-  meter: { attrs: { value: null, min: null, low: null, high: null, max: null, optimum: null } },
-  nav: l,
-  noscript: l,
-  object: {
-    attrs: {
-      data: null,
-      type: null,
-      name: null,
-      usemap: null,
-      form: null,
-      width: null,
-      height: null,
-      typemustmatch: ["typemustmatch"]
-    }
-  },
-  ol: {
-    attrs: { reversed: ["reversed"], start: null, type: ["1", "a", "A", "i", "I"] },
-    children: ["li", "script", "template", "ul", "ol"]
-  },
-  optgroup: { attrs: { disabled: ["disabled"], label: null } },
-  option: { attrs: { disabled: ["disabled"], label: null, selected: ["selected"], value: null } },
-  output: { attrs: { for: null, form: null, name: null } },
-  p: l,
-  param: { attrs: { name: null, value: null } },
-  pre: l,
-  progress: { attrs: { value: null, max: null } },
-  q: { attrs: { cite: null } },
-  rp: l,
-  rt: l,
-  ruby: l,
-  samp: l,
-  script: {
-    attrs: {
-      type: ["text/javascript"],
-      src: null,
-      async: ["async"],
-      defer: ["defer"],
-      charset: S
-    }
-  },
-  section: l,
-  select: {
-    attrs: {
-      form: null,
-      name: null,
-      size: null,
-      autofocus: ["autofocus"],
-      disabled: ["disabled"],
-      multiple: ["multiple"]
-    }
-  },
-  slot: { attrs: { name: null } },
-  small: l,
-  source: { attrs: { src: null, type: null, media: null } },
-  span: l,
-  strong: l,
-  style: {
-    attrs: {
-      type: ["text/css"],
-      media: null,
-      scoped: null
-    }
-  },
-  sub: l,
-  summary: l,
-  sup: l,
-  table: l,
-  tbody: l,
-  td: { attrs: { colspan: null, rowspan: null, headers: null } },
-  template: l,
-  textarea: {
-    attrs: {
-      dirname: null,
-      form: null,
-      maxlength: null,
-      name: null,
-      placeholder: null,
-      rows: null,
-      cols: null,
-      autofocus: ["autofocus"],
-      disabled: ["disabled"],
-      readonly: ["readonly"],
-      required: ["required"],
-      wrap: ["soft", "hard"]
-    }
-  },
-  tfoot: l,
-  th: { attrs: { colspan: null, rowspan: null, headers: null, scope: ["row", "col", "rowgroup", "colgroup"] } },
-  thead: l,
-  time: { attrs: { datetime: null } },
-  title: l,
-  tr: l,
-  track: {
-    attrs: {
-      src: null,
-      label: null,
-      default: null,
-      kind: ["subtitles", "captions", "descriptions", "chapters", "metadata"],
-      srclang: null
-    }
-  },
-  ul: { children: ["li", "script", "template", "ul", "ol"] },
-  var: l,
-  video: {
-    attrs: {
-      src: null,
-      poster: null,
-      width: null,
-      height: null,
-      crossorigin: ["anonymous", "use-credentials"],
-      preload: ["auto", "metadata", "none"],
-      autoplay: ["autoplay"],
-      mediagroup: ["movie"],
-      muted: ["muted"],
-      controls: ["controls"]
-    }
-  },
-  wbr: l
-}, D = {
-  accesskey: null,
-  class: null,
-  contenteditable: c,
-  contextmenu: null,
-  dir: ["ltr", "rtl", "auto"],
-  draggable: ["true", "false", "auto"],
-  dropzone: ["copy", "move", "link", "string:", "file:"],
-  hidden: ["hidden"],
-  id: null,
-  inert: ["inert"],
-  itemid: null,
-  itemprop: null,
-  itemref: null,
-  itemscope: ["itemscope"],
-  itemtype: null,
-  lang: ["ar", "bn", "de", "en-GB", "en-US", "es", "fr", "hi", "id", "ja", "pa", "pt", "ru", "tr", "zh"],
-  spellcheck: c,
-  autocorrect: c,
-  autocapitalize: c,
-  style: null,
-  tabindex: null,
-  title: null,
-  translate: ["yes", "no"],
-  rel: ["stylesheet", "alternate", "author", "bookmark", "help", "license", "next", "nofollow", "noreferrer", "prefetch", "prev", "search", "tag"],
-  role: /* @__PURE__ */ "alert application article banner button cell checkbox complementary contentinfo dialog document feed figure form grid gridcell heading img list listbox listitem main navigation region row rowgroup search switch tab table tabpanel textbox timer".split(" "),
-  "aria-activedescendant": null,
-  "aria-atomic": c,
-  "aria-autocomplete": ["inline", "list", "both", "none"],
-  "aria-busy": c,
-  "aria-checked": ["true", "false", "mixed", "undefined"],
-  "aria-controls": null,
-  "aria-describedby": null,
-  "aria-disabled": c,
-  "aria-dropeffect": null,
-  "aria-expanded": ["true", "false", "undefined"],
-  "aria-flowto": null,
-  "aria-grabbed": ["true", "false", "undefined"],
-  "aria-haspopup": c,
-  "aria-hidden": c,
-  "aria-invalid": ["true", "false", "grammar", "spelling"],
-  "aria-label": null,
-  "aria-labelledby": null,
-  "aria-level": null,
-  "aria-live": ["off", "polite", "assertive"],
-  "aria-multiline": c,
-  "aria-multiselectable": c,
-  "aria-owns": null,
-  "aria-posinset": null,
-  "aria-pressed": ["true", "false", "mixed", "undefined"],
-  "aria-readonly": c,
-  "aria-relevant": null,
-  "aria-required": c,
-  "aria-selected": ["true", "false", "undefined"],
-  "aria-setsize": null,
-  "aria-sort": ["ascending", "descending", "none", "other"],
-  "aria-valuemax": null,
-  "aria-valuemin": null,
-  "aria-valuenow": null,
-  "aria-valuetext": null
-}, F = /* @__PURE__ */ "beforeunload copy cut dragstart dragover dragleave dragenter dragend drag paste focus blur change click load mousedown mouseenter mouseleave mouseup keydown keyup resize scroll unload".split(" ").map((e) => "on" + e);
-for (let e of F)
-  D[e] = null;
-class C {
-  constructor(n, r) {
-    this.tags = { ...ne, ...n }, this.globalAttrs = { ...D, ...r }, this.allTags = Object.keys(this.tags), this.globalAttrNames = Object.keys(this.globalAttrs);
-  }
-}
-C.default = /* @__PURE__ */ new C();
-function y(e, n, r = e.length) {
-  if (!n)
-    return "";
-  let a = n.firstChild, t = a && a.getChild("TagName");
-  return t ? e.sliceString(t.from, Math.min(t.to, r)) : "";
-}
-function v(e, n = !1) {
-  for (; e; e = e.parent)
-    if (e.name == "Element")
-      if (n)
-        n = !1;
-      else
-        return e;
-  return null;
-}
-function P(e, n, r) {
-  let a = r.tags[y(e, v(n))];
-  return (a == null ? void 0 : a.children) || r.allTags;
-}
-function j(e, n) {
-  let r = [];
-  for (let a = v(n); a && !a.type.isTop; a = v(a.parent)) {
-    let t = y(e, a);
-    if (t && a.lastChild.name == "CloseTag")
-      break;
-    t && r.indexOf(t) < 0 && (n.name == "EndTag" || n.from >= a.firstChild.to) && r.push(t);
-  }
-  return r;
-}
-const V = /^[:\-\.\w\u00b7-\uffff]*$/;
-function I(e, n, r, a, t) {
-  let s = /\s*>/.test(e.sliceDoc(t, t + 5)) ? "" : ">", o = v(r, r.name == "StartTag" || r.name == "TagName");
-  return {
-    from: a,
-    to: t,
-    options: P(e.doc, o, n).map((u) => ({ label: u, type: "type" })).concat(j(e.doc, r).map((u, i) => ({
-      label: "/" + u,
-      apply: "/" + u + s,
-      type: "type",
-      boost: 99 - i
-    }))),
-    validFor: /^\/?[:\-\.\w\u00b7-\uffff]*$/
-  };
-}
-function L(e, n, r, a) {
-  let t = /\s*>/.test(e.sliceDoc(a, a + 5)) ? "" : ">";
-  return {
-    from: r,
-    to: a,
-    options: j(e.doc, n).map((s, o) => ({ label: s, apply: s + t, type: "type", boost: 99 - o })),
-    validFor: V
-  };
-}
-function re(e, n, r, a) {
-  let t = [], s = 0;
-  for (let o of P(e.doc, r, n))
-    t.push({ label: "<" + o, type: "type" });
-  for (let o of j(e.doc, r))
-    t.push({ label: "</" + o + ">", type: "type", boost: 99 - s++ });
-  return { from: a, to: a, options: t, validFor: /^<\/?[:\-\.\w\u00b7-\uffff]*$/ };
-}
-function oe(e, n, r, a, t) {
-  let s = v(r), o = s ? n.tags[y(e.doc, s)] : null, u = o && o.attrs ? Object.keys(o.attrs) : [], i = o && o.globalAttrs === !1 ? u : u.length ? u.concat(n.globalAttrNames) : n.globalAttrNames;
-  return {
-    from: a,
-    to: t,
-    options: i.map((f) => ({ label: f, type: "property" })),
-    validFor: V
-  };
-}
-function se(e, n, r, a, t) {
-  var s;
-  let o = (s = r.parent) === null || s === void 0 ? void 0 : s.getChild("AttributeName"), u = [], i;
-  if (o) {
-    let f = e.sliceDoc(o.from, o.to), g = n.globalAttrs[f];
-    if (!g) {
-      let p = v(r), m = p ? n.tags[y(e.doc, p)] : null;
-      g = (m == null ? void 0 : m.attrs) && m.attrs[f];
-    }
-    if (g) {
-      let p = e.sliceDoc(a, t).toLowerCase(), m = '"', d = '"';
-      /^['"]/.test(p) ? (i = p[0] == '"' ? /^[^"]*$/ : /^[^']*$/, m = "", d = e.sliceDoc(t, t + 1) == p[0] ? "" : p[0], p = p.slice(1), a++) : i = /^[^\s<>='"]*$/;
-      for (let h of g)
-        u.push({ label: h, apply: m + h + d, type: "constant" });
-    }
-  }
-  return { from: a, to: t, options: u, validFor: i };
-}
-function B(e, n) {
-  let { state: r, pos: a } = n, t = z(r).resolveInner(a, -1), s = t.resolve(a);
-  for (let o = a, u; s == t && (u = t.childBefore(o)); ) {
-    let i = u.lastChild;
-    if (!i || !i.type.isError || i.from < i.to)
-      break;
-    s = t = u, o = i.from;
-  }
-  return t.name == "TagName" ? t.parent && /CloseTag$/.test(t.parent.name) ? L(r, t, t.from, a) : I(r, e, t, t.from, a) : t.name == "StartTag" || t.name == "IncompleteTag" ? I(r, e, t, a, a) : t.name == "StartCloseTag" || t.name == "IncompleteCloseTag" ? L(r, t, a, a) : t.name == "OpenTag" || t.name == "SelfClosingTag" || t.name == "AttributeName" ? oe(r, e, t, t.name == "AttributeName" ? t.from : a, a) : t.name == "Is" || t.name == "AttributeValue" || t.name == "UnquotedAttributeValue" ? se(r, e, t, t.name == "Is" ? a : t.from, a) : n.explicit && (s.name == "Element" || s.name == "Text" || s.name == "Document") ? re(r, e, t, a) : null;
-}
-function be(e) {
-  return B(C.default, e);
-}
-function ie(e) {
-  let { extraTags: n, extraGlobalAttributes: r } = e, a = r || n ? new C(n, r) : C.default;
-  return (t) => B(a, t);
-}
-const ue = /* @__PURE__ */ $.parser.configure({ top: "SingleExpression" }), M = [
-  {
-    tag: "script",
-    attrs: (e) => e.type == "text/typescript" || e.lang == "ts",
-    parser: W.parser
-  },
-  {
-    tag: "script",
-    attrs: (e) => e.type == "text/babel" || e.type == "text/jsx",
-    parser: J.parser
-  },
-  {
-    tag: "script",
-    attrs: (e) => e.type == "text/typescript-jsx",
-    parser: K.parser
-  },
-  {
-    tag: "script",
-    attrs(e) {
-      return /^(importmap|speculationrules|application\/(.+\+)?json)$/i.test(e.type);
-    },
-    parser: ue
-  },
-  {
-    tag: "script",
-    attrs(e) {
-      return !e.type || /^(?:text|application)\/(?:x-)?(?:java|ecma)script$|^module$|^$/i.test(e.type);
-    },
-    parser: $.parser
-  },
-  {
-    tag: "style",
-    attrs(e) {
-      return (!e.lang || e.lang == "css") && (!e.type || /^(text\/)?(x-)?(stylesheet|css)$/i.test(e.type));
-    },
-    parser: _.parser
-  }
-], G = /* @__PURE__ */ [
-  {
-    name: "style",
-    parser: /* @__PURE__ */ _.parser.configure({ top: "Styles" })
-  }
-].concat(/* @__PURE__ */ F.map((e) => ({ name: e, parser: $.parser }))), R = /* @__PURE__ */ Z.define({
-  name: "html",
-  parser: /* @__PURE__ */ H.configure({
-    props: [
-      /* @__PURE__ */ te.add({
-        Element(e) {
-          let n = /^(\s*)(<\/)?/.exec(e.textAfter);
-          return e.node.to <= e.pos + n[0].length ? e.continue() : e.lineIndent(e.node.from) + (n[2] ? 0 : e.unit);
-        },
-        "OpenTag CloseTag SelfClosingTag"(e) {
-          return e.column(e.node.from) + e.unit;
-        },
-        Document(e) {
-          if (e.pos + /\s*/.exec(e.textAfter)[0].length < e.node.to)
-            return e.continue();
-          let n = null, r;
-          for (let a = e.node; ; ) {
-            let t = a.lastChild;
-            if (!t || t.name != "Element" || t.to != a.to)
-              break;
-            n = a = t;
-          }
-          return n && !((r = n.lastChild) && (r.name == "CloseTag" || r.name == "SelfClosingTag")) ? e.lineIndent(n.from) + e.unit : null;
-        }
-      }),
-      /* @__PURE__ */ le.add({
-        Element(e) {
-          let n = e.firstChild, r = e.lastChild;
-          return !n || n.name != "OpenTag" ? null : { from: n.to, to: r.name == "CloseTag" ? r.from : e.to };
-        }
-      }),
-      /* @__PURE__ */ ae.add({
-        "OpenTag CloseTag": (e) => e.getChild("TagName")
-      })
-    ]
-  }),
-  languageData: {
-    commentTokens: { block: { open: "<!--", close: "-->" } },
-    indentOnInput: /^\s*<\/\w+\W$/,
-    wordChars: "-_"
-  }
-}), x = /* @__PURE__ */ R.configure({
-  wrap: /* @__PURE__ */ O(M, G)
+import { Prec as z, EditorSelection as x, countColumn as w, EditorState as K } from "./index59.js";
+import { keymap as _, EditorView as j } from "./index58.js";
+import { foldService as G, LanguageSupport as N, Language as Q, defineLanguageFacet as J, syntaxTree as A, indentUnit as Y, foldNodeProp as R, indentNodeProp as Z, languageDataProp as W, LanguageDescription as D, ParseContext as ee } from "./index67.js";
+import { CompletionContext as te } from "./index128.js";
+import { MarkdownParser as re, parseCode as ne, parser as oe, GFM as ie, Subscript as le, Superscript as se, Emoji as fe } from "./index129.js";
+import { html as ae, htmlCompletionSource as me } from "./index61.js";
+import { NodeProp as ue } from "./index130.js";
+const $ = /* @__PURE__ */ J({ commentTokens: { block: { open: "<!--", close: "-->" } } }), q = /* @__PURE__ */ new ue(), H = /* @__PURE__ */ oe.configure({
+  props: [
+    /* @__PURE__ */ R.add((r) => !r.is("Block") || r.is("Document") || P(r) != null || ce(r) ? void 0 : (n, o) => ({ from: o.doc.lineAt(n.from).to, to: n.to })),
+    /* @__PURE__ */ q.add(P),
+    /* @__PURE__ */ Z.add({
+      Document: () => null
+    }),
+    /* @__PURE__ */ W.add({
+      Document: $
+    })
+  ]
 });
-function ye(e = {}) {
-  let n = "", r;
-  e.matchClosingTags === !1 && (n = "noMatch"), e.selfClosingTags === !0 && (n = (n ? n + " " : "") + "selfClosing"), (e.nestedLanguages && e.nestedLanguages.length || e.nestedAttributes && e.nestedAttributes.length) && (r = O((e.nestedLanguages || []).concat(M), (e.nestedAttributes || []).concat(G)));
-  let a = r ? R.configure({ wrap: r, dialect: n }) : n ? x.configure({ dialect: n }) : x;
-  return new ee(a, [
-    x.data.of({ autocomplete: ie(e) }),
-    e.autoCloseTags !== !1 ? de : [],
-    Q().support,
-    U().support
-  ]);
+function P(r) {
+  let n = /^(?:ATX|Setext)Heading(\d)$/.exec(r.name);
+  return n ? +n[1] : void 0;
 }
-const q = /* @__PURE__ */ new Set(/* @__PURE__ */ "area base br col command embed frame hr img input keygen link meta param source track wbr menuitem".split(" ")), de = /* @__PURE__ */ X.inputHandler.of((e, n, r, a, t) => {
-  if (e.composing || e.state.readOnly || n != r || a != ">" && a != "/" || !x.isActiveAt(e.state, n, -1))
-    return !1;
-  let s = t(), { state: o } = s, u = o.changeByRange((i) => {
-    var f, g, p;
-    let m = o.doc.sliceString(i.from - 1, i.to) == a, { head: d } = i, h = z(o).resolveInner(d, -1), b;
-    if (m && a == ">" && h.name == "EndTag") {
-      let w = h.parent;
-      if (((g = (f = w.parent) === null || f === void 0 ? void 0 : f.lastChild) === null || g === void 0 ? void 0 : g.name) != "CloseTag" && (b = y(o.doc, w.parent, d)) && !q.has(b)) {
-        let A = d + (o.doc.sliceString(d, d + 1) === ">" ? 1 : 0), k = `</${b}>`;
-        return { range: i, changes: { from: d, to: A, insert: k } };
+function ce(r) {
+  return r.name == "OrderedList" || r.name == "BulletList";
+}
+function pe(r, n) {
+  let o = r;
+  for (; ; ) {
+    let t = o.nextSibling, e;
+    if (!t || (e = P(t.type)) != null && e <= n)
+      break;
+    o = t;
+  }
+  return o.to;
+}
+const de = /* @__PURE__ */ G.of((r, n, o) => {
+  for (let t = A(r).resolveInner(o, -1); t && !(t.from < n); t = t.parent) {
+    let e = t.type.prop(q);
+    if (e == null)
+      continue;
+    let i = pe(t, e);
+    if (i > o)
+      return { from: o, to: i };
+  }
+  return null;
+});
+function T(r) {
+  return new Q($, r, [], "markdown");
+}
+const he = /* @__PURE__ */ T(H), ge = /* @__PURE__ */ H.configure([ie, le, se, fe, {
+  props: [
+    /* @__PURE__ */ R.add({
+      Table: (r, n) => ({ from: n.doc.lineAt(r.from).to, to: r.to })
+    })
+  ]
+}]), b = /* @__PURE__ */ T(ge);
+function ke(r, n) {
+  return (o) => {
+    if (o && r) {
+      let t = null;
+      if (o = /\S*/.exec(o)[0], typeof r == "function" ? t = r(o) : t = D.matchLanguageName(r, o, !0), t instanceof D)
+        return t.support ? t.support.language.parser : ee.getSkippingParser(t.load());
+      if (t)
+        return t.parser;
+    }
+    return n ? n.parser : null;
+  };
+}
+class v {
+  constructor(n, o, t, e, i, a, m) {
+    this.node = n, this.from = o, this.to = t, this.spaceBefore = e, this.spaceAfter = i, this.type = a, this.item = m;
+  }
+  blank(n, o = !0) {
+    let t = this.spaceBefore + (this.node.name == "Blockquote" ? ">" : "");
+    if (n != null) {
+      for (; t.length < n; )
+        t += " ";
+      return t;
+    } else {
+      for (let e = this.to - this.from - t.length - this.spaceAfter.length; e > 0; e--)
+        t += " ";
+      return t + (o ? this.spaceAfter : "");
+    }
+  }
+  marker(n, o) {
+    let t = this.node.name == "OrderedList" ? String(+V(this.item, n)[2] + o) : "";
+    return this.spaceBefore + t + this.type + this.spaceAfter;
+  }
+}
+function U(r, n) {
+  let o = [], t = [];
+  for (let e = r; e; e = e.parent) {
+    if (e.name == "FencedCode")
+      return t;
+    (e.name == "ListItem" || e.name == "Blockquote") && o.push(e);
+  }
+  for (let e = o.length - 1; e >= 0; e--) {
+    let i = o[e], a, m = n.lineAt(i.from), s = i.from - m.from;
+    if (i.name == "Blockquote" && (a = /^ *>( ?)/.exec(m.text.slice(s))))
+      t.push(new v(i, s, s + a[0].length, "", a[1], ">", null));
+    else if (i.name == "ListItem" && i.parent.name == "OrderedList" && (a = /^( *)\d+([.)])( *)/.exec(m.text.slice(s)))) {
+      let f = a[3], l = a[0].length;
+      f.length >= 4 && (f = f.slice(0, f.length - 4), l -= 4), t.push(new v(i.parent, s, s + l, a[1], f, a[2], i));
+    } else if (i.name == "ListItem" && i.parent.name == "BulletList" && (a = /^( *)([-+*])( {1,4}\[[ xX]\])?( +)/.exec(m.text.slice(s)))) {
+      let f = a[4], l = a[0].length;
+      f.length > 4 && (f = f.slice(0, f.length - 4), l -= 4);
+      let u = a[2];
+      a[3] && (u += a[3].replace(/[xX]/, " ")), t.push(new v(i.parent, s, s + l, a[1], f, u, i));
+    }
+  }
+  return t;
+}
+function V(r, n) {
+  return /^(\s*)(\d+)(?=[.)])/.exec(n.sliceString(r.from, r.from + 10));
+}
+function I(r, n, o, t = 0) {
+  for (let e = -1, i = r; ; ) {
+    if (i.name == "ListItem") {
+      let m = V(i, n), s = +m[2];
+      if (e >= 0) {
+        if (s != e + 1)
+          return;
+        o.push({ from: i.from + m[1].length, to: i.from + m[0].length, insert: String(e + 2 + t) });
       }
-    } else if (m && a == "/" && h.name == "IncompleteCloseTag") {
-      let w = h.parent;
-      if (h.from == d - 2 && ((p = w.lastChild) === null || p === void 0 ? void 0 : p.name) != "CloseTag" && (b = y(o.doc, w, d)) && !q.has(b)) {
-        let A = d + (o.doc.sliceString(d, d + 1) === ">" ? 1 : 0), k = `${b}>`;
+      e = s;
+    }
+    let a = i.nextSibling;
+    if (!a)
+      break;
+    i = a;
+  }
+}
+function E(r, n) {
+  let o = /^[ \t]*/.exec(r)[0].length;
+  if (!o || n.facet(Y) != "	")
+    return r;
+  let t = w(r, 4, o), e = "";
+  for (let i = t; i > 0; )
+    i >= 4 ? (e += "	", i -= 4) : (e += " ", i--);
+  return e + r.slice(o);
+}
+const xe = (r = {}) => ({ state: n, dispatch: o }) => {
+  let t = A(n), { doc: e } = n, i = null, a = n.changeByRange((m) => {
+    if (!m.empty || !b.isActiveAt(n, m.from, -1) && !b.isActiveAt(n, m.from, 1))
+      return i = { range: m };
+    let s = m.from, f = e.lineAt(s), l = U(t.resolveInner(s, -1), e);
+    for (; l.length && l[l.length - 1].from > s - f.from; )
+      l.pop();
+    if (!l.length)
+      return i = { range: m };
+    let u = l[l.length - 1];
+    if (u.to - u.spaceAfter.length > s - f.from)
+      return i = { range: m };
+    let d = s >= u.to - u.spaceAfter.length && !/\S/.test(f.text.slice(u.to));
+    if (u.item && d) {
+      let p = u.node.firstChild, h = u.node.getChild("ListItem", "ListItem");
+      if (p.to >= s || h && h.to < s || f.from > 0 && !/[^\s>]/.test(e.lineAt(f.from - 1).text) || r.nonTightLists === !1) {
+        let c = l.length > 1 ? l[l.length - 2] : null, C, B = "";
+        c && c.item ? (C = f.from + c.from, B = c.marker(e, 1)) : C = f.from + (c ? c.to : 0);
+        let S = [{ from: C, to: s, insert: B }];
+        return u.node.name == "OrderedList" && I(u.item, e, S, -2), c && c.node.name == "OrderedList" && I(c.item, e, S), { range: x.cursor(C + B.length), changes: S };
+      } else {
+        let c = F(l, n, f);
         return {
-          range: Y.cursor(d + k.length, -1),
-          changes: { from: d, to: A, insert: k }
+          range: x.cursor(s + c.length + 1),
+          changes: { from: f.from, insert: c + n.lineBreak }
         };
       }
     }
-    return { range: i };
+    if (u.node.name == "Blockquote" && d && f.from) {
+      let p = e.lineAt(f.from - 1), h = />\s*$/.exec(p.text);
+      if (h && h.index == u.from) {
+        let c = n.changes([
+          { from: p.from + h.index, to: p.to },
+          { from: f.from + u.from, to: f.to }
+        ]);
+        return { range: m.map(c), changes: c };
+      }
+    }
+    let g = [];
+    u.node.name == "OrderedList" && I(u.item, e, g);
+    let M = u.item && u.item.from < f.from, k = "";
+    if (!M || /^[\s\d.)\-+*>]*/.exec(f.text)[0].length >= u.to)
+      for (let p = 0, h = l.length - 1; p <= h; p++)
+        k += p == h && !M ? l[p].marker(e, 1) : l[p].blank(p < h ? w(f.text, 4, l[p + 1].from) - k.length : null);
+    let L = s;
+    for (; L > f.from && /\s/.test(f.text.charAt(L - f.from - 1)); )
+      L--;
+    return k = E(k, n), we(u.node, n.doc) && (k = F(l, n, f) + n.lineBreak + k), g.push({ from: L, to: s, insert: n.lineBreak + k }), { range: x.cursor(L + k.length + 1), changes: g };
   });
-  return u.changes.empty ? !1 : (e.dispatch([
-    s,
-    o.update(u, {
-      userEvent: "input.complete",
+  return i ? !1 : (o(n.update(a, { scrollIntoView: !0, userEvent: "input" })), !0);
+}, Le = /* @__PURE__ */ xe();
+function O(r) {
+  return r.name == "QuoteMark" || r.name == "ListMark";
+}
+function we(r, n) {
+  if (r.name != "OrderedList" && r.name != "BulletList")
+    return !1;
+  let o = r.firstChild, t = r.getChild("ListItem", "ListItem");
+  if (!t)
+    return !1;
+  let e = n.lineAt(o.to), i = n.lineAt(t.from), a = /^[\s>]*$/.test(e.text);
+  return e.number + (a ? 0 : 1) < i.number;
+}
+function F(r, n, o) {
+  let t = "";
+  for (let e = 0, i = r.length - 2; e <= i; e++)
+    t += r[e].blank(e < i ? w(o.text, 4, r[e + 1].from) - t.length : null, e < i);
+  return E(t, n);
+}
+function Ae(r, n) {
+  let o = r.resolveInner(n, -1), t = n;
+  O(o) && (t = o.from, o = o.parent);
+  for (let e; e = o.childBefore(t); )
+    if (O(e))
+      t = e.from;
+    else if (e.name == "OrderedList" || e.name == "BulletList")
+      o = e.lastChild, t = o.to;
+    else
+      break;
+  return o;
+}
+const Ce = ({ state: r, dispatch: n }) => {
+  let o = A(r), t = null, e = r.changeByRange((i) => {
+    let a = i.from, { doc: m } = r;
+    if (i.empty && b.isActiveAt(r, i.from)) {
+      let s = m.lineAt(a), f = U(Ae(o, a), m);
+      if (f.length) {
+        let l = f[f.length - 1], u = l.to - l.spaceAfter.length + (l.spaceAfter ? 1 : 0);
+        if (a - s.from > u && !/\S/.test(s.text.slice(u, a - s.from)))
+          return {
+            range: x.cursor(s.from + u),
+            changes: { from: s.from + u, to: a }
+          };
+        if (a - s.from == u && // Only apply this if we're on the line that has the
+        // construct's syntax, or there's only indentation in the
+        // target range
+        (!l.item || s.from <= l.item.from || !/\S/.test(s.text.slice(0, l.to)))) {
+          let d = s.from + l.from;
+          if (l.item && l.node.from < l.item.from && /\S/.test(s.text.slice(l.from, l.to))) {
+            let g = l.blank(w(s.text, 4, l.to) - w(s.text, 4, l.from));
+            return d == s.from && (g = E(g, r)), {
+              range: x.cursor(d + g.length),
+              changes: { from: d, to: s.from + l.to, insert: g }
+            };
+          }
+          if (d < a)
+            return { range: x.cursor(d), changes: { from: d, to: a } };
+        }
+      }
+    }
+    return t = { range: i };
+  });
+  return t ? !1 : (n(r.update(e, { scrollIntoView: !0, userEvent: "delete" })), !0);
+}, be = [
+  { key: "Enter", run: Le },
+  { key: "Backspace", run: Ce }
+], X = /* @__PURE__ */ ae({ matchClosingTags: !1 });
+function Oe(r = {}) {
+  let { codeLanguages: n, defaultCodeLanguage: o, addKeymap: t = !0, base: { parser: e } = he, completeHTMLTags: i = !0, pasteURLAsLink: a = !0, htmlTagLanguage: m = X } = r;
+  if (!(e instanceof re))
+    throw new RangeError("Base parser provided to `markdown` should be a Markdown parser");
+  let s = r.extensions ? [r.extensions] : [], f = [m.support, de], l;
+  a && f.push(Ie), o instanceof N ? (f.push(o.support), l = o.language) : o && (l = o);
+  let u = n || l ? ke(n, l) : void 0;
+  s.push(ne({ codeParser: u, htmlParser: m.language.parser })), t && f.push(z.high(_.of(be)));
+  let d = T(e.configure(s));
+  return i && f.push(d.data.of({ autocomplete: Be })), new N(d, f);
+}
+function Be(r) {
+  let { state: n, pos: o } = r, t = /<[:\-\.\w\u00b7-\uffff]*$/.exec(n.sliceDoc(o - 25, o));
+  if (!t)
+    return null;
+  let e = A(n).resolveInner(o, -1);
+  for (; e && !e.type.isTop; ) {
+    if (e.name == "CodeBlock" || e.name == "FencedCode" || e.name == "ProcessingInstructionBlock" || e.name == "CommentBlock" || e.name == "Link" || e.name == "Image")
+      return null;
+    e = e.parent;
+  }
+  return {
+    from: o - t[0].length,
+    to: o,
+    options: Se(),
+    validFor: /^<[:\-\.\w\u00b7-\uffff]*$/
+  };
+}
+let y = null;
+function Se() {
+  if (y)
+    return y;
+  let r = me(new te(K.create({ extensions: X }), 0, !0));
+  return y = r ? r.options : [];
+}
+const ve = /code|horizontalrule|html|link|comment|processing|escape|entity|image|mark|url/i, Ie = /* @__PURE__ */ j.domEventHandlers({
+  paste: (r, n) => {
+    var o;
+    let { main: t } = n.state.selection;
+    if (t.empty)
+      return !1;
+    let e = (o = r.clipboardData) === null || o === void 0 ? void 0 : o.getData("text/plain");
+    if (!e || !/^(https?:\/\/|mailto:|xmpp:|www\.)/.test(e) || (/^www\./.test(e) && (e = "https://" + e), !b.isActiveAt(n.state, t.from, 1)))
+      return !1;
+    let i = A(n.state), a = !1;
+    return i.iterate({
+      from: t.from,
+      to: t.to,
+      enter: (m) => {
+        (m.from > t.from || ve.test(m.name)) && (a = !0);
+      },
+      leave: (m) => {
+        m.to < t.to && (a = !0);
+      }
+    }), a ? !1 : (n.dispatch({
+      changes: [{ from: t.from, insert: "[" }, { from: t.to, insert: `](${e})` }],
+      userEvent: "input.paste",
       scrollIntoView: !0
-    })
-  ]), !0);
+    }), !0);
+  }
 });
 export {
-  de as autoCloseTags,
-  ye as html,
-  be as htmlCompletionSource,
-  ie as htmlCompletionSourceWith,
-  x as htmlLanguage
+  he as commonmarkLanguage,
+  Ce as deleteMarkupBackward,
+  Le as insertNewlineContinueMarkup,
+  xe as insertNewlineContinueMarkupCommand,
+  Oe as markdown,
+  be as markdownKeymap,
+  b as markdownLanguage,
+  Ie as pasteURLAsLink
 };

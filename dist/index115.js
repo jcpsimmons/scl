@@ -1,71 +1,32 @@
 import * as a from "react";
-import { useComposedRefs as E } from "./index89.js";
-import { useLayoutEffect as A } from "./index109.js";
-function T(n, e) {
-  return a.useReducer((r, t) => e[r][t] ?? r, n);
-}
-var R = (n) => {
-  const { present: e, children: r } = n, t = v(e), i = typeof r == "function" ? r({ present: t.isPresent }) : a.Children.only(r), c = E(t.ref, P(i));
-  return typeof r == "function" || t.isPresent ? a.cloneElement(i, { ref: c }) : null;
-};
-R.displayName = "Presence";
-function v(n) {
-  const [e, r] = a.useState(), t = a.useRef(null), i = a.useRef(n), c = a.useRef("none"), p = n ? "mounted" : "unmounted", [N, s] = T(p, {
-    mounted: {
-      UNMOUNT: "unmounted",
-      ANIMATION_OUT: "unmountSuspended"
-    },
-    unmountSuspended: {
-      MOUNT: "mounted",
-      ANIMATION_END: "unmounted"
-    },
-    unmounted: {
-      MOUNT: "mounted"
+import { Primitive as o } from "./index93.js";
+import { jsx as t } from "react/jsx-runtime";
+var d = Object.freeze({
+  // See: https://github.com/twbs/bootstrap/blob/main/scss/mixins/_visually-hidden.scss
+  position: "absolute",
+  border: 0,
+  width: 1,
+  height: 1,
+  padding: 0,
+  margin: -1,
+  overflow: "hidden",
+  clip: "rect(0, 0, 0, 0)",
+  whiteSpace: "nowrap",
+  wordWrap: "normal"
+}), l = "VisuallyHidden", e = a.forwardRef(
+  (r, i) => /* @__PURE__ */ t(
+    o.span,
+    {
+      ...r,
+      ref: i,
+      style: { ...d, ...r.style }
     }
-  });
-  return a.useEffect(() => {
-    const o = l(t.current);
-    c.current = N === "mounted" ? o : "none";
-  }, [N]), A(() => {
-    const o = t.current, m = i.current;
-    if (m !== n) {
-      const f = c.current, u = l(o);
-      n ? s("MOUNT") : u === "none" || (o == null ? void 0 : o.display) === "none" ? s("UNMOUNT") : s(m && f !== u ? "ANIMATION_OUT" : "UNMOUNT"), i.current = n;
-    }
-  }, [n, s]), A(() => {
-    if (e) {
-      let o;
-      const m = e.ownerDocument.defaultView ?? window, d = (u) => {
-        const g = l(t.current).includes(CSS.escape(u.animationName));
-        if (u.target === e && g && (s("ANIMATION_END"), !i.current)) {
-          const O = e.style.animationFillMode;
-          e.style.animationFillMode = "forwards", o = m.setTimeout(() => {
-            e.style.animationFillMode === "forwards" && (e.style.animationFillMode = O);
-          });
-        }
-      }, f = (u) => {
-        u.target === e && (c.current = l(t.current));
-      };
-      return e.addEventListener("animationstart", f), e.addEventListener("animationcancel", d), e.addEventListener("animationend", d), () => {
-        m.clearTimeout(o), e.removeEventListener("animationstart", f), e.removeEventListener("animationcancel", d), e.removeEventListener("animationend", d);
-      };
-    } else
-      s("ANIMATION_END");
-  }, [e, s]), {
-    isPresent: ["mounted", "unmountSuspended"].includes(N),
-    ref: a.useCallback((o) => {
-      t.current = o ? getComputedStyle(o) : null, r(o);
-    }, [])
-  };
-}
-function l(n) {
-  return (n == null ? void 0 : n.animationName) || "none";
-}
-function P(n) {
-  var t, i;
-  let e = (t = Object.getOwnPropertyDescriptor(n.props, "ref")) == null ? void 0 : t.get, r = e && "isReactWarning" in e && e.isReactWarning;
-  return r ? n.ref : (e = (i = Object.getOwnPropertyDescriptor(n, "ref")) == null ? void 0 : i.get, r = e && "isReactWarning" in e && e.isReactWarning, r ? n.props.ref : n.props.ref || n.ref);
-}
+  )
+);
+e.displayName = l;
+var p = e;
 export {
-  R as Presence
+  p as Root,
+  d as VISUALLY_HIDDEN_STYLES,
+  e as VisuallyHidden
 };

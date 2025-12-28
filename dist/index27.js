@@ -1,11 +1,11 @@
 import { jsx as a, jsxs as r } from "react/jsx-runtime";
 import * as i from "react";
-import { Root as g, Portal as u, Trigger as x, Close as d, Overlay as n, Content as l, Title as m, Description as c } from "./index82.js";
-import { cva as y } from "./index47.js";
+import { Root as g, Portal as u, Trigger as x, Close as n, Overlay as d, Content as l, Title as m, Description as c } from "./index76.js";
+import { cva as y } from "./index46.js";
 import { cn as s } from "./index2.js";
-import N from "./index83.js";
-const H = g, O = x, P = d, b = u, f = i.forwardRef(({ className: e, ...t }, o) => /* @__PURE__ */ a(
-  n,
+import N from "./index77.js";
+const H = g, O = x, P = n, b = u, f = i.forwardRef(({ className: e, ...t }, o) => /* @__PURE__ */ a(
+  d,
   {
     className: s(
       "fixed inset-0 z-50 bg-black/80 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
@@ -15,9 +15,9 @@ const H = g, O = x, P = d, b = u, f = i.forwardRef(({ className: e, ...t }, o) =
     ref: o
   }
 ));
-f.displayName = n.displayName;
+f.displayName = d.displayName;
 const S = y(
-  "fixed z-[60] gap-4 bg-black p-6 shadow-lg transition ease-in-out data-[state=closed]:duration-300 data-[state=open]:duration-500 data-[state=open]:animate-in data-[state=closed]:animate-out",
+  "fixed z-[60] gap-4 bg-black p-6 transition ease-in-out data-[state=closed]:duration-300 data-[state=open]:duration-500 data-[state=open]:animate-in data-[state=closed]:animate-out",
   {
     variants: {
       side: {
@@ -40,7 +40,7 @@ const S = y(
       className: s(S({ side: e }), t),
       ...p,
       children: [
-        /* @__PURE__ */ r(d, { className: "absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-secondary", children: [
+        /* @__PURE__ */ r(n, { className: "absolute right-4 top-4 opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-secondary", children: [
           /* @__PURE__ */ a(N, { className: "h-4 w-4" }),
           /* @__PURE__ */ a("span", { className: "sr-only", children: "Close" })
         ] }),
