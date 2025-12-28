@@ -9,9 +9,6 @@ const meta: Meta<typeof Progress> = {
     value: {
       control: { type: 'range', min: 0, max: 100, step: 1 },
     },
-    segments: {
-      control: { type: 'range', min: 5, max: 50, step: 1 },
-    },
     showPercentage: {
       control: 'boolean',
     },
