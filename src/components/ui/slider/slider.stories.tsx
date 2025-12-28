@@ -54,6 +54,13 @@ export const Range: Story = {
     max: 100,
     step: 1,
   },
+  decorators: [
+    (Story) => (
+      <div className="w-80">
+        <Story />
+      </div>
+    ),
+  ],
 }
 
 export const Disabled: Story = {
@@ -63,6 +70,13 @@ export const Disabled: Story = {
     step: 1,
     disabled: true,
   },
+  decorators: [
+    (Story) => (
+      <div className="w-80">
+        <Story />
+      </div>
+    ),
+  ],
 }
 
 export const StepValues: Story = {
@@ -71,4 +85,11 @@ export const StepValues: Story = {
     max: 100,
     step: 10,
   },
+  decorators: [
+    (Story) => (
+      <div className="w-80">
+        <Story />
+      </div>
+    ),
+  ],
 }
