@@ -25,6 +25,7 @@ type Story = StoryObj<typeof Skeleton>
 
 export const Default: Story = {
   args: {
+    blink: true,
     className: 'h-4 w-[250px]',
   },
 }
