@@ -286,7 +286,7 @@
 
   /* Blink animation utility - only blinks the fill, not the border */
   .animate-blink {
-    animation: blink 0.5s step-end infinite;
+    animation: blink 0.25s step-end infinite;
   }
 
   @keyframes blink {
