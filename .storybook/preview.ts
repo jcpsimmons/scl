@@ -1,6 +1,10 @@
 import type { Preview } from '@storybook/react'
 import { themes } from '@storybook/theming'
+import { inject } from '@vercel/analytics'
 import '../src/styles/globals.css'
+
+// Initialize Vercel Analytics
+inject()
 
 const preview: Preview = {
   parameters: {
