@@ -1,71 +1,67 @@
-import * as d from "react";
-import { styleSingleton as f } from "./index191.js";
-import { noScrollbarsClassName as p, zeroRightClassName as g, fullWidthClassName as l, removedBarSizeVariable as v } from "./index180.js";
-import { getGapWidth as m } from "./index197.js";
-var b = f(), e = "data-scroll-locked", h = function(n, a, o, t) {
-  var r = n.left, i = n.top, s = n.right, c = n.gap;
-  return o === void 0 && (o = "margin"), `
-  .`.concat(p, ` {
-   overflow: hidden `).concat(t, `;
-   padding-right: `).concat(c, "px ").concat(t, `;
-  }
-  body[`).concat(e, `] {
-    overflow: hidden `).concat(t, `;
-    overscroll-behavior: contain;
-    `).concat([
-    a && "position: relative ".concat(t, ";"),
-    o === "margin" && `
-    padding-left: `.concat(r, `px;
-    padding-top: `).concat(i, `px;
-    padding-right: `).concat(s, `px;
-    margin-left:0;
-    margin-top:0;
-    margin-right: `).concat(c, "px ").concat(t, `;
-    `),
-    o === "padding" && "padding-right: ".concat(c, "px ").concat(t, ";")
-  ].filter(Boolean).join(""), `
-  }
-  
-  .`).concat(g, ` {
-    right: `).concat(c, "px ").concat(t, `;
-  }
-  
-  .`).concat(l, ` {
-    margin-right: `).concat(c, "px ").concat(t, `;
-  }
-  
-  .`).concat(g, " .").concat(g, ` {
-    right: 0 `).concat(t, `;
-  }
-  
-  .`).concat(l, " .").concat(l, ` {
-    margin-right: 0 `).concat(t, `;
-  }
-  
-  body[`).concat(e, `] {
-    `).concat(v, ": ").concat(c, `px;
-  }
-`);
-}, u = function() {
-  var n = parseInt(document.body.getAttribute(e) || "0", 10);
-  return isFinite(n) ? n : 0;
-}, x = function() {
-  d.useEffect(function() {
-    return document.body.setAttribute(e, (u() + 1).toString()), function() {
-      var n = u() - 1;
-      n <= 0 ? document.body.removeAttribute(e) : document.body.setAttribute(e, n.toString());
-    };
-  }, []);
-}, C = function(n) {
-  var a = n.noRelative, o = n.noImportant, t = n.gapMode, r = t === void 0 ? "margin" : t;
-  x();
-  var i = d.useMemo(function() {
-    return m(r);
-  }, [r]);
-  return d.createElement(b, { styles: h(i, !a, r, o ? "" : "!important") });
-};
+import { __assign as d } from "./index176.js";
+function l(r) {
+  return r;
+}
+function h(r, t) {
+  t === void 0 && (t = l);
+  var e = [], o = !1, c = {
+    read: function() {
+      if (o)
+        throw new Error("Sidecar: could not `read` from an `assigned` medium. `read` could be used only with `useMedium`.");
+      return e.length ? e[e.length - 1] : r;
+    },
+    useMedium: function(u) {
+      var n = t(u, o);
+      return e.push(n), function() {
+        e = e.filter(function(i) {
+          return i !== n;
+        });
+      };
+    },
+    assignSyncMedium: function(u) {
+      for (o = !0; e.length; ) {
+        var n = e;
+        e = [], n.forEach(u);
+      }
+      e = {
+        push: function(i) {
+          return u(i);
+        },
+        filter: function() {
+          return e;
+        }
+      };
+    },
+    assignMedium: function(u) {
+      o = !0;
+      var n = [];
+      if (e.length) {
+        var i = e;
+        e = [], i.forEach(u), n = e;
+      }
+      var s = function() {
+        var f = n;
+        n = [], f.forEach(u);
+      }, a = function() {
+        return Promise.resolve().then(s);
+      };
+      a(), e = {
+        push: function(f) {
+          n.push(f), a();
+        },
+        filter: function(f) {
+          return n = n.filter(f), e;
+        }
+      };
+    }
+  };
+  return c;
+}
+function v(r) {
+  r === void 0 && (r = {});
+  var t = h(null);
+  return t.options = d({ async: !0, ssr: !1 }, r), t;
+}
 export {
-  C as RemoveScrollBar,
-  e as lockAttribute,
-  x as useLockAttribute
+  v as createSidecarMedium
 };

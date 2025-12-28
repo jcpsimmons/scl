@@ -1,11 +1,14 @@
-import e from "./index159.js";
+import e from "./index164.js";
 /**
  * @license lucide-react v0.460.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const t = e("Check", [["path", { d: "M20 6 9 17l-5-5", key: "1gmf2c" }]]);
+const t = e("ChevronsUpDown", [
+  ["path", { d: "m7 15 5 5 5-5", key: "1hf1tw" }],
+  ["path", { d: "m7 9 5-5 5 5", key: "sgt6xg" }]
+]);
 export {
   t as default
 };

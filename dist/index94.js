@@ -1,8 +1,13 @@
-import * as u from "react";
-function t(r) {
-  const e = u.useRef({ value: r, previous: r });
-  return u.useMemo(() => (e.current.value !== r && (e.current.previous = e.current.value, e.current.value = r), e.current.previous), [r]);
+import * as o from "react";
+import { useLayoutEffect as a } from "./index89.js";
+var s = o[" useId ".trim().toString()] || (() => {
+}), f = 0;
+function i(t) {
+  const [e, r] = o.useState(s());
+  return a(() => {
+    r((u) => u ?? String(f++));
+  }, [t]), t || (e ? `radix-${e}` : "");
 }
 export {
-  t as usePrevious
+  i as useId
 };

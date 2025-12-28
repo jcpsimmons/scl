@@ -1,4 +1,4 @@
-import { StateEffect as W, EditorState as R, CharCategory as u, codePointAt as q, codePointSize as b, fromCodePoint as E, findClusterBreak as S } from "./index60.js";
+import { StateEffect as W, EditorState as R, CharCategory as u, codePointAt as q, codePointSize as b, fromCodePoint as E, findClusterBreak as S } from "./index63.js";
 const v = typeof String.prototype.normalize == "function" ? (n) => n.normalize("NFKD") : (n) => n;
 class L {
   /**

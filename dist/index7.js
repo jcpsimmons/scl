@@ -1,6 +1,6 @@
 import { jsx as l } from "react/jsx-runtime";
 import * as o from "react";
-import { Root as s, Image as t, Fallback as d } from "./index71.js";
+import { Root as s, Image as t, Fallback as d } from "./index45.js";
 import { cn as m } from "./index2.js";
 const f = o.forwardRef(({ className: a, ...r }, e) => /* @__PURE__ */ l(
   s,

@@ -1,20 +1,84 @@
-import * as i from "react";
-import { Primitive as f } from "./index149.js";
+import * as m from "react";
+import { createContextScope as $ } from "./index146.js";
+import { Primitive as c } from "./index147.js";
 import { jsx as l } from "react/jsx-runtime";
-var m = "Label", r = i.forwardRef((e, o) => /* @__PURE__ */ l(
-  f.label,
-  {
-    ...e,
-    ref: o,
-    onMouseDown: (t) => {
-      var a;
-      t.target.closest("button, input, select, textarea") || ((a = e.onMouseDown) == null || a.call(e, t), !t.defaultPrevented && t.detail > 1 && t.preventDefault());
-    }
+var u = "Progress", d = 100, [h] = $(u), [R, _] = h(u), f = m.forwardRef(
+  (r, e) => {
+    const {
+      __scopeProgress: i,
+      value: o = null,
+      max: a,
+      getValueLabel: N = E,
+      ...b
+    } = r;
+    (a || a === 0) && !v(a) && console.error(M(`${a}`, "Progress"));
+    const t = v(a) ? a : d;
+    o !== null && !p(o, t) && console.error(V(`${o}`, "Progress"));
+    const n = p(o, t) ? o : null, I = s(n) ? N(n, t) : void 0;
+    return /* @__PURE__ */ l(R, { scope: i, value: n, max: t, children: /* @__PURE__ */ l(
+      c.div,
+      {
+        "aria-valuemax": t,
+        "aria-valuemin": 0,
+        "aria-valuenow": s(n) ? n : void 0,
+        "aria-valuetext": I,
+        role: "progressbar",
+        "data-state": P(n, t),
+        "data-value": n ?? void 0,
+        "data-max": t,
+        ...b,
+        ref: e
+      }
+    ) });
   }
-));
-r.displayName = m;
-var b = r;
+);
+f.displayName = u;
+var g = "ProgressIndicator", x = m.forwardRef(
+  (r, e) => {
+    const { __scopeProgress: i, ...o } = r, a = _(g, i);
+    return /* @__PURE__ */ l(
+      c.div,
+      {
+        "data-state": P(a.value, a.max),
+        "data-value": a.value ?? void 0,
+        "data-max": a.max,
+        ...o,
+        ref: e
+      }
+    );
+  }
+);
+x.displayName = g;
+function E(r, e) {
+  return `${Math.round(r / e * 100)}%`;
+}
+function P(r, e) {
+  return r == null ? "indeterminate" : r === e ? "complete" : "loading";
+}
+function s(r) {
+  return typeof r == "number";
+}
+function v(r) {
+  return s(r) && !isNaN(r) && r > 0;
+}
+function p(r, e) {
+  return s(r) && !isNaN(r) && r <= e && r >= 0;
+}
+function M(r, e) {
+  return `Invalid prop \`max\` of value \`${r}\` supplied to \`${e}\`. Only numbers greater than 0 are valid max values. Defaulting to \`${d}\`.`;
+}
+function V(r, e) {
+  return `Invalid prop \`value\` of value \`${r}\` supplied to \`${e}\`. The \`value\` prop must be:
+  - a positive number
+  - less than the value passed to \`max\` (or ${d} if no \`max\` prop is set)
+  - \`null\` or \`undefined\` if the progress is indeterminate.
+
+Defaulting to \`null\`.`;
+}
+var D = f, L = x;
 export {
-  r as Label,
-  b as Root
+  L as Indicator,
+  f as Progress,
+  x as ProgressIndicator,
+  D as Root
 };

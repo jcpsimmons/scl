@@ -1,32 +1,27 @@
-import * as a from "react";
-import { Primitive as o } from "./index88.js";
-import { jsx as t } from "react/jsx-runtime";
-var d = Object.freeze({
-  // See: https://github.com/twbs/bootstrap/blob/main/scss/mixins/_visually-hidden.scss
-  position: "absolute",
-  border: 0,
-  width: 1,
-  height: 1,
-  padding: 0,
-  margin: -1,
-  overflow: "hidden",
-  clip: "rect(0, 0, 0, 0)",
-  whiteSpace: "nowrap",
-  wordWrap: "normal"
-}), l = "VisuallyHidden", e = a.forwardRef(
-  (r, i) => /* @__PURE__ */ t(
-    o.span,
-    {
-      ...r,
-      ref: i,
-      style: { ...d, ...r.style }
-    }
-  )
-);
-e.displayName = l;
-var p = e;
+import * as h from "react";
+import { useLayoutEffect as z } from "./index89.js";
+function c(r) {
+  const [d, e] = h.useState(void 0);
+  return z(() => {
+    if (r) {
+      e({ width: r.offsetWidth, height: r.offsetHeight });
+      const f = new ResizeObserver((i) => {
+        if (!Array.isArray(i) || !i.length)
+          return;
+        const b = i[0];
+        let o, t;
+        if ("borderBoxSize" in b) {
+          const s = b.borderBoxSize, u = Array.isArray(s) ? s[0] : s;
+          o = u.inlineSize, t = u.blockSize;
+        } else
+          o = r.offsetWidth, t = r.offsetHeight;
+        e({ width: o, height: t });
+      });
+      return f.observe(r, { box: "border-box" }), () => f.unobserve(r);
+    } else
+      e(void 0);
+  }, [r]), d;
+}
 export {
-  p as Root,
-  d as VISUALLY_HIDDEN_STYLES,
-  e as VisuallyHidden
+  c as useSize
 };

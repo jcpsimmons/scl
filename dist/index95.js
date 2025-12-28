@@ -1,27 +1,29 @@
-import * as h from "react";
-import { useLayoutEffect as z } from "./index110.js";
-function c(r) {
-  const [d, e] = h.useState(void 0);
-  return z(() => {
-    if (r) {
-      e({ width: r.offsetWidth, height: r.offsetHeight });
-      const f = new ResizeObserver((i) => {
-        if (!Array.isArray(i) || !i.length)
-          return;
-        const b = i[0];
-        let o, t;
-        if ("borderBoxSize" in b) {
-          const s = b.borderBoxSize, u = Array.isArray(s) ? s[0] : s;
-          o = u.inlineSize, t = u.blockSize;
-        } else
-          o = r.offsetWidth, t = r.offsetHeight;
-        e({ width: o, height: t });
-      });
-      return f.observe(r, { box: "border-box" }), () => f.unobserve(r);
-    } else
-      e(void 0);
-  }, [r]), d;
+import * as f from "react";
+function l(n, o) {
+  if (typeof n == "function")
+    return n(o);
+  n != null && (n.current = o);
+}
+function i(...n) {
+  return (o) => {
+    let u = !1;
+    const c = n.map((t) => {
+      const e = l(t, o);
+      return !u && typeof e == "function" && (u = !0), e;
+    });
+    if (u)
+      return () => {
+        for (let t = 0; t < c.length; t++) {
+          const e = c[t];
+          typeof e == "function" ? e() : l(n[t], null);
+        }
+      };
+  };
+}
+function s(...n) {
+  return f.useCallback(i(...n), n);
 }
 export {
-  c as useSize
+  i as composeRefs,
+  s as useComposedRefs
 };

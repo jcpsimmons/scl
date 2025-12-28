@@ -1,11 +1,14 @@
-/**
- * @license lucide-react v0.460.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const n = (e) => e.replace(/([a-z0-9])([A-Z])/g, "$1-$2").toLowerCase(), i = (...e) => e.filter((o, r, t) => !!o && o.trim() !== "" && t.indexOf(o) === r).join(" ").trim();
+import * as r from "react";
+import { useCallbackRef as s } from "./index88.js";
+function p(n, e = globalThis == null ? void 0 : globalThis.document) {
+  const t = s(n);
+  r.useEffect(() => {
+    const o = (a) => {
+      a.key === "Escape" && t(a);
+    };
+    return e.addEventListener("keydown", o, { capture: !0 }), () => e.removeEventListener("keydown", o, { capture: !0 });
+  }, [t, e]);
+}
 export {
-  i as mergeClasses,
-  n as toKebabCase
+  p as useEscapeKeydown
 };

@@ -1,32 +1,50 @@
-import * as f from "react";
-import "react-dom";
-import { createSlot as l } from "./index48.js";
-import { jsx as n } from "react/jsx-runtime";
-var u = [
-  "a",
-  "button",
-  "div",
-  "form",
-  "h2",
-  "h3",
-  "img",
-  "input",
-  "label",
-  "li",
-  "nav",
-  "ol",
-  "p",
-  "select",
-  "span",
-  "svg",
-  "ul"
-], w = u.reduce((t, i) => {
-  const o = l(`Primitive.${i}`), r = f.forwardRef((e, m) => {
-    const { asChild: a, ...p } = e, s = a ? o : i;
-    return typeof window < "u" && (window[Symbol.for("radix-ui")] = !0), /* @__PURE__ */ n(s, { ...p, ref: m });
+import * as l from "react";
+import { composeRefs as m } from "./index95.js";
+import { jsx as u } from "react/jsx-runtime";
+// @__NO_SIDE_EFFECTS__
+function b(e) {
+  const n = /* @__PURE__ */ y(e), o = l.forwardRef((t, r) => {
+    const { children: i, ...c } = t, s = l.Children.toArray(i), a = s.find(E);
+    if (a) {
+      const f = a.props.children, d = s.map((p) => p === a ? l.Children.count(f) > 1 ? l.Children.only(null) : l.isValidElement(f) ? f.props.children : null : p);
+      return /* @__PURE__ */ u(n, { ...c, ref: r, children: l.isValidElement(f) ? l.cloneElement(f, void 0, d) : null });
+    }
+    return /* @__PURE__ */ u(n, { ...c, ref: r, children: i });
   });
-  return r.displayName = `Primitive.${i}`, { ...t, [i]: r };
-}, {});
+  return o.displayName = `${e}.Slot`, o;
+}
+// @__NO_SIDE_EFFECTS__
+function y(e) {
+  const n = l.forwardRef((o, t) => {
+    const { children: r, ...i } = o;
+    if (l.isValidElement(r)) {
+      const c = S(r), s = C(i, r.props);
+      return r.type !== l.Fragment && (s.ref = t ? m(t, c) : c), l.cloneElement(r, s);
+    }
+    return l.Children.count(r) > 1 ? l.Children.only(null) : null;
+  });
+  return n.displayName = `${e}.SlotClone`, n;
+}
+var g = Symbol("radix.slottable");
+function E(e) {
+  return l.isValidElement(e) && typeof e.type == "function" && "__radixId" in e.type && e.type.__radixId === g;
+}
+function C(e, n) {
+  const o = { ...n };
+  for (const t in n) {
+    const r = e[t], i = n[t];
+    /^on[A-Z]/.test(t) ? r && i ? o[t] = (...s) => {
+      const a = i(...s);
+      return r(...s), a;
+    } : r && (o[t] = r) : t === "style" ? o[t] = { ...r, ...i } : t === "className" && (o[t] = [r, i].filter(Boolean).join(" "));
+  }
+  return { ...e, ...o };
+}
+function S(e) {
+  var t, r;
+  let n = (t = Object.getOwnPropertyDescriptor(e.props, "ref")) == null ? void 0 : t.get, o = n && "isReactWarning" in n && n.isReactWarning;
+  return o ? e.ref : (n = (r = Object.getOwnPropertyDescriptor(e, "ref")) == null ? void 0 : r.get, o = n && "isReactWarning" in n && n.isReactWarning, o ? e.props.ref : e.props.ref || e.ref);
+}
 export {
-  w as Primitive
+  b as createSlot
 };

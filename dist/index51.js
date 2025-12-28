@@ -1,13 +1,13 @@
-import o from "./index159.js";
+import t from "./index164.js";
 /**
  * @license lucide-react v0.460.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const n = o("ChevronDown", [
-  ["path", { d: "m6 9 6 6 6-6", key: "qrunsl" }]
+const h = t("ChevronRight", [
+  ["path", { d: "m9 18 6-6-6-6", key: "mthhwq" }]
 ]);
 export {
-  n as default
+  h as default
 };

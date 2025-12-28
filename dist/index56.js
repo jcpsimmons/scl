@@ -1,33 +1,20 @@
-import * as f from "react";
-import { composeEventHandlers as m } from "./index111.js";
-import { useControllableState as p } from "./index93.js";
-import { Primitive as b } from "./index88.js";
-import { jsx as c } from "react/jsx-runtime";
-var r = "Toggle", t = f.forwardRef((e, a) => {
-  const { pressed: s, defaultPressed: d, onPressedChange: i, ...l } = e, [o, n] = p({
-    prop: s,
-    onChange: i,
-    defaultProp: d ?? !1,
-    caller: r
-  });
-  return /* @__PURE__ */ c(
-    b.button,
-    {
-      type: "button",
-      "aria-pressed": o,
-      "data-state": o ? "on" : "off",
-      "data-disabled": e.disabled ? "" : void 0,
-      ...l,
-      ref: a,
-      onClick: m(e.onClick, () => {
-        e.disabled || n(!o);
-      })
+import * as i from "react";
+import { Primitive as f } from "./index100.js";
+import { jsx as l } from "react/jsx-runtime";
+var m = "Label", r = i.forwardRef((e, o) => /* @__PURE__ */ l(
+  f.label,
+  {
+    ...e,
+    ref: o,
+    onMouseDown: (t) => {
+      var a;
+      t.target.closest("button, input, select, textarea") || ((a = e.onMouseDown) == null || a.call(e, t), !t.defaultPrevented && t.detail > 1 && t.preventDefault());
     }
-  );
-});
-t.displayName = r;
-var C = t;
+  }
+));
+r.displayName = m;
+var b = r;
 export {
-  C as Root,
-  t as Toggle
+  r as Label,
+  b as Root
 };

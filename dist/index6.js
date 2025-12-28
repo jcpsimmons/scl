@@ -1,6 +1,6 @@
 import { jsx as o, jsxs as g } from "react/jsx-runtime";
 import * as l from "react";
-import { Root as N, Portal as y, Trigger as x, Overlay as i, Content as r, Title as d, Description as n, Action as m, Cancel as c } from "./index74.js";
+import { Root as N, Portal as y, Trigger as x, Overlay as i, Content as r, Title as d, Description as n, Action as m, Cancel as c } from "./index58.js";
 import { cn as s } from "./index2.js";
 import { buttonVariants as f } from "./index9.js";
 const P = N, k = x, D = y, p = l.forwardRef(({ className: a, ...t }, e) => /* @__PURE__ */ o(

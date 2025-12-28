@@ -1,38 +1,39 @@
-import { jsxs as n, jsx as l } from "react/jsx-runtime";
-import * as s from "react";
-import { Root as t, Viewport as p, Corner as d, ScrollAreaScrollbar as c, ScrollAreaThumb as f } from "./index83.js";
-import { cn as i } from "./index2.js";
-const h = s.forwardRef(({ className: e, children: r, ...a }, o) => /* @__PURE__ */ n(
-  t,
+import { jsxs as m, jsx as r } from "react/jsx-runtime";
+import * as i from "react";
+import { Root as s, Viewport as p, Corner as d, ScrollAreaScrollbar as c, ScrollAreaThumb as f } from "./index85.js";
+import { cn as n } from "./index2.js";
+const h = i.forwardRef(({ className: l, children: e, ...o }, a) => /* @__PURE__ */ m(
+  s,
   {
-    ref: o,
-    className: i("relative overflow-hidden", e),
-    ...a,
+    ref: a,
+    className: n("relative overflow-hidden", l),
+    ...o,
     children: [
-      /* @__PURE__ */ l(p, { className: "h-full w-full rounded-[inherit]", children: r }),
-      /* @__PURE__ */ l(m, {}),
-      /* @__PURE__ */ l(d, {})
+      /* @__PURE__ */ r(p, { className: "h-full w-full rounded-[inherit]", children: e }),
+      /* @__PURE__ */ r(t, { orientation: "vertical" }),
+      /* @__PURE__ */ r(t, { orientation: "horizontal" }),
+      /* @__PURE__ */ r(d, {})
     ]
   }
 ));
-h.displayName = t.displayName;
-const m = s.forwardRef(({ className: e, orientation: r = "vertical", ...a }, o) => /* @__PURE__ */ l(
+h.displayName = s.displayName;
+const t = i.forwardRef(({ className: l, orientation: e = "vertical", ...o }, a) => /* @__PURE__ */ r(
   c,
   {
-    ref: o,
-    orientation: r,
-    className: i(
+    ref: a,
+    orientation: e,
+    className: n(
       "flex touch-none select-none transition-colors",
-      r === "vertical" && "h-full w-2.5 border-l border-l-transparent p-[1px]",
-      r === "horizontal" && "h-2.5 flex-col border-t border-t-transparent p-[1px]",
-      e
+      e === "vertical" && "h-full w-2.5 border-l border-l-transparent p-[1px]",
+      e === "horizontal" && "h-2.5 flex-col border-t border-t-transparent p-[1px]",
+      l
     ),
-    ...a,
-    children: /* @__PURE__ */ l(f, { className: "relative flex-1 bg-primary terminal-glow" })
+    ...o,
+    children: /* @__PURE__ */ r(f, { className: "relative flex-1 bg-primary terminal-glow" })
   }
 ));
-m.displayName = c.displayName;
+t.displayName = c.displayName;
 export {
   h as ScrollArea,
-  m as ScrollBar
+  t as ScrollBar
 };

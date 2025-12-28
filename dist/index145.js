@@ -1,6 +1,9 @@
-function m(t, [a, n]) {
-  return Math.min(n, Math.max(a, t));
+function h(f, c, { checkForDefaultPrevented: p = !0 } = {}) {
+  return function(s) {
+    if (f == null || f(s), p === !1 || !s.defaultPrevented)
+      return c == null ? void 0 : c(s);
+  };
 }
 export {
-  m as clamp
+  h as composeEventHandlers
 };

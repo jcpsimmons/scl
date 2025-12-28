@@ -1,17 +1,22 @@
-import { jsx as m } from "react/jsx-runtime";
-import { cn as o } from "./index2.js";
-function n({
+import { jsx as t } from "react/jsx-runtime";
+import { cn as a } from "./index2.js";
+function i({
   className: r,
   ...e
 }) {
-  return /* @__PURE__ */ m(
+  return /* @__PURE__ */ t(
     "div",
     {
-      className: o("animate-pulse bg-primary/25", r),
+      className: a(
+        "relative overflow-hidden border border-primary/30 bg-primary/10",
+        // Scanline animation effect
+        "after:absolute after:inset-0 after:bg-gradient-to-b after:from-transparent after:via-primary/20 after:to-transparent after:animate-scanline",
+        r
+      ),
       ...e
     }
   );
 }
 export {
-  n as Skeleton
+  i as Skeleton
 };

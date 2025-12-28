@@ -1,243 +1,251 @@
-import * as i from "react";
-import { composeEventHandlers as P } from "./index122.js";
-import { useComposedRefs as O } from "./index90.js";
-import { createContextScope as G } from "./index91.js";
-import { DismissableLayer as H } from "./index102.js";
-import { useFocusGuards as K } from "./index105.js";
-import { FocusScope as $ } from "./index103.js";
-import { useId as j } from "./index89.js";
-import { createPopperScope as _, Root as U, Anchor as x, Content as V, Arrow as W } from "./index119.js";
-import { Portal as Z } from "./index104.js";
-import { Presence as w } from "./index96.js";
-import { Primitive as E } from "./index88.js";
-import { createSlot as q } from "./index123.js";
-import { useControllableState as z } from "./index93.js";
-import { hideOthers as B } from "./index107.js";
-import J from "./index106.js";
-import { jsx as p } from "react/jsx-runtime";
-var C = "Popover", [b] = G(C, [
-  _
-]), m = _(), [Q, f] = b(C), F = (o) => {
+import * as s from "react";
+import { useComposedRefs as B } from "./index95.js";
+import { createContextScope as L } from "./index97.js";
+import { composeEventHandlers as S } from "./index119.js";
+import { useControllableState as O } from "./index98.js";
+import { usePrevious as j } from "./index120.js";
+import { useSize as H } from "./index121.js";
+import { Presence as z } from "./index105.js";
+import { Primitive as P } from "./index93.js";
+import { jsx as b, jsxs as G, Fragment as K } from "react/jsx-runtime";
+var g = "Checkbox", [U] = L(g), [X, E] = U(g);
+function J(t) {
   const {
-    __scopePopover: n,
-    children: t,
-    open: a,
-    defaultOpen: e,
-    onOpenChange: r,
-    modal: s = !1
-  } = o, c = m(n), u = i.useRef(null), [l, g] = i.useState(!1), [h, d] = z({
-    prop: a,
-    defaultProp: e ?? !1,
-    onChange: r,
-    caller: C
-  });
-  return /* @__PURE__ */ p(U, { ...c, children: /* @__PURE__ */ p(
-    Q,
+    __scopeCheckbox: a,
+    checked: c,
+    children: u,
+    defaultChecked: r,
+    disabled: e,
+    form: p,
+    name: f,
+    onCheckedChange: i,
+    required: m,
+    value: C = "on",
+    // @ts-expect-error
+    internal_do_not_use_render: d
+  } = t, [l, v] = O({
+    prop: c,
+    defaultProp: r ?? !1,
+    onChange: i,
+    caller: g
+  }), [k, x] = s.useState(null), [_, o] = s.useState(null), n = s.useRef(!1), I = k ? !!p || !!k.closest("form") : (
+    // We set this to true by default so that events bubble to forms without JS (SSR)
+    !0
+  ), R = {
+    checked: l,
+    disabled: e,
+    setChecked: v,
+    control: k,
+    setControl: x,
+    name: f,
+    form: p,
+    value: C,
+    hasConsumerStoppedPropagationRef: n,
+    required: m,
+    defaultChecked: h(r) ? !1 : r,
+    isFormControl: I,
+    bubbleInput: _,
+    setBubbleInput: o
+  };
+  return /* @__PURE__ */ b(
+    X,
     {
-      scope: n,
-      contentId: j(),
-      triggerRef: u,
-      open: h,
-      onOpenChange: d,
-      onOpenToggle: i.useCallback(() => d((R) => !R), [d]),
-      hasCustomAnchor: l,
-      onCustomAnchorAdd: i.useCallback(() => g(!0), []),
-      onCustomAnchorRemove: i.useCallback(() => g(!1), []),
-      modal: s,
-      children: t
+      scope: a,
+      ...R,
+      children: W(d) ? d(R) : u
     }
-  ) });
-};
-F.displayName = C;
-var N = "PopoverAnchor", S = i.forwardRef(
-  (o, n) => {
-    const { __scopePopover: t, ...a } = o, e = f(N, t), r = m(t), { onCustomAnchorAdd: s, onCustomAnchorRemove: c } = e;
-    return i.useEffect(() => (s(), () => c()), [s, c]), /* @__PURE__ */ p(x, { ...r, ...a, ref: n });
-  }
-);
-S.displayName = N;
-var y = "PopoverTrigger", D = i.forwardRef(
-  (o, n) => {
-    const { __scopePopover: t, ...a } = o, e = f(y, t), r = m(t), s = O(n, e.triggerRef), c = /* @__PURE__ */ p(
-      E.button,
+  );
+}
+var N = "CheckboxTrigger", w = s.forwardRef(
+  ({ __scopeCheckbox: t, onKeyDown: a, onClick: c, ...u }, r) => {
+    const {
+      control: e,
+      value: p,
+      disabled: f,
+      checked: i,
+      required: m,
+      setControl: C,
+      setChecked: d,
+      hasConsumerStoppedPropagationRef: l,
+      isFormControl: v,
+      bubbleInput: k
+    } = E(N, t), x = B(r, C), _ = s.useRef(i);
+    return s.useEffect(() => {
+      const o = e == null ? void 0 : e.form;
+      if (o) {
+        const n = () => d(_.current);
+        return o.addEventListener("reset", n), () => o.removeEventListener("reset", n);
+      }
+    }, [e, d]), /* @__PURE__ */ b(
+      P.button,
       {
         type: "button",
-        "aria-haspopup": "dialog",
-        "aria-expanded": e.open,
-        "aria-controls": e.contentId,
-        "data-state": L(e.open),
-        ...a,
-        ref: s,
-        onClick: P(o.onClick, e.onOpenToggle)
-      }
-    );
-    return e.hasCustomAnchor ? c : /* @__PURE__ */ p(x, { asChild: !0, ...r, children: c });
-  }
-);
-D.displayName = y;
-var A = "PopoverPortal", [X, Y] = b(A, {
-  forceMount: void 0
-}), M = (o) => {
-  const { __scopePopover: n, forceMount: t, children: a, container: e } = o, r = f(A, n);
-  return /* @__PURE__ */ p(X, { scope: n, forceMount: t, children: /* @__PURE__ */ p(w, { present: t || r.open, children: /* @__PURE__ */ p(Z, { asChild: !0, container: e, children: a }) }) });
-};
-M.displayName = A;
-var v = "PopoverContent", k = i.forwardRef(
-  (o, n) => {
-    const t = Y(v, o.__scopePopover), { forceMount: a = t.forceMount, ...e } = o, r = f(v, o.__scopePopover);
-    return /* @__PURE__ */ p(w, { present: a || r.open, children: r.modal ? /* @__PURE__ */ p(eo, { ...e, ref: n }) : /* @__PURE__ */ p(ro, { ...e, ref: n }) });
-  }
-);
-k.displayName = v;
-var oo = q("PopoverContent.RemoveScroll"), eo = i.forwardRef(
-  (o, n) => {
-    const t = f(v, o.__scopePopover), a = i.useRef(null), e = O(n, a), r = i.useRef(!1);
-    return i.useEffect(() => {
-      const s = a.current;
-      if (s) return B(s);
-    }, []), /* @__PURE__ */ p(J, { as: oo, allowPinchZoom: !0, children: /* @__PURE__ */ p(
-      I,
-      {
-        ...o,
-        ref: e,
-        trapFocus: t.open,
-        disableOutsidePointerEvents: !0,
-        onCloseAutoFocus: P(o.onCloseAutoFocus, (s) => {
-          var c;
-          s.preventDefault(), r.current || (c = t.triggerRef.current) == null || c.focus();
+        role: "checkbox",
+        "aria-checked": h(i) ? "mixed" : i,
+        "aria-required": m,
+        "data-state": A(i),
+        "data-disabled": f ? "" : void 0,
+        disabled: f,
+        value: p,
+        ...u,
+        ref: x,
+        onKeyDown: S(a, (o) => {
+          o.key === "Enter" && o.preventDefault();
         }),
-        onPointerDownOutside: P(
-          o.onPointerDownOutside,
-          (s) => {
-            const c = s.detail.originalEvent, u = c.button === 0 && c.ctrlKey === !0, l = c.button === 2 || u;
-            r.current = l;
-          },
-          { checkForDefaultPrevented: !1 }
-        ),
-        onFocusOutside: P(
-          o.onFocusOutside,
-          (s) => s.preventDefault(),
-          { checkForDefaultPrevented: !1 }
-        )
-      }
-    ) });
-  }
-), ro = i.forwardRef(
-  (o, n) => {
-    const t = f(v, o.__scopePopover), a = i.useRef(!1), e = i.useRef(!1);
-    return /* @__PURE__ */ p(
-      I,
-      {
-        ...o,
-        ref: n,
-        trapFocus: !1,
-        disableOutsidePointerEvents: !1,
-        onCloseAutoFocus: (r) => {
-          var s, c;
-          (s = o.onCloseAutoFocus) == null || s.call(o, r), r.defaultPrevented || (a.current || (c = t.triggerRef.current) == null || c.focus(), r.preventDefault()), a.current = !1, e.current = !1;
-        },
-        onInteractOutside: (r) => {
-          var u, l;
-          (u = o.onInteractOutside) == null || u.call(o, r), r.defaultPrevented || (a.current = !0, r.detail.originalEvent.type === "pointerdown" && (e.current = !0));
-          const s = r.target;
-          ((l = t.triggerRef.current) == null ? void 0 : l.contains(s)) && r.preventDefault(), r.detail.originalEvent.type === "focusin" && e.current && r.preventDefault();
-        }
+        onClick: S(c, (o) => {
+          d((n) => h(n) ? !0 : !n), k && v && (l.current = o.isPropagationStopped(), l.current || o.stopPropagation());
+        })
       }
     );
   }
-), I = i.forwardRef(
-  (o, n) => {
+);
+w.displayName = N;
+var Q = s.forwardRef(
+  (t, a) => {
     const {
-      __scopePopover: t,
-      trapFocus: a,
-      onOpenAutoFocus: e,
-      onCloseAutoFocus: r,
-      disableOutsidePointerEvents: s,
-      onEscapeKeyDown: c,
-      onPointerDownOutside: u,
-      onFocusOutside: l,
-      onInteractOutside: g,
-      ...h
-    } = o, d = f(v, t), R = m(t);
-    return K(), /* @__PURE__ */ p(
-      $,
+      __scopeCheckbox: c,
+      name: u,
+      checked: r,
+      defaultChecked: e,
+      required: p,
+      disabled: f,
+      value: i,
+      onCheckedChange: m,
+      form: C,
+      ...d
+    } = t;
+    return /* @__PURE__ */ b(
+      J,
       {
-        asChild: !0,
-        loop: !0,
-        trapped: a,
-        onMountAutoFocus: e,
-        onUnmountAutoFocus: r,
-        children: /* @__PURE__ */ p(
-          H,
+        __scopeCheckbox: c,
+        checked: r,
+        defaultChecked: e,
+        disabled: f,
+        required: p,
+        onCheckedChange: m,
+        name: u,
+        form: C,
+        value: i,
+        internal_do_not_use_render: ({ isFormControl: l }) => /* @__PURE__ */ G(K, { children: [
+          /* @__PURE__ */ b(
+            w,
+            {
+              ...d,
+              ref: a,
+              __scopeCheckbox: c
+            }
+          ),
+          l && /* @__PURE__ */ b(
+            q,
+            {
+              __scopeCheckbox: c
+            }
+          )
+        ] })
+      }
+    );
+  }
+);
+Q.displayName = g;
+var T = "CheckboxIndicator", V = s.forwardRef(
+  (t, a) => {
+    const { __scopeCheckbox: c, forceMount: u, ...r } = t, e = E(T, c);
+    return /* @__PURE__ */ b(
+      z,
+      {
+        present: u || h(e.checked) || e.checked === !0,
+        children: /* @__PURE__ */ b(
+          P.span,
           {
-            asChild: !0,
-            disableOutsidePointerEvents: s,
-            onInteractOutside: g,
-            onEscapeKeyDown: c,
-            onPointerDownOutside: u,
-            onFocusOutside: l,
-            onDismiss: () => d.onOpenChange(!1),
-            children: /* @__PURE__ */ p(
-              V,
-              {
-                "data-state": L(d.open),
-                role: "dialog",
-                id: d.contentId,
-                ...R,
-                ...h,
-                ref: n,
-                style: {
-                  ...h.style,
-                  "--radix-popover-content-transform-origin": "var(--radix-popper-transform-origin)",
-                  "--radix-popover-content-available-width": "var(--radix-popper-available-width)",
-                  "--radix-popover-content-available-height": "var(--radix-popper-available-height)",
-                  "--radix-popover-trigger-width": "var(--radix-popper-anchor-width)",
-                  "--radix-popover-trigger-height": "var(--radix-popper-anchor-height)"
-                }
-              }
-            )
+            "data-state": A(e.checked),
+            "data-disabled": e.disabled ? "" : void 0,
+            ...r,
+            ref: a,
+            style: { pointerEvents: "none", ...t.style }
           }
         )
       }
     );
   }
-), T = "PopoverClose", to = i.forwardRef(
-  (o, n) => {
-    const { __scopePopover: t, ...a } = o, e = f(T, t);
-    return /* @__PURE__ */ p(
-      E.button,
+);
+V.displayName = T;
+var M = "CheckboxBubbleInput", q = s.forwardRef(
+  ({ __scopeCheckbox: t, ...a }, c) => {
+    const {
+      control: u,
+      hasConsumerStoppedPropagationRef: r,
+      checked: e,
+      defaultChecked: p,
+      required: f,
+      disabled: i,
+      name: m,
+      value: C,
+      form: d,
+      bubbleInput: l,
+      setBubbleInput: v
+    } = E(M, t), k = B(c, v), x = j(e), _ = H(u);
+    s.useEffect(() => {
+      const n = l;
+      if (!n) return;
+      const I = window.HTMLInputElement.prototype, y = Object.getOwnPropertyDescriptor(
+        I,
+        "checked"
+      ).set, D = !r.current;
+      if (x !== e && y) {
+        const F = new Event("click", { bubbles: D });
+        n.indeterminate = h(e), y.call(n, h(e) ? !1 : e), n.dispatchEvent(F);
+      }
+    }, [l, x, e, r]);
+    const o = s.useRef(h(e) ? !1 : e);
+    return /* @__PURE__ */ b(
+      P.input,
       {
-        type: "button",
+        type: "checkbox",
+        "aria-hidden": !0,
+        defaultChecked: p ?? o.current,
+        required: f,
+        disabled: i,
+        name: m,
+        value: C,
+        form: d,
         ...a,
-        ref: n,
-        onClick: P(o.onClick, () => e.onOpenChange(!1))
+        tabIndex: -1,
+        ref: k,
+        style: {
+          ...a.style,
+          ..._,
+          position: "absolute",
+          pointerEvents: "none",
+          opacity: 0,
+          margin: 0,
+          // We transform because the input is absolutely positioned but we have
+          // rendered it **after** the button. This pulls it back to sit on top
+          // of the button.
+          transform: "translateX(-100%)"
+        }
       }
     );
   }
 );
-to.displayName = T;
-var no = "PopoverArrow", ao = i.forwardRef(
-  (o, n) => {
-    const { __scopePopover: t, ...a } = o, e = m(t);
-    return /* @__PURE__ */ p(W, { ...e, ...a, ref: n });
-  }
-);
-ao.displayName = no;
-function L(o) {
-  return o ? "open" : "closed";
+q.displayName = M;
+function W(t) {
+  return typeof t == "function";
 }
-var _o = F, xo = S, wo = D, Eo = M, bo = k;
+function h(t) {
+  return t === "indeterminate";
+}
+function A(t) {
+  return h(t) ? "indeterminate" : t ? "checked" : "unchecked";
+}
 export {
-  xo as Anchor,
-  bo as Content,
-  F as Popover,
-  S as PopoverAnchor,
-  ao as PopoverArrow,
-  to as PopoverClose,
-  k as PopoverContent,
-  M as PopoverPortal,
-  D as PopoverTrigger,
-  Eo as Portal,
-  _o as Root,
-  wo as Trigger
+  Q as Checkbox,
+  V as CheckboxIndicator,
+  V as Indicator,
+  Q as Root,
+  q as unstable_BubbleInput,
+  q as unstable_CheckboxBubbleInput,
+  J as unstable_CheckboxProvider,
+  w as unstable_CheckboxTrigger,
+  J as unstable_Provider,
+  w as unstable_Trigger
 };

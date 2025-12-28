@@ -1,4 +1,4 @@
-import { Root as l, CollapsibleTrigger as o, CollapsibleContent as e } from "./index58.js";
+import { Root as l, CollapsibleTrigger as o, CollapsibleContent as e } from "./index61.js";
 const t = l, i = o, C = e;
 export {
   t as Collapsible,

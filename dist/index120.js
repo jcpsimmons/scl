@@ -1,11 +1,8 @@
-import "react";
-import { jsx as e, Fragment as o } from "react/jsx-runtime";
-var l = Symbol("radix.slottable");
-// @__NO_SIDE_EFFECTS__
-function n(r) {
-  const t = ({ children: a }) => /* @__PURE__ */ e(o, { children: a });
-  return t.displayName = `${r}.Slottable`, t.__radixId = l, t;
+import * as u from "react";
+function t(r) {
+  const e = u.useRef({ value: r, previous: r });
+  return u.useMemo(() => (e.current.value !== r && (e.current.previous = e.current.value, e.current.value = r), e.current.previous), [r]);
 }
 export {
-  n as createSlottable
+  t as usePrevious
 };

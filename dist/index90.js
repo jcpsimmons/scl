@@ -1,29 +1,32 @@
 import * as f from "react";
-function l(n, o) {
-  if (typeof n == "function")
-    return n(o);
-  n != null && (n.current = o);
-}
-function i(...n) {
-  return (o) => {
-    let u = !1;
-    const c = n.map((t) => {
-      const e = l(t, o);
-      return !u && typeof e == "function" && (u = !0), e;
-    });
-    if (u)
-      return () => {
-        for (let t = 0; t < c.length; t++) {
-          const e = c[t];
-          typeof e == "function" ? e() : l(n[t], null);
-        }
-      };
-  };
-}
-function s(...n) {
-  return f.useCallback(i(...n), n);
-}
+import "react-dom";
+import { createSlot as l } from "./index74.js";
+import { jsx as n } from "react/jsx-runtime";
+var u = [
+  "a",
+  "button",
+  "div",
+  "form",
+  "h2",
+  "h3",
+  "img",
+  "input",
+  "label",
+  "li",
+  "nav",
+  "ol",
+  "p",
+  "select",
+  "span",
+  "svg",
+  "ul"
+], w = u.reduce((t, i) => {
+  const o = l(`Primitive.${i}`), r = f.forwardRef((e, m) => {
+    const { asChild: a, ...p } = e, s = a ? o : i;
+    return typeof window < "u" && (window[Symbol.for("radix-ui")] = !0), /* @__PURE__ */ n(s, { ...p, ref: m });
+  });
+  return r.displayName = `Primitive.${i}`, { ...t, [i]: r };
+}, {});
 export {
-  i as composeRefs,
-  s as useComposedRefs
+  w as Primitive
 };

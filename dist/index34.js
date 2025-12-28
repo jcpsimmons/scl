@@ -4,17 +4,17 @@ var F = (o, e, r) => V(o, typeof e != "symbol" ? e + "" : e, r);
 import { jsxs as A, jsx as N } from "react/jsx-runtime";
 import * as c from "react";
 import { cn as C } from "./index2.js";
-import { EditorView as u, ViewPlugin as H, keymap as K, lineNumbers as P, Decoration as v } from "./index59.js";
-import { EditorState as w } from "./index60.js";
-import { javascript as W } from "./index61.js";
-import { html as z } from "./index62.js";
-import { css as I } from "./index63.js";
-import { json as O } from "./index64.js";
-import { markdown as $ } from "./index65.js";
-import { vim as q } from "./index66.js";
-import { defaultKeymap as G, historyKeymap as J } from "./index67.js";
-import { HighlightStyle as M, syntaxHighlighting as Q } from "./index68.js";
-import { tags as t } from "./index69.js";
+import { EditorView as u, ViewPlugin as H, keymap as K, lineNumbers as P, Decoration as v } from "./index62.js";
+import { EditorState as w } from "./index63.js";
+import { javascript as W } from "./index64.js";
+import { html as z } from "./index65.js";
+import { css as I } from "./index66.js";
+import { json as O } from "./index67.js";
+import { markdown as $ } from "./index68.js";
+import { vim as q } from "./index69.js";
+import { defaultKeymap as G, historyKeymap as J } from "./index70.js";
+import { HighlightStyle as M, syntaxHighlighting as Q } from "./index71.js";
+import { tags as t } from "./index72.js";
 const U = v.line({
   attributes: { class: "cm-vim-empty-line" }
 }), X = H.fromClass(

@@ -1,9 +1,10 @@
-function h(f, c, { checkForDefaultPrevented: p = !0 } = {}) {
-  return function(s) {
-    if (f == null || f(s), p === !1 || !s.defaultPrevented)
-      return c == null ? void 0 : c(s);
-  };
+import * as t from "react";
+import "react/jsx-runtime";
+var r = t.createContext(void 0);
+function n(o) {
+  const e = t.useContext(r);
+  return o || e || "ltr";
 }
 export {
-  h as composeEventHandlers
+  n as useDirection
 };

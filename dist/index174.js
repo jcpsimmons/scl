@@ -1,31 +1,55 @@
-import { __rest as E, __assign as r } from "./index173.js";
-import * as a from "react";
-import { zeroRightClassName as I, fullWidthClassName as Z } from "./index180.js";
-import { effectCar as W } from "./index181.js";
-import { useMergeRefs as z } from "./index182.js";
-var l = function() {
-}, m = a.forwardRef(function(e, d) {
-  var o = a.useRef(null), n = a.useState({
-    onScrollCapture: l,
-    onWheelCapture: l,
-    onTouchMoveCapture: l
-  }), f = n[0], v = n[1], h = e.forwardProps, t = e.children, u = e.className, C = e.removeScrollBar, R = e.enabled, g = e.shards, P = e.sideCar, S = e.noRelative, b = e.noIsolation, w = e.inert, N = e.allowPinchZoom, i = e.as, M = i === void 0 ? "div" : i, _ = e.gapMode, B = E(e, ["forwardProps", "children", "className", "removeScrollBar", "enabled", "shards", "sideCar", "noRelative", "noIsolation", "inert", "allowPinchZoom", "as", "gapMode"]), k = P, s = z([o, d]), c = r(r({}, B), f);
-  return a.createElement(
-    a.Fragment,
-    null,
-    R && a.createElement(k, { sideCar: W, removeScrollBar: C, shards: g, noRelative: S, noIsolation: b, inert: w, setCallbacks: v, allowPinchZoom: !!N, lockRef: o, gapMode: _ }),
-    h ? a.cloneElement(a.Children.only(t), r(r({}, c), { ref: s })) : a.createElement(M, r({}, c, { className: u, ref: s }), t)
-  );
-});
-m.defaultProps = {
-  enabled: !0,
-  removeScrollBar: !0,
-  inert: !1
-};
-m.classNames = {
-  fullWidth: Z,
-  zeroRight: I
-};
+import { __exports as i } from "./index179.js";
+import h from "react";
+/**
+ * @license React
+ * use-sync-external-store-shim.production.js
+ *
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+var f;
+function x() {
+  if (f) return i;
+  f = 1;
+  var u = h;
+  function s(e, t) {
+    return e === t && (e !== 0 || 1 / e === 1 / t) || e !== e && t !== t;
+  }
+  var S = typeof Object.is == "function" ? Object.is : s, d = u.useState, l = u.useEffect, p = u.useLayoutEffect, E = u.useDebugValue;
+  function v(e, t) {
+    var r = t(), a = d({ inst: { value: r, getSnapshot: t } }), n = a[0].inst, c = a[1];
+    return p(
+      function() {
+        n.value = r, n.getSnapshot = t, o(n) && c({ inst: n });
+      },
+      [e, r, t]
+    ), l(
+      function() {
+        return o(n) && c({ inst: n }), e(function() {
+          o(n) && c({ inst: n });
+        });
+      },
+      [e]
+    ), E(r), r;
+  }
+  function o(e) {
+    var t = e.getSnapshot;
+    e = e.value;
+    try {
+      var r = t();
+      return !S(e, r);
+    } catch {
+      return !0;
+    }
+  }
+  function y(e, t) {
+    return t();
+  }
+  var m = typeof window > "u" || typeof window.document > "u" || typeof window.document.createElement > "u" ? y : v;
+  return i.useSyncExternalStore = u.useSyncExternalStore !== void 0 ? u.useSyncExternalStore : m, i;
+}
 export {
-  m as RemoveScroll
+  x as __require
 };

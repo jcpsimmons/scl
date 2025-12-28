@@ -1,54 +1,36 @@
-import * as n from "react";
-import { useLayoutEffect as v } from "./index110.js";
-var E = n[" useInsertionEffect ".trim().toString()] || v;
-function y({
-  prop: t,
-  defaultProp: u,
-  onChange: o = () => {
-  },
-  caller: i
-}) {
-  const [l, e, r] = w({
-    defaultProp: u,
-    onChange: o
-  }), c = t !== void 0, a = c ? t : l;
-  {
-    const s = n.useRef(t !== void 0);
-    n.useEffect(() => {
-      const f = s.current;
-      f !== c && console.warn(
-        `${i} is changing from ${f ? "controlled" : "uncontrolled"} to ${c ? "controlled" : "uncontrolled"}. Components should not switch from controlled to uncontrolled (or vice versa). Decide between using a controlled or uncontrolled value for the lifetime of the component.`
-      ), s.current = c;
-    }, [c, i]);
-  }
-  const m = n.useCallback(
-    (s) => {
-      var f;
-      if (c) {
-        const d = R(s) ? s(t) : s;
-        d !== t && ((f = r.current) == null || f.call(r, d));
-      } else
-        e(s);
-    },
-    [c, t, e, r]
-  );
-  return [a, m];
-}
-function w({
-  defaultProp: t,
-  onChange: u
-}) {
-  const [o, i] = n.useState(t), l = n.useRef(o), e = n.useRef(u);
-  return E(() => {
-    e.current = u;
-  }, [u]), n.useEffect(() => {
-    var r;
-    l.current !== o && ((r = e.current) == null || r.call(e, o), l.current = o);
-  }, [o, l]), [o, i, e];
-}
-function R(t) {
-  return typeof t == "function";
+import * as f from "react";
+import * as p from "react-dom";
+import { createSlot as c } from "./index156.js";
+import { jsx as l } from "react/jsx-runtime";
+var u = [
+  "a",
+  "button",
+  "div",
+  "form",
+  "h2",
+  "h3",
+  "img",
+  "input",
+  "label",
+  "li",
+  "nav",
+  "ol",
+  "p",
+  "select",
+  "span",
+  "svg",
+  "ul"
+], h = u.reduce((t, i) => {
+  const o = c(`Primitive.${i}`), r = f.forwardRef((e, m) => {
+    const { asChild: s, ...a } = e, n = s ? o : i;
+    return typeof window < "u" && (window[Symbol.for("radix-ui")] = !0), /* @__PURE__ */ l(n, { ...a, ref: m });
+  });
+  return r.displayName = `Primitive.${i}`, { ...t, [i]: r };
+}, {});
+function w(t, i) {
+  t && p.flushSync(() => t.dispatchEvent(i));
 }
 export {
-  y as useControllableState
+  h as Primitive,
+  w as dispatchDiscreteCustomEvent
 };

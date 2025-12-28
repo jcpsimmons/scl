@@ -1,57 +1,48 @@
-import * as i from "react";
-import { jsx as _ } from "react/jsx-runtime";
-function $(e, x = []) {
-  let o = [];
-  function f(r, n) {
-    const t = i.createContext(n);
-    t.displayName = r + "Context";
-    const c = o.length;
-    o = [...o, n];
-    const m = (a) => {
-      var l;
-      const { scope: s, children: C, ...p } = a, d = ((l = s == null ? void 0 : s[e]) == null ? void 0 : l[c]) || t, v = i.useMemo(() => p, Object.values(p));
-      return /* @__PURE__ */ _(d.Provider, { value: v, children: C });
-    };
-    m.displayName = r + "Provider";
-    function S(a, s) {
-      var d;
-      const C = ((d = s == null ? void 0 : s[e]) == null ? void 0 : d[c]) || t, p = i.useContext(C);
-      if (p) return p;
-      if (n !== void 0) return n;
-      throw new Error(`\`${a}\` must be used within \`${r}\``);
+import r from "react";
+import { createContextScope as y } from "./index97.js";
+import { useComposedRefs as M } from "./index95.js";
+import { createSlot as x } from "./index168.js";
+import { jsx as u } from "react/jsx-runtime";
+function g(s) {
+  const m = s + "CollectionProvider", [A, N] = y(m), [_, f] = A(
+    m,
+    { collectionRef: { current: null }, itemMap: /* @__PURE__ */ new Map() }
+  ), p = (c) => {
+    const { scope: e, children: l } = c, o = r.useRef(null), t = r.useRef(/* @__PURE__ */ new Map()).current;
+    return /* @__PURE__ */ u(_, { scope: e, itemMap: t, collectionRef: o, children: l });
+  };
+  p.displayName = m;
+  const a = s + "CollectionSlot", E = x(a), C = r.forwardRef(
+    (c, e) => {
+      const { scope: l, children: o } = c, t = f(a, l), n = M(e, t.collectionRef);
+      return /* @__PURE__ */ u(E, { ref: n, children: o });
     }
-    return [m, S];
-  }
-  const u = () => {
-    const r = o.map((n) => i.createContext(n));
-    return function(t) {
-      const c = (t == null ? void 0 : t[e]) || r;
-      return i.useMemo(
-        () => ({ [`__scope${e}`]: { ...t, [e]: c } }),
-        [t, c]
+  );
+  C.displayName = a;
+  const d = s + "CollectionItemSlot", R = "data-radix-collection-item", T = x(d), I = r.forwardRef(
+    (c, e) => {
+      const { scope: l, children: o, ...t } = c, n = r.useRef(null), S = M(e, n), i = f(d, l);
+      return r.useEffect(() => (i.itemMap.set(n, { ref: n, ...t }), () => void i.itemMap.delete(n))), /* @__PURE__ */ u(T, { [R]: "", ref: S, children: o });
+    }
+  );
+  I.displayName = d;
+  function O(c) {
+    const e = f(s + "CollectionConsumer", c);
+    return r.useCallback(() => {
+      const o = e.collectionRef.current;
+      if (!o) return [];
+      const t = Array.from(o.querySelectorAll(`[${R}]`));
+      return Array.from(e.itemMap.values()).sort(
+        (i, v) => t.indexOf(i.ref.current) - t.indexOf(v.ref.current)
       );
-    };
-  };
-  return u.scopeName = e, [f, h(u, ...x)];
-}
-function h(...e) {
-  const x = e[0];
-  if (e.length === 1) return x;
-  const o = () => {
-    const f = e.map((u) => ({
-      useScope: u(),
-      scopeName: u.scopeName
-    }));
-    return function(r) {
-      const n = f.reduce((t, { useScope: c, scopeName: m }) => {
-        const a = c(r)[`__scope${m}`];
-        return { ...t, ...a };
-      }, {});
-      return i.useMemo(() => ({ [`__scope${x.scopeName}`]: n }), [n]);
-    };
-  };
-  return o.scopeName = x.scopeName, o;
+    }, [e.collectionRef, e.itemMap]);
+  }
+  return [
+    { Provider: p, Slot: C, ItemSlot: I },
+    O,
+    N
+  ];
 }
 export {
-  $ as createContextScope
+  g as createCollection
 };

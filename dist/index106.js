@@ -1,11 +1,17 @@
-import { __assign as m } from "./index173.js";
 import * as r from "react";
-import { RemoveScroll as e } from "./index174.js";
-import t from "./index175.js";
-var s = r.forwardRef(function(a, o) {
-  return r.createElement(e, m({}, a, { ref: o, sideCar: t }));
-});
-s.classNames = e.classNames;
+var t = 0;
+function a() {
+  r.useEffect(() => {
+    const e = document.querySelectorAll("[data-radix-focus-guard]");
+    return document.body.insertAdjacentElement("afterbegin", e[0] ?? n()), document.body.insertAdjacentElement("beforeend", e[1] ?? n()), t++, () => {
+      t === 1 && document.querySelectorAll("[data-radix-focus-guard]").forEach((o) => o.remove()), t--;
+    };
+  }, []);
+}
+function n() {
+  const e = document.createElement("span");
+  return e.setAttribute("data-radix-focus-guard", ""), e.tabIndex = 0, e.style.outline = "none", e.style.opacity = "0", e.style.position = "fixed", e.style.pointerEvents = "none", e;
+}
 export {
-  s as default
+  a as useFocusGuards
 };
