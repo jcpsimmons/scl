@@ -22,6 +22,13 @@ export const Default: Story = {
     max: 100,
     step: 1,
   },
+  decorators: [
+    (Story) => (
+      <div className="w-80">
+        <Story />
+      </div>
+    ),
+  ],
 }
 
 const WithLabelComponent = () => {
