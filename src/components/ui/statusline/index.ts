@@ -1,1 +1,1 @@
-export { Statusline, type StatuslineProps } from './statusline'
+export { Statusline, type StatuslineProps } from './statusline';

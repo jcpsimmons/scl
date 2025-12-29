@@ -67,6 +67,6 @@ export const typography = {
     relaxed: '1.625',
     loose: '2',
   },
-} as const
+} as const;
 
-export type TypographyTokens = typeof typography
+export type TypographyTokens = typeof typography;

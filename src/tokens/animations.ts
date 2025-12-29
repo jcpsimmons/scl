@@ -101,6 +101,6 @@ export const animations = {
     // Custom easing from source app
     smooth: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)',
   },
-} as const
+} as const;
 
-export type AnimationTokens = typeof animations
+export type AnimationTokens = typeof animations;

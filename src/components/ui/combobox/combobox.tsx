@@ -1,7 +1,6 @@
-import * as React from 'react'
-import { Check, ChevronsUpDown } from 'lucide-react'
-import { cn } from '@/lib/utils'
-import { Button } from '@/components/ui/button'
+import { Check, ChevronsUpDown } from 'lucide-react';
+import * as React from 'react';
+import { Button } from '@/components/ui/button';
 import {
   Command,
   CommandEmpty,
@@ -9,28 +8,25 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from '@/components/ui/command'
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover'
+} from '@/components/ui/command';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { cn } from '@/lib/utils';
 
 export interface ComboboxOption {
-  value: string
-  label: string
-  disabled?: boolean
+  value: string;
+  label: string;
+  disabled?: boolean;
 }
 
 export interface ComboboxProps {
-  options: ComboboxOption[]
-  value?: string
-  onValueChange?: (value: string) => void
-  placeholder?: string
-  searchPlaceholder?: string
-  emptyText?: string
-  className?: string
-  disabled?: boolean
+  options: ComboboxOption[];
+  value?: string;
+  onValueChange?: (value: string) => void;
+  placeholder?: string;
+  searchPlaceholder?: string;
+  emptyText?: string;
+  className?: string;
+  disabled?: boolean;
 }
 
 const Combobox = React.forwardRef<HTMLButtonElement, ComboboxProps>(
@@ -47,9 +43,9 @@ const Combobox = React.forwardRef<HTMLButtonElement, ComboboxProps>(
     },
     ref
   ) => {
-    const [open, setOpen] = React.useState(false)
+    const [open, setOpen] = React.useState(false);
 
-    const selectedOption = options.find((option) => option.value === value)
+    const selectedOption = options.find((option) => option.value === value);
 
     return (
       <Popover open={open} onOpenChange={setOpen}>
@@ -62,9 +58,7 @@ const Combobox = React.forwardRef<HTMLButtonElement, ComboboxProps>(
             className={cn('w-[200px] justify-between', className)}
             disabled={disabled}
           >
-            <span className="truncate">
-              {selectedOption ? selectedOption.label : placeholder}
-            </span>
+            <span className="truncate">{selectedOption ? selectedOption.label : placeholder}</span>
             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
@@ -79,8 +73,8 @@ const Combobox = React.forwardRef<HTMLButtonElement, ComboboxProps>(
                     key={option.value}
                     value={option.value}
                     onSelect={(currentValue) => {
-                      onValueChange?.(currentValue === value ? '' : currentValue)
-                      setOpen(false)
+                      onValueChange?.(currentValue === value ? '' : currentValue);
+                      setOpen(false);
                     }}
                     disabled={option.disabled}
                   >
@@ -98,21 +92,21 @@ const Combobox = React.forwardRef<HTMLButtonElement, ComboboxProps>(
           </Command>
         </PopoverContent>
       </Popover>
-    )
+    );
   }
-)
-Combobox.displayName = 'Combobox'
+);
+Combobox.displayName = 'Combobox';
 
 export interface ComboboxMultiProps {
-  options: ComboboxOption[]
-  value?: string[]
-  onValueChange?: (value: string[]) => void
-  placeholder?: string
-  searchPlaceholder?: string
-  emptyText?: string
-  className?: string
-  disabled?: boolean
-  maxSelected?: number
+  options: ComboboxOption[];
+  value?: string[];
+  onValueChange?: (value: string[]) => void;
+  placeholder?: string;
+  searchPlaceholder?: string;
+  emptyText?: string;
+  className?: string;
+  disabled?: boolean;
+  maxSelected?: number;
 }
 
 const ComboboxMulti = React.forwardRef<HTMLButtonElement, ComboboxMultiProps>(
@@ -130,21 +124,21 @@ const ComboboxMulti = React.forwardRef<HTMLButtonElement, ComboboxMultiProps>(
     },
     ref
   ) => {
-    const [open, setOpen] = React.useState(false)
+    const [open, setOpen] = React.useState(false);
 
     const selectedLabels = value
       .map((v) => options.find((option) => option.value === v)?.label)
       .filter(Boolean)
-      .join(', ')
+      .join(', ');
 
     const toggleOption = (optionValue: string) => {
       const newValue = value.includes(optionValue)
         ? value.filter((v) => v !== optionValue)
         : maxSelected && value.length >= maxSelected
           ? value
-          : [...value, optionValue]
-      onValueChange?.(newValue)
-    }
+          : [...value, optionValue];
+      onValueChange?.(newValue);
+    };
 
     return (
       <Popover open={open} onOpenChange={setOpen}>
@@ -157,9 +151,7 @@ const ComboboxMulti = React.forwardRef<HTMLButtonElement, ComboboxMultiProps>(
             className={cn('w-[200px] justify-between', className)}
             disabled={disabled}
           >
-            <span className="truncate">
-              {selectedLabels || placeholder}
-            </span>
+            <span className="truncate">{selectedLabels || placeholder}</span>
             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
@@ -190,9 +182,9 @@ const ComboboxMulti = React.forwardRef<HTMLButtonElement, ComboboxMultiProps>(
           </Command>
         </PopoverContent>
       </Popover>
-    )
+    );
   }
-)
-ComboboxMulti.displayName = 'ComboboxMulti'
+);
+ComboboxMulti.displayName = 'ComboboxMulti';
 
-export { Combobox, ComboboxMulti }
+export { Combobox, ComboboxMulti };

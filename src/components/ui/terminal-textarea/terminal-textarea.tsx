@@ -1,23 +1,23 @@
-import * as React from 'react'
-import { cn } from '@/lib/utils'
+import * as React from 'react';
+import { cn } from '@/lib/utils';
 
 export interface TerminalTextareaProps {
   /** Number of visible lines (rows) */
-  visibleLines?: number
+  visibleLines?: number;
   /** Show line numbers */
-  showLineNumbers?: boolean
+  showLineNumbers?: boolean;
   /** Value of the textarea */
-  value?: string
+  value?: string;
   /** Change handler */
-  onChange?: (value: string) => void
+  onChange?: (value: string) => void;
   /** Callback when cursor position changes */
-  onCursorChange?: (line: number, column: number) => void
+  onCursorChange?: (line: number, column: number) => void;
   /** Placeholder text */
-  placeholder?: string
+  placeholder?: string;
   /** Read-only mode */
-  readOnly?: boolean
+  readOnly?: boolean;
   /** Additional CSS classes */
-  className?: string
+  className?: string;
 }
 
 const TerminalTextarea = React.forwardRef<HTMLDivElement, TerminalTextareaProps>(
@@ -34,37 +34,37 @@ const TerminalTextarea = React.forwardRef<HTMLDivElement, TerminalTextareaProps>
     },
     ref
   ) => {
-    const textareaRef = React.useRef<HTMLTextAreaElement>(null)
-    const lineNumbersRef = React.useRef<HTMLDivElement>(null)
+    const textareaRef = React.useRef<HTMLTextAreaElement>(null);
+    const lineNumbersRef = React.useRef<HTMLDivElement>(null);
 
-    const lines = value.split('\n')
-    const lineCount = lines.length
+    const lines = value.split('\n');
+    const lineCount = lines.length;
 
     // Sync scroll between textarea and line numbers
     const handleScroll = () => {
       if (textareaRef.current && lineNumbersRef.current) {
-        lineNumbersRef.current.scrollTop = textareaRef.current.scrollTop
+        lineNumbersRef.current.scrollTop = textareaRef.current.scrollTop;
       }
-    }
+    };
 
     // Handle cursor position changes
     const handleSelect = () => {
       if (textareaRef.current && onCursorChange) {
-        const textarea = textareaRef.current
-        const textBeforeCursor = textarea.value.substring(0, textarea.selectionStart)
-        const linesBeforeCursor = textBeforeCursor.split('\n')
-        const line = linesBeforeCursor.length
-        const column = linesBeforeCursor[linesBeforeCursor.length - 1].length + 1
-        onCursorChange(line, column)
+        const textarea = textareaRef.current;
+        const textBeforeCursor = textarea.value.substring(0, textarea.selectionStart);
+        const linesBeforeCursor = textBeforeCursor.split('\n');
+        const line = linesBeforeCursor.length;
+        const column = linesBeforeCursor[linesBeforeCursor.length - 1].length + 1;
+        onCursorChange(line, column);
       }
-    }
+    };
 
     const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-      onChange?.(e.target.value)
-    }
+      onChange?.(e.target.value);
+    };
 
-    const lineHeight = 1.5 // rem
-    const height = visibleLines * lineHeight
+    const lineHeight = 1.5; // rem
+    const height = visibleLines * lineHeight;
 
     return (
       <div
@@ -84,10 +84,7 @@ const TerminalTextarea = React.forwardRef<HTMLDivElement, TerminalTextareaProps>
             {Array.from({ length: Math.max(lineCount, visibleLines) }, (_, i) => (
               <div
                 key={i}
-                className={cn(
-                  'px-2 leading-6',
-                  i >= lineCount && 'text-blue-500'
-                )}
+                className={cn('px-2 leading-6', i >= lineCount && 'text-blue-500')}
                 style={{ height: `${lineHeight}rem` }}
               >
                 {i < lineCount ? i + 1 : '~'}
@@ -117,9 +114,9 @@ const TerminalTextarea = React.forwardRef<HTMLDivElement, TerminalTextareaProps>
           }}
         />
       </div>
-    )
+    );
   }
-)
-TerminalTextarea.displayName = 'TerminalTextarea'
+);
+TerminalTextarea.displayName = 'TerminalTextarea';
 
-export { TerminalTextarea }
+export { TerminalTextarea };

@@ -1,15 +1,15 @@
-import type { Meta, StoryObj } from '@storybook/react'
-import { RadioGroup, RadioGroupItem } from './radio-group'
-import { Label } from '../label'
+import type { Meta, StoryObj } from '@storybook/react';
+import { Label } from '../label';
+import { RadioGroup, RadioGroupItem } from './radio-group';
 
 const meta: Meta<typeof RadioGroup> = {
   title: 'Components/RadioGroup',
   component: RadioGroup,
   tags: ['autodocs'],
-}
+};
 
-export default meta
-type Story = StoryObj<typeof RadioGroup>
+export default meta;
+type Story = StoryObj<typeof RadioGroup>;
 
 export const Default: Story = {
   render: () => (
@@ -28,7 +28,7 @@ export const Default: Story = {
       </div>
     </RadioGroup>
   ),
-}
+};
 
 export const Horizontal: Story = {
   render: () => (
@@ -47,7 +47,7 @@ export const Horizontal: Story = {
       </div>
     </RadioGroup>
   ),
-}
+};
 
 export const Disabled: Story = {
   render: () => (
@@ -62,4 +62,4 @@ export const Disabled: Story = {
       </div>
     </RadioGroup>
   ),
-}
+};

@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/react'
-import { Progress } from './progress'
+import type { Meta, StoryObj } from '@storybook/react';
+import { Progress } from './progress';
 
 const meta: Meta<typeof Progress> = {
   title: 'Components/Progress',
@@ -13,16 +13,16 @@ const meta: Meta<typeof Progress> = {
       control: 'boolean',
     },
   },
-}
+};
 
-export default meta
-type Story = StoryObj<typeof Progress>
+export default meta;
+type Story = StoryObj<typeof Progress>;
 
 export const Default: Story = {
   args: {
     value: 50,
   },
-}
+};
 
 export const Empty: Story = {
   args: {
@@ -30,7 +30,7 @@ export const Empty: Story = {
     label: 'Not started',
     showPercentage: true,
   },
-}
+};
 
 export const Quarter: Story = {
   args: {
@@ -38,7 +38,7 @@ export const Quarter: Story = {
     label: 'Loading...',
     showPercentage: true,
   },
-}
+};
 
 export const Half: Story = {
   args: {
@@ -46,7 +46,7 @@ export const Half: Story = {
     label: 'Processing...',
     showPercentage: true,
   },
-}
+};
 
 export const ThreeQuarters: Story = {
   args: {
@@ -54,7 +54,7 @@ export const ThreeQuarters: Story = {
     label: 'Almost there...',
     showPercentage: true,
   },
-}
+};
 
 export const Complete: Story = {
   args: {
@@ -62,7 +62,7 @@ export const Complete: Story = {
     label: 'Complete!',
     showPercentage: true,
   },
-}
+};
 
 export const WithLabel: Story = {
   args: {
@@ -70,7 +70,7 @@ export const WithLabel: Story = {
     label: 'Upload progress',
     showPercentage: true,
   },
-}
+};
 
 export const WithThemeColors: Story = {
   render: () => (
@@ -87,7 +87,7 @@ export const WithThemeColors: Story = {
       </div>
     </div>
   ),
-}
+};
 
 export const ComparisonDemo: Story = {
   render: () => (
@@ -97,4 +97,4 @@ export const ComparisonDemo: Story = {
       <Progress value={90} label="Disk Space" showPercentage />
     </div>
   ),
-}
+};

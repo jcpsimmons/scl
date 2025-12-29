@@ -1,17 +1,17 @@
-import type { Meta, StoryObj } from '@storybook/react'
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from './card'
-import { Button } from '../button'
-import { Input } from '../input'
-import { Label } from '../label'
+import type { Meta, StoryObj } from '@storybook/react';
+import { Button } from '../button';
+import { Input } from '../input';
+import { Label } from '../label';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from './card';
 
 const meta: Meta<typeof Card> = {
   title: 'Components/Card',
   component: Card,
   tags: ['autodocs'],
-}
+};
 
-export default meta
-type Story = StoryObj<typeof Card>
+export default meta;
+type Story = StoryObj<typeof Card>;
 
 export const Default: Story = {
   render: () => (
@@ -28,7 +28,7 @@ export const Default: Story = {
       </CardFooter>
     </Card>
   ),
-}
+};
 
 export const WithForm: Story = {
   render: () => (
@@ -53,7 +53,7 @@ export const WithForm: Story = {
       </CardFooter>
     </Card>
   ),
-}
+};
 
 export const Simple: Story = {
   render: () => (
@@ -62,10 +62,8 @@ export const Simple: Story = {
         <CardTitle>Notifications</CardTitle>
       </CardHeader>
       <CardContent>
-        <p className="text-sm text-muted-foreground">
-          You have 3 unread messages.
-        </p>
+        <p className="text-sm text-muted-foreground">You have 3 unread messages.</p>
       </CardContent>
     </Card>
   ),
-}
+};

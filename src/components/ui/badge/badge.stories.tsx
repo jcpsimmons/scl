@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/react'
-import { Badge } from './badge'
+import type { Meta, StoryObj } from '@storybook/react';
+import { Badge } from './badge';
 
 const meta: Meta<typeof Badge> = {
   title: 'Components/Badge',
@@ -8,19 +8,26 @@ const meta: Meta<typeof Badge> = {
   argTypes: {
     variant: {
       control: 'select',
-      options: ['default', 'secondary', 'destructive', 'outline', 'secondary-outline', 'destructive-outline'],
+      options: [
+        'default',
+        'secondary',
+        'destructive',
+        'outline',
+        'secondary-outline',
+        'destructive-outline',
+      ],
     },
   },
-}
+};
 
-export default meta
-type Story = StoryObj<typeof Badge>
+export default meta;
+type Story = StoryObj<typeof Badge>;
 
 export const Default: Story = {
   args: {
     children: 'Badge',
   },
-}
+};
 
 export const FilledVariants: Story = {
   render: () => (
@@ -30,7 +37,7 @@ export const FilledVariants: Story = {
       <Badge variant="destructive">Destructive</Badge>
     </div>
   ),
-}
+};
 
 export const OutlineVariants: Story = {
   render: () => (
@@ -40,7 +47,7 @@ export const OutlineVariants: Story = {
       <Badge variant="destructive-outline">Destructive</Badge>
     </div>
   ),
-}
+};
 
 export const AllVariants: Story = {
   render: () => (
@@ -63,7 +70,7 @@ export const AllVariants: Story = {
       </div>
     </div>
   ),
-}
+};
 
 export const WithIcon: Story = {
   render: () => (
@@ -78,7 +85,7 @@ export const WithIcon: Story = {
       </Badge>
     </div>
   ),
-}
+};
 
 export const WithThemeColors: Story = {
   render: () => (
@@ -87,27 +94,47 @@ export const WithThemeColors: Story = {
         <p className="text-sm mb-2 text-muted-foreground">Filled with theme colors:</p>
         <div className="flex flex-wrap gap-2">
           <Badge>Green (Default)</Badge>
-          <div className="theme-cyan"><Badge>Cyan</Badge></div>
-          <div className="theme-yellow"><Badge>Yellow</Badge></div>
-          <div className="theme-hotpink"><Badge>Hot Pink</Badge></div>
-          <div className="theme-amber"><Badge>Amber</Badge></div>
-          <div className="theme-white"><Badge>White</Badge></div>
+          <div className="theme-cyan">
+            <Badge>Cyan</Badge>
+          </div>
+          <div className="theme-yellow">
+            <Badge>Yellow</Badge>
+          </div>
+          <div className="theme-hotpink">
+            <Badge>Hot Pink</Badge>
+          </div>
+          <div className="theme-amber">
+            <Badge>Amber</Badge>
+          </div>
+          <div className="theme-white">
+            <Badge>White</Badge>
+          </div>
         </div>
       </div>
       <div>
         <p className="text-sm mb-2 text-muted-foreground">Outline with theme colors:</p>
         <div className="flex flex-wrap gap-2">
           <Badge variant="outline">Green (Default)</Badge>
-          <div className="theme-cyan"><Badge variant="outline">Cyan</Badge></div>
-          <div className="theme-yellow"><Badge variant="outline">Yellow</Badge></div>
-          <div className="theme-hotpink"><Badge variant="outline">Hot Pink</Badge></div>
-          <div className="theme-amber"><Badge variant="outline">Amber</Badge></div>
-          <div className="theme-white"><Badge variant="outline">White</Badge></div>
+          <div className="theme-cyan">
+            <Badge variant="outline">Cyan</Badge>
+          </div>
+          <div className="theme-yellow">
+            <Badge variant="outline">Yellow</Badge>
+          </div>
+          <div className="theme-hotpink">
+            <Badge variant="outline">Hot Pink</Badge>
+          </div>
+          <div className="theme-amber">
+            <Badge variant="outline">Amber</Badge>
+          </div>
+          <div className="theme-white">
+            <Badge variant="outline">White</Badge>
+          </div>
         </div>
       </div>
     </div>
   ),
-}
+};
 
 export const StatusBadges: Story = {
   render: () => (
@@ -118,4 +145,4 @@ export const StatusBadges: Story = {
       <Badge variant="outline">DRAFT</Badge>
     </div>
   ),
-}
+};

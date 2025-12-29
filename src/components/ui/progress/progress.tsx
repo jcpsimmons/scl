@@ -1,31 +1,19 @@
-import * as React from 'react'
-import * as ProgressPrimitive from '@radix-ui/react-progress'
-import { cn } from '@/lib/utils'
+import * as ProgressPrimitive from '@radix-ui/react-progress';
+import * as React from 'react';
+import { cn } from '@/lib/utils';
 
 export interface ProgressProps
   extends React.ComponentPropsWithoutRef<typeof ProgressPrimitive.Root> {
   /** Progress value from 0 to 100 */
-  value?: number
+  value?: number;
   /** Show percentage text */
-  showPercentage?: boolean
+  showPercentage?: boolean;
   /** Custom label text */
-  label?: string
+  label?: string;
 }
 
-const Progress = React.forwardRef<
-  React.ElementRef<typeof ProgressPrimitive.Root>,
-  ProgressProps
->(
-  (
-    {
-      className,
-      value = 0,
-      showPercentage = false,
-      label,
-      ...props
-    },
-    ref
-  ) => {
+const Progress = React.forwardRef<React.ElementRef<typeof ProgressPrimitive.Root>, ProgressProps>(
+  ({ className, value = 0, showPercentage = false, label, ...props }, ref) => {
     return (
       <div className="w-full min-w-[200px]">
         {(label || showPercentage) && (
@@ -36,7 +24,10 @@ const Progress = React.forwardRef<
         )}
         <ProgressPrimitive.Root
           ref={ref}
-          className={cn('relative h-6 w-full overflow-hidden bg-background border-2 border-primary', className)}
+          className={cn(
+            'relative h-6 w-full overflow-hidden bg-background border-2 border-primary',
+            className
+          )}
           {...props}
         >
           <ProgressPrimitive.Indicator
@@ -45,9 +36,9 @@ const Progress = React.forwardRef<
           />
         </ProgressPrimitive.Root>
       </div>
-    )
+    );
   }
-)
-Progress.displayName = 'Progress'
+);
+Progress.displayName = 'Progress';
 
-export { Progress }
+export { Progress };

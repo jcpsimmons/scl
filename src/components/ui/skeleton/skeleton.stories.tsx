@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/react'
-import { Skeleton } from './skeleton'
+import type { Meta, StoryObj } from '@storybook/react';
+import { Skeleton } from './skeleton';
 
 const meta: Meta<typeof Skeleton> = {
   title: 'Components/Skeleton',
@@ -18,24 +18,24 @@ const meta: Meta<typeof Skeleton> = {
       description: 'Additional CSS classes for sizing',
     },
   },
-}
+};
 
-export default meta
-type Story = StoryObj<typeof Skeleton>
+export default meta;
+type Story = StoryObj<typeof Skeleton>;
 
 export const Default: Story = {
   args: {
     blink: true,
     className: 'h-4 w-[250px]',
   },
-}
+};
 
 export const Static: Story = {
   args: {
     blink: false,
     className: 'h-4 w-[250px]',
   },
-}
+};
 
 export const Card: Story = {
   render: () => (
@@ -47,7 +47,7 @@ export const Card: Story = {
       </div>
     </div>
   ),
-}
+};
 
 export const Avatar: Story = {
   render: () => (
@@ -59,7 +59,7 @@ export const Avatar: Story = {
       </div>
     </div>
   ),
-}
+};
 
 export const Text: Story = {
   render: () => (
@@ -69,7 +69,7 @@ export const Text: Story = {
       <Skeleton className="h-4 w-3/4" />
     </div>
   ),
-}
+};
 
 export const LoadingTable: Story = {
   render: () => (
@@ -88,4 +88,4 @@ export const LoadingTable: Story = {
       ))}
     </div>
   ),
-}
+};

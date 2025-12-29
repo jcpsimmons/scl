@@ -39,7 +39,7 @@ export const spacing = {
   72: '18rem',
   80: '20rem',
   96: '24rem',
-} as const
+} as const;
 
 export const borderRadius = {
   none: '0px',
@@ -51,7 +51,7 @@ export const borderRadius = {
   '2xl': 'calc(var(--radius) + 8px)',
   '3xl': 'calc(var(--radius) + 16px)',
   full: '9999px',
-} as const
+} as const;
 
-export type SpacingTokens = typeof spacing
-export type BorderRadiusTokens = typeof borderRadius
+export type SpacingTokens = typeof spacing;
+export type BorderRadiusTokens = typeof borderRadius;

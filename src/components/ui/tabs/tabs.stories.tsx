@@ -1,18 +1,18 @@
-import type { Meta, StoryObj } from '@storybook/react'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from './tabs'
-import { Button } from '../button'
-import { Input } from '../input'
-import { Label } from '../label'
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../card'
+import type { Meta, StoryObj } from '@storybook/react';
+import { Button } from '../button';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../card';
+import { Input } from '../input';
+import { Label } from '../label';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from './tabs';
 
 const meta: Meta<typeof Tabs> = {
   title: 'Components/Tabs',
   component: Tabs,
   tags: ['autodocs'],
-}
+};
 
-export default meta
-type Story = StoryObj<typeof Tabs>
+export default meta;
+type Story = StoryObj<typeof Tabs>;
 
 export const Default: Story = {
   render: () => (
@@ -69,7 +69,7 @@ export const Default: Story = {
       </TabsContent>
     </Tabs>
   ),
-}
+};
 
 export const Simple: Story = {
   render: () => (
@@ -90,4 +90,4 @@ export const Simple: Story = {
       </TabsContent>
     </Tabs>
   ),
-}
+};

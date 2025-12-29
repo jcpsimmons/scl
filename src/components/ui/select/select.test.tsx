@@ -1,7 +1,7 @@
-import { render, screen } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
-import { describe, it, expect, vi } from 'vitest'
-import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from './select'
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { describe, expect, it, vi } from 'vitest';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './select';
 
 describe('Select', () => {
   it('renders select trigger', () => {
@@ -14,9 +14,9 @@ describe('Select', () => {
           <SelectItem value="1">Option 1</SelectItem>
         </SelectContent>
       </Select>
-    )
-    expect(screen.getByRole('combobox')).toBeInTheDocument()
-  })
+    );
+    expect(screen.getByRole('combobox')).toBeInTheDocument();
+  });
 
   it('shows placeholder text', () => {
     render(
@@ -28,12 +28,12 @@ describe('Select', () => {
           <SelectItem value="1">Option 1</SelectItem>
         </SelectContent>
       </Select>
-    )
-    expect(screen.getByText('Select an option')).toBeInTheDocument()
-  })
+    );
+    expect(screen.getByText('Select an option')).toBeInTheDocument();
+  });
 
   it('opens dropdown on click', async () => {
-    const user = userEvent.setup()
+    const user = userEvent.setup();
     render(
       <Select>
         <SelectTrigger>
@@ -44,14 +44,14 @@ describe('Select', () => {
           <SelectItem value="2">Option 2</SelectItem>
         </SelectContent>
       </Select>
-    )
-    await user.click(screen.getByRole('combobox'))
-    expect(screen.getByText('Option 1')).toBeInTheDocument()
-  })
+    );
+    await user.click(screen.getByRole('combobox'));
+    expect(screen.getByText('Option 1')).toBeInTheDocument();
+  });
 
   it('calls onValueChange when selection changes', async () => {
-    const user = userEvent.setup()
-    const onValueChange = vi.fn()
+    const user = userEvent.setup();
+    const onValueChange = vi.fn();
     render(
       <Select onValueChange={onValueChange}>
         <SelectTrigger>
@@ -61,9 +61,9 @@ describe('Select', () => {
           <SelectItem value="1">Option 1</SelectItem>
         </SelectContent>
       </Select>
-    )
-    await user.click(screen.getByRole('combobox'))
-    await user.click(screen.getByText('Option 1'))
-    expect(onValueChange).toHaveBeenCalledWith('1')
-  })
-})
+    );
+    await user.click(screen.getByRole('combobox'));
+    await user.click(screen.getByText('Option 1'));
+    expect(onValueChange).toHaveBeenCalledWith('1');
+  });
+});

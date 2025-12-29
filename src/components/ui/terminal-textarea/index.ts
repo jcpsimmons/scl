@@ -1,1 +1,1 @@
-export { TerminalTextarea, type TerminalTextareaProps } from './terminal-textarea'
+export { TerminalTextarea, type TerminalTextareaProps } from './terminal-textarea';

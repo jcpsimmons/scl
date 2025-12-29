@@ -1,16 +1,16 @@
-import { describe, it, expect } from 'vitest'
-import { render, screen } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { describe, expect, it } from 'vitest';
 import {
   Command,
-  CommandInput,
-  CommandList,
   CommandEmpty,
   CommandGroup,
+  CommandInput,
   CommandItem,
+  CommandList,
   CommandSeparator,
   CommandShortcut,
-} from './command'
+} from './command';
 
 describe('Command', () => {
   it('renders command component', () => {
@@ -24,11 +24,11 @@ describe('Command', () => {
           </CommandGroup>
         </CommandList>
       </Command>
-    )
+    );
 
-    expect(screen.getByTestId('command')).toBeInTheDocument()
-    expect(screen.getByPlaceholderText('Search...')).toBeInTheDocument()
-  })
+    expect(screen.getByTestId('command')).toBeInTheDocument();
+    expect(screen.getByPlaceholderText('Search...')).toBeInTheDocument();
+  });
 
   it('renders command items', () => {
     render(
@@ -41,13 +41,13 @@ describe('Command', () => {
           </CommandGroup>
         </CommandList>
       </Command>
-    )
+    );
 
-    expect(screen.getByText('Action 1')).toBeInTheDocument()
-    expect(screen.getByText('Action 2')).toBeInTheDocument()
-    expect(screen.getByText('Action 3')).toBeInTheDocument()
-    expect(screen.getByText('Actions')).toBeInTheDocument()
-  })
+    expect(screen.getByText('Action 1')).toBeInTheDocument();
+    expect(screen.getByText('Action 2')).toBeInTheDocument();
+    expect(screen.getByText('Action 3')).toBeInTheDocument();
+    expect(screen.getByText('Actions')).toBeInTheDocument();
+  });
 
   it('renders command shortcut', () => {
     render(
@@ -61,11 +61,11 @@ describe('Command', () => {
           </CommandGroup>
         </CommandList>
       </Command>
-    )
+    );
 
-    expect(screen.getByText('Save')).toBeInTheDocument()
-    expect(screen.getByText(':w')).toBeInTheDocument()
-  })
+    expect(screen.getByText('Save')).toBeInTheDocument();
+    expect(screen.getByText(':w')).toBeInTheDocument();
+  });
 
   it('renders command separator', () => {
     render(
@@ -80,15 +80,15 @@ describe('Command', () => {
           </CommandGroup>
         </CommandList>
       </Command>
-    )
+    );
 
-    expect(screen.getByTestId('separator')).toBeInTheDocument()
-    expect(screen.getByText('Group 1')).toBeInTheDocument()
-    expect(screen.getByText('Group 2')).toBeInTheDocument()
-  })
+    expect(screen.getByTestId('separator')).toBeInTheDocument();
+    expect(screen.getByText('Group 1')).toBeInTheDocument();
+    expect(screen.getByText('Group 2')).toBeInTheDocument();
+  });
 
   it('shows empty state when no results', async () => {
-    const user = userEvent.setup()
+    const user = userEvent.setup();
 
     render(
       <Command>
@@ -101,16 +101,16 @@ describe('Command', () => {
           </CommandGroup>
         </CommandList>
       </Command>
-    )
+    );
 
-    const input = screen.getByPlaceholderText('Search...')
-    await user.type(input, 'xyz')
+    const input = screen.getByPlaceholderText('Search...');
+    await user.type(input, 'xyz');
 
-    expect(screen.getByText('No results found.')).toBeInTheDocument()
-  })
+    expect(screen.getByText('No results found.')).toBeInTheDocument();
+  });
 
   it('filters items based on search', async () => {
-    const user = userEvent.setup()
+    const user = userEvent.setup();
 
     render(
       <Command>
@@ -124,18 +124,18 @@ describe('Command', () => {
           </CommandGroup>
         </CommandList>
       </Command>
-    )
+    );
 
-    const input = screen.getByPlaceholderText('Search...')
-    await user.type(input, 'app')
+    const input = screen.getByPlaceholderText('Search...');
+    await user.type(input, 'app');
 
-    expect(screen.getByText('Apple')).toBeInTheDocument()
-    expect(screen.queryByText('Banana')).not.toBeInTheDocument()
-    expect(screen.queryByText('Cherry')).not.toBeInTheDocument()
-  })
+    expect(screen.getByText('Apple')).toBeInTheDocument();
+    expect(screen.queryByText('Banana')).not.toBeInTheDocument();
+    expect(screen.queryByText('Cherry')).not.toBeInTheDocument();
+  });
 
   it('supports keyboard navigation', async () => {
-    const user = userEvent.setup()
+    const user = userEvent.setup();
 
     render(
       <Command>
@@ -148,18 +148,18 @@ describe('Command', () => {
           </CommandGroup>
         </CommandList>
       </Command>
-    )
+    );
 
-    const input = screen.getByPlaceholderText('Search...')
-    await user.click(input)
-    await user.keyboard('{ArrowDown}')
-    await user.keyboard('{ArrowDown}')
+    const input = screen.getByPlaceholderText('Search...');
+    await user.click(input);
+    await user.keyboard('{ArrowDown}');
+    await user.keyboard('{ArrowDown}');
 
     // Check that navigation works (items should be selectable)
-    expect(screen.getByText('Item 1')).toBeInTheDocument()
-    expect(screen.getByText('Item 2')).toBeInTheDocument()
-    expect(screen.getByText('Item 3')).toBeInTheDocument()
-  })
+    expect(screen.getByText('Item 1')).toBeInTheDocument();
+    expect(screen.getByText('Item 2')).toBeInTheDocument();
+    expect(screen.getByText('Item 3')).toBeInTheDocument();
+  });
 
   it('renders disabled items correctly', () => {
     render(
@@ -170,11 +170,11 @@ describe('Command', () => {
           </CommandGroup>
         </CommandList>
       </Command>
-    )
+    );
 
-    const item = screen.getByText('Disabled Item').closest('[cmdk-item]')
-    expect(item).toHaveAttribute('data-disabled', 'true')
-  })
+    const item = screen.getByText('Disabled Item').closest('[cmdk-item]');
+    expect(item).toHaveAttribute('data-disabled', 'true');
+  });
 
   it('applies custom className', () => {
     render(
@@ -183,8 +183,8 @@ describe('Command', () => {
           <CommandItem>Test</CommandItem>
         </CommandList>
       </Command>
-    )
+    );
 
-    expect(screen.getByTestId('command')).toHaveClass('custom-class')
-  })
-})
+    expect(screen.getByTestId('command')).toHaveClass('custom-class');
+  });
+});

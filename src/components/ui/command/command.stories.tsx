@@ -1,5 +1,17 @@
-import type { Meta, StoryObj } from '@storybook/react'
-import * as React from 'react'
+import type { Meta, StoryObj } from '@storybook/react';
+import {
+  Calculator,
+  Calendar,
+  CreditCard,
+  File,
+  Moon,
+  Settings,
+  Smile,
+  Sun,
+  Terminal,
+  User,
+} from 'lucide-react';
+import * as React from 'react';
 import {
   Command,
   CommandDialog,
@@ -10,19 +22,7 @@ import {
   CommandList,
   CommandSeparator,
   CommandShortcut,
-} from './command'
-import {
-  Calculator,
-  Calendar,
-  CreditCard,
-  Settings,
-  Smile,
-  User,
-  File,
-  Terminal,
-  Moon,
-  Sun,
-} from 'lucide-react'
+} from './command';
 
 const meta: Meta<typeof Command> = {
   title: 'Components/Command',
@@ -31,10 +31,10 @@ const meta: Meta<typeof Command> = {
     layout: 'centered',
   },
   tags: ['autodocs'],
-}
+};
 
-export default meta
-type Story = StoryObj<typeof Command>
+export default meta;
+type Story = StoryObj<typeof Command>;
 
 export const Default: Story = {
   render: () => (
@@ -77,7 +77,7 @@ export const Default: Story = {
       </CommandList>
     </Command>
   ),
-}
+};
 
 export const VimStyle: Story = {
   render: () => (
@@ -141,23 +141,23 @@ export const VimStyle: Story = {
       </CommandList>
     </Command>
   ),
-}
+};
 
 export const WithDialog: Story = {
   render: function DialogExample() {
-    const [open, setOpen] = React.useState(false)
+    const [open, setOpen] = React.useState(false);
 
     React.useEffect(() => {
       const down = (e: KeyboardEvent) => {
         if (e.key === 'k' && (e.metaKey || e.ctrlKey)) {
-          e.preventDefault()
-          setOpen((open) => !open)
+          e.preventDefault();
+          setOpen((open) => !open);
         }
-      }
+      };
 
-      document.addEventListener('keydown', down)
-      return () => document.removeEventListener('keydown', down)
-    }, [])
+      document.addEventListener('keydown', down);
+      return () => document.removeEventListener('keydown', down);
+    }, []);
 
     return (
       <>
@@ -188,9 +188,9 @@ export const WithDialog: Story = {
           </CommandList>
         </CommandDialog>
       </>
-    )
+    );
   },
-}
+};
 
 export const ThemeSwitcher: Story = {
   render: () => (
@@ -227,7 +227,7 @@ export const ThemeSwitcher: Story = {
       </CommandList>
     </Command>
   ),
-}
+};
 
 export const Empty: Story = {
   render: () => (
@@ -238,4 +238,4 @@ export const Empty: Story = {
       </CommandList>
     </Command>
   ),
-}
+};

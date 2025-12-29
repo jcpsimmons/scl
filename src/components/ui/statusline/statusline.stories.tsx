@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/react'
-import { Statusline } from './statusline'
+import type { Meta, StoryObj } from '@storybook/react';
+import { Statusline } from './statusline';
 
 const meta: Meta<typeof Statusline> = {
   title: 'Components/Statusline',
@@ -14,10 +14,10 @@ const meta: Meta<typeof Statusline> = {
       </div>
     ),
   ],
-}
+};
 
-export default meta
-type Story = StoryObj<typeof Statusline>
+export default meta;
+type Story = StoryObj<typeof Statusline>;
 
 export const Default: Story = {
   args: {
@@ -32,7 +32,7 @@ export const Default: Story = {
     column: 1,
     totalLines: 31,
   },
-}
+};
 
 export const InsertMode: Story = {
   args: {
@@ -47,7 +47,7 @@ export const InsertMode: Story = {
     totalLines: 150,
     modified: true,
   },
-}
+};
 
 export const VisualMode: Story = {
   args: {
@@ -60,7 +60,7 @@ export const VisualMode: Story = {
     column: 5,
     totalLines: 100,
   },
-}
+};
 
 export const CommandMode: Story = {
   args: {
@@ -73,7 +73,7 @@ export const CommandMode: Story = {
     column: 1,
     totalLines: 50,
   },
-}
+};
 
 export const WithBranch: Story = {
   args: {
@@ -88,7 +88,7 @@ export const WithBranch: Story = {
     column: 12,
     totalLines: 80,
   },
-}
+};
 
 export const ModifiedFile: Story = {
   args: {
@@ -102,7 +102,7 @@ export const ModifiedFile: Story = {
     totalLines: 200,
     modified: true,
   },
-}
+};
 
 export const ReadonlyFile: Story = {
   args: {
@@ -115,7 +115,7 @@ export const ReadonlyFile: Story = {
     totalLines: 20,
     readonly: true,
   },
-}
+};
 
 export const AtTop: Story = {
   args: {
@@ -126,7 +126,7 @@ export const AtTop: Story = {
     column: 1,
     totalLines: 1000,
   },
-}
+};
 
 export const AtBottom: Story = {
   args: {
@@ -137,33 +137,23 @@ export const AtBottom: Story = {
     column: 1,
     totalLines: 1000,
   },
-}
+};
 
 export const CustomContent: Story = {
   args: {
     mode: 'NORMAL',
-    leftContent: (
-      <div className="flex items-center px-2 bg-amber-500 text-black">
-        LSP: Ready
-      </div>
-    ),
-    centerContent: (
-      <span className="text-yellow-400">Custom Center Content</span>
-    ),
-    rightContent: (
-      <div className="flex items-center px-2 text-green-400">
-        Spaces: 2
-      </div>
-    ),
+    leftContent: <div className="flex items-center px-2 bg-amber-500 text-black">LSP: Ready</div>,
+    centerContent: <span className="text-yellow-400">Custom Center Content</span>,
+    rightContent: <div className="flex items-center px-2 text-green-400">Spaces: 2</div>,
     line: 42,
     column: 10,
     percentage: '50%',
   },
-}
+};
 
 export const Minimal: Story = {
   args: {
     mode: 'NORMAL',
     filename: 'file.txt',
   },
-}
+};

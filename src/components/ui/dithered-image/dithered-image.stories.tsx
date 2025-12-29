@@ -1,6 +1,6 @@
-import type { Meta, StoryObj } from '@storybook/react'
-import { DitheredImage } from './dithered-image'
-import sampleImage from '../../../../simmonsprofile.jpg'
+import type { Meta, StoryObj } from '@storybook/react';
+import sampleImage from '../../../../simmonsprofile.jpg';
+import { DitheredImage } from './dithered-image';
 
 const meta: Meta<typeof DitheredImage> = {
   title: 'Components/DitheredImage',
@@ -24,12 +24,12 @@ const meta: Meta<typeof DitheredImage> = {
       control: false,
     },
   },
-}
+};
 
-export default meta
-type Story = StoryObj<typeof DitheredImage>
+export default meta;
+type Story = StoryObj<typeof DitheredImage>;
 
-const SAMPLE_IMAGE = sampleImage
+const SAMPLE_IMAGE = sampleImage;
 
 // Default now uses Atkinson (classic Mac)
 export const Default: Story = {
@@ -38,7 +38,7 @@ export const Default: Story = {
     alt: 'Atkinson dithered image (classic Mac)',
     width: 400,
   },
-}
+};
 
 // Classic Mac aesthetic - Atkinson with green
 export const AtkinsonGreen: Story = {
@@ -49,7 +49,7 @@ export const AtkinsonGreen: Story = {
     algorithm: 'atkinson',
     color: [0, 255, 0],
   },
-}
+};
 
 // Atkinson with amber (like old monochrome monitors)
 export const AtkinsonAmber: Story = {
@@ -60,7 +60,7 @@ export const AtkinsonAmber: Story = {
     algorithm: 'atkinson',
     color: [255, 176, 0],
   },
-}
+};
 
 // Floyd-Steinberg for comparison (smoother gradients)
 export const FloydSteinberg: Story = {
@@ -71,7 +71,7 @@ export const FloydSteinberg: Story = {
     algorithm: 'floyd-steinberg',
     color: [0, 255, 0],
   },
-}
+};
 
 // Bayer ordered dithering (the original pattern)
 export const BayerOrdered: Story = {
@@ -82,7 +82,7 @@ export const BayerOrdered: Story = {
     algorithm: 'bayer',
     ditherSize: 1,
   },
-}
+};
 
 // Large Bayer pattern
 export const BayerLargePattern: Story = {
@@ -93,7 +93,7 @@ export const BayerLargePattern: Story = {
     algorithm: 'bayer',
     ditherSize: 2,
   },
-}
+};
 
 // Cyan terminal color
 export const CyanColor: Story = {
@@ -104,7 +104,7 @@ export const CyanColor: Story = {
     algorithm: 'atkinson',
     color: [0, 255, 255],
   },
-}
+};
 
 // Hot pink
 export const HotPinkColor: Story = {
@@ -115,7 +115,7 @@ export const HotPinkColor: Story = {
     algorithm: 'atkinson',
     color: [255, 0, 255],
   },
-}
+};
 
 // White (high contrast)
 export const WhiteColor: Story = {
@@ -126,7 +126,7 @@ export const WhiteColor: Story = {
     algorithm: 'atkinson',
     color: [255, 255, 255],
   },
-}
+};
 
 // Custom threshold (darker)
 export const DarkThreshold: Story = {
@@ -137,7 +137,7 @@ export const DarkThreshold: Story = {
     algorithm: 'atkinson',
     threshold: 100,
   },
-}
+};
 
 // Custom threshold (lighter)
 export const LightThreshold: Story = {
@@ -148,19 +148,14 @@ export const LightThreshold: Story = {
     algorithm: 'atkinson',
     threshold: 180,
   },
-}
+};
 
 // Comparison grid
 export const AlgorithmComparison: Story = {
   render: () => (
     <div className="grid grid-cols-3 gap-4">
       <div className="text-center">
-        <DitheredImage
-          src={SAMPLE_IMAGE}
-          alt="Atkinson"
-          width={200}
-          algorithm="atkinson"
-        />
+        <DitheredImage src={SAMPLE_IMAGE} alt="Atkinson" width={200} algorithm="atkinson" />
         <p className="mt-2 text-sm text-primary">Atkinson (Mac)</p>
       </div>
       <div className="text-center">
@@ -173,14 +168,9 @@ export const AlgorithmComparison: Story = {
         <p className="mt-2 text-sm text-primary">Floyd-Steinberg</p>
       </div>
       <div className="text-center">
-        <DitheredImage
-          src={SAMPLE_IMAGE}
-          alt="Bayer"
-          width={200}
-          algorithm="bayer"
-        />
+        <DitheredImage src={SAMPLE_IMAGE} alt="Bayer" width={200} algorithm="bayer" />
         <p className="mt-2 text-sm text-primary">Bayer (Ordered)</p>
       </div>
     </div>
   ),
-}
+};

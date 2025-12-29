@@ -1,15 +1,15 @@
-import * as React from 'react'
-import { render, screen } from '@testing-library/react'
-import { describe, it, expect } from 'vitest'
+import { render, screen } from '@testing-library/react';
+import * as React from 'react';
+import { describe, expect, it } from 'vitest';
 import {
   Table,
-  TableHeader,
   TableBody,
-  TableRow,
-  TableHead,
-  TableCell,
   TableCaption,
-} from './table'
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from './table';
 
 describe('Table', () => {
   it('renders table with data', () => {
@@ -29,18 +29,26 @@ describe('Table', () => {
           </TableRow>
         </TableBody>
       </Table>
-    )
-    expect(screen.getByRole('table')).toBeInTheDocument()
-    expect(screen.getByText('A list of invoices')).toBeInTheDocument()
-    expect(screen.getByText('Invoice')).toBeInTheDocument()
-    expect(screen.getByText('INV001')).toBeInTheDocument()
-  })
+    );
+    expect(screen.getByRole('table')).toBeInTheDocument();
+    expect(screen.getByText('A list of invoices')).toBeInTheDocument();
+    expect(screen.getByText('Invoice')).toBeInTheDocument();
+    expect(screen.getByText('INV001')).toBeInTheDocument();
+  });
 
   it('forwards ref to Table', () => {
-    const ref = React.createRef<HTMLTableElement>()
-    render(<Table ref={ref}><TableBody><TableRow><TableCell>Cell</TableCell></TableRow></TableBody></Table>)
-    expect(ref.current).toBeInstanceOf(HTMLTableElement)
-  })
+    const ref = React.createRef<HTMLTableElement>();
+    render(
+      <Table ref={ref}>
+        <TableBody>
+          <TableRow>
+            <TableCell>Cell</TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>
+    );
+    expect(ref.current).toBeInstanceOf(HTMLTableElement);
+  });
 
   it('merges custom className', () => {
     render(
@@ -51,7 +59,7 @@ describe('Table', () => {
           </TableRow>
         </TableBody>
       </Table>
-    )
-    expect(screen.getByRole('table')).toHaveClass('custom-class')
-  })
-})
+    );
+    expect(screen.getByRole('table')).toHaveClass('custom-class');
+  });
+});

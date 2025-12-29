@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/react'
-import { Alert, AlertTitle, AlertDescription } from './alert'
+import type { Meta, StoryObj } from '@storybook/react';
+import { Alert, AlertDescription, AlertTitle } from './alert';
 
 const meta: Meta<typeof Alert> = {
   title: 'Components/Alert',
@@ -11,21 +11,19 @@ const meta: Meta<typeof Alert> = {
       options: ['default', 'secondary', 'destructive'],
     },
   },
-}
+};
 
-export default meta
-type Story = StoryObj<typeof Alert>
+export default meta;
+type Story = StoryObj<typeof Alert>;
 
 export const Default: Story = {
   render: () => (
     <Alert>
       <AlertTitle>Heads up!</AlertTitle>
-      <AlertDescription>
-        You can add components to your app using the cli.
-      </AlertDescription>
+      <AlertDescription>You can add components to your app using the cli.</AlertDescription>
     </Alert>
   ),
-}
+};
 
 export const Secondary: Story = {
   render: () => (
@@ -36,18 +34,16 @@ export const Secondary: Story = {
       </AlertDescription>
     </Alert>
   ),
-}
+};
 
 export const Destructive: Story = {
   render: () => (
     <Alert variant="destructive">
       <AlertTitle>Error</AlertTitle>
-      <AlertDescription>
-        Your session has expired. Please log in again.
-      </AlertDescription>
+      <AlertDescription>Your session has expired. Please log in again.</AlertDescription>
     </Alert>
   ),
-}
+};
 
 export const WithoutDescription: Story = {
   render: () => (
@@ -55,7 +51,7 @@ export const WithoutDescription: Story = {
       <AlertTitle>Note</AlertTitle>
     </Alert>
   ),
-}
+};
 
 export const AllVariants: Story = {
   render: () => (
@@ -74,7 +70,7 @@ export const AllVariants: Story = {
       </Alert>
     </div>
   ),
-}
+};
 
 export const WithThemeColors: Story = {
   render: () => (
@@ -93,4 +89,4 @@ export const WithThemeColors: Story = {
       </Alert>
     </div>
   ),
-}
+};

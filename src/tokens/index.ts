@@ -3,17 +3,17 @@
  * Export all tokens and theme configuration.
  */
 
-export * from './colors'
-export * from './typography'
-export * from './spacing'
-export * from './animations'
-export * from './shadows'
+export * from './animations';
+export * from './colors';
+export * from './shadows';
+export * from './spacing';
+export * from './typography';
 
-import { colors } from './colors'
-import { typography } from './typography'
-import { spacing, borderRadius } from './spacing'
-import { animations } from './animations'
-import { shadows } from './shadows'
+import { animations } from './animations';
+import { colors } from './colors';
+import { shadows } from './shadows';
+import { borderRadius, spacing } from './spacing';
+import { typography } from './typography';
 
 /**
  * Complete theme configuration object.
@@ -26,6 +26,6 @@ export const theme = {
   borderRadius,
   animations,
   shadows,
-} as const
+} as const;
 
-export type Theme = typeof theme
+export type Theme = typeof theme;

@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/react'
-import { Button } from './button'
+import type { Meta, StoryObj } from '@storybook/react';
+import { Button } from './button';
 
 const meta: Meta<typeof Button> = {
   title: 'Components/Button',
@@ -8,7 +8,16 @@ const meta: Meta<typeof Button> = {
   argTypes: {
     variant: {
       control: 'select',
-      options: ['default', 'destructive', 'outline', 'secondary', 'secondary-outline', 'ghost', 'link', 'destructive-outline'],
+      options: [
+        'default',
+        'destructive',
+        'outline',
+        'secondary',
+        'secondary-outline',
+        'ghost',
+        'link',
+        'destructive-outline',
+      ],
     },
     size: {
       control: 'select',
@@ -21,30 +30,30 @@ const meta: Meta<typeof Button> = {
       control: 'boolean',
     },
   },
-}
+};
 
-export default meta
-type Story = StoryObj<typeof Button>
+export default meta;
+type Story = StoryObj<typeof Button>;
 
 export const Default: Story = {
   args: {
     children: '[Start Quiz]',
   },
-}
+};
 
 export const Primary: Story = {
   args: {
     variant: 'default',
     children: '[Start Quiz]',
   },
-}
+};
 
 export const Secondary: Story = {
   args: {
     variant: 'secondary',
     children: 'Reset Progress',
   },
-}
+};
 
 export const AllVariants: Story = {
   render: () => (
@@ -59,7 +68,7 @@ export const AllVariants: Story = {
       <Button variant="link">Learn More</Button>
     </div>
   ),
-}
+};
 
 export const AllSizes: Story = {
   render: () => (
@@ -72,14 +81,14 @@ export const AllSizes: Story = {
       </Button>
     </div>
   ),
-}
+};
 
 export const Disabled: Story = {
   args: {
     children: '[Loading...]',
     disabled: true,
   },
-}
+};
 
 export const WithIcon: Story = {
   render: () => (
@@ -94,7 +103,7 @@ export const WithIcon: Story = {
       </Button>
     </div>
   ),
-}
+};
 
 export const AsLink: Story = {
   render: () => (
@@ -102,16 +111,22 @@ export const AsLink: Story = {
       <a href="#">[View Documentation]</a>
     </Button>
   ),
-}
+};
 
 export const InteractiveDemo: Story = {
   render: () => (
     <div className="flex flex-col gap-6 p-8 bg-black rounded-lg">
       <div className="text-white font-mono text-center">
         <p className="text-gray-400 mb-2">14 questions • ~3 minutes</p>
-        <Button size="lg" className="mb-4">[Start Quiz]</Button>
+        <Button size="lg" className="mb-4">
+          [Start Quiz]
+        </Button>
         <p className="text-sm">
-          Press <Button variant="ghost" size="sm" className="inline-flex mx-1">ENTER</Button> to start
+          Press{' '}
+          <Button variant="ghost" size="sm" className="inline-flex mx-1">
+            ENTER
+          </Button>{' '}
+          to start
         </p>
       </div>
       <div className="flex justify-between items-center">
@@ -120,7 +135,7 @@ export const InteractiveDemo: Story = {
       </div>
     </div>
   ),
-}
+};
 
 export const WithThemeColors: Story = {
   render: () => (
@@ -147,4 +162,4 @@ export const WithThemeColors: Story = {
       </div>
     </div>
   ),
-}
+};

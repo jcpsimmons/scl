@@ -1,15 +1,15 @@
-import type { Meta, StoryObj } from '@storybook/react'
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from './collapsible'
-import { Button } from '../button'
+import type { Meta, StoryObj } from '@storybook/react';
+import { Button } from '../button';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from './collapsible';
 
 const meta: Meta<typeof Collapsible> = {
   title: 'Components/Collapsible',
   component: Collapsible,
   tags: ['autodocs'],
-}
+};
 
-export default meta
-type Story = StoryObj<typeof Collapsible>
+export default meta;
+type Story = StoryObj<typeof Collapsible>;
 
 export const Default: Story = {
   render: () => (
@@ -17,7 +17,9 @@ export const Default: Story = {
       <div className="flex items-center justify-between space-x-4 px-4">
         <h4 className="text-sm font-semibold">@peduarte starred 3 repositories</h4>
         <CollapsibleTrigger asChild>
-          <Button variant="outline" size="sm">Toggle</Button>
+          <Button variant="outline" size="sm">
+            Toggle
+          </Button>
         </CollapsibleTrigger>
       </div>
       <div className="rounded-md border px-4 py-2 font-mono text-sm shadow-sm">
@@ -33,4 +35,4 @@ export const Default: Story = {
       </CollapsibleContent>
     </Collapsible>
   ),
-}
+};

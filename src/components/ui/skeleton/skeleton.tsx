@@ -1,24 +1,16 @@
-import { cn } from '@/lib/utils'
+import { cn } from '@/lib/utils';
 
 interface SkeletonProps extends React.HTMLAttributes<HTMLDivElement> {
-  blink?: boolean
+  blink?: boolean;
 }
 
-function Skeleton({
-  className,
-  blink = true,
-  ...props
-}: SkeletonProps) {
+function Skeleton({ className, blink = true, ...props }: SkeletonProps) {
   return (
     <div
-      className={cn(
-        'border border-primary/30 bg-primary/10',
-        blink && 'animate-blink',
-        className
-      )}
+      className={cn('border border-primary/30 bg-primary/10', blink && 'animate-blink', className)}
       {...props}
     />
-  )
+  );
 }
 
-export { Skeleton }
+export { Skeleton };

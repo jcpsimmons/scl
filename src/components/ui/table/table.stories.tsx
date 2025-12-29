@@ -1,23 +1,23 @@
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react';
 import {
   Table,
   TableBody,
   TableCaption,
   TableCell,
+  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
-  TableFooter,
-} from './table'
+} from './table';
 
 const meta: Meta<typeof Table> = {
   title: 'Components/Table',
   component: Table,
   tags: ['autodocs'],
-}
+};
 
-export default meta
-type Story = StoryObj<typeof Table>
+export default meta;
+type Story = StoryObj<typeof Table>;
 
 const invoices = [
   { invoice: 'INV001', status: 'Paid', method: 'Credit Card', amount: '$250.00' },
@@ -25,7 +25,7 @@ const invoices = [
   { invoice: 'INV003', status: 'Unpaid', method: 'Bank Transfer', amount: '$350.00' },
   { invoice: 'INV004', status: 'Paid', method: 'Credit Card', amount: '$450.00' },
   { invoice: 'INV005', status: 'Paid', method: 'PayPal', amount: '$550.00' },
-]
+];
 
 export const Default: Story = {
   render: () => (
@@ -57,7 +57,7 @@ export const Default: Story = {
       </TableFooter>
     </Table>
   ),
-}
+};
 
 export const Simple: Story = {
   render: () => (
@@ -83,4 +83,4 @@ export const Simple: Story = {
       </TableBody>
     </Table>
   ),
-}
+};

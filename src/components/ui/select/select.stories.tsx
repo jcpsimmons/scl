@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react';
 import {
   Select,
   SelectContent,
@@ -7,16 +7,16 @@ import {
   SelectLabel,
   SelectTrigger,
   SelectValue,
-} from './select'
+} from './select';
 
 const meta: Meta<typeof Select> = {
   title: 'Components/Select',
   component: Select,
   tags: ['autodocs'],
-}
+};
 
-export default meta
-type Story = StoryObj<typeof Select>
+export default meta;
+type Story = StoryObj<typeof Select>;
 
 export const Default: Story = {
   render: () => (
@@ -32,7 +32,7 @@ export const Default: Story = {
       </SelectContent>
     </Select>
   ),
-}
+};
 
 export const WithGroups: Story = {
   render: () => (
@@ -57,7 +57,7 @@ export const WithGroups: Story = {
       </SelectContent>
     </Select>
   ),
-}
+};
 
 export const Disabled: Story = {
   render: () => (
@@ -70,7 +70,7 @@ export const Disabled: Story = {
       </SelectContent>
     </Select>
   ),
-}
+};
 
 export const WithDefaultValue: Story = {
   render: () => (
@@ -85,4 +85,4 @@ export const WithDefaultValue: Story = {
       </SelectContent>
     </Select>
   ),
-}
+};

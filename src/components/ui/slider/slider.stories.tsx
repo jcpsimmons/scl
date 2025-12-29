@@ -1,6 +1,6 @@
-import type { Meta, StoryObj } from '@storybook/react'
-import * as React from 'react'
-import { Slider } from './slider'
+import type { Meta, StoryObj } from '@storybook/react';
+import * as React from 'react';
+import { Slider } from './slider';
 
 const meta: Meta<typeof Slider> = {
   title: 'Components/Slider',
@@ -11,10 +11,10 @@ const meta: Meta<typeof Slider> = {
       control: 'boolean',
     },
   },
-}
+};
 
-export default meta
-type Story = StoryObj<typeof Slider>
+export default meta;
+type Story = StoryObj<typeof Slider>;
 
 export const Default: Story = {
   args: {
@@ -29,10 +29,10 @@ export const Default: Story = {
       </div>
     ),
   ],
-}
+};
 
 const WithLabelComponent = () => {
-  const [value, setValue] = React.useState([50])
+  const [value, setValue] = React.useState([50]);
   return (
     <div className="space-y-4 w-80">
       <div className="flex justify-between">
@@ -41,12 +41,12 @@ const WithLabelComponent = () => {
       </div>
       <Slider value={value} onValueChange={setValue} max={100} step={1} />
     </div>
-  )
-}
+  );
+};
 
 export const WithLabel: Story = {
   render: () => <WithLabelComponent />,
-}
+};
 
 export const Range: Story = {
   args: {
@@ -61,7 +61,7 @@ export const Range: Story = {
       </div>
     ),
   ],
-}
+};
 
 export const Disabled: Story = {
   args: {
@@ -77,7 +77,7 @@ export const Disabled: Story = {
       </div>
     ),
   ],
-}
+};
 
 export const StepValues: Story = {
   args: {
@@ -92,4 +92,4 @@ export const StepValues: Story = {
       </div>
     ),
   ],
-}
+};

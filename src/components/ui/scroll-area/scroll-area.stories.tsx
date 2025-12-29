@@ -1,19 +1,17 @@
-import type { Meta, StoryObj } from '@storybook/react'
-import { ScrollArea } from './scroll-area'
-import { Separator } from '../separator'
+import type { Meta, StoryObj } from '@storybook/react';
+import { Separator } from '../separator';
+import { ScrollArea } from './scroll-area';
 
 const meta: Meta<typeof ScrollArea> = {
   title: 'Components/ScrollArea',
   component: ScrollArea,
   tags: ['autodocs'],
-}
+};
 
-export default meta
-type Story = StoryObj<typeof ScrollArea>
+export default meta;
+type Story = StoryObj<typeof ScrollArea>;
 
-const tags = Array.from({ length: 50 }).map(
-  (_, i, a) => `v1.2.0-beta.${a.length - i}`
-)
+const tags = Array.from({ length: 50 }).map((_, i, a) => `v1.2.0-beta.${a.length - i}`);
 
 export const Default: Story = {
   render: () => (
@@ -31,7 +29,7 @@ export const Default: Story = {
       </div>
     </ScrollArea>
   ),
-}
+};
 
 export const Horizontal: Story = {
   render: () => (
@@ -48,7 +46,7 @@ export const Horizontal: Story = {
       </div>
     </ScrollArea>
   ),
-}
+};
 
 export const BothDirections: Story = {
   render: () => (
@@ -56,10 +54,10 @@ export const BothDirections: Story = {
       <div className="p-4" style={{ width: '500px', height: '500px' }}>
         <h4 className="mb-4 text-sm font-medium">Large Content Area</h4>
         <p className="text-sm text-muted-foreground">
-          This content area is larger than the scroll container,
-          allowing both vertical and horizontal scrolling.
+          This content area is larger than the scroll container, allowing both vertical and
+          horizontal scrolling.
         </p>
       </div>
     </ScrollArea>
   ),
-}
+};

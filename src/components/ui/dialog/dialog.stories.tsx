@@ -1,4 +1,7 @@
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react';
+import { Button } from '../button';
+import { Input } from '../input';
+import { Label } from '../label';
 import {
   Dialog,
   DialogContent,
@@ -7,19 +10,16 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from './dialog'
-import { Button } from '../button'
-import { Input } from '../input'
-import { Label } from '../label'
+} from './dialog';
 
 const meta: Meta<typeof Dialog> = {
   title: 'Components/Dialog',
   component: Dialog,
   tags: ['autodocs'],
-}
+};
 
-export default meta
-type Story = StoryObj<typeof Dialog>
+export default meta;
+type Story = StoryObj<typeof Dialog>;
 
 export const Default: Story = {
   render: () => (
@@ -54,7 +54,7 @@ export const Default: Story = {
       </DialogContent>
     </Dialog>
   ),
-}
+};
 
 export const Simple: Story = {
   render: () => (
@@ -66,8 +66,8 @@ export const Simple: Story = {
         <DialogHeader>
           <DialogTitle>Are you absolutely sure?</DialogTitle>
           <DialogDescription>
-            This action cannot be undone. This will permanently delete your
-            account and remove your data from our servers.
+            This action cannot be undone. This will permanently delete your account and remove your
+            data from our servers.
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
@@ -77,4 +77,4 @@ export const Simple: Story = {
       </DialogContent>
     </Dialog>
   ),
-}
+};

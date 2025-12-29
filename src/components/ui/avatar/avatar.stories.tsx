@@ -1,14 +1,14 @@
-import type { Meta, StoryObj } from '@storybook/react'
-import { Avatar, AvatarImage, AvatarFallback } from './avatar'
+import type { Meta, StoryObj } from '@storybook/react';
+import { Avatar, AvatarFallback, AvatarImage } from './avatar';
 
 const meta: Meta<typeof Avatar> = {
   title: 'Components/Avatar',
   component: Avatar,
   tags: ['autodocs'],
-}
+};
 
-export default meta
-type Story = StoryObj<typeof Avatar>
+export default meta;
+type Story = StoryObj<typeof Avatar>;
 
 export const WithImage: Story = {
   render: () => (
@@ -17,7 +17,7 @@ export const WithImage: Story = {
       <AvatarFallback>CN</AvatarFallback>
     </Avatar>
   ),
-}
+};
 
 export const WithFallback: Story = {
   render: () => (
@@ -26,7 +26,7 @@ export const WithFallback: Story = {
       <AvatarFallback>JD</AvatarFallback>
     </Avatar>
   ),
-}
+};
 
 export const Sizes: Story = {
   render: () => (
@@ -45,7 +45,7 @@ export const Sizes: Story = {
       </Avatar>
     </div>
   ),
-}
+};
 
 export const Group: Story = {
   render: () => (
@@ -64,4 +64,4 @@ export const Group: Story = {
       </Avatar>
     </div>
   ),
-}
+};

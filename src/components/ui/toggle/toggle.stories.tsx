@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/react'
-import { Toggle } from './toggle'
+import type { Meta, StoryObj } from '@storybook/react';
+import { Toggle } from './toggle';
 
 const meta: Meta<typeof Toggle> = {
   title: 'Components/Toggle',
@@ -18,17 +18,17 @@ const meta: Meta<typeof Toggle> = {
       control: 'boolean',
     },
   },
-}
+};
 
-export default meta
-type Story = StoryObj<typeof Toggle>
+export default meta;
+type Story = StoryObj<typeof Toggle>;
 
 export const Default: Story = {
   args: {
     children: 'B',
     'aria-label': 'Toggle bold',
   },
-}
+};
 
 export const Outline: Story = {
   args: {
@@ -36,23 +36,29 @@ export const Outline: Story = {
     variant: 'outline',
     'aria-label': 'Toggle bold',
   },
-}
+};
 
 export const WithText: Story = {
   args: {
     children: 'Toggle me',
   },
-}
+};
 
 export const AllSizes: Story = {
   render: () => (
     <div className="flex items-center gap-4">
-      <Toggle size="sm" aria-label="Small">Sm</Toggle>
-      <Toggle size="default" aria-label="Default">Md</Toggle>
-      <Toggle size="lg" aria-label="Large">Lg</Toggle>
+      <Toggle size="sm" aria-label="Small">
+        Sm
+      </Toggle>
+      <Toggle size="default" aria-label="Default">
+        Md
+      </Toggle>
+      <Toggle size="lg" aria-label="Large">
+        Lg
+      </Toggle>
     </div>
   ),
-}
+};
 
 export const Disabled: Story = {
   args: {
@@ -60,7 +66,7 @@ export const Disabled: Story = {
     disabled: true,
     'aria-label': 'Toggle disabled',
   },
-}
+};
 
 export const Pressed: Story = {
   args: {
@@ -68,4 +74,4 @@ export const Pressed: Story = {
     defaultPressed: true,
     'aria-label': 'Toggle pressed',
   },
-}
+};

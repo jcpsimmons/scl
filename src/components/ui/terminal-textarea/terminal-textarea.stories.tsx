@@ -1,7 +1,7 @@
-import type { Meta, StoryObj } from '@storybook/react'
-import { useState } from 'react'
-import { TerminalTextarea } from './terminal-textarea'
-import { Statusline } from '../statusline/statusline'
+import type { Meta, StoryObj } from '@storybook/react';
+import { useState } from 'react';
+import { Statusline } from '../statusline/statusline';
+import { TerminalTextarea } from './terminal-textarea';
 
 const meta: Meta<typeof TerminalTextarea> = {
   title: 'Components/TerminalTextarea',
@@ -24,10 +24,10 @@ const meta: Meta<typeof TerminalTextarea> = {
       description: 'Read-only mode',
     },
   },
-}
+};
 
-export default meta
-type Story = StoryObj<typeof TerminalTextarea>
+export default meta;
+type Story = StoryObj<typeof TerminalTextarea>;
 
 export const Default: Story = {
   args: {
@@ -39,14 +39,14 @@ export const Default: Story = {
 greet("Terminal");`,
     placeholder: 'Enter code here...',
   },
-}
+};
 
 export const WithPlaceholder: Story = {
   args: {
     visibleLines: 8,
     placeholder: 'Type something...',
   },
-}
+};
 
 export const NoLineNumbers: Story = {
   args: {
@@ -57,7 +57,7 @@ function simple() {
   return "Clean and minimal";
 }`,
   },
-}
+};
 
 export const ReadOnly: Story = {
   args: {
@@ -68,7 +68,7 @@ export const ReadOnly: Story = {
 const message = "Read-only mode";
 console.log(message);`,
   },
-}
+};
 
 // Interactive example with statusline
 const InteractiveDemo = () => {
@@ -78,9 +78,9 @@ function fibonacci(n) {
   return fibonacci(n - 1) + fibonacci(n - 2);
 }
 
-console.log(fibonacci(10));`)
-  const [cursor, setCursor] = useState({ line: 1, column: 1 })
-  const lines = value.split('\n')
+console.log(fibonacci(10));`);
+  const [cursor, setCursor] = useState({ line: 1, column: 1 });
+  const lines = value.split('\n');
 
   return (
     <div className="flex flex-col w-[600px] bg-black">
@@ -103,16 +103,18 @@ console.log(fibonacci(10));`)
         modified={true}
       />
     </div>
-  )
-}
+  );
+};
 
 export const WithStatusline: Story = {
   render: () => <InteractiveDemo />,
-}
+};
 
 export const LongContent: Story = {
   args: {
     visibleLines: 15,
-    value: Array.from({ length: 50 }, (_, i) => `Line ${i + 1}: This is some sample content`).join('\n'),
+    value: Array.from({ length: 50 }, (_, i) => `Line ${i + 1}: This is some sample content`).join(
+      '\n'
+    ),
   },
-}
+};

@@ -1,7 +1,18 @@
-import type { Meta, StoryObj } from '@storybook/react'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import * as z from 'zod'
+import { zodResolver } from '@hookform/resolvers/zod';
+import type { Meta, StoryObj } from '@storybook/react';
+import { useForm } from 'react-hook-form';
+import * as z from 'zod';
+import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Input } from '@/components/ui/input';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
 import {
   Form,
   FormControl,
@@ -10,12 +21,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from './form'
-import { Input } from '@/components/ui/input'
-import { Button } from '@/components/ui/button'
-import { Checkbox } from '@/components/ui/checkbox'
-import { Textarea } from '@/components/ui/textarea'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+} from './form';
 
 const meta: Meta = {
   title: 'Components/Form',
@@ -23,10 +29,10 @@ const meta: Meta = {
     layout: 'centered',
   },
   tags: ['autodocs'],
-}
+};
 
-export default meta
-type Story = StoryObj
+export default meta;
+type Story = StoryObj;
 
 const basicSchema = z.object({
   username: z.string().min(2, {
@@ -35,7 +41,7 @@ const basicSchema = z.object({
   email: z.string().email({
     message: 'Please enter a valid email address.',
   }),
-})
+});
 
 export const BasicForm: Story = {
   render: function BasicFormExample() {
@@ -45,11 +51,11 @@ export const BasicForm: Story = {
         username: '',
         email: '',
       },
-    })
+    });
 
     function onSubmit(values: z.infer<typeof basicSchema>) {
-      console.log(values)
-      alert(JSON.stringify(values, null, 2))
+      console.log(values);
+      alert(JSON.stringify(values, null, 2));
     }
 
     return (
@@ -64,9 +70,7 @@ export const BasicForm: Story = {
                 <FormControl>
                   <Input placeholder="simsies" {...field} />
                 </FormControl>
-                <FormDescription>
-                  Your public display name.
-                </FormDescription>
+                <FormDescription>Your public display name.</FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -80,9 +84,7 @@ export const BasicForm: Story = {
                 <FormControl>
                   <Input placeholder="user@example.com" {...field} />
                 </FormControl>
-                <FormDescription>
-                  We'll never share your email.
-                </FormDescription>
+                <FormDescription>We'll never share your email.</FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -90,9 +92,9 @@ export const BasicForm: Story = {
           <Button type="submit">Submit</Button>
         </form>
       </Form>
-    )
+    );
   },
-}
+};
 
 const vimConfigSchema = z.object({
   leader: z.string().min(1, 'Leader key is required'),
@@ -100,7 +102,7 @@ const vimConfigSchema = z.object({
   relativenumber: z.boolean(),
   tabstop: z.coerce.number().min(1).max(8),
   notes: z.string().optional(),
-})
+});
 
 export const VimConfigForm: Story = {
   render: function VimConfigExample() {
@@ -113,11 +115,11 @@ export const VimConfigForm: Story = {
         tabstop: 2,
         notes: '',
       },
-    })
+    });
 
     function onSubmit(values: z.infer<typeof vimConfigSchema>) {
-      console.log(values)
-      alert(`:set applied!\n${JSON.stringify(values, null, 2)}`)
+      console.log(values);
+      alert(`:set applied!\n${JSON.stringify(values, null, 2)}`);
     }
 
     return (
@@ -132,9 +134,7 @@ export const VimConfigForm: Story = {
                 <FormControl>
                   <Input placeholder="<Space>" {...field} />
                 </FormControl>
-                <FormDescription>
-                  vim.g.mapleader = &quot;{field.value}&quot;
-                </FormDescription>
+                <FormDescription>vim.g.mapleader = &quot;{field.value}&quot;</FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -158,9 +158,7 @@ export const VimConfigForm: Story = {
                     <SelectItem value="amber">Amber</SelectItem>
                   </SelectContent>
                 </Select>
-                <FormDescription>
-                  Select your preferred color theme.
-                </FormDescription>
+                <FormDescription>Select your preferred color theme.</FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -171,16 +169,11 @@ export const VimConfigForm: Story = {
             render={({ field }) => (
               <FormItem className="flex flex-row items-start space-x-3 space-y-0">
                 <FormControl>
-                  <Checkbox
-                    checked={field.value}
-                    onCheckedChange={field.onChange}
-                  />
+                  <Checkbox checked={field.value} onCheckedChange={field.onChange} />
                 </FormControl>
                 <div className="space-y-1 leading-none">
                   <FormLabel>Relative numbers</FormLabel>
-                  <FormDescription>
-                    :set relativenumber
-                  </FormDescription>
+                  <FormDescription>:set relativenumber</FormDescription>
                 </div>
               </FormItem>
             )}
@@ -194,9 +187,7 @@ export const VimConfigForm: Story = {
                 <FormControl>
                   <Input type="number" min={1} max={8} {...field} />
                 </FormControl>
-                <FormDescription>
-                  :set tabstop={field.value}
-                </FormDescription>
+                <FormDescription>:set tabstop={field.value}</FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -208,10 +199,7 @@ export const VimConfigForm: Story = {
               <FormItem>
                 <FormLabel>Notes</FormLabel>
                 <FormControl>
-                  <Textarea
-                    placeholder="-- Additional config notes"
-                    {...field}
-                  />
+                  <Textarea placeholder="-- Additional config notes" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -225,15 +213,15 @@ export const VimConfigForm: Story = {
           </div>
         </form>
       </Form>
-    )
+    );
   },
-}
+};
 
 const loginSchema = z.object({
   username: z.string().min(1, 'Username is required'),
   password: z.string().min(8, 'Password must be at least 8 characters'),
   remember: z.boolean(),
-})
+});
 
 export const LoginForm: Story = {
   render: function LoginExample() {
@@ -244,11 +232,11 @@ export const LoginForm: Story = {
         password: '',
         remember: false,
       },
-    })
+    });
 
     function onSubmit(values: z.infer<typeof loginSchema>) {
-      console.log(values)
-      alert('Login submitted!')
+      console.log(values);
+      alert('Login submitted!');
     }
 
     return (
@@ -288,10 +276,7 @@ export const LoginForm: Story = {
               render={({ field }) => (
                 <FormItem className="flex flex-row items-center space-x-2 space-y-0">
                   <FormControl>
-                    <Checkbox
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                    />
+                    <Checkbox checked={field.value} onCheckedChange={field.onChange} />
                   </FormControl>
                   <FormLabel className="font-normal">Remember me</FormLabel>
                 </FormItem>
@@ -303,9 +288,9 @@ export const LoginForm: Story = {
           </form>
         </Form>
       </div>
-    )
+    );
   },
-}
+};
 
 export const WithErrors: Story = {
   render: function ErrorsExample() {
@@ -315,10 +300,10 @@ export const WithErrors: Story = {
         username: 'a',
         email: 'not-an-email',
       },
-    })
+    });
 
     // Trigger validation on mount to show errors
-    form.trigger()
+    form.trigger();
 
     return (
       <Form {...form}>
@@ -332,9 +317,7 @@ export const WithErrors: Story = {
                 <FormControl>
                   <Input {...field} />
                 </FormControl>
-                <FormDescription>
-                  Minimum 2 characters required.
-                </FormDescription>
+                <FormDescription>Minimum 2 characters required.</FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -354,6 +337,6 @@ export const WithErrors: Story = {
           />
         </form>
       </Form>
-    )
+    );
   },
-}
+};
