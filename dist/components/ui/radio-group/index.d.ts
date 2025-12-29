@@ -1,2 +1,0 @@
-export { RadioGroup, RadioGroupItem } from './radio-group';
-//# sourceMappingURL=index.d.ts.map

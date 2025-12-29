@@ -1,1 +1,0 @@
-import{_ as e}from"./index-CpPXzfmY.js";import"./index-B2-qRKKC.js";import"./_commonjsHelpers-Cpj98o6Y.js";const o={parameters:{docs:{theme:e.dark},controls:{matchers:{color:/(background|color)$/i,date:/Date$/i}},backgrounds:{default:"terminal",values:[{name:"terminal",value:"#000000"}]},layout:"centered"}};export{o as default};

@@ -1,6 +1,0 @@
-import * as t from "react";
-var e = globalThis != null && globalThis.document ? t.useLayoutEffect : () => {
-};
-export {
-  e as useLayoutEffect
-};
