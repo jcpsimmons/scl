@@ -3,3 +3,10 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Override card borders to be green until npm package is updated */
+@layer components {
+  [class*="border-2"]:not([class*="border-primary"]):not([class*="border-secondary"]):not([class*="border-destructive"]) {
+    border-color: hsl(var(--primary));
+  }
+}
