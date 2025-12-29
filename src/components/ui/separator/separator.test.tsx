@@ -6,12 +6,12 @@ import { Separator } from './separator';
 describe('Separator', () => {
   it('renders horizontal separator by default', () => {
     render(<Separator data-testid="separator" />);
-    expect(screen.getByTestId('separator')).toHaveClass('h-[1px]', 'w-full');
+    expect(screen.getByTestId('separator')).toHaveClass('h-[2px]', 'w-full');
   });
 
   it('renders vertical separator', () => {
     render(<Separator orientation="vertical" data-testid="separator" />);
-    expect(screen.getByTestId('separator')).toHaveClass('h-full', 'w-[1px]');
+    expect(screen.getByTestId('separator')).toHaveClass('h-full', 'w-[3px]');
   });
 
   it('forwards ref correctly', () => {
