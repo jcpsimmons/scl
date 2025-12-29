@@ -1,5 +1,4 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import sampleImage from '../../../../simmonsprofile.jpg';
 import { DitheredImage } from './dithered-image';
 
 const meta: Meta<typeof DitheredImage> = {
@@ -29,7 +28,8 @@ const meta: Meta<typeof DitheredImage> = {
 export default meta;
 type Story = StoryObj<typeof DitheredImage>;
 
-const SAMPLE_IMAGE = sampleImage;
+// Using picsum for a consistent sample portrait
+const SAMPLE_IMAGE = 'https://picsum.photos/seed/scl-demo/400/400';
 
 // Default now uses Atkinson (classic Mac)
 export const Default: Story = {
