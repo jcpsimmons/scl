@@ -1,41 +1,50 @@
-'use client'
+"use client";
 
-import { useState, useEffect } from 'react'
 import {
+  Badge,
   Button,
   Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
-  CardDescription,
-  CardContent,
-  CardFooter,
+  Checkbox,
   Input,
   Label,
-  Checkbox,
+  Progress,
+  Separator,
+  Skeleton,
   Switch,
   Tabs,
+  TabsContent,
   TabsList,
   TabsTrigger,
-  TabsContent,
-  Badge,
-  Progress,
-  Skeleton,
-  Separator,
-} from '@drjoshcsimmons/scl'
-import { Terminal, Zap, Code, Package, Github, ExternalLink, Copy, Check } from 'lucide-react'
+} from "@drjoshcsimmons/scl";
+import {
+  Check,
+  Code,
+  Copy,
+  ExternalLink,
+  Github,
+  Package,
+  Terminal,
+  Zap,
+} from "lucide-react";
+import { useEffect, useState } from "react";
 
 export default function Home() {
-  const [checked, setChecked] = useState(false)
-  const [switchOn, setSwitchOn] = useState(false)
-  const [progress, setProgress] = useState(45)
-  const [copiedId, setCopiedId] = useState<string | null>(null)
-  const [typedText, setTypedText] = useState('')
+  const [checked, setChecked] = useState(false);
+  const [switchOn, setSwitchOn] = useState(false);
+  const [progress, setProgress] = useState(45);
+  const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [typedText, setTypedText] = useState("");
 
-  const installCmd = 'npm install @drjoshcsimmons/scl'
-  const fullText = '> SIMSIES COMPONENT LIBRARY'
+  const installCmd = "npm install @drjoshcsimmons/scl";
+  const fullText = "> SIMSIES COMPONENT LIBRARY";
 
   const codeSnippets = {
-    install: 'npm install @drjoshcsimmons/scl',
+    install: "npm install @drjoshcsimmons/scl",
     css: `// In your global CSS file
 @import '@drjoshcsimmons/scl/globals.css';`,
     usage: `import { Button, Card } from '@drjoshcsimmons/scl'
@@ -47,26 +56,26 @@ export default function App() {
     </Card>
   )
 }`,
-  }
+  };
 
   useEffect(() => {
-    let i = 0
+    let i = 0;
     const timer = setInterval(() => {
       if (i <= fullText.length) {
-        setTypedText(fullText.slice(0, i))
-        i++
+        setTypedText(fullText.slice(0, i));
+        i++;
       } else {
-        clearInterval(timer)
+        clearInterval(timer);
       }
-    }, 50)
-    return () => clearInterval(timer)
-  }, [])
+    }, 50);
+    return () => clearInterval(timer);
+  }, []);
 
   const copyToClipboard = (text: string, id: string) => {
-    navigator.clipboard.writeText(text)
-    setCopiedId(id)
-    setTimeout(() => setCopiedId(null), 2000)
-  }
+    navigator.clipboard.writeText(text);
+    setCopiedId(id);
+    setTimeout(() => setCopiedId(null), 2000);
+  };
 
   return (
     <main className="min-h-screen">
@@ -81,9 +90,9 @@ export default function App() {
             <span className="animate-blink">_</span>
           </h1>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            A retro terminal-themed React component library built on shadcn/ui,
-            Radix primitives, and Tailwind CSS. No rounded corners. No shadows.
-            Pure terminal aesthetics.
+            The most based UI library on the web. Fuck multimedia, fuck
+            gradients, fuck "user experience", fuck "design", and above all fuck
+            subtlety.
           </p>
 
           {/* Install Command */}
@@ -91,26 +100,46 @@ export default function App() {
             <code className="bg-card border-2 border-primary px-4 py-2 text-sm font-mono">
               {installCmd}
             </code>
-            <Button variant="outline" size="sm" onClick={() => copyToClipboard(installCmd, 'hero')}>
-              {copiedId === 'hero' ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => copyToClipboard(installCmd, "hero")}
+            >
+              {copiedId === "hero" ? (
+                <Check className="w-4 h-4" />
+              ) : (
+                <Copy className="w-4 h-4" />
+              )}
             </Button>
           </div>
 
-          <div className="flex items-center justify-center gap-4 mt-6">
-            <Button asChild>
-              <a href="https://simsies-component-library.vercel.app" target="_blank" rel="noopener noreferrer">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mt-6 w-full">
+            <Button asChild className="w-full sm:w-auto">
+              <a
+                href="https://simsies-component-library.vercel.app"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <ExternalLink className="w-4 h-4 mr-2" />
-                Storybook Docs
+                Docs
               </a>
             </Button>
-            <Button variant="outline" asChild>
-              <a href="https://github.com/jcpsimmons/scl" target="_blank" rel="noopener noreferrer">
+            <Button variant="outline" asChild className="w-full sm:w-auto">
+              <a
+                href="https://github.com/jcpsimmons/scl"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <Github className="w-4 h-4 mr-2" />
                 GitHub
               </a>
             </Button>
-            <Button variant="outline" asChild>
-              <a href="https://www.npmjs.com/package/@drjoshcsimmons/scl" target="_blank" rel="noopener noreferrer">
+            <Button variant="outline" asChild className="w-full sm:w-auto">
+              <a
+                href="https://www.npmjs.com/package/@drjoshcsimmons/scl"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <Package className="w-4 h-4 mr-2" />
                 npm
               </a>
@@ -133,7 +162,8 @@ export default function App() {
             </CardHeader>
             <CardContent>
               <p className="text-muted-foreground">
-                Buttons, Cards, Dialogs, Forms, Tables, and more. Everything you need for a complete terminal UI.
+                Buttons, Cards, Dialogs, Forms, Tables, and more. Everything you
+                need for a complete terminal UI.
               </p>
             </CardContent>
           </Card>
@@ -144,7 +174,8 @@ export default function App() {
             </CardHeader>
             <CardContent>
               <p className="text-muted-foreground">
-                Built on accessible Radix UI primitives. Full keyboard navigation and screen reader support.
+                Built on accessible Radix UI primitives. Full keyboard
+                navigation and screen reader support.
               </p>
             </CardContent>
           </Card>
@@ -155,7 +186,8 @@ export default function App() {
             </CardHeader>
             <CardContent>
               <p className="text-muted-foreground">
-                Styled with Tailwind CSS and CSS variables. Easy to customize and theme to your needs.
+                Styled with Tailwind CSS and CSS variables. Easy to customize
+                and theme to your needs.
               </p>
             </CardContent>
           </Card>
@@ -268,7 +300,11 @@ export default function App() {
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="password">Password</Label>
-                  <Input id="password" type="password" placeholder="Enter password" />
+                  <Input
+                    id="password"
+                    type="password"
+                    placeholder="Enter password"
+                  />
                 </div>
                 <div className="flex items-center space-x-2">
                   <Checkbox
@@ -317,9 +353,15 @@ export default function App() {
                   variant="ghost"
                   size="sm"
                   className="absolute top-2 right-2"
-                  onClick={() => copyToClipboard(codeSnippets.install, 'install')}
+                  onClick={() =>
+                    copyToClipboard(codeSnippets.install, "install")
+                  }
                 >
-                  {copiedId === 'install' ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+                  {copiedId === "install" ? (
+                    <Check className="w-4 h-4" />
+                  ) : (
+                    <Copy className="w-4 h-4" />
+                  )}
                 </Button>
               </div>
             </CardContent>
@@ -338,9 +380,13 @@ export default function App() {
                   variant="ghost"
                   size="sm"
                   className="absolute top-2 right-2"
-                  onClick={() => copyToClipboard(codeSnippets.css, 'css')}
+                  onClick={() => copyToClipboard(codeSnippets.css, "css")}
                 >
-                  {copiedId === 'css' ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+                  {copiedId === "css" ? (
+                    <Check className="w-4 h-4" />
+                  ) : (
+                    <Copy className="w-4 h-4" />
+                  )}
                 </Button>
               </div>
             </CardContent>
@@ -359,9 +405,13 @@ export default function App() {
                   variant="ghost"
                   size="sm"
                   className="absolute top-2 right-2"
-                  onClick={() => copyToClipboard(codeSnippets.usage, 'usage')}
+                  onClick={() => copyToClipboard(codeSnippets.usage, "usage")}
                 >
-                  {copiedId === 'usage' ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+                  {copiedId === "usage" ? (
+                    <Check className="w-4 h-4" />
+                  ) : (
+                    <Copy className="w-4 h-4" />
+                  )}
                 </Button>
               </div>
             </CardContent>
@@ -378,13 +428,22 @@ export default function App() {
               <span className="font-mono text-sm">SCL v0.1.8</span>
             </div>
             <div className="flex items-center gap-4 text-sm text-muted-foreground">
-              <a href="https://github.com/jcpsimmons/scl" className="hover:text-primary transition-colors">
+              <a
+                href="https://github.com/jcpsimmons/scl"
+                className="hover:text-primary transition-colors"
+              >
                 GitHub
               </a>
-              <a href="https://www.npmjs.com/package/@drjoshcsimmons/scl" className="hover:text-primary transition-colors">
+              <a
+                href="https://www.npmjs.com/package/@drjoshcsimmons/scl"
+                className="hover:text-primary transition-colors"
+              >
                 npm
               </a>
-              <a href="https://simsies-component-library.vercel.app" className="hover:text-primary transition-colors">
+              <a
+                href="https://simsies-component-library.vercel.app"
+                className="hover:text-primary transition-colors"
+              >
                 Docs
               </a>
             </div>
@@ -395,5 +454,5 @@ export default function App() {
         </div>
       </footer>
     </main>
-  )
+  );
 }
