@@ -147,6 +147,42 @@ export default function App() {
 
       <Separator className="max-w-5xl mx-auto" />
 
+      {/* Color Palette */}
+      <section className="container mx-auto px-4 py-16 max-w-5xl">
+        <h2 className="text-2xl font-bold text-center mb-8">
+          <span className="text-primary">&gt;</span> PALETTE
+        </h2>
+        <div className="flex flex-wrap justify-center gap-4">
+          {[
+            { name: 'GREEN', color: 'hsl(120 100% 50%)', textDark: true },
+            { name: 'HOTPINK', color: 'hsl(300 100% 50%)', textDark: true },
+            { name: 'YELLOW', color: 'hsl(60 100% 50%)', textDark: true },
+            { name: 'CYAN', color: 'hsl(180 100% 50%)', textDark: true },
+            { name: 'BLUE', color: 'hsl(240 100% 50%)', textDark: false },
+            { name: 'AMBER', color: 'hsl(45 100% 50%)', textDark: true },
+            { name: 'RED', color: 'hsl(0 100% 50%)', textDark: true },
+            { name: 'WHITE', color: 'hsl(0 0% 100%)', textDark: true },
+          ].map((c) => (
+            <div key={c.name} className="group relative">
+              <div
+                className="w-16 h-16 sm:w-20 sm:h-20 border-2 border-primary transition-transform hover:scale-110 hover:z-10"
+                style={{ backgroundColor: c.color }}
+              />
+              <span
+                className={`absolute -bottom-6 left-1/2 -translate-x-1/2 text-xs font-mono opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap`}
+              >
+                {c.name}
+              </span>
+            </div>
+          ))}
+        </div>
+        <p className="text-center text-muted-foreground text-sm mt-12">
+          Pure, saturated CRT colors. No pastels. No gradients. No subtlety.
+        </p>
+      </section>
+
+      <Separator className="max-w-5xl mx-auto" />
+
       {/* Features */}
       <section className="container mx-auto px-4 py-16 max-w-5xl">
         <h2 className="text-2xl font-bold text-center mb-8">
