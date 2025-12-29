@@ -309,9 +309,19 @@ export default function App() {
               <CardTitle>1. Install</CardTitle>
             </CardHeader>
             <CardContent>
-              <code className="block bg-background p-4 border border-primary text-sm">
-                npm install @drjoshcsimmons/scl
-              </code>
+              <div className="relative">
+                <code className="block bg-background p-4 pr-12 border border-primary text-sm">
+                  {codeSnippets.install}
+                </code>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="absolute top-2 right-2"
+                  onClick={() => copyToClipboard(codeSnippets.install, 'install')}
+                >
+                  {copiedId === 'install' ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+                </Button>
+              </div>
             </CardContent>
           </Card>
 
@@ -320,10 +330,19 @@ export default function App() {
               <CardTitle>2. Import CSS</CardTitle>
             </CardHeader>
             <CardContent>
-              <code className="block bg-background p-4 border border-primary text-sm whitespace-pre">
-{`// In your global CSS file
-@import '@drjoshcsimmons/scl/globals.css';`}
-              </code>
+              <div className="relative">
+                <code className="block bg-background p-4 pr-12 border border-primary text-sm whitespace-pre">
+                  {codeSnippets.css}
+                </code>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="absolute top-2 right-2"
+                  onClick={() => copyToClipboard(codeSnippets.css, 'css')}
+                >
+                  {copiedId === 'css' ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+                </Button>
+              </div>
             </CardContent>
           </Card>
 
@@ -332,17 +351,19 @@ export default function App() {
               <CardTitle>3. Use Components</CardTitle>
             </CardHeader>
             <CardContent>
-              <code className="block bg-background p-4 border border-primary text-sm whitespace-pre">
-{`import { Button, Card } from '@drjoshcsimmons/scl'
-
-export default function App() {
-  return (
-    <Card>
-      <Button>Click me</Button>
-    </Card>
-  )
-}`}
-              </code>
+              <div className="relative">
+                <code className="block bg-background p-4 pr-12 border border-primary text-sm whitespace-pre">
+                  {codeSnippets.usage}
+                </code>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="absolute top-2 right-2"
+                  onClick={() => copyToClipboard(codeSnippets.usage, 'usage')}
+                >
+                  {copiedId === 'usage' ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+                </Button>
+              </div>
             </CardContent>
           </Card>
         </div>
