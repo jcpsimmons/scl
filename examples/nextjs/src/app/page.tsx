@@ -21,6 +21,7 @@ import {
   TabsList,
   TabsTrigger,
 } from "@drjoshcsimmons/scl";
+import { version as sclVersion } from "@drjoshcsimmons/scl/package.json";
 import {
   Check,
   Code,
