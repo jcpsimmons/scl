@@ -5,7 +5,7 @@
     "": {
       "name": "scl-nextjs-example",
       "dependencies": {
-        "@drjoshcsimmons/scl": "^0.2.5",
+        "@drjoshcsimmons/scl": "^0.2.7",
         "@vercel/analytics": "^1.4.0",
         "lucide-react": "^0.460.0",
         "next": "^15.0.0",
@@ -52,7 +52,7 @@
 
     "@codemirror/view": ["@codemirror/view@6.39.7", "", { "dependencies": { "@codemirror/state": "^6.5.0", "crelt": "^1.0.6", "style-mod": "^4.1.0", "w3c-keyname": "^2.2.4" } }, "sha512-3Vif9hnNHJnl2YgOtkR/wzGzhYcQ8gy3LGdUhkLUU8xSBbgsTxrE8he/CMTpeINm5TgxLe2FmzvF6IYQL/BSAg=="],
 
-    "@drjoshcsimmons/scl": ["@drjoshcsimmons/scl@0.2.5", "", { "dependencies": { "@codemirror/basic-setup": "^0.20.0", "@codemirror/commands": "^6.10.1", "@codemirror/lang-css": "^6.3.1", "@codemirror/lang-html": "^6.4.11", "@codemirror/lang-javascript": "^6.2.4", "@codemirror/lang-json": "^6.0.2", "@codemirror/lang-markdown": "^6.5.0", "@codemirror/language": "^6.11.3", "@codemirror/state": "^6.5.2", "@codemirror/view": "^6.39.4", "@lezer/highlight": "^1.2.3", "@replit/codemirror-vim": "^6.3.0", "@vercel/analytics": "^1.6.1" }, "peerDependencies": { "react": "^18.0.0 || ^19.0.0", "react-dom": "^18.0.0 || ^19.0.0" } }, "sha512-PEGS8f7dlz3iV5iCQfepCUQGHwrIV4UIabsdpACavioHjHT0BKnO2nxEEdXYLm7HSoQCTJAxGb34nhLmM8vJ6A=="],
+    "@drjoshcsimmons/scl": ["@drjoshcsimmons/scl@0.2.7", "", { "dependencies": { "@codemirror/basic-setup": "^0.20.0", "@codemirror/commands": "^6.10.1", "@codemirror/lang-css": "^6.3.1", "@codemirror/lang-html": "^6.4.11", "@codemirror/lang-javascript": "^6.2.4", "@codemirror/lang-json": "^6.0.2", "@codemirror/lang-markdown": "^6.5.0", "@codemirror/language": "^6.11.3", "@codemirror/state": "^6.5.2", "@codemirror/view": "^6.39.4", "@lezer/highlight": "^1.2.3", "@replit/codemirror-vim": "^6.3.0", "@vercel/analytics": "^1.6.1" }, "peerDependencies": { "react": "^18.0.0 || ^19.0.0", "react-dom": "^18.0.0 || ^19.0.0" } }, "sha512-BgeppKO7Rh3wPMZdYmqvT6vkIPgr6SKHdBcTVnMs7iBS+jGbFfGoDDfwlzT3Z5YRM+JnWB1XIKzhEPyumd/v0w=="],
 
     "@emnapi/runtime": ["@emnapi/runtime@1.7.1", "", { "dependencies": { "tslib": "^2.4.0" } }, "sha512-PVtJr5CmLwYAU9PZDMITZoR5iAOShYREoR45EyyLrbntV50mdePTgUn4AmOw90Ifcj+x2kRjdzr1HP3RrNiHGA=="],
 
