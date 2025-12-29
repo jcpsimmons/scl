@@ -1,6 +1,6 @@
 import { jsxs as m, jsx as r } from "react/jsx-runtime";
 import * as i from "react";
-import { Root as s, Viewport as p, Corner as d, ScrollAreaScrollbar as c, ScrollAreaThumb as f } from "./index64.js";
+import { Root as s, Viewport as p, Corner as d, ScrollAreaScrollbar as c, ScrollAreaThumb as f } from "./index69.js";
 import { cn as n } from "./index2.js";
 const h = i.forwardRef(({ className: l, children: e, ...o }, a) => /* @__PURE__ */ m(
   s,
@@ -29,7 +29,7 @@ const t = i.forwardRef(({ className: l, orientation: e = "vertical", ...o }, a) 
       l
     ),
     ...o,
-    children: /* @__PURE__ */ r(f, { className: "relative flex-1 bg-primary terminal-glow" })
+    children: /* @__PURE__ */ r(f, { className: "relative flex-1 bg-primary" })
   }
 ));
 t.displayName = c.displayName;

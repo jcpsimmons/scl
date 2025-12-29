@@ -1,832 +1,532 @@
-import { parser as b } from "./index138.js";
-import { LanguageSupport as w, LRLanguage as v, indentNodeProp as y, foldNodeProp as k, continuedIndent as x, foldInside as z, syntaxTree as S } from "./index74.js";
-import { NodeWeakMap as q, IterMode as C } from "./index139.js";
-let c = null;
-function u() {
-  if (!c && typeof document == "object" && document.body) {
-    let { style: t } = document.body, a = [], o = /* @__PURE__ */ new Set();
-    for (let r in t)
-      r != "cssText" && r != "cssFloat" && typeof t[r] == "string" && (/[A-Z]/.test(r) && (r = r.replace(/[A-Z]/g, (e) => "-" + e.toLowerCase())), o.has(r) || (a.push(r), o.add(r)));
-    c = a.sort().map((r) => ({ type: "property", label: r, apply: r + ": " }));
-  }
-  return c || [];
+import * as c from "react";
+import { Primitive as L } from "./index86.js";
+import { Presence as I } from "./index94.js";
+import { createContextScope as te } from "./index81.js";
+import { useComposedRefs as A } from "./index83.js";
+import { useCallbackRef as C } from "./index77.js";
+import { useDirection as ne } from "./index88.js";
+import { useLayoutEffect as le } from "./index78.js";
+import { clamp as ce } from "./index90.js";
+import { composeEventHandlers as R } from "./index84.js";
+import { jsx as b, jsxs as ie, Fragment as se } from "react/jsx-runtime";
+function ae(e, t) {
+  return c.useReducer((r, l) => t[r][l] ?? r, e);
 }
-const p = /* @__PURE__ */ [
-  "active",
-  "after",
-  "any-link",
-  "autofill",
-  "backdrop",
-  "before",
-  "checked",
-  "cue",
-  "default",
-  "defined",
-  "disabled",
-  "empty",
-  "enabled",
-  "file-selector-button",
-  "first",
-  "first-child",
-  "first-letter",
-  "first-line",
-  "first-of-type",
-  "focus",
-  "focus-visible",
-  "focus-within",
-  "fullscreen",
-  "has",
-  "host",
-  "host-context",
-  "hover",
-  "in-range",
-  "indeterminate",
-  "invalid",
-  "is",
-  "lang",
-  "last-child",
-  "last-of-type",
-  "left",
-  "link",
-  "marker",
-  "modal",
-  "not",
-  "nth-child",
-  "nth-last-child",
-  "nth-last-of-type",
-  "nth-of-type",
-  "only-child",
-  "only-of-type",
-  "optional",
-  "out-of-range",
-  "part",
-  "placeholder",
-  "placeholder-shown",
-  "read-only",
-  "read-write",
-  "required",
-  "right",
-  "root",
-  "scope",
-  "selection",
-  "slotted",
-  "target",
-  "target-text",
-  "valid",
-  "visited",
-  "where"
-].map((t) => ({ type: "class", label: t })), m = /* @__PURE__ */ [
-  "above",
-  "absolute",
-  "activeborder",
-  "additive",
-  "activecaption",
-  "after-white-space",
-  "ahead",
-  "alias",
-  "all",
-  "all-scroll",
-  "alphabetic",
-  "alternate",
-  "always",
-  "antialiased",
-  "appworkspace",
-  "asterisks",
-  "attr",
-  "auto",
-  "auto-flow",
-  "avoid",
-  "avoid-column",
-  "avoid-page",
-  "avoid-region",
-  "axis-pan",
-  "background",
-  "backwards",
-  "baseline",
-  "below",
-  "bidi-override",
-  "blink",
-  "block",
-  "block-axis",
-  "bold",
-  "bolder",
-  "border",
-  "border-box",
-  "both",
-  "bottom",
-  "break",
-  "break-all",
-  "break-word",
-  "bullets",
-  "button",
-  "button-bevel",
-  "buttonface",
-  "buttonhighlight",
-  "buttonshadow",
-  "buttontext",
-  "calc",
-  "capitalize",
-  "caps-lock-indicator",
-  "caption",
-  "captiontext",
-  "caret",
-  "cell",
-  "center",
-  "checkbox",
-  "circle",
-  "cjk-decimal",
-  "clear",
-  "clip",
-  "close-quote",
-  "col-resize",
-  "collapse",
-  "color",
-  "color-burn",
-  "color-dodge",
-  "column",
-  "column-reverse",
-  "compact",
-  "condensed",
-  "contain",
-  "content",
-  "contents",
-  "content-box",
-  "context-menu",
-  "continuous",
-  "copy",
-  "counter",
-  "counters",
-  "cover",
-  "crop",
-  "cross",
-  "crosshair",
-  "currentcolor",
-  "cursive",
-  "cyclic",
-  "darken",
-  "dashed",
-  "decimal",
-  "decimal-leading-zero",
-  "default",
-  "default-button",
-  "dense",
-  "destination-atop",
-  "destination-in",
-  "destination-out",
-  "destination-over",
-  "difference",
-  "disc",
-  "discard",
-  "disclosure-closed",
-  "disclosure-open",
-  "document",
-  "dot-dash",
-  "dot-dot-dash",
-  "dotted",
-  "double",
-  "down",
-  "e-resize",
-  "ease",
-  "ease-in",
-  "ease-in-out",
-  "ease-out",
-  "element",
-  "ellipse",
-  "ellipsis",
-  "embed",
-  "end",
-  "ethiopic-abegede-gez",
-  "ethiopic-halehame-aa-er",
-  "ethiopic-halehame-gez",
-  "ew-resize",
-  "exclusion",
-  "expanded",
-  "extends",
-  "extra-condensed",
-  "extra-expanded",
-  "fantasy",
-  "fast",
-  "fill",
-  "fill-box",
-  "fixed",
-  "flat",
-  "flex",
-  "flex-end",
-  "flex-start",
-  "footnotes",
-  "forwards",
-  "from",
-  "geometricPrecision",
-  "graytext",
-  "grid",
-  "groove",
-  "hand",
-  "hard-light",
-  "help",
-  "hidden",
-  "hide",
-  "higher",
-  "highlight",
-  "highlighttext",
-  "horizontal",
-  "hsl",
-  "hsla",
-  "hue",
-  "icon",
-  "ignore",
-  "inactiveborder",
-  "inactivecaption",
-  "inactivecaptiontext",
-  "infinite",
-  "infobackground",
-  "infotext",
-  "inherit",
-  "initial",
-  "inline",
-  "inline-axis",
-  "inline-block",
-  "inline-flex",
-  "inline-grid",
-  "inline-table",
-  "inset",
-  "inside",
-  "intrinsic",
-  "invert",
-  "italic",
-  "justify",
-  "keep-all",
-  "landscape",
-  "large",
-  "larger",
-  "left",
-  "level",
-  "lighter",
-  "lighten",
-  "line-through",
-  "linear",
-  "linear-gradient",
-  "lines",
-  "list-item",
-  "listbox",
-  "listitem",
-  "local",
-  "logical",
-  "loud",
-  "lower",
-  "lower-hexadecimal",
-  "lower-latin",
-  "lower-norwegian",
-  "lowercase",
-  "ltr",
-  "luminosity",
-  "manipulation",
-  "match",
-  "matrix",
-  "matrix3d",
-  "medium",
-  "menu",
-  "menutext",
-  "message-box",
-  "middle",
-  "min-intrinsic",
-  "mix",
-  "monospace",
-  "move",
-  "multiple",
-  "multiple_mask_images",
-  "multiply",
-  "n-resize",
-  "narrower",
-  "ne-resize",
-  "nesw-resize",
-  "no-close-quote",
-  "no-drop",
-  "no-open-quote",
-  "no-repeat",
-  "none",
-  "normal",
-  "not-allowed",
-  "nowrap",
-  "ns-resize",
-  "numbers",
-  "numeric",
-  "nw-resize",
-  "nwse-resize",
-  "oblique",
-  "opacity",
-  "open-quote",
-  "optimizeLegibility",
-  "optimizeSpeed",
-  "outset",
-  "outside",
-  "outside-shape",
-  "overlay",
-  "overline",
-  "padding",
-  "padding-box",
-  "painted",
-  "page",
-  "paused",
-  "perspective",
-  "pinch-zoom",
-  "plus-darker",
-  "plus-lighter",
-  "pointer",
-  "polygon",
-  "portrait",
-  "pre",
-  "pre-line",
-  "pre-wrap",
-  "preserve-3d",
-  "progress",
-  "push-button",
-  "radial-gradient",
-  "radio",
-  "read-only",
-  "read-write",
-  "read-write-plaintext-only",
-  "rectangle",
-  "region",
-  "relative",
-  "repeat",
-  "repeating-linear-gradient",
-  "repeating-radial-gradient",
-  "repeat-x",
-  "repeat-y",
-  "reset",
-  "reverse",
-  "rgb",
-  "rgba",
-  "ridge",
-  "right",
-  "rotate",
-  "rotate3d",
-  "rotateX",
-  "rotateY",
-  "rotateZ",
-  "round",
-  "row",
-  "row-resize",
-  "row-reverse",
-  "rtl",
-  "run-in",
-  "running",
-  "s-resize",
-  "sans-serif",
-  "saturation",
-  "scale",
-  "scale3d",
-  "scaleX",
-  "scaleY",
-  "scaleZ",
-  "screen",
-  "scroll",
-  "scrollbar",
-  "scroll-position",
-  "se-resize",
-  "self-start",
-  "self-end",
-  "semi-condensed",
-  "semi-expanded",
-  "separate",
-  "serif",
-  "show",
-  "single",
-  "skew",
-  "skewX",
-  "skewY",
-  "skip-white-space",
-  "slide",
-  "slider-horizontal",
-  "slider-vertical",
-  "sliderthumb-horizontal",
-  "sliderthumb-vertical",
-  "slow",
-  "small",
-  "small-caps",
-  "small-caption",
-  "smaller",
-  "soft-light",
-  "solid",
-  "source-atop",
-  "source-in",
-  "source-out",
-  "source-over",
-  "space",
-  "space-around",
-  "space-between",
-  "space-evenly",
-  "spell-out",
-  "square",
-  "start",
-  "static",
-  "status-bar",
-  "stretch",
-  "stroke",
-  "stroke-box",
-  "sub",
-  "subpixel-antialiased",
-  "svg_masks",
-  "super",
-  "sw-resize",
-  "symbolic",
-  "symbols",
-  "system-ui",
-  "table",
-  "table-caption",
-  "table-cell",
-  "table-column",
-  "table-column-group",
-  "table-footer-group",
-  "table-header-group",
-  "table-row",
-  "table-row-group",
-  "text",
-  "text-bottom",
-  "text-top",
-  "textarea",
-  "textfield",
-  "thick",
-  "thin",
-  "threeddarkshadow",
-  "threedface",
-  "threedhighlight",
-  "threedlightshadow",
-  "threedshadow",
-  "to",
-  "top",
-  "transform",
-  "translate",
-  "translate3d",
-  "translateX",
-  "translateY",
-  "translateZ",
-  "transparent",
-  "ultra-condensed",
-  "ultra-expanded",
-  "underline",
-  "unidirectional-pan",
-  "unset",
-  "up",
-  "upper-latin",
-  "uppercase",
-  "url",
-  "var",
-  "vertical",
-  "vertical-text",
-  "view-box",
-  "visible",
-  "visibleFill",
-  "visiblePainted",
-  "visibleStroke",
-  "visual",
-  "w-resize",
-  "wait",
-  "wave",
-  "wider",
-  "window",
-  "windowframe",
-  "windowtext",
-  "words",
-  "wrap",
-  "wrap-reverse",
-  "x-large",
-  "x-small",
-  "xor",
-  "xx-large",
-  "xx-small"
-].map((t) => ({ type: "keyword", label: t })).concat(/* @__PURE__ */ [
-  "aliceblue",
-  "antiquewhite",
-  "aqua",
-  "aquamarine",
-  "azure",
-  "beige",
-  "bisque",
-  "black",
-  "blanchedalmond",
-  "blue",
-  "blueviolet",
-  "brown",
-  "burlywood",
-  "cadetblue",
-  "chartreuse",
-  "chocolate",
-  "coral",
-  "cornflowerblue",
-  "cornsilk",
-  "crimson",
-  "cyan",
-  "darkblue",
-  "darkcyan",
-  "darkgoldenrod",
-  "darkgray",
-  "darkgreen",
-  "darkkhaki",
-  "darkmagenta",
-  "darkolivegreen",
-  "darkorange",
-  "darkorchid",
-  "darkred",
-  "darksalmon",
-  "darkseagreen",
-  "darkslateblue",
-  "darkslategray",
-  "darkturquoise",
-  "darkviolet",
-  "deeppink",
-  "deepskyblue",
-  "dimgray",
-  "dodgerblue",
-  "firebrick",
-  "floralwhite",
-  "forestgreen",
-  "fuchsia",
-  "gainsboro",
-  "ghostwhite",
-  "gold",
-  "goldenrod",
-  "gray",
-  "grey",
-  "green",
-  "greenyellow",
-  "honeydew",
-  "hotpink",
-  "indianred",
-  "indigo",
-  "ivory",
-  "khaki",
-  "lavender",
-  "lavenderblush",
-  "lawngreen",
-  "lemonchiffon",
-  "lightblue",
-  "lightcoral",
-  "lightcyan",
-  "lightgoldenrodyellow",
-  "lightgray",
-  "lightgreen",
-  "lightpink",
-  "lightsalmon",
-  "lightseagreen",
-  "lightskyblue",
-  "lightslategray",
-  "lightsteelblue",
-  "lightyellow",
-  "lime",
-  "limegreen",
-  "linen",
-  "magenta",
-  "maroon",
-  "mediumaquamarine",
-  "mediumblue",
-  "mediumorchid",
-  "mediumpurple",
-  "mediumseagreen",
-  "mediumslateblue",
-  "mediumspringgreen",
-  "mediumturquoise",
-  "mediumvioletred",
-  "midnightblue",
-  "mintcream",
-  "mistyrose",
-  "moccasin",
-  "navajowhite",
-  "navy",
-  "oldlace",
-  "olive",
-  "olivedrab",
-  "orange",
-  "orangered",
-  "orchid",
-  "palegoldenrod",
-  "palegreen",
-  "paleturquoise",
-  "palevioletred",
-  "papayawhip",
-  "peachpuff",
-  "peru",
-  "pink",
-  "plum",
-  "powderblue",
-  "purple",
-  "rebeccapurple",
-  "red",
-  "rosybrown",
-  "royalblue",
-  "saddlebrown",
-  "salmon",
-  "sandybrown",
-  "seagreen",
-  "seashell",
-  "sienna",
-  "silver",
-  "skyblue",
-  "slateblue",
-  "slategray",
-  "snow",
-  "springgreen",
-  "steelblue",
-  "tan",
-  "teal",
-  "thistle",
-  "tomato",
-  "turquoise",
-  "violet",
-  "wheat",
-  "white",
-  "whitesmoke",
-  "yellow",
-  "yellowgreen"
-].map((t) => ({ type: "constant", label: t }))), F = /* @__PURE__ */ [
-  "a",
-  "abbr",
-  "address",
-  "article",
-  "aside",
-  "b",
-  "bdi",
-  "bdo",
-  "blockquote",
-  "body",
-  "br",
-  "button",
-  "canvas",
-  "caption",
-  "cite",
-  "code",
-  "col",
-  "colgroup",
-  "dd",
-  "del",
-  "details",
-  "dfn",
-  "dialog",
-  "div",
-  "dl",
-  "dt",
-  "em",
-  "figcaption",
-  "figure",
-  "footer",
-  "form",
-  "header",
-  "hgroup",
-  "h1",
-  "h2",
-  "h3",
-  "h4",
-  "h5",
-  "h6",
-  "hr",
-  "html",
-  "i",
-  "iframe",
-  "img",
-  "input",
-  "ins",
-  "kbd",
-  "label",
-  "legend",
-  "li",
-  "main",
-  "meter",
-  "nav",
-  "ol",
-  "output",
-  "p",
-  "pre",
-  "ruby",
-  "section",
-  "select",
-  "small",
-  "source",
-  "span",
-  "strong",
-  "sub",
-  "summary",
-  "sup",
-  "table",
-  "tbody",
-  "td",
-  "template",
-  "textarea",
-  "tfoot",
-  "th",
-  "thead",
-  "tr",
-  "u",
-  "ul"
-].map((t) => ({ type: "type", label: t })), N = /* @__PURE__ */ [
-  "@charset",
-  "@color-profile",
-  "@container",
-  "@counter-style",
-  "@font-face",
-  "@font-feature-values",
-  "@font-palette-values",
-  "@import",
-  "@keyframes",
-  "@layer",
-  "@media",
-  "@namespace",
-  "@page",
-  "@position-try",
-  "@property",
-  "@scope",
-  "@starting-style",
-  "@supports",
-  "@view-transition"
-].map((t) => ({ type: "keyword", label: t })), s = /^(\w[\w-]*|-\w[\w-]*|)$/, L = /^-(-[\w-]*)?$/;
-function A(t, a) {
-  var o;
-  if ((t.name == "(" || t.type.isError) && (t = t.parent || t), t.name != "ArgList")
-    return !1;
-  let r = (o = t.parent) === null || o === void 0 ? void 0 : o.firstChild;
-  return (r == null ? void 0 : r.name) != "Callee" ? !1 : a.sliceString(r.from, r.to) == "var";
-}
-const f = /* @__PURE__ */ new q(), P = ["Declaration"];
-function T(t) {
-  for (let a = t; ; ) {
-    if (a.type.isTop)
-      return a;
-    if (!(a = a.parent))
-      return t;
-  }
-}
-function h(t, a, o) {
-  if (a.to - a.from > 4096) {
-    let r = f.get(a);
-    if (r)
-      return r;
-    let e = [], l = /* @__PURE__ */ new Set(), i = a.cursor(C.IncludeAnonymous);
-    if (i.firstChild())
-      do
-        for (let n of h(t, i.node, o))
-          l.has(n.label) || (l.add(n.label), e.push(n));
-      while (i.nextSibling());
-    return f.set(a, e), e;
-  } else {
-    let r = [], e = /* @__PURE__ */ new Set();
-    return a.cursor().iterate((l) => {
-      var i;
-      if (o(l) && l.matchContext(P) && ((i = l.node.nextSibling) === null || i === void 0 ? void 0 : i.name) == ":") {
-        let n = t.sliceString(l.from, l.to);
-        e.has(n) || (e.add(n), r.push({ label: n, type: "variable" }));
+var V = "ScrollArea", [j] = te(V), [de, v] = j(V), q = c.forwardRef(
+  (e, t) => {
+    const {
+      __scopeScrollArea: r,
+      type: l = "hover",
+      dir: o,
+      scrollHideDelay: n = 600,
+      ...i
+    } = e, [s, a] = c.useState(null), [f, d] = c.useState(null), [h, u] = c.useState(null), [S, p] = c.useState(null), [y, M] = c.useState(null), [P, _] = c.useState(0), [U, D] = c.useState(0), [W, x] = c.useState(!1), [H, z] = c.useState(!1), m = A(t, (E) => a(E)), w = ne(o);
+    return /* @__PURE__ */ b(
+      de,
+      {
+        scope: r,
+        type: l,
+        dir: w,
+        scrollHideDelay: n,
+        scrollArea: s,
+        viewport: f,
+        onViewportChange: d,
+        content: h,
+        onContentChange: u,
+        scrollbarX: S,
+        onScrollbarXChange: p,
+        scrollbarXEnabled: W,
+        onScrollbarXEnabledChange: x,
+        scrollbarY: y,
+        onScrollbarYChange: M,
+        scrollbarYEnabled: H,
+        onScrollbarYEnabledChange: z,
+        onCornerWidthChange: _,
+        onCornerHeightChange: D,
+        children: /* @__PURE__ */ b(
+          L.div,
+          {
+            dir: w,
+            ...i,
+            ref: m,
+            style: {
+              position: "relative",
+              // Pass corner sizes as CSS vars to reduce re-renders of context consumers
+              "--radix-scroll-area-corner-width": P + "px",
+              "--radix-scroll-area-corner-height": U + "px",
+              ...e.style
+            }
+          }
+        )
       }
-    }), r;
+    );
   }
-}
-const B = (t) => (a) => {
-  let { state: o, pos: r } = a, e = S(o).resolveInner(r, -1), l = e.type.isError && e.from == e.to - 1 && o.doc.sliceString(e.from, e.to) == "-";
-  if (e.name == "PropertyName" || (l || e.name == "TagName") && /^(Block|Styles)$/.test(e.resolve(e.to).name))
-    return { from: e.from, options: u(), validFor: s };
-  if (e.name == "ValueName")
-    return { from: e.from, options: m, validFor: s };
-  if (e.name == "PseudoClassName")
-    return { from: e.from, options: p, validFor: s };
-  if (t(e) || (a.explicit || l) && A(e, o.doc))
-    return {
-      from: t(e) || l ? e.from : r,
-      options: h(o.doc, T(e), t),
-      validFor: L
+);
+q.displayName = V;
+var $ = "ScrollAreaViewport", G = c.forwardRef(
+  (e, t) => {
+    const { __scopeScrollArea: r, children: l, nonce: o, ...n } = e, i = v($, r), s = c.useRef(null), a = A(t, s, i.onViewportChange);
+    return /* @__PURE__ */ ie(se, { children: [
+      /* @__PURE__ */ b(
+        "style",
+        {
+          dangerouslySetInnerHTML: {
+            __html: "[data-radix-scroll-area-viewport]{scrollbar-width:none;-ms-overflow-style:none;-webkit-overflow-scrolling:touch;}[data-radix-scroll-area-viewport]::-webkit-scrollbar{display:none}"
+          },
+          nonce: o
+        }
+      ),
+      /* @__PURE__ */ b(
+        L.div,
+        {
+          "data-radix-scroll-area-viewport": "",
+          ...n,
+          ref: a,
+          style: {
+            /**
+             * We don't support `visible` because the intention is to have at least one scrollbar
+             * if this component is used and `visible` will behave like `auto` in that case
+             * https://developer.mozilla.org/en-US/docs/Web/CSS/overflow#description
+             *
+             * We don't handle `auto` because the intention is for the native implementation
+             * to be hidden if using this component. We just want to ensure the node is scrollable
+             * so could have used either `scroll` or `auto` here. We picked `scroll` to prevent
+             * the browser from having to work out whether to render native scrollbars or not,
+             * we tell it to with the intention of hiding them in CSS.
+             */
+            overflowX: i.scrollbarXEnabled ? "scroll" : "hidden",
+            overflowY: i.scrollbarYEnabled ? "scroll" : "hidden",
+            ...e.style
+          },
+          children: /* @__PURE__ */ b("div", { ref: i.onContentChange, style: { minWidth: "100%", display: "table" }, children: l })
+        }
+      )
+    ] });
+  }
+);
+G.displayName = $;
+var g = "ScrollAreaScrollbar", ue = c.forwardRef(
+  (e, t) => {
+    const { forceMount: r, ...l } = e, o = v(g, e.__scopeScrollArea), { onScrollbarXEnabledChange: n, onScrollbarYEnabledChange: i } = o, s = e.orientation === "horizontal";
+    return c.useEffect(() => (s ? n(!0) : i(!0), () => {
+      s ? n(!1) : i(!1);
+    }), [s, n, i]), o.type === "hover" ? /* @__PURE__ */ b(fe, { ...l, ref: t, forceMount: r }) : o.type === "scroll" ? /* @__PURE__ */ b(he, { ...l, ref: t, forceMount: r }) : o.type === "auto" ? /* @__PURE__ */ b(J, { ...l, ref: t, forceMount: r }) : o.type === "always" ? /* @__PURE__ */ b(k, { ...l, ref: t }) : null;
+  }
+);
+ue.displayName = g;
+var fe = c.forwardRef((e, t) => {
+  const { forceMount: r, ...l } = e, o = v(g, e.__scopeScrollArea), [n, i] = c.useState(!1);
+  return c.useEffect(() => {
+    const s = o.scrollArea;
+    let a = 0;
+    if (s) {
+      const f = () => {
+        window.clearTimeout(a), i(!0);
+      }, d = () => {
+        a = window.setTimeout(() => i(!1), o.scrollHideDelay);
+      };
+      return s.addEventListener("pointerenter", f), s.addEventListener("pointerleave", d), () => {
+        window.clearTimeout(a), s.removeEventListener("pointerenter", f), s.removeEventListener("pointerleave", d);
+      };
+    }
+  }, [o.scrollArea, o.scrollHideDelay]), /* @__PURE__ */ b(I, { present: r || n, children: /* @__PURE__ */ b(
+    J,
+    {
+      "data-state": n ? "visible" : "hidden",
+      ...l,
+      ref: t
+    }
+  ) });
+}), he = c.forwardRef((e, t) => {
+  const { forceMount: r, ...l } = e, o = v(g, e.__scopeScrollArea), n = e.orientation === "horizontal", i = Y(() => a("SCROLL_END"), 100), [s, a] = ae("hidden", {
+    hidden: {
+      SCROLL: "scrolling"
+    },
+    scrolling: {
+      SCROLL_END: "idle",
+      POINTER_ENTER: "interacting"
+    },
+    interacting: {
+      SCROLL: "interacting",
+      POINTER_LEAVE: "idle"
+    },
+    idle: {
+      HIDE: "hidden",
+      SCROLL: "scrolling",
+      POINTER_ENTER: "interacting"
+    }
+  });
+  return c.useEffect(() => {
+    if (s === "idle") {
+      const f = window.setTimeout(() => a("HIDE"), o.scrollHideDelay);
+      return () => window.clearTimeout(f);
+    }
+  }, [s, o.scrollHideDelay, a]), c.useEffect(() => {
+    const f = o.viewport, d = n ? "scrollLeft" : "scrollTop";
+    if (f) {
+      let h = f[d];
+      const u = () => {
+        const S = f[d];
+        h !== S && (a("SCROLL"), i()), h = S;
+      };
+      return f.addEventListener("scroll", u), () => f.removeEventListener("scroll", u);
+    }
+  }, [o.viewport, n, a, i]), /* @__PURE__ */ b(I, { present: r || s !== "hidden", children: /* @__PURE__ */ b(
+    k,
+    {
+      "data-state": s === "hidden" ? "hidden" : "visible",
+      ...l,
+      ref: t,
+      onPointerEnter: R(e.onPointerEnter, () => a("POINTER_ENTER")),
+      onPointerLeave: R(e.onPointerLeave, () => a("POINTER_LEAVE"))
+    }
+  ) });
+}), J = c.forwardRef((e, t) => {
+  const r = v(g, e.__scopeScrollArea), { forceMount: l, ...o } = e, [n, i] = c.useState(!1), s = e.orientation === "horizontal", a = Y(() => {
+    if (r.viewport) {
+      const f = r.viewport.offsetWidth < r.viewport.scrollWidth, d = r.viewport.offsetHeight < r.viewport.scrollHeight;
+      i(s ? f : d);
+    }
+  }, 10);
+  return T(r.viewport, a), T(r.content, a), /* @__PURE__ */ b(I, { present: l || n, children: /* @__PURE__ */ b(
+    k,
+    {
+      "data-state": n ? "visible" : "hidden",
+      ...o,
+      ref: t
+    }
+  ) });
+}), k = c.forwardRef((e, t) => {
+  const { orientation: r = "vertical", ...l } = e, o = v(g, e.__scopeScrollArea), n = c.useRef(null), i = c.useRef(0), [s, a] = c.useState({
+    content: 0,
+    viewport: 0,
+    scrollbar: { size: 0, paddingStart: 0, paddingEnd: 0 }
+  }), f = ee(s.viewport, s.content), d = {
+    ...l,
+    sizes: s,
+    onSizesChange: a,
+    hasThumb: f > 0 && f < 1,
+    onThumbChange: (u) => n.current = u,
+    onThumbPointerUp: () => i.current = 0,
+    onThumbPointerDown: (u) => i.current = u
+  };
+  function h(u, S) {
+    return ge(u, i.current, s, S);
+  }
+  return r === "horizontal" ? /* @__PURE__ */ b(
+    be,
+    {
+      ...d,
+      ref: t,
+      onThumbPositionChange: () => {
+        if (o.viewport && n.current) {
+          const u = o.viewport.scrollLeft, S = F(u, s, o.dir);
+          n.current.style.transform = `translate3d(${S}px, 0, 0)`;
+        }
+      },
+      onWheelScroll: (u) => {
+        o.viewport && (o.viewport.scrollLeft = u);
+      },
+      onDragScroll: (u) => {
+        o.viewport && (o.viewport.scrollLeft = h(u, o.dir));
+      }
+    }
+  ) : r === "vertical" ? /* @__PURE__ */ b(
+    Se,
+    {
+      ...d,
+      ref: t,
+      onThumbPositionChange: () => {
+        if (o.viewport && n.current) {
+          const u = o.viewport.scrollTop, S = F(u, s);
+          n.current.style.transform = `translate3d(0, ${S}px, 0)`;
+        }
+      },
+      onWheelScroll: (u) => {
+        o.viewport && (o.viewport.scrollTop = u);
+      },
+      onDragScroll: (u) => {
+        o.viewport && (o.viewport.scrollTop = h(u));
+      }
+    }
+  ) : null;
+}), be = c.forwardRef((e, t) => {
+  const { sizes: r, onSizesChange: l, ...o } = e, n = v(g, e.__scopeScrollArea), [i, s] = c.useState(), a = c.useRef(null), f = A(t, a, n.onScrollbarXChange);
+  return c.useEffect(() => {
+    a.current && s(getComputedStyle(a.current));
+  }, [a]), /* @__PURE__ */ b(
+    Q,
+    {
+      "data-orientation": "horizontal",
+      ...o,
+      ref: f,
+      sizes: r,
+      style: {
+        bottom: 0,
+        left: n.dir === "rtl" ? "var(--radix-scroll-area-corner-width)" : 0,
+        right: n.dir === "ltr" ? "var(--radix-scroll-area-corner-width)" : 0,
+        "--radix-scroll-area-thumb-width": X(r) + "px",
+        ...e.style
+      },
+      onThumbPointerDown: (d) => e.onThumbPointerDown(d.x),
+      onDragScroll: (d) => e.onDragScroll(d.x),
+      onWheelScroll: (d, h) => {
+        if (n.viewport) {
+          const u = n.viewport.scrollLeft + d.deltaX;
+          e.onWheelScroll(u), oe(u, h) && d.preventDefault();
+        }
+      },
+      onResize: () => {
+        a.current && n.viewport && i && l({
+          content: n.viewport.scrollWidth,
+          viewport: n.viewport.offsetWidth,
+          scrollbar: {
+            size: a.current.clientWidth,
+            paddingStart: O(i.paddingLeft),
+            paddingEnd: O(i.paddingRight)
+          }
+        });
+      }
+    }
+  );
+}), Se = c.forwardRef((e, t) => {
+  const { sizes: r, onSizesChange: l, ...o } = e, n = v(g, e.__scopeScrollArea), [i, s] = c.useState(), a = c.useRef(null), f = A(t, a, n.onScrollbarYChange);
+  return c.useEffect(() => {
+    a.current && s(getComputedStyle(a.current));
+  }, [a]), /* @__PURE__ */ b(
+    Q,
+    {
+      "data-orientation": "vertical",
+      ...o,
+      ref: f,
+      sizes: r,
+      style: {
+        top: 0,
+        right: n.dir === "ltr" ? 0 : void 0,
+        left: n.dir === "rtl" ? 0 : void 0,
+        bottom: "var(--radix-scroll-area-corner-height)",
+        "--radix-scroll-area-thumb-height": X(r) + "px",
+        ...e.style
+      },
+      onThumbPointerDown: (d) => e.onThumbPointerDown(d.y),
+      onDragScroll: (d) => e.onDragScroll(d.y),
+      onWheelScroll: (d, h) => {
+        if (n.viewport) {
+          const u = n.viewport.scrollTop + d.deltaY;
+          e.onWheelScroll(u), oe(u, h) && d.preventDefault();
+        }
+      },
+      onResize: () => {
+        a.current && n.viewport && i && l({
+          content: n.viewport.scrollHeight,
+          viewport: n.viewport.offsetHeight,
+          scrollbar: {
+            size: a.current.clientHeight,
+            paddingStart: O(i.paddingTop),
+            paddingEnd: O(i.paddingBottom)
+          }
+        });
+      }
+    }
+  );
+}), [me, K] = j(g), Q = c.forwardRef((e, t) => {
+  const {
+    __scopeScrollArea: r,
+    sizes: l,
+    hasThumb: o,
+    onThumbChange: n,
+    onThumbPointerUp: i,
+    onThumbPointerDown: s,
+    onThumbPositionChange: a,
+    onDragScroll: f,
+    onWheelScroll: d,
+    onResize: h,
+    ...u
+  } = e, S = v(g, r), [p, y] = c.useState(null), M = A(t, (m) => y(m)), P = c.useRef(null), _ = c.useRef(""), U = S.viewport, D = l.content - l.viewport, W = C(d), x = C(a), H = Y(h, 10);
+  function z(m) {
+    if (P.current) {
+      const w = m.clientX - P.current.left, E = m.clientY - P.current.top;
+      f({ x: w, y: E });
+    }
+  }
+  return c.useEffect(() => {
+    const m = (w) => {
+      const E = w.target;
+      (p == null ? void 0 : p.contains(E)) && W(w, D);
     };
-  if (e.name == "TagName") {
-    for (let { parent: d } = e; d; d = d.parent)
-      if (d.name == "Block")
-        return { from: e.from, options: u(), validFor: s };
-    return { from: e.from, options: F, validFor: s };
+    return document.addEventListener("wheel", m, { passive: !1 }), () => document.removeEventListener("wheel", m, { passive: !1 });
+  }, [U, p, D, W]), c.useEffect(x, [l, x]), T(p, H), T(S.content, H), /* @__PURE__ */ b(
+    me,
+    {
+      scope: r,
+      scrollbar: p,
+      hasThumb: o,
+      onThumbChange: C(n),
+      onThumbPointerUp: C(i),
+      onThumbPositionChange: x,
+      onThumbPointerDown: C(s),
+      children: /* @__PURE__ */ b(
+        L.div,
+        {
+          ...u,
+          ref: M,
+          style: { position: "absolute", ...u.style },
+          onPointerDown: R(e.onPointerDown, (m) => {
+            m.button === 0 && (m.target.setPointerCapture(m.pointerId), P.current = p.getBoundingClientRect(), _.current = document.body.style.webkitUserSelect, document.body.style.webkitUserSelect = "none", S.viewport && (S.viewport.style.scrollBehavior = "auto"), z(m));
+          }),
+          onPointerMove: R(e.onPointerMove, z),
+          onPointerUp: R(e.onPointerUp, (m) => {
+            const w = m.target;
+            w.hasPointerCapture(m.pointerId) && w.releasePointerCapture(m.pointerId), document.body.style.webkitUserSelect = _.current, S.viewport && (S.viewport.style.scrollBehavior = ""), P.current = null;
+          })
+        }
+      )
+    }
+  );
+}), N = "ScrollAreaThumb", pe = c.forwardRef(
+  (e, t) => {
+    const { forceMount: r, ...l } = e, o = K(N, e.__scopeScrollArea);
+    return /* @__PURE__ */ b(I, { present: r || o.hasThumb, children: /* @__PURE__ */ b(ve, { ref: t, ...l }) });
   }
-  if (e.name == "AtKeyword")
-    return { from: e.from, options: N, validFor: s };
-  if (!a.explicit)
-    return null;
-  let i = e.resolve(r), n = i.childBefore(r);
-  return n && n.name == ":" && i.name == "PseudoClassSelector" ? { from: r, options: p, validFor: s } : n && n.name == ":" && i.name == "Declaration" || i.name == "ArgList" ? { from: r, options: m, validFor: s } : i.name == "Block" || i.name == "Styles" ? { from: r, options: u(), validFor: s } : null;
-}, I = /* @__PURE__ */ B((t) => t.name == "VariableName"), g = /* @__PURE__ */ v.define({
-  name: "css",
-  parser: /* @__PURE__ */ b.configure({
-    props: [
-      /* @__PURE__ */ y.add({
-        Declaration: /* @__PURE__ */ x()
-      }),
-      /* @__PURE__ */ k.add({
-        "Block KeyframeList": z
-      })
-    ]
-  }),
-  languageData: {
-    commentTokens: { block: { open: "/*", close: "*/" } },
-    indentOnInput: /^\s*\}$/,
-    wordChars: "-"
+), ve = c.forwardRef(
+  (e, t) => {
+    const { __scopeScrollArea: r, style: l, ...o } = e, n = v(N, r), i = K(N, r), { onThumbPositionChange: s } = i, a = A(
+      t,
+      (h) => i.onThumbChange(h)
+    ), f = c.useRef(void 0), d = Y(() => {
+      f.current && (f.current(), f.current = void 0);
+    }, 100);
+    return c.useEffect(() => {
+      const h = n.viewport;
+      if (h) {
+        const u = () => {
+          if (d(), !f.current) {
+            const S = Pe(h, s);
+            f.current = S, s();
+          }
+        };
+        return s(), h.addEventListener("scroll", u), () => h.removeEventListener("scroll", u);
+      }
+    }, [n.viewport, d, s]), /* @__PURE__ */ b(
+      L.div,
+      {
+        "data-state": i.hasThumb ? "visible" : "hidden",
+        ...o,
+        ref: a,
+        style: {
+          width: "var(--radix-scroll-area-thumb-width)",
+          height: "var(--radix-scroll-area-thumb-height)",
+          ...l
+        },
+        onPointerDownCapture: R(e.onPointerDownCapture, (h) => {
+          const S = h.target.getBoundingClientRect(), p = h.clientX - S.left, y = h.clientY - S.top;
+          i.onThumbPointerDown({ x: p, y });
+        }),
+        onPointerUp: R(e.onPointerUp, i.onThumbPointerUp)
+      }
+    );
   }
+);
+pe.displayName = N;
+var B = "ScrollAreaCorner", Z = c.forwardRef(
+  (e, t) => {
+    const r = v(B, e.__scopeScrollArea), l = !!(r.scrollbarX && r.scrollbarY);
+    return r.type !== "scroll" && l ? /* @__PURE__ */ b(we, { ...e, ref: t }) : null;
+  }
+);
+Z.displayName = B;
+var we = c.forwardRef((e, t) => {
+  const { __scopeScrollArea: r, ...l } = e, o = v(B, r), [n, i] = c.useState(0), [s, a] = c.useState(0), f = !!(n && s);
+  return T(o.scrollbarX, () => {
+    var h;
+    const d = ((h = o.scrollbarX) == null ? void 0 : h.offsetHeight) || 0;
+    o.onCornerHeightChange(d), a(d);
+  }), T(o.scrollbarY, () => {
+    var h;
+    const d = ((h = o.scrollbarY) == null ? void 0 : h.offsetWidth) || 0;
+    o.onCornerWidthChange(d), i(d);
+  }), f ? /* @__PURE__ */ b(
+    L.div,
+    {
+      ...l,
+      ref: t,
+      style: {
+        width: n,
+        height: s,
+        position: "absolute",
+        right: o.dir === "ltr" ? 0 : void 0,
+        left: o.dir === "rtl" ? 0 : void 0,
+        bottom: 0,
+        ...e.style
+      }
+    }
+  ) : null;
 });
-function j() {
-  return new w(g, g.data.of({ autocomplete: I }));
+function O(e) {
+  return e ? parseInt(e, 10) : 0;
 }
+function ee(e, t) {
+  const r = e / t;
+  return isNaN(r) ? 0 : r;
+}
+function X(e) {
+  const t = ee(e.viewport, e.content), r = e.scrollbar.paddingStart + e.scrollbar.paddingEnd, l = (e.scrollbar.size - r) * t;
+  return Math.max(l, 18);
+}
+function ge(e, t, r, l = "ltr") {
+  const o = X(r), n = o / 2, i = t || n, s = o - i, a = r.scrollbar.paddingStart + i, f = r.scrollbar.size - r.scrollbar.paddingEnd - s, d = r.content - r.viewport, h = l === "ltr" ? [0, d] : [d * -1, 0];
+  return re([a, f], h)(e);
+}
+function F(e, t, r = "ltr") {
+  const l = X(t), o = t.scrollbar.paddingStart + t.scrollbar.paddingEnd, n = t.scrollbar.size - o, i = t.content - t.viewport, s = n - l, a = r === "ltr" ? [0, i] : [i * -1, 0], f = ce(e, a);
+  return re([0, i], [0, s])(f);
+}
+function re(e, t) {
+  return (r) => {
+    if (e[0] === e[1] || t[0] === t[1]) return t[0];
+    const l = (t[1] - t[0]) / (e[1] - e[0]);
+    return t[0] + l * (r - e[0]);
+  };
+}
+function oe(e, t) {
+  return e > 0 && e < t;
+}
+var Pe = (e, t = () => {
+}) => {
+  let r = { left: e.scrollLeft, top: e.scrollTop }, l = 0;
+  return function o() {
+    const n = { left: e.scrollLeft, top: e.scrollTop }, i = r.left !== n.left, s = r.top !== n.top;
+    (i || s) && t(), r = n, l = window.requestAnimationFrame(o);
+  }(), () => window.cancelAnimationFrame(l);
+};
+function Y(e, t) {
+  const r = C(e), l = c.useRef(0);
+  return c.useEffect(() => () => window.clearTimeout(l.current), []), c.useCallback(() => {
+    window.clearTimeout(l.current), l.current = window.setTimeout(r, t);
+  }, [r, t]);
+}
+function T(e, t) {
+  const r = C(t);
+  le(() => {
+    let l = 0;
+    if (e) {
+      const o = new ResizeObserver(() => {
+        cancelAnimationFrame(l), l = window.requestAnimationFrame(r);
+      });
+      return o.observe(e), () => {
+        window.cancelAnimationFrame(l), o.unobserve(e);
+      };
+    }
+  }, [e, r]);
+}
+var He = q, ze = G, Ne = Z;
 export {
-  j as css,
-  I as cssCompletionSource,
-  g as cssLanguage,
-  B as defineCSSCompletionSource
+  Ne as Corner,
+  He as Root,
+  q as ScrollArea,
+  Z as ScrollAreaCorner,
+  ue as ScrollAreaScrollbar,
+  pe as ScrollAreaThumb,
+  G as ScrollAreaViewport,
+  ze as Viewport
 };

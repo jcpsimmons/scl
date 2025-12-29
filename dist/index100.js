@@ -1,57 +1,52 @@
-import * as i from "react";
-import { jsx as _ } from "react/jsx-runtime";
-function $(e, x = []) {
-  let o = [];
-  function f(r, n) {
-    const t = i.createContext(n);
-    t.displayName = r + "Context";
-    const c = o.length;
-    o = [...o, n];
-    const m = (a) => {
-      var l;
-      const { scope: s, children: C, ...p } = a, d = ((l = s == null ? void 0 : s[e]) == null ? void 0 : l[c]) || t, v = i.useMemo(() => p, Object.values(p));
-      return /* @__PURE__ */ _(d.Provider, { value: v, children: C });
-    };
-    m.displayName = r + "Provider";
-    function S(a, s) {
-      var d;
-      const C = ((d = s == null ? void 0 : s[e]) == null ? void 0 : d[c]) || t, p = i.useContext(C);
-      if (p) return p;
-      if (n !== void 0) return n;
-      throw new Error(`\`${a}\` must be used within \`${r}\``);
-    }
-    return [m, S];
-  }
-  const u = () => {
-    const r = o.map((n) => i.createContext(n));
-    return function(t) {
-      const c = (t == null ? void 0 : t[e]) || r;
-      return i.useMemo(
-        () => ({ [`__scope${e}`]: { ...t, [e]: c } }),
-        [t, c]
-      );
-    };
+var S = function(r) {
+  if (typeof document > "u")
+    return null;
+  var u = Array.isArray(r) ? r[0] : r;
+  return u.ownerDocument.body;
+}, f = /* @__PURE__ */ new WeakMap(), v = /* @__PURE__ */ new WeakMap(), p = {}, h = 0, W = function(r) {
+  return r && (r.host || W(r.parentNode));
+}, D = function(r, u) {
+  return u.map(function(e) {
+    if (r.contains(e))
+      return e;
+    var n = W(e);
+    return n && r.contains(n) ? n : (console.error("aria-hidden", e, "in not contained inside", r, ". Doing nothing"), null);
+  }).filter(function(e) {
+    return !!e;
+  });
+}, E = function(r, u, e, n) {
+  var i = D(u, Array.isArray(r) ? r : [r]);
+  p[e] || (p[e] = /* @__PURE__ */ new WeakMap());
+  var s = p[e], l = [], o = /* @__PURE__ */ new Set(), b = new Set(i), y = function(t) {
+    !t || o.has(t) || (o.add(t), y(t.parentNode));
   };
-  return u.scopeName = e, [f, h(u, ...x)];
-}
-function h(...e) {
-  const x = e[0];
-  if (e.length === 1) return x;
-  const o = () => {
-    const f = e.map((u) => ({
-      useScope: u(),
-      scopeName: u.scopeName
-    }));
-    return function(r) {
-      const n = f.reduce((t, { useScope: c, scopeName: m }) => {
-        const a = c(r)[`__scope${m}`];
-        return { ...t, ...a };
-      }, {});
-      return i.useMemo(() => ({ [`__scope${x.scopeName}`]: n }), [n]);
-    };
+  i.forEach(y);
+  var A = function(t) {
+    !t || b.has(t) || Array.prototype.forEach.call(t.children, function(a) {
+      if (o.has(a))
+        A(a);
+      else
+        try {
+          var c = a.getAttribute(n), w = c !== null && c !== "false", d = (f.get(a) || 0) + 1, M = (s.get(a) || 0) + 1;
+          f.set(a, d), s.set(a, M), l.push(a), d === 1 && w && v.set(a, !0), M === 1 && a.setAttribute(e, "true"), w || a.setAttribute(n, "true");
+        } catch (k) {
+          console.error("aria-hidden: cannot operate on ", a, k);
+        }
+    });
   };
-  return o.scopeName = x.scopeName, o;
-}
+  return A(u), o.clear(), h++, function() {
+    l.forEach(function(t) {
+      var a = f.get(t) - 1, c = s.get(t) - 1;
+      f.set(t, a), s.set(t, c), a || (v.has(t) || t.removeAttribute(n), v.delete(t)), c || t.removeAttribute(e);
+    }), h--, h || (f = /* @__PURE__ */ new WeakMap(), f = /* @__PURE__ */ new WeakMap(), v = /* @__PURE__ */ new WeakMap(), p = {});
+  };
+}, C = function(r, u, e) {
+  e === void 0 && (e = "data-aria-hidden");
+  var n = Array.from(Array.isArray(r) ? r : [r]), i = S(r);
+  return i ? (n.push.apply(n, Array.from(i.querySelectorAll("[aria-live], script"))), E(n, i, e, "aria-hidden")) : function() {
+    return null;
+  };
+};
 export {
-  $ as createContextScope
+  C as hideOthers
 };

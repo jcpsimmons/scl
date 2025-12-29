@@ -1,13 +1,9 @@
-import t from "./index163.js";
-/**
- * @license lucide-react v0.460.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const h = t("ChevronRight", [
-  ["path", { d: "m9 18 6-6-6-6", key: "mthhwq" }]
-]);
+function h(f, c, { checkForDefaultPrevented: p = !0 } = {}) {
+  return function(s) {
+    if (f == null || f(s), p === !1 || !s.defaultPrevented)
+      return c == null ? void 0 : c(s);
+  };
+}
 export {
-  h as default
+  h as composeEventHandlers
 };

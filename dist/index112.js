@@ -1,17 +1,40 @@
-import * as r from "react";
-var t = 0;
-function a() {
-  r.useEffect(() => {
-    const e = document.querySelectorAll("[data-radix-focus-guard]");
-    return document.body.insertAdjacentElement("afterbegin", e[0] ?? n()), document.body.insertAdjacentElement("beforeend", e[1] ?? n()), t++, () => {
-      t === 1 && document.querySelectorAll("[data-radix-focus-guard]").forEach((o) => o.remove()), t--;
-    };
-  }, []);
-}
-function n() {
-  const e = document.createElement("span");
-  return e.setAttribute("data-radix-focus-guard", ""), e.tabIndex = 0, e.style.outline = "none", e.style.opacity = "0", e.style.position = "fixed", e.style.pointerEvents = "none", e;
-}
+import { forwardRef as i, createElement as o } from "react";
+import b from "./index113.js";
+import { mergeClasses as d } from "./index111.js";
+/**
+ * @license lucide-react v0.460.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const N = i(
+  ({
+    color: m = "currentColor",
+    size: r = 24,
+    strokeWidth: e = 2,
+    absoluteStrokeWidth: a,
+    className: s = "",
+    children: t,
+    iconNode: u,
+    ...f
+  }, l) => o(
+    "svg",
+    {
+      ref: l,
+      ...b,
+      width: r,
+      height: r,
+      stroke: m,
+      strokeWidth: a ? Number(e) * 24 / Number(r) : e,
+      className: d("lucide", s),
+      ...f
+    },
+    [
+      ...u.map(([p, c]) => o(p, c)),
+      ...Array.isArray(t) ? t : [t]
+    ]
+  )
+);
 export {
-  a as useFocusGuards
+  N as default
 };

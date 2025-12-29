@@ -1,5 +1,5 @@
 import { jsx as o } from "react/jsx-runtime";
-import { cva as n } from "./index45.js";
+import { cva as n } from "./index48.js";
 import { cn as a } from "./index2.js";
 const i = n(
   "inline-flex items-center border-2 px-2.5 py-0.5 text-xs font-semibold uppercase tracking-wider transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",

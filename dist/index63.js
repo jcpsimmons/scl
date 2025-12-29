@@ -1,127 +1,120 @@
-import * as l from "react";
-import { createContextScope as w } from "./index92.js";
-import { useComposedRefs as v } from "./index91.js";
-import { createDialogScope as A, Root as M, Portal as x, Trigger as I, Overlay as L, WarningProvider as $, Content as F, Title as G, Description as j, Close as f } from "./index60.js";
-import { composeEventHandlers as W } from "./index121.js";
-import { createSlottable as Y } from "./index122.js";
-import { jsx as i, jsxs as q } from "react/jsx-runtime";
-var D = "AlertDialog", [B] = w(D, [
-  A
-]), n = A(), m = (e) => {
-  const { __scopeAlertDialog: o, ...r } = e, t = n(o);
-  return /* @__PURE__ */ i(M, { ...t, ...r, modal: !0 });
-};
-m.displayName = D;
-var H = "AlertDialogTrigger", y = l.forwardRef(
-  (e, o) => {
-    const { __scopeAlertDialog: r, ...t } = e, a = n(r);
-    return /* @__PURE__ */ i(I, { ...a, ...t, ref: o });
-  }
-);
-y.displayName = H;
-var V = "AlertDialogPortal", _ = (e) => {
-  const { __scopeAlertDialog: o, ...r } = e, t = n(o);
-  return /* @__PURE__ */ i(x, { ...t, ...r });
-};
-_.displayName = V;
-var k = "AlertDialogOverlay", N = l.forwardRef(
-  (e, o) => {
-    const { __scopeAlertDialog: r, ...t } = e, a = n(r);
-    return /* @__PURE__ */ i(L, { ...a, ...t, ref: o });
-  }
-);
-N.displayName = k;
-var s = "AlertDialogContent", [z, J] = B(s), K = Y("AlertDialogContent"), R = l.forwardRef(
-  (e, o) => {
-    const { __scopeAlertDialog: r, children: t, ...a } = e, g = n(r), p = l.useRef(null), b = v(o, p), d = l.useRef(null);
-    return /* @__PURE__ */ i(
-      $,
+import * as o from "react";
+import { composeEventHandlers as T } from "./index84.js";
+import { createContextScope as S } from "./index81.js";
+import { useControllableState as D } from "./index85.js";
+import { useLayoutEffect as L } from "./index78.js";
+import { useComposedRefs as M } from "./index83.js";
+import { Primitive as v } from "./index86.js";
+import { Presence as k } from "./index94.js";
+import { useId as F } from "./index87.js";
+import { jsx as c } from "react/jsx-runtime";
+var u = "Collapsible", [B, W] = S(u), [G, g] = B(u), w = o.forwardRef(
+  (e, a) => {
+    const {
+      __scopeCollapsible: i,
+      open: r,
+      defaultOpen: t,
+      disabled: l,
+      onOpenChange: s,
+      ...m
+    } = e, [d, p] = D({
+      prop: r,
+      defaultProp: t ?? !1,
+      onChange: s,
+      caller: u
+    });
+    return /* @__PURE__ */ c(
+      G,
       {
-        contentName: s,
-        titleName: C,
-        docsSlug: "alert-dialog",
-        children: /* @__PURE__ */ i(z, { scope: r, cancelRef: d, children: /* @__PURE__ */ q(
-          F,
+        scope: i,
+        disabled: l,
+        contentId: F(),
+        open: d,
+        onOpenToggle: o.useCallback(() => p((C) => !C), [p]),
+        children: /* @__PURE__ */ c(
+          v.div,
           {
-            role: "alertdialog",
-            ...g,
-            ...a,
-            ref: b,
-            onOpenAutoFocus: W(a.onOpenAutoFocus, (c) => {
-              var u;
-              c.preventDefault(), (u = d.current) == null || u.focus({ preventScroll: !0 });
-            }),
-            onPointerDownOutside: (c) => c.preventDefault(),
-            onInteractOutside: (c) => c.preventDefault(),
-            children: [
-              /* @__PURE__ */ i(K, { children: t }),
-              /* @__PURE__ */ i(U, { contentRef: p })
-            ]
+            "data-state": h(d),
+            "data-disabled": l ? "" : void 0,
+            ...m,
+            ref: a
           }
-        ) })
+        )
       }
     );
   }
 );
-R.displayName = s;
-var C = "AlertDialogTitle", h = l.forwardRef(
-  (e, o) => {
-    const { __scopeAlertDialog: r, ...t } = e, a = n(r);
-    return /* @__PURE__ */ i(G, { ...a, ...t, ref: o });
+w.displayName = u;
+var A = "CollapsibleTrigger", I = o.forwardRef(
+  (e, a) => {
+    const { __scopeCollapsible: i, ...r } = e, t = g(A, i);
+    return /* @__PURE__ */ c(
+      v.button,
+      {
+        type: "button",
+        "aria-controls": t.contentId,
+        "aria-expanded": t.open || !1,
+        "data-state": h(t.open),
+        "data-disabled": t.disabled ? "" : void 0,
+        disabled: t.disabled,
+        ...r,
+        ref: a,
+        onClick: T(e.onClick, t.onOpenToggle)
+      }
+    );
   }
 );
-h.displayName = C;
-var E = "AlertDialogDescription", P = l.forwardRef((e, o) => {
-  const { __scopeAlertDialog: r, ...t } = e, a = n(r);
-  return /* @__PURE__ */ i(j, { ...a, ...t, ref: o });
+I.displayName = A;
+var R = "CollapsibleContent", O = o.forwardRef(
+  (e, a) => {
+    const { forceMount: i, ...r } = e, t = g(R, e.__scopeCollapsible);
+    return /* @__PURE__ */ c(k, { present: i || t.open, children: ({ present: l }) => /* @__PURE__ */ c($, { ...r, ref: a, present: l }) });
+  }
+);
+O.displayName = R;
+var $ = o.forwardRef((e, a) => {
+  const { __scopeCollapsible: i, present: r, children: t, ...l } = e, s = g(R, i), [m, d] = o.useState(r), p = o.useRef(null), C = M(a, p), y = o.useRef(0), x = y.current, N = o.useRef(0), P = N.current, b = s.open || m, _ = o.useRef(b), f = o.useRef(void 0);
+  return o.useEffect(() => {
+    const n = requestAnimationFrame(() => _.current = !1);
+    return () => cancelAnimationFrame(n);
+  }, []), L(() => {
+    const n = p.current;
+    if (n) {
+      f.current = f.current || {
+        transitionDuration: n.style.transitionDuration,
+        animationName: n.style.animationName
+      }, n.style.transitionDuration = "0s", n.style.animationName = "none";
+      const E = n.getBoundingClientRect();
+      y.current = E.height, N.current = E.width, _.current || (n.style.transitionDuration = f.current.transitionDuration, n.style.animationName = f.current.animationName), d(r);
+    }
+  }, [s.open, r]), /* @__PURE__ */ c(
+    v.div,
+    {
+      "data-state": h(s.open),
+      "data-disabled": s.disabled ? "" : void 0,
+      id: s.contentId,
+      hidden: !b,
+      ...l,
+      ref: C,
+      style: {
+        "--radix-collapsible-content-height": x ? `${x}px` : void 0,
+        "--radix-collapsible-content-width": P ? `${P}px` : void 0,
+        ...e.style
+      },
+      children: b && t
+    }
+  );
 });
-P.displayName = E;
-var Q = "AlertDialogAction", S = l.forwardRef(
-  (e, o) => {
-    const { __scopeAlertDialog: r, ...t } = e, a = n(r);
-    return /* @__PURE__ */ i(f, { ...a, ...t, ref: o });
-  }
-);
-S.displayName = Q;
-var T = "AlertDialogCancel", O = l.forwardRef(
-  (e, o) => {
-    const { __scopeAlertDialog: r, ...t } = e, { cancelRef: a } = J(T, r), g = n(r), p = v(o, a);
-    return /* @__PURE__ */ i(f, { ...g, ...t, ref: p });
-  }
-);
-O.displayName = T;
-var U = ({ contentRef: e }) => {
-  const o = `\`${s}\` requires a description for the component to be accessible for screen reader users.
-
-You can add a description to the \`${s}\` by passing a \`${E}\` component as a child, which also benefits sighted users by adding visible context to the dialog.
-
-Alternatively, you can use your own component as a description by assigning it an \`id\` and passing the same value to the \`aria-describedby\` prop in \`${s}\`. If the description is confusing or duplicative for sighted users, you can use the \`@radix-ui/react-visually-hidden\` primitive as a wrapper around your description component.
-
-For more information, see https://radix-ui.com/primitives/docs/components/alert-dialog`;
-  return l.useEffect(() => {
-    var t;
-    document.getElementById(
-      (t = e.current) == null ? void 0 : t.getAttribute("aria-describedby")
-    ) || console.warn(o);
-  }, [o, e]), null;
-}, ae = m, ie = y, le = _, ne = N, se = R, ce = S, pe = O, ge = h, de = P;
+function h(e) {
+  return e ? "open" : "closed";
+}
+var X = w, Y = I, Z = O;
 export {
-  ce as Action,
-  m as AlertDialog,
-  S as AlertDialogAction,
-  O as AlertDialogCancel,
-  R as AlertDialogContent,
-  P as AlertDialogDescription,
-  N as AlertDialogOverlay,
-  _ as AlertDialogPortal,
-  h as AlertDialogTitle,
-  y as AlertDialogTrigger,
-  pe as Cancel,
-  se as Content,
-  de as Description,
-  ne as Overlay,
-  le as Portal,
-  ae as Root,
-  ge as Title,
-  ie as Trigger
+  w as Collapsible,
+  O as CollapsibleContent,
+  I as CollapsibleTrigger,
+  Z as Content,
+  X as Root,
+  Y as Trigger,
+  W as createCollapsibleScope
 };

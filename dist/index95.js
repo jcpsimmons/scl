@@ -1,221 +1,127 @@
-import * as p from "react";
-import { useFloating as xe, offset as Pe, shift as ye, flip as Ae, size as ve, arrow as Ce, hide as be, limitShift as Se } from "./index159.js";
-import { Root as Oe } from "./index160.js";
-import { useComposedRefs as j } from "./index91.js";
-import { createContextScope as Re } from "./index92.js";
-import { Primitive as z } from "./index89.js";
-import { useCallbackRef as Ee } from "./index101.js";
-import { useLayoutEffect as T } from "./index102.js";
-import { useSize as Ne } from "./index108.js";
-import { jsx as f } from "react/jsx-runtime";
-import { autoUpdate as _e } from "./index161.js";
-var N = "Popper", [L, Ue] = Re(N), [$e, Z] = L(N), U = (e) => {
-  const { __scopePopper: s, children: a } = e, [t, i] = p.useState(null);
-  return /* @__PURE__ */ f($e, { scope: s, anchor: t, onAnchorChange: i, children: a });
-};
-U.displayName = N;
-var q = "PopperAnchor", G = p.forwardRef(
-  (e, s) => {
-    const { __scopePopper: a, virtualRef: t, ...i } = e, r = Z(q, a), o = p.useRef(null), w = j(s, o), n = p.useRef(null);
-    return p.useEffect(() => {
-      const c = n.current;
-      n.current = (t == null ? void 0 : t.current) || o.current, c !== n.current && r.onAnchorChange(n.current);
-    }), t ? null : /* @__PURE__ */ f(z.div, { ...i, ref: w });
-  }
-);
-G.displayName = q;
-var _ = "PopperContent", [He, We] = L(_), J = p.forwardRef(
-  (e, s) => {
-    var Y, M, X, D, F, k;
+import * as n from "react";
+import { composeEventHandlers as m } from "./index84.js";
+import { Primitive as g, dispatchDiscreteCustomEvent as k } from "./index86.js";
+import { useComposedRefs as R } from "./index83.js";
+import { useCallbackRef as w } from "./index77.js";
+import { useEscapeKeydown as U } from "./index106.js";
+import { jsx as T } from "react/jsx-runtime";
+var z = "DismissableLayer", y = "dismissableLayer.update", H = "dismissableLayer.pointerDownOutside", M = "dismissableLayer.focusOutside", L, B = n.createContext({
+  layers: /* @__PURE__ */ new Set(),
+  layersWithOutsidePointerEventsDisabled: /* @__PURE__ */ new Set(),
+  branches: /* @__PURE__ */ new Set()
+}), j = n.forwardRef(
+  (r, e) => {
     const {
-      __scopePopper: a,
-      side: t = "bottom",
-      sideOffset: i = 0,
-      align: r = "center",
-      alignOffset: o = 0,
-      arrowPadding: w = 0,
-      avoidCollisions: n = !0,
-      collisionBoundary: c = [],
-      collisionPadding: x = 0,
-      sticky: m = "partial",
-      hideWhenDetached: y = !1,
-      updatePositionStrategy: A = "optimized",
-      onPlaced: l,
-      ...d
-    } = e, v = Z(_, a), [h, C] = p.useState(null), ee = j(s, (P) => C(P)), [E, te] = p.useState(null), u = Ne(E), re = (u == null ? void 0 : u.width) ?? 0, $ = (u == null ? void 0 : u.height) ?? 0, oe = t + (r !== "center" ? "-" + r : ""), ne = typeof x == "number" ? x : { top: 0, right: 0, bottom: 0, left: 0, ...x }, H = Array.isArray(c) ? c : [c], ae = H.length > 0, b = {
-      padding: ne,
-      boundary: H.filter(Ye),
-      // with `strategy: 'fixed'`, this is the only way to get it to respect boundaries
-      altBoundary: ae
-    }, { refs: ie, floatingStyles: W, placement: se, isPositioned: S, middlewareData: g } = xe({
-      // default to `fixed` strategy so users don't have to pick and we also avoid focus scroll issues
-      strategy: "fixed",
-      placement: oe,
-      whileElementsMounted: (...P) => _e(...P, {
-        animationFrame: A === "always"
-      }),
-      elements: {
-        reference: v.anchor
-      },
-      middleware: [
-        Pe({ mainAxis: i + $, alignmentAxis: o }),
-        n && ye({
-          mainAxis: !0,
-          crossAxis: !1,
-          limiter: m === "partial" ? Se() : void 0,
-          ...b
-        }),
-        n && Ae({ ...b }),
-        ve({
-          ...b,
-          apply: ({ elements: P, rects: B, availableWidth: he, availableHeight: ue }) => {
-            const { width: ge, height: we } = B.reference, R = P.floating.style;
-            R.setProperty("--radix-popper-available-width", `${he}px`), R.setProperty("--radix-popper-available-height", `${ue}px`), R.setProperty("--radix-popper-anchor-width", `${ge}px`), R.setProperty("--radix-popper-anchor-height", `${we}px`);
-          }
-        }),
-        E && Ce({ element: E, padding: w }),
-        Me({ arrowWidth: re, arrowHeight: $ }),
-        y && be({ strategy: "referenceHidden", ...b })
-      ]
-    }), [I, ce] = V(se), O = Ee(l);
-    T(() => {
-      S && (O == null || O());
-    }, [S, O]);
-    const pe = (Y = g.arrow) == null ? void 0 : Y.x, de = (M = g.arrow) == null ? void 0 : M.y, le = ((X = g.arrow) == null ? void 0 : X.centerOffset) !== 0, [fe, me] = p.useState();
-    return T(() => {
-      h && me(window.getComputedStyle(h).zIndex);
-    }, [h]), /* @__PURE__ */ f(
-      "div",
+      disableOutsidePointerEvents: i = !1,
+      onEscapeKeyDown: o,
+      onPointerDownOutside: t,
+      onFocusOutside: a,
+      onInteractOutside: l,
+      onDismiss: d,
+      ...v
+    } = r, c = n.useContext(B), [u, S] = n.useState(null), f = (u == null ? void 0 : u.ownerDocument) ?? (globalThis == null ? void 0 : globalThis.document), [, F] = n.useState({}), W = R(e, (s) => S(s)), p = Array.from(c.layers), [A] = [...c.layersWithOutsidePointerEventsDisabled].slice(-1), N = p.indexOf(A), b = u ? p.indexOf(u) : -1, I = c.layersWithOutsidePointerEventsDisabled.size > 0, P = b >= N, _ = q((s) => {
+      const E = s.target, C = [...c.branches].some((h) => h.contains(E));
+      !P || C || (t == null || t(s), l == null || l(s), s.defaultPrevented || d == null || d());
+    }, f), D = G((s) => {
+      const E = s.target;
+      [...c.branches].some((h) => h.contains(E)) || (a == null || a(s), l == null || l(s), s.defaultPrevented || d == null || d());
+    }, f);
+    return U((s) => {
+      b === c.layers.size - 1 && (o == null || o(s), !s.defaultPrevented && d && (s.preventDefault(), d()));
+    }, f), n.useEffect(() => {
+      if (u)
+        return i && (c.layersWithOutsidePointerEventsDisabled.size === 0 && (L = f.body.style.pointerEvents, f.body.style.pointerEvents = "none"), c.layersWithOutsidePointerEventsDisabled.add(u)), c.layers.add(u), O(), () => {
+          i && c.layersWithOutsidePointerEventsDisabled.size === 1 && (f.body.style.pointerEvents = L);
+        };
+    }, [u, f, i, c]), n.useEffect(() => () => {
+      u && (c.layers.delete(u), c.layersWithOutsidePointerEventsDisabled.delete(u), O());
+    }, [u, c]), n.useEffect(() => {
+      const s = () => F({});
+      return document.addEventListener(y, s), () => document.removeEventListener(y, s);
+    }, []), /* @__PURE__ */ T(
+      g.div,
       {
-        ref: ie.setFloating,
-        "data-radix-popper-content-wrapper": "",
+        ...v,
+        ref: W,
         style: {
-          ...W,
-          transform: S ? W.transform : "translate(0, -200%)",
-          // keep off the page when measuring
-          minWidth: "max-content",
-          zIndex: fe,
-          "--radix-popper-transform-origin": [
-            (D = g.transformOrigin) == null ? void 0 : D.x,
-            (F = g.transformOrigin) == null ? void 0 : F.y
-          ].join(" "),
-          // hide the content if using the hide middleware and should be hidden
-          // set visibility to hidden and disable pointer events so the UI behaves
-          // as if the PopperContent isn't there at all
-          ...((k = g.hide) == null ? void 0 : k.referenceHidden) && {
-            visibility: "hidden",
-            pointerEvents: "none"
-          }
+          pointerEvents: I ? P ? "auto" : "none" : void 0,
+          ...r.style
         },
-        dir: e.dir,
-        children: /* @__PURE__ */ f(
-          He,
-          {
-            scope: a,
-            placedSide: I,
-            onArrowChange: te,
-            arrowX: pe,
-            arrowY: de,
-            shouldHideArrow: le,
-            children: /* @__PURE__ */ f(
-              z.div,
-              {
-                "data-side": I,
-                "data-align": ce,
-                ...d,
-                ref: ee,
-                style: {
-                  ...d.style,
-                  // if the PopperContent hasn't been placed yet (not all measurements done)
-                  // we prevent animations so that users's animation don't kick in too early referring wrong sides
-                  animation: S ? void 0 : "none"
-                }
-              }
-            )
-          }
+        onFocusCapture: m(r.onFocusCapture, D.onFocusCapture),
+        onBlurCapture: m(r.onBlurCapture, D.onBlurCapture),
+        onPointerDownCapture: m(
+          r.onPointerDownCapture,
+          _.onPointerDownCapture
         )
       }
     );
   }
 );
-J.displayName = _;
-var K = "PopperArrow", Ie = {
-  top: "bottom",
-  right: "left",
-  bottom: "top",
-  left: "right"
-}, Q = p.forwardRef(function(s, a) {
-  const { __scopePopper: t, ...i } = s, r = We(K, t), o = Ie[r.placedSide];
-  return (
-    // we have to use an extra wrapper because `ResizeObserver` (used by `useSize`)
-    // doesn't report size as we'd expect on SVG elements.
-    // it reports their bounding box which is effectively the largest path inside the SVG.
-    /* @__PURE__ */ f(
-      "span",
-      {
-        ref: r.onArrowChange,
-        style: {
-          position: "absolute",
-          left: r.arrowX,
-          top: r.arrowY,
-          [o]: 0,
-          transformOrigin: {
-            top: "",
-            right: "0 0",
-            bottom: "center 0",
-            left: "100% 0"
-          }[r.placedSide],
-          transform: {
-            top: "translateY(100%)",
-            right: "translateY(50%) rotate(90deg) translateX(-50%)",
-            bottom: "rotate(180deg)",
-            left: "translateY(50%) rotate(-90deg) translateX(50%)"
-          }[r.placedSide],
-          visibility: r.shouldHideArrow ? "hidden" : void 0
-        },
-        children: /* @__PURE__ */ f(
-          Oe,
-          {
-            ...i,
-            ref: a,
-            style: {
-              ...i.style,
-              // ensures the element can be measured correctly (mostly for if SVG)
-              display: "block"
-            }
-          }
-        )
-      }
-    )
-  );
+j.displayName = z;
+var X = "DismissableLayerBranch", Y = n.forwardRef((r, e) => {
+  const i = n.useContext(B), o = n.useRef(null), t = R(e, o);
+  return n.useEffect(() => {
+    const a = o.current;
+    if (a)
+      return i.branches.add(a), () => {
+        i.branches.delete(a);
+      };
+  }, [i.branches]), /* @__PURE__ */ T(g.div, { ...r, ref: t });
 });
-Q.displayName = K;
-function Ye(e) {
-  return e !== null;
+Y.displayName = X;
+function q(r, e = globalThis == null ? void 0 : globalThis.document) {
+  const i = w(r), o = n.useRef(!1), t = n.useRef(() => {
+  });
+  return n.useEffect(() => {
+    const a = (d) => {
+      if (d.target && !o.current) {
+        let v = function() {
+          x(
+            H,
+            i,
+            c,
+            { discrete: !0 }
+          );
+        };
+        const c = { originalEvent: d };
+        d.pointerType === "touch" ? (e.removeEventListener("click", t.current), t.current = v, e.addEventListener("click", t.current, { once: !0 })) : v();
+      } else
+        e.removeEventListener("click", t.current);
+      o.current = !1;
+    }, l = window.setTimeout(() => {
+      e.addEventListener("pointerdown", a);
+    }, 0);
+    return () => {
+      window.clearTimeout(l), e.removeEventListener("pointerdown", a), e.removeEventListener("click", t.current);
+    };
+  }, [e, i]), {
+    // ensures we check React component tree (not just DOM tree)
+    onPointerDownCapture: () => o.current = !0
+  };
 }
-var Me = (e) => ({
-  name: "transformOrigin",
-  options: e,
-  fn(s) {
-    var v, h, C;
-    const { placement: a, rects: t, middlewareData: i } = s, o = ((v = i.arrow) == null ? void 0 : v.centerOffset) !== 0, w = o ? 0 : e.arrowWidth, n = o ? 0 : e.arrowHeight, [c, x] = V(a), m = { start: "0%", center: "50%", end: "100%" }[x], y = (((h = i.arrow) == null ? void 0 : h.x) ?? 0) + w / 2, A = (((C = i.arrow) == null ? void 0 : C.y) ?? 0) + n / 2;
-    let l = "", d = "";
-    return c === "bottom" ? (l = o ? m : `${y}px`, d = `${-n}px`) : c === "top" ? (l = o ? m : `${y}px`, d = `${t.floating.height + n}px`) : c === "right" ? (l = `${-n}px`, d = o ? m : `${A}px`) : c === "left" && (l = `${t.floating.width + n}px`, d = o ? m : `${A}px`), { data: { x: l, y: d } };
-  }
-});
-function V(e) {
-  const [s, a = "center"] = e.split("-");
-  return [s, a];
+function G(r, e = globalThis == null ? void 0 : globalThis.document) {
+  const i = w(r), o = n.useRef(!1);
+  return n.useEffect(() => {
+    const t = (a) => {
+      a.target && !o.current && x(M, i, { originalEvent: a }, {
+        discrete: !1
+      });
+    };
+    return e.addEventListener("focusin", t), () => e.removeEventListener("focusin", t);
+  }, [e, i]), {
+    onFocusCapture: () => o.current = !0,
+    onBlurCapture: () => o.current = !1
+  };
 }
-var qe = U, Ge = G, Je = J, Ke = Q;
+function O() {
+  const r = new CustomEvent(y);
+  document.dispatchEvent(r);
+}
+function x(r, e, i, { discrete: o }) {
+  const t = i.originalEvent.target, a = new CustomEvent(r, { bubbles: !1, cancelable: !0, detail: i });
+  e && t.addEventListener(r, e, { once: !0 }), o ? k(t, a) : t.dispatchEvent(a);
+}
 export {
-  Ge as Anchor,
-  Ke as Arrow,
-  Je as Content,
-  U as Popper,
-  G as PopperAnchor,
-  Q as PopperArrow,
-  J as PopperContent,
-  qe as Root,
-  Ue as createPopperScope
+  j as DismissableLayer,
+  Y as DismissableLayerBranch
 };

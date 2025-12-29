@@ -1,75 +1,127 @@
-import * as i from "react";
-import { createContextScope as C } from "./index100.js";
-import { useCallbackRef as h } from "./index101.js";
-import { useLayoutEffect as f } from "./index102.js";
-import { Primitive as m } from "./index103.js";
-import { useIsHydrated as _ } from "./index104.js";
-import { jsx as l } from "react/jsx-runtime";
-var v = "Avatar", [y] = C(v), [x, A] = y(v), L = i.forwardRef(
-  (t, e) => {
-    const { __scopeAvatar: o, ...r } = t, [n, a] = i.useState("idle");
-    return /* @__PURE__ */ l(
-      x,
+import * as l from "react";
+import { createContextScope as w } from "./index81.js";
+import { useComposedRefs as v } from "./index83.js";
+import { createDialogScope as A, Root as M, Portal as x, Trigger as I, Overlay as L, WarningProvider as $, Content as F, Title as G, Description as j, Close as f } from "./index55.js";
+import { composeEventHandlers as W } from "./index84.js";
+import { createSlottable as Y } from "./index89.js";
+import { jsx as i, jsxs as q } from "react/jsx-runtime";
+var D = "AlertDialog", [B] = w(D, [
+  A
+]), n = A(), m = (e) => {
+  const { __scopeAlertDialog: o, ...r } = e, t = n(o);
+  return /* @__PURE__ */ i(M, { ...t, ...r, modal: !0 });
+};
+m.displayName = D;
+var H = "AlertDialogTrigger", y = l.forwardRef(
+  (e, o) => {
+    const { __scopeAlertDialog: r, ...t } = e, a = n(r);
+    return /* @__PURE__ */ i(I, { ...a, ...t, ref: o });
+  }
+);
+y.displayName = H;
+var V = "AlertDialogPortal", _ = (e) => {
+  const { __scopeAlertDialog: o, ...r } = e, t = n(o);
+  return /* @__PURE__ */ i(x, { ...t, ...r });
+};
+_.displayName = V;
+var k = "AlertDialogOverlay", N = l.forwardRef(
+  (e, o) => {
+    const { __scopeAlertDialog: r, ...t } = e, a = n(r);
+    return /* @__PURE__ */ i(L, { ...a, ...t, ref: o });
+  }
+);
+N.displayName = k;
+var s = "AlertDialogContent", [z, J] = B(s), K = Y("AlertDialogContent"), R = l.forwardRef(
+  (e, o) => {
+    const { __scopeAlertDialog: r, children: t, ...a } = e, g = n(r), p = l.useRef(null), b = v(o, p), d = l.useRef(null);
+    return /* @__PURE__ */ i(
+      $,
       {
-        scope: o,
-        imageLoadingStatus: n,
-        onImageLoadingStatusChange: a,
-        children: /* @__PURE__ */ l(m.span, { ...r, ref: e })
+        contentName: s,
+        titleName: C,
+        docsSlug: "alert-dialog",
+        children: /* @__PURE__ */ i(z, { scope: r, cancelRef: d, children: /* @__PURE__ */ q(
+          F,
+          {
+            role: "alertdialog",
+            ...g,
+            ...a,
+            ref: b,
+            onOpenAutoFocus: W(a.onOpenAutoFocus, (c) => {
+              var u;
+              c.preventDefault(), (u = d.current) == null || u.focus({ preventScroll: !0 });
+            }),
+            onPointerDownOutside: (c) => c.preventDefault(),
+            onInteractOutside: (c) => c.preventDefault(),
+            children: [
+              /* @__PURE__ */ i(K, { children: t }),
+              /* @__PURE__ */ i(U, { contentRef: p })
+            ]
+          }
+        ) })
       }
     );
   }
 );
-L.displayName = v;
-var S = "AvatarImage", E = i.forwardRef(
-  (t, e) => {
-    const { __scopeAvatar: o, src: r, onLoadingStatusChange: n = () => {
-    }, ...a } = t, u = A(S, o), s = N(r, a), d = h((c) => {
-      n(c), u.onImageLoadingStatusChange(c);
-    });
-    return f(() => {
-      s !== "idle" && d(s);
-    }, [s, d]), s === "loaded" ? /* @__PURE__ */ l(m.img, { ...a, ref: e, src: r }) : null;
+R.displayName = s;
+var C = "AlertDialogTitle", h = l.forwardRef(
+  (e, o) => {
+    const { __scopeAlertDialog: r, ...t } = e, a = n(r);
+    return /* @__PURE__ */ i(G, { ...a, ...t, ref: o });
   }
 );
-E.displayName = S;
-var I = "AvatarFallback", R = i.forwardRef(
-  (t, e) => {
-    const { __scopeAvatar: o, delayMs: r, ...n } = t, a = A(I, o), [u, s] = i.useState(r === void 0);
-    return i.useEffect(() => {
-      if (r !== void 0) {
-        const d = window.setTimeout(() => s(!0), r);
-        return () => window.clearTimeout(d);
-      }
-    }, [r]), u && a.imageLoadingStatus !== "loaded" ? /* @__PURE__ */ l(m.span, { ...n, ref: e }) : null;
+h.displayName = C;
+var E = "AlertDialogDescription", P = l.forwardRef((e, o) => {
+  const { __scopeAlertDialog: r, ...t } = e, a = n(r);
+  return /* @__PURE__ */ i(j, { ...a, ...t, ref: o });
+});
+P.displayName = E;
+var Q = "AlertDialogAction", S = l.forwardRef(
+  (e, o) => {
+    const { __scopeAlertDialog: r, ...t } = e, a = n(r);
+    return /* @__PURE__ */ i(f, { ...a, ...t, ref: o });
   }
 );
-R.displayName = I;
-function p(t, e) {
-  return t ? e ? (t.src !== e && (t.src = e), t.complete && t.naturalWidth > 0 ? "loaded" : "loading") : "error" : "idle";
-}
-function N(t, { referrerPolicy: e, crossOrigin: o }) {
-  const r = _(), n = i.useRef(null), a = r ? (n.current || (n.current = new window.Image()), n.current) : null, [u, s] = i.useState(
-    () => p(a, t)
-  );
-  return f(() => {
-    s(p(a, t));
-  }, [a, t]), f(() => {
-    const d = (w) => () => {
-      s(w);
-    };
-    if (!a) return;
-    const c = d("loaded"), g = d("error");
-    return a.addEventListener("load", c), a.addEventListener("error", g), e && (a.referrerPolicy = e), typeof o == "string" && (a.crossOrigin = o), () => {
-      a.removeEventListener("load", c), a.removeEventListener("error", g);
-    };
-  }, [a, o, e]), u;
-}
-var H = L, j = E, B = R;
+S.displayName = Q;
+var T = "AlertDialogCancel", O = l.forwardRef(
+  (e, o) => {
+    const { __scopeAlertDialog: r, ...t } = e, { cancelRef: a } = J(T, r), g = n(r), p = v(o, a);
+    return /* @__PURE__ */ i(f, { ...g, ...t, ref: p });
+  }
+);
+O.displayName = T;
+var U = ({ contentRef: e }) => {
+  const o = `\`${s}\` requires a description for the component to be accessible for screen reader users.
+
+You can add a description to the \`${s}\` by passing a \`${E}\` component as a child, which also benefits sighted users by adding visible context to the dialog.
+
+Alternatively, you can use your own component as a description by assigning it an \`id\` and passing the same value to the \`aria-describedby\` prop in \`${s}\`. If the description is confusing or duplicative for sighted users, you can use the \`@radix-ui/react-visually-hidden\` primitive as a wrapper around your description component.
+
+For more information, see https://radix-ui.com/primitives/docs/components/alert-dialog`;
+  return l.useEffect(() => {
+    var t;
+    document.getElementById(
+      (t = e.current) == null ? void 0 : t.getAttribute("aria-describedby")
+    ) || console.warn(o);
+  }, [o, e]), null;
+}, ae = m, ie = y, le = _, ne = N, se = R, ce = S, pe = O, ge = h, de = P;
 export {
-  L as Avatar,
-  R as AvatarFallback,
-  E as AvatarImage,
-  B as Fallback,
-  j as Image,
-  H as Root
+  ce as Action,
+  m as AlertDialog,
+  S as AlertDialogAction,
+  O as AlertDialogCancel,
+  R as AlertDialogContent,
+  P as AlertDialogDescription,
+  N as AlertDialogOverlay,
+  _ as AlertDialogPortal,
+  h as AlertDialogTitle,
+  y as AlertDialogTrigger,
+  pe as Cancel,
+  se as Content,
+  de as Description,
+  ne as Overlay,
+  le as Portal,
+  ae as Root,
+  ge as Title,
+  ie as Trigger
 };

@@ -1,32 +1,23 @@
-import * as f from "react";
-import "react-dom";
-import { createSlot as l } from "./index54.js";
-import { jsx as n } from "react/jsx-runtime";
-var u = [
-  "a",
-  "button",
-  "div",
-  "form",
-  "h2",
-  "h3",
-  "img",
-  "input",
-  "label",
-  "li",
-  "nav",
-  "ol",
-  "p",
-  "select",
-  "span",
-  "svg",
-  "ul"
-], w = u.reduce((t, i) => {
-  const o = l(`Primitive.${i}`), r = f.forwardRef((e, m) => {
-    const { asChild: a, ...p } = e, s = a ? o : i;
-    return typeof window < "u" && (window[Symbol.for("radix-ui")] = !0), /* @__PURE__ */ n(s, { ...p, ref: m });
-  });
-  return r.displayName = `Primitive.${i}`, { ...t, [i]: r };
-}, {});
+import { forwardRef as s, createElement as c } from "react";
+import { mergeClasses as n, toKebabCase as f } from "./index111.js";
+import l from "./index112.js";
+/**
+ * @license lucide-react v0.460.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const u = (e, r) => {
+  const o = s(
+    ({ className: t, ...a }, m) => c(l, {
+      ref: m,
+      iconNode: r,
+      className: n(`lucide-${f(e)}`, t),
+      ...a
+    })
+  );
+  return o.displayName = `${e}`, o;
+};
 export {
-  w as Primitive
+  u as default
 };

@@ -1,71 +1,137 @@
-import * as a from "react";
-import { useComposedRefs as E } from "./index91.js";
-import { useLayoutEffect as A } from "./index102.js";
-function T(n, e) {
-  return a.useReducer((r, t) => e[r][t] ?? r, n);
+import * as d from "react";
+import { useComposedRefs as R } from "./index83.js";
+import { Primitive as M } from "./index86.js";
+import { useCallbackRef as y } from "./index77.js";
+import { jsx as _ } from "react/jsx-runtime";
+var F = "focusScope.autoFocusOnMount", T = "focusScope.autoFocusOnUnmount", N = { bubbles: !1, cancelable: !0 }, K = "FocusScope", k = d.forwardRef((e, n) => {
+  const {
+    loop: t = !1,
+    trapped: u = !1,
+    onMountAutoFocus: p,
+    onUnmountAutoFocus: L,
+    ...g
+  } = e, [o, U] = d.useState(null), E = y(p), v = y(L), b = d.useRef(null), A = R(n, (s) => U(s)), a = d.useRef({
+    paused: !1,
+    pause() {
+      this.paused = !0;
+    },
+    resume() {
+      this.paused = !1;
+    }
+  }).current;
+  d.useEffect(() => {
+    if (u) {
+      let s = function(i) {
+        if (a.paused || !o) return;
+        const c = i.target;
+        o.contains(c) ? b.current = c : f(b.current, { select: !0 });
+      }, l = function(i) {
+        if (a.paused || !o) return;
+        const c = i.relatedTarget;
+        c !== null && (o.contains(c) || f(b.current, { select: !0 }));
+      }, r = function(i) {
+        if (document.activeElement === document.body)
+          for (const h of i)
+            h.removedNodes.length > 0 && f(o);
+      };
+      document.addEventListener("focusin", s), document.addEventListener("focusout", l);
+      const m = new MutationObserver(r);
+      return o && m.observe(o, { childList: !0, subtree: !0 }), () => {
+        document.removeEventListener("focusin", s), document.removeEventListener("focusout", l), m.disconnect();
+      };
+    }
+  }, [u, o, a.paused]), d.useEffect(() => {
+    if (o) {
+      S.add(a);
+      const s = document.activeElement;
+      if (!o.contains(s)) {
+        const r = new CustomEvent(F, N);
+        o.addEventListener(F, E), o.dispatchEvent(r), r.defaultPrevented || (w(W(I(o)), { select: !0 }), document.activeElement === s && f(o));
+      }
+      return () => {
+        o.removeEventListener(F, E), setTimeout(() => {
+          const r = new CustomEvent(T, N);
+          o.addEventListener(T, v), o.dispatchEvent(r), r.defaultPrevented || f(s ?? document.body, { select: !0 }), o.removeEventListener(T, v), S.remove(a);
+        }, 0);
+      };
+    }
+  }, [o, E, v, a]);
+  const P = d.useCallback(
+    (s) => {
+      if (!t && !u || a.paused) return;
+      const l = s.key === "Tab" && !s.altKey && !s.ctrlKey && !s.metaKey, r = document.activeElement;
+      if (l && r) {
+        const m = s.currentTarget, [i, c] = x(m);
+        i && c ? !s.shiftKey && r === c ? (s.preventDefault(), t && f(i, { select: !0 })) : s.shiftKey && r === i && (s.preventDefault(), t && f(c, { select: !0 })) : r === m && s.preventDefault();
+      }
+    },
+    [t, u, a.paused]
+  );
+  return /* @__PURE__ */ _(M.div, { tabIndex: -1, ...g, ref: A, onKeyDown: P });
+});
+k.displayName = K;
+function w(e, { select: n = !1 } = {}) {
+  const t = document.activeElement;
+  for (const u of e)
+    if (f(u, { select: n }), document.activeElement !== t) return;
 }
-var R = (n) => {
-  const { present: e, children: r } = n, t = v(e), i = typeof r == "function" ? r({ present: t.isPresent }) : a.Children.only(r), c = E(t.ref, P(i));
-  return typeof r == "function" || t.isPresent ? a.cloneElement(i, { ref: c }) : null;
-};
-R.displayName = "Presence";
-function v(n) {
-  const [e, r] = a.useState(), t = a.useRef(null), i = a.useRef(n), c = a.useRef("none"), p = n ? "mounted" : "unmounted", [N, s] = T(p, {
-    mounted: {
-      UNMOUNT: "unmounted",
-      ANIMATION_OUT: "unmountSuspended"
-    },
-    unmountSuspended: {
-      MOUNT: "mounted",
-      ANIMATION_END: "unmounted"
-    },
-    unmounted: {
-      MOUNT: "mounted"
+function x(e) {
+  const n = I(e), t = O(n, e), u = O(n.reverse(), e);
+  return [t, u];
+}
+function I(e) {
+  const n = [], t = document.createTreeWalker(e, NodeFilter.SHOW_ELEMENT, {
+    acceptNode: (u) => {
+      const p = u.tagName === "INPUT" && u.type === "hidden";
+      return u.disabled || u.hidden || p ? NodeFilter.FILTER_SKIP : u.tabIndex >= 0 ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_SKIP;
     }
   });
-  return a.useEffect(() => {
-    const o = l(t.current);
-    c.current = N === "mounted" ? o : "none";
-  }, [N]), A(() => {
-    const o = t.current, m = i.current;
-    if (m !== n) {
-      const f = c.current, u = l(o);
-      n ? s("MOUNT") : u === "none" || (o == null ? void 0 : o.display) === "none" ? s("UNMOUNT") : s(m && f !== u ? "ANIMATION_OUT" : "UNMOUNT"), i.current = n;
+  for (; t.nextNode(); ) n.push(t.currentNode);
+  return n;
+}
+function O(e, n) {
+  for (const t of e)
+    if (!D(t, { upTo: n })) return t;
+}
+function D(e, { upTo: n }) {
+  if (getComputedStyle(e).visibility === "hidden") return !0;
+  for (; e; ) {
+    if (n !== void 0 && e === n) return !1;
+    if (getComputedStyle(e).display === "none") return !0;
+    e = e.parentElement;
+  }
+  return !1;
+}
+function H(e) {
+  return e instanceof HTMLInputElement && "select" in e;
+}
+function f(e, { select: n = !1 } = {}) {
+  if (e && e.focus) {
+    const t = document.activeElement;
+    e.focus({ preventScroll: !0 }), e !== t && H(e) && n && e.select();
+  }
+}
+var S = V();
+function V() {
+  let e = [];
+  return {
+    add(n) {
+      const t = e[0];
+      n !== t && (t == null || t.pause()), e = C(e, n), e.unshift(n);
+    },
+    remove(n) {
+      var t;
+      e = C(e, n), (t = e[0]) == null || t.resume();
     }
-  }, [n, s]), A(() => {
-    if (e) {
-      let o;
-      const m = e.ownerDocument.defaultView ?? window, d = (u) => {
-        const g = l(t.current).includes(CSS.escape(u.animationName));
-        if (u.target === e && g && (s("ANIMATION_END"), !i.current)) {
-          const O = e.style.animationFillMode;
-          e.style.animationFillMode = "forwards", o = m.setTimeout(() => {
-            e.style.animationFillMode === "forwards" && (e.style.animationFillMode = O);
-          });
-        }
-      }, f = (u) => {
-        u.target === e && (c.current = l(t.current));
-      };
-      return e.addEventListener("animationstart", f), e.addEventListener("animationcancel", d), e.addEventListener("animationend", d), () => {
-        m.clearTimeout(o), e.removeEventListener("animationstart", f), e.removeEventListener("animationcancel", d), e.removeEventListener("animationend", d);
-      };
-    } else
-      s("ANIMATION_END");
-  }, [e, s]), {
-    isPresent: ["mounted", "unmountSuspended"].includes(N),
-    ref: a.useCallback((o) => {
-      t.current = o ? getComputedStyle(o) : null, r(o);
-    }, [])
   };
 }
-function l(n) {
-  return (n == null ? void 0 : n.animationName) || "none";
+function C(e, n) {
+  const t = [...e], u = t.indexOf(n);
+  return u !== -1 && t.splice(u, 1), t;
 }
-function P(n) {
-  var t, i;
-  let e = (t = Object.getOwnPropertyDescriptor(n.props, "ref")) == null ? void 0 : t.get, r = e && "isReactWarning" in e && e.isReactWarning;
-  return r ? n.ref : (e = (i = Object.getOwnPropertyDescriptor(n, "ref")) == null ? void 0 : i.get, r = e && "isReactWarning" in e && e.isReactWarning, r ? n.props.ref : n.props.ref || n.ref);
+function W(e) {
+  return e.filter((n) => n.tagName !== "A");
 }
 export {
-  R as Presence
+  k as FocusScope
 };

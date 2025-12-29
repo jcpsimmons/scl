@@ -1,17 +1,27 @@
-var m = 1, j = 0.9, k = 0.8, B = 0.17, v = 0.1, w = 0.999, D = 0.9999, G = 0.99, H = /[\\\/_+.#"@\[\(\{&]/, J = /[\\\/_+.#"@\[\(\{&]/g, K = /[\s-]/, A = /[\s-]/g;
-function $(t, o, e, i, n, h, u) {
-  if (h === o.length) return n === t.length ? m : G;
-  var s = `${n},${h}`;
-  if (u[s] !== void 0) return u[s];
-  for (var d = i.charAt(h), a = e.indexOf(d, n), l = 0, r, g, c, p; a >= 0; ) r = $(t, o, e, i, a + 1, h + 1, u), r > l && (a === n ? r *= m : H.test(t.charAt(a - 1)) ? (r *= k, c = t.slice(n, a - 1).match(J), c && n > 0 && (r *= Math.pow(w, c.length))) : K.test(t.charAt(a - 1)) ? (r *= j, p = t.slice(n, a - 1).match(A), p && n > 0 && (r *= Math.pow(w, p.length))) : (r *= B, n > 0 && (r *= Math.pow(w, a - n))), t.charAt(a) !== o.charAt(h) && (r *= D)), (r < v && e.charAt(a - 1) === i.charAt(h + 1) || i.charAt(h + 1) === i.charAt(h) && e.charAt(a - 1) !== i.charAt(h)) && (g = $(t, o, e, i, a + 1, h + 2, u), g * v > r && (r = g * v)), r > l && (l = r), a = e.indexOf(d, a + 1);
-  return u[s] = l, l;
+var p = function() {
+  return p = Object.assign || function(e) {
+    for (var n, r = 1, o = arguments.length; r < o; r++) {
+      n = arguments[r];
+      for (var a in n) Object.prototype.hasOwnProperty.call(n, a) && (e[a] = n[a]);
+    }
+    return e;
+  }, p.apply(this, arguments);
+};
+function c(t, e) {
+  var n = {};
+  for (var r in t) Object.prototype.hasOwnProperty.call(t, r) && e.indexOf(r) < 0 && (n[r] = t[r]);
+  if (t != null && typeof Object.getOwnPropertySymbols == "function")
+    for (var o = 0, r = Object.getOwnPropertySymbols(t); o < r.length; o++)
+      e.indexOf(r[o]) < 0 && Object.prototype.propertyIsEnumerable.call(t, r[o]) && (n[r[o]] = t[r[o]]);
+  return n;
 }
-function x(t) {
-  return t.toLowerCase().replace(A, " ");
-}
-function M(t, o, e) {
-  return t = e && e.length > 0 ? `${t + " " + e.join(" ")}` : t, $(t, o, x(t), x(o), 0, 0, {});
+function l(t, e, n) {
+  if (n || arguments.length === 2) for (var r = 0, o = e.length, a; r < o; r++)
+    (a || !(r in e)) && (a || (a = Array.prototype.slice.call(e, 0, r)), a[r] = e[r]);
+  return t.concat(a || Array.prototype.slice.call(e));
 }
 export {
-  M as a
+  p as __assign,
+  c as __rest,
+  l as __spreadArray
 };

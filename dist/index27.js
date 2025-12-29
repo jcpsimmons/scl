@@ -1,14 +1,14 @@
 import { jsx as a, jsxs as r } from "react/jsx-runtime";
 import * as i from "react";
-import { Root as g, Portal as u, Trigger as x, Close as n, Overlay as d, Content as l, Title as m, Description as c } from "./index60.js";
-import { cva as y } from "./index45.js";
+import { Root as g, Portal as u, Trigger as x, Close as n, Overlay as d, Content as l, Title as m, Description as c } from "./index55.js";
+import { cva as y } from "./index48.js";
 import { cn as s } from "./index2.js";
-import N from "./index61.js";
+import N from "./index56.js";
 const H = g, O = x, P = n, b = u, f = i.forwardRef(({ className: e, ...t }, o) => /* @__PURE__ */ a(
   d,
   {
     className: s(
-      "fixed inset-0 z-50 bg-black/80 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
+      "fixed inset-0 z-50 bg-black data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
       e
     ),
     ...t,

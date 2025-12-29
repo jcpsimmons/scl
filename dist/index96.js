@@ -1,16 +1,17 @@
 import * as r from "react";
-import s from "react-dom";
-import { Primitive as c } from "./index89.js";
-import { useLayoutEffect as u } from "./index102.js";
-import { jsx as l } from "react/jsx-runtime";
-var p = "Portal", d = r.forwardRef((e, a) => {
-  var o;
-  const { container: f, ...i } = e, [m, n] = r.useState(!1);
-  u(() => n(!0), []);
-  const t = f || m && ((o = globalThis == null ? void 0 : globalThis.document) == null ? void 0 : o.body);
-  return t ? s.createPortal(/* @__PURE__ */ l(c.div, { ...i, ref: a }), t) : null;
-});
-d.displayName = p;
+var t = 0;
+function a() {
+  r.useEffect(() => {
+    const e = document.querySelectorAll("[data-radix-focus-guard]");
+    return document.body.insertAdjacentElement("afterbegin", e[0] ?? n()), document.body.insertAdjacentElement("beforeend", e[1] ?? n()), t++, () => {
+      t === 1 && document.querySelectorAll("[data-radix-focus-guard]").forEach((o) => o.remove()), t--;
+    };
+  }, []);
+}
+function n() {
+  const e = document.createElement("span");
+  return e.setAttribute("data-radix-focus-guard", ""), e.tabIndex = 0, e.style.outline = "none", e.style.opacity = "0", e.style.position = "fixed", e.style.pointerEvents = "none", e;
+}
 export {
-  d as Portal
+  a as useFocusGuards
 };

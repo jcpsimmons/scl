@@ -1,22 +1,22 @@
-import { jsx as t } from "react/jsx-runtime";
-import { cn as a } from "./index2.js";
-function i({
+import { jsx as i } from "react/jsx-runtime";
+import { cn as m } from "./index2.js";
+function a({
   className: r,
-  ...e
+  blink: e = !0,
+  ...o
 }) {
-  return /* @__PURE__ */ t(
+  return /* @__PURE__ */ i(
     "div",
     {
-      className: a(
-        "relative overflow-hidden border border-primary/30 bg-primary/10",
-        // Scanline animation effect
-        "after:absolute after:inset-0 after:bg-gradient-to-b after:from-transparent after:via-primary/20 after:to-transparent after:animate-scanline",
+      className: m(
+        "border border-primary/30 bg-primary/10",
+        e && "animate-blink",
         r
       ),
-      ...e
+      ...o
     }
   );
 }
 export {
-  i as Skeleton
+  a as Skeleton
 };

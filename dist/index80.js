@@ -1,13 +1,15 @@
-import o from "./index163.js";
-/**
- * @license lucide-react v0.460.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const n = o("ChevronDown", [
-  ["path", { d: "m6 9 6 6 6-6", key: "qrunsl" }]
-]);
+import { s as r } from "./index105.js";
+function s() {
+  return r.useSyncExternalStore(
+    e,
+    () => !0,
+    () => !1
+  );
+}
+function e() {
+  return () => {
+  };
+}
 export {
-  n as default
+  s as useIsHydrated
 };

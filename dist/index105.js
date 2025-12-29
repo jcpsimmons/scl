@@ -1,9 +1,8 @@
-function h(f, c, { checkForDefaultPrevented: p = !0 } = {}) {
-  return function(s) {
-    if (f == null || f(s), p === !1 || !s.defaultPrevented)
-      return c == null ? void 0 : c(s);
-  };
-}
+import { __module as r } from "./index114.js";
+import { __require as e } from "./index115.js";
+import { __require as o } from "./index116.js";
+process.env.NODE_ENV === "production" ? r.exports = e() : r.exports = o();
+var m = r.exports;
 export {
-  h as composeEventHandlers
+  m as s
 };

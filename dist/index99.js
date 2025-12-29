@@ -1,32 +1,16 @@
-import * as a from "react";
-import { Primitive as o } from "./index89.js";
-import { jsx as t } from "react/jsx-runtime";
-var d = Object.freeze({
-  // See: https://github.com/twbs/bootstrap/blob/main/scss/mixins/_visually-hidden.scss
-  position: "absolute",
-  border: 0,
-  width: 1,
-  height: 1,
-  padding: 0,
-  margin: -1,
-  overflow: "hidden",
-  clip: "rect(0, 0, 0, 0)",
-  whiteSpace: "nowrap",
-  wordWrap: "normal"
-}), l = "VisuallyHidden", e = a.forwardRef(
-  (r, i) => /* @__PURE__ */ t(
-    o.span,
-    {
-      ...r,
-      ref: i,
-      style: { ...d, ...r.style }
-    }
-  )
-);
-e.displayName = l;
-var p = e;
+import * as r from "react";
+import s from "react-dom";
+import { Primitive as c } from "./index86.js";
+import { useLayoutEffect as u } from "./index78.js";
+import { jsx as l } from "react/jsx-runtime";
+var p = "Portal", d = r.forwardRef((e, a) => {
+  var o;
+  const { container: f, ...i } = e, [m, n] = r.useState(!1);
+  u(() => n(!0), []);
+  const t = f || m && ((o = globalThis == null ? void 0 : globalThis.document) == null ? void 0 : o.body);
+  return t ? s.createPortal(/* @__PURE__ */ l(c.div, { ...i, ref: a }), t) : null;
+});
+d.displayName = p;
 export {
-  p as Root,
-  d as VISUALLY_HIDDEN_STYLES,
-  e as VisuallyHidden
+  d as Portal
 };

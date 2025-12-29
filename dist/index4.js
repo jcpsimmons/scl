@@ -1,13 +1,13 @@
 import { jsx as a, jsxs as m } from "react/jsx-runtime";
 import * as n from "react";
-import { Root as c, Item as l, Header as f, Trigger as i, Content as d } from "./index79.js";
+import { Root as c, Item as l, Header as f, Trigger as i, Content as d } from "./index45.js";
 import { cn as s } from "./index2.js";
-import p from "./index80.js";
+import p from "./index46.js";
 const R = c, N = n.forwardRef(({ className: e, ...o }, t) => /* @__PURE__ */ a(
   l,
   {
     ref: t,
-    className: s("border-b", e),
+    className: s("border-b-2 w-full", e),
     ...o
   }
 ));
@@ -28,7 +28,7 @@ const x = n.forwardRef(({ className: e, children: o, ...t }, r) => /* @__PURE__ 
   }
 ) }));
 x.displayName = i.displayName;
-const g = n.forwardRef(({ className: e, children: o, ...t }, r) => /* @__PURE__ */ a(
+const w = n.forwardRef(({ className: e, children: o, ...t }, r) => /* @__PURE__ */ a(
   d,
   {
     ref: r,
@@ -37,10 +37,10 @@ const g = n.forwardRef(({ className: e, children: o, ...t }, r) => /* @__PURE__ 
     children: /* @__PURE__ */ a("div", { className: s("pb-4 pt-0", e), children: o })
   }
 ));
-g.displayName = d.displayName;
+w.displayName = d.displayName;
 export {
   R as Accordion,
-  g as AccordionContent,
+  w as AccordionContent,
   N as AccordionItem,
   x as AccordionTrigger
 };

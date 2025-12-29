@@ -1,256 +1,262 @@
-import u from "react";
-var z = (e) => e.type === "checkbox", k = (e) => e instanceof Date, w = (e) => e == null;
-const H = (e) => typeof e == "object";
-var p = (e) => !w(e) && !Array.isArray(e) && H(e) && !k(e), J = (e) => p(e) && e.target ? z(e.target) ? e.target.checked : e.target.value : e, Q = (e) => e.substring(0, e.search(/\.\d+(\.|$)/)) || e, X = (e, s) => e.has(Q(s)), Y = (e) => {
-  const s = e.constructor && e.constructor.prototype;
-  return p(s) && s.hasOwnProperty("isPrototypeOf");
-}, Z = typeof window < "u" && typeof window.HTMLElement < "u" && typeof document < "u";
-function W(e) {
-  if (e instanceof Date)
-    return new Date(e);
-  const s = typeof FileList < "u" && e instanceof FileList;
-  if (Z && (e instanceof Blob || s))
-    return e;
-  const t = Array.isArray(e);
-  if (!t && !(p(e) && Y(e)))
-    return e;
-  const n = t ? [] : Object.create(Object.getPrototypeOf(e));
-  for (const r in e)
-    Object.prototype.hasOwnProperty.call(e, r) && (n[r] = W(e[r]));
-  return n;
-}
-var G = (e) => /^\w*$/.test(e), R = (e) => e === void 0, j = (e) => Array.isArray(e) ? e.filter(Boolean) : [], $ = (e) => j(e.replace(/["|']|\]/g, "").split(/\.|\[/)), y = (e, s, t) => {
-  if (!s || !p(e))
-    return t;
-  const n = (G(s) ? [s] : $(s)).reduce((r, a) => w(r) ? r : r[a], e);
-  return R(n) || n === e ? R(e[s]) ? t : e[s] : n;
-}, P = (e) => typeof e == "boolean", E = (e) => typeof e == "function", D = (e, s, t) => {
-  let n = -1;
-  const r = G(s) ? [s] : $(s), a = r.length, i = a - 1;
-  for (; ++n < a; ) {
-    const l = r[n];
-    let c = t;
-    if (n !== i) {
-      const f = e[l];
-      c = p(f) || Array.isArray(f) ? f : isNaN(+r[n + 1]) ? {} : [];
-    }
-    if (l === "__proto__" || l === "constructor" || l === "prototype")
-      return;
-    e[l] = c, e = e[l];
-  }
-};
-const I = {
-  BLUR: "blur",
-  CHANGE: "change"
-}, B = {
-  all: "all"
-}, L = u.createContext(null);
-L.displayName = "HookFormContext";
-const M = () => u.useContext(L), oe = (e) => {
-  const { children: s, ...t } = e;
-  return u.createElement(L.Provider, { value: t }, s);
-};
-var ee = (e, s, t, n = !0) => {
-  const r = {
-    defaultValues: s._defaultValues
-  };
-  for (const a in e)
-    Object.defineProperty(r, a, {
-      get: () => {
-        const i = a;
-        return s._proxyFormState[i] !== B.all && (s._proxyFormState[i] = !n || B.all), t && (t[i] = !0), e[i];
-      }
-    });
-  return r;
-};
-const q = typeof window < "u" ? u.useLayoutEffect : u.useEffect;
-function te(e) {
-  const s = M(), { control: t = s.control, disabled: n, name: r, exact: a } = e || {}, [i, l] = u.useState(t._formState), c = u.useRef({
-    isDirty: !1,
-    isLoading: !1,
-    dirtyFields: !1,
-    touchedFields: !1,
-    validatingFields: !1,
-    isValidating: !1,
-    isValid: !1,
-    errors: !1
+import * as s from "react";
+import { composeEventHandlers as p } from "./index84.js";
+import { useComposedRefs as _ } from "./index83.js";
+import { createContextScope as V, createContext as q } from "./index81.js";
+import { useId as R } from "./index87.js";
+import { useControllableState as K } from "./index85.js";
+import { DismissableLayer as U } from "./index95.js";
+import { FocusScope as Y } from "./index97.js";
+import { Portal as Z } from "./index99.js";
+import { Presence as h } from "./index94.js";
+import { Primitive as m } from "./index86.js";
+import { useFocusGuards as z } from "./index96.js";
+import J from "./index101.js";
+import { hideOthers as Q } from "./index100.js";
+import { createSlot as X } from "./index89.js";
+import { jsx as i, jsxs as P, Fragment as O } from "react/jsx-runtime";
+var v = "Dialog", [I, Ne] = V(v), [ee, u] = I(v), x = (e) => {
+  const {
+    __scopeDialog: o,
+    children: n,
+    open: a,
+    defaultOpen: r,
+    onOpenChange: t,
+    modal: c = !0
+  } = e, l = s.useRef(null), d = s.useRef(null), [g, C] = K({
+    prop: a,
+    defaultProp: r ?? !1,
+    onChange: t,
+    caller: v
   });
-  return q(() => t._subscribe({
-    name: r,
-    formState: c.current,
-    exact: a,
-    callback: (f) => {
-      !n && l({
-        ...t._formState,
-        ...f
-      });
+  return /* @__PURE__ */ i(
+    ee,
+    {
+      scope: o,
+      triggerRef: l,
+      contentRef: d,
+      contentId: R(),
+      titleId: R(),
+      descriptionId: R(),
+      open: g,
+      onOpenChange: C,
+      onOpenToggle: s.useCallback(() => C((H) => !H), [C]),
+      modal: c,
+      children: n
     }
-  }), [r, n, a]), u.useEffect(() => {
-    c.current.isValid && t._setValid(!0);
-  }, [t]), u.useMemo(() => ee(i, t, c.current, !1), [i, t]);
-}
-var re = (e) => typeof e == "string", T = (e, s, t, n, r) => re(e) ? y(t, e, r) : Array.isArray(e) ? e.map((a) => y(t, a)) : t, U = (e) => w(e) || !H(e);
-function S(e, s, t = /* @__PURE__ */ new WeakSet()) {
-  if (U(e) || U(s))
-    return Object.is(e, s);
-  if (k(e) && k(s))
-    return e.getTime() === s.getTime();
-  const n = Object.keys(e), r = Object.keys(s);
-  if (n.length !== r.length)
-    return !1;
-  if (t.has(e) || t.has(s))
-    return !0;
-  t.add(e), t.add(s);
-  for (const a of n) {
-    const i = e[a];
-    if (!r.includes(a))
-      return !1;
-    if (a !== "ref") {
-      const l = s[a];
-      if (k(i) && k(l) || p(i) && p(l) || Array.isArray(i) && Array.isArray(l) ? !S(i, l, t) : !Object.is(i, l))
-        return !1;
-    }
+  );
+};
+x.displayName = v;
+var A = "DialogTrigger", T = s.forwardRef(
+  (e, o) => {
+    const { __scopeDialog: n, ...a } = e, r = u(A, n), t = _(o, r.triggerRef);
+    return /* @__PURE__ */ i(
+      m.button,
+      {
+        type: "button",
+        "aria-haspopup": "dialog",
+        "aria-expanded": r.open,
+        "aria-controls": r.contentId,
+        "data-state": N(r.open),
+        ...a,
+        ref: t,
+        onClick: p(e.onClick, r.onOpenToggle)
+      }
+    );
   }
-  return !0;
+);
+T.displayName = A;
+var E = "DialogPortal", [te, b] = I(E, {
+  forceMount: void 0
+}), M = (e) => {
+  const { __scopeDialog: o, forceMount: n, children: a, container: r } = e, t = u(E, o);
+  return /* @__PURE__ */ i(te, { scope: o, forceMount: n, children: s.Children.map(a, (c) => /* @__PURE__ */ i(h, { present: n || t.open, children: /* @__PURE__ */ i(Z, { asChild: !0, container: r, children: c }) })) });
+};
+M.displayName = E;
+var D = "DialogOverlay", w = s.forwardRef(
+  (e, o) => {
+    const n = b(D, e.__scopeDialog), { forceMount: a = n.forceMount, ...r } = e, t = u(D, e.__scopeDialog);
+    return t.modal ? /* @__PURE__ */ i(h, { present: a || t.open, children: /* @__PURE__ */ i(re, { ...r, ref: o }) }) : null;
+  }
+);
+w.displayName = D;
+var oe = X("DialogOverlay.RemoveScroll"), re = s.forwardRef(
+  (e, o) => {
+    const { __scopeDialog: n, ...a } = e, r = u(D, n);
+    return (
+      // Make sure `Content` is scrollable even when it doesn't live inside `RemoveScroll`
+      // ie. when `Overlay` and `Content` are siblings
+      /* @__PURE__ */ i(J, { as: oe, allowPinchZoom: !0, shards: [r.contentRef], children: /* @__PURE__ */ i(
+        m.div,
+        {
+          "data-state": N(r.open),
+          ...a,
+          ref: o,
+          style: { pointerEvents: "auto", ...a.style }
+        }
+      ) })
+    );
+  }
+), f = "DialogContent", S = s.forwardRef(
+  (e, o) => {
+    const n = b(f, e.__scopeDialog), { forceMount: a = n.forceMount, ...r } = e, t = u(f, e.__scopeDialog);
+    return /* @__PURE__ */ i(h, { present: a || t.open, children: t.modal ? /* @__PURE__ */ i(ne, { ...r, ref: o }) : /* @__PURE__ */ i(ae, { ...r, ref: o }) });
+  }
+);
+S.displayName = f;
+var ne = s.forwardRef(
+  (e, o) => {
+    const n = u(f, e.__scopeDialog), a = s.useRef(null), r = _(o, n.contentRef, a);
+    return s.useEffect(() => {
+      const t = a.current;
+      if (t) return Q(t);
+    }, []), /* @__PURE__ */ i(
+      F,
+      {
+        ...e,
+        ref: r,
+        trapFocus: n.open,
+        disableOutsidePointerEvents: !0,
+        onCloseAutoFocus: p(e.onCloseAutoFocus, (t) => {
+          var c;
+          t.preventDefault(), (c = n.triggerRef.current) == null || c.focus();
+        }),
+        onPointerDownOutside: p(e.onPointerDownOutside, (t) => {
+          const c = t.detail.originalEvent, l = c.button === 0 && c.ctrlKey === !0;
+          (c.button === 2 || l) && t.preventDefault();
+        }),
+        onFocusOutside: p(
+          e.onFocusOutside,
+          (t) => t.preventDefault()
+        )
+      }
+    );
+  }
+), ae = s.forwardRef(
+  (e, o) => {
+    const n = u(f, e.__scopeDialog), a = s.useRef(!1), r = s.useRef(!1);
+    return /* @__PURE__ */ i(
+      F,
+      {
+        ...e,
+        ref: o,
+        trapFocus: !1,
+        disableOutsidePointerEvents: !1,
+        onCloseAutoFocus: (t) => {
+          var c, l;
+          (c = e.onCloseAutoFocus) == null || c.call(e, t), t.defaultPrevented || (a.current || (l = n.triggerRef.current) == null || l.focus(), t.preventDefault()), a.current = !1, r.current = !1;
+        },
+        onInteractOutside: (t) => {
+          var d, g;
+          (d = e.onInteractOutside) == null || d.call(e, t), t.defaultPrevented || (a.current = !0, t.detail.originalEvent.type === "pointerdown" && (r.current = !0));
+          const c = t.target;
+          ((g = n.triggerRef.current) == null ? void 0 : g.contains(c)) && t.preventDefault(), t.detail.originalEvent.type === "focusin" && r.current && t.preventDefault();
+        }
+      }
+    );
+  }
+), F = s.forwardRef(
+  (e, o) => {
+    const { __scopeDialog: n, trapFocus: a, onOpenAutoFocus: r, onCloseAutoFocus: t, ...c } = e, l = u(f, n), d = s.useRef(null), g = _(o, d);
+    return z(), /* @__PURE__ */ P(O, { children: [
+      /* @__PURE__ */ i(
+        Y,
+        {
+          asChild: !0,
+          loop: !0,
+          trapped: a,
+          onMountAutoFocus: r,
+          onUnmountAutoFocus: t,
+          children: /* @__PURE__ */ i(
+            U,
+            {
+              role: "dialog",
+              id: l.contentId,
+              "aria-describedby": l.descriptionId,
+              "aria-labelledby": l.titleId,
+              "data-state": N(l.open),
+              ...c,
+              ref: g,
+              onDismiss: () => l.onOpenChange(!1)
+            }
+          )
+        }
+      ),
+      /* @__PURE__ */ P(O, { children: [
+        /* @__PURE__ */ i(ie, { titleId: l.titleId }),
+        /* @__PURE__ */ i(ce, { contentRef: d, descriptionId: l.descriptionId })
+      ] })
+    ] });
+  }
+), y = "DialogTitle", W = s.forwardRef(
+  (e, o) => {
+    const { __scopeDialog: n, ...a } = e, r = u(y, n);
+    return /* @__PURE__ */ i(m.h2, { id: r.titleId, ...a, ref: o });
+  }
+);
+W.displayName = y;
+var k = "DialogDescription", G = s.forwardRef(
+  (e, o) => {
+    const { __scopeDialog: n, ...a } = e, r = u(k, n);
+    return /* @__PURE__ */ i(m.p, { id: r.descriptionId, ...a, ref: o });
+  }
+);
+G.displayName = k;
+var L = "DialogClose", $ = s.forwardRef(
+  (e, o) => {
+    const { __scopeDialog: n, ...a } = e, r = u(L, n);
+    return /* @__PURE__ */ i(
+      m.button,
+      {
+        type: "button",
+        ...a,
+        ref: o,
+        onClick: p(e.onClick, () => r.onOpenChange(!1))
+      }
+    );
+  }
+);
+$.displayName = L;
+function N(e) {
+  return e ? "open" : "closed";
 }
-function se(e) {
-  const s = M(), { control: t = s.control, name: n, defaultValue: r, disabled: a, exact: i, compute: l } = e || {}, c = u.useRef(r), f = u.useRef(l), V = u.useRef(void 0), d = u.useRef(t), g = u.useRef(n);
-  f.current = l;
-  const [A, v] = u.useState(() => {
-    const o = t._getWatch(n, c.current);
-    return f.current ? f.current(o) : o;
-  }), C = u.useCallback((o) => {
-    const m = T(n, t._names, o || t._formValues, !1, c.current);
-    return f.current ? f.current(m) : m;
-  }, [t._formValues, t._names, n]), b = u.useCallback((o) => {
-    if (!a) {
-      const m = T(n, t._names, o || t._formValues, !1, c.current);
-      if (f.current) {
-        const _ = f.current(m);
-        S(_, V.current) || (v(_), V.current = _);
-      } else
-        v(m);
-    }
-  }, [t._formValues, t._names, a, n]);
-  q(() => ((d.current !== t || !S(g.current, n)) && (d.current = t, g.current = n, b()), t._subscribe({
-    name: n,
-    formState: {
-      values: !0
-    },
-    exact: i,
-    callback: (o) => {
-      b(o.values);
-    }
-  })), [t, i, n, b]), u.useEffect(() => t._removeUnmounted());
-  const h = d.current !== t, F = g.current, O = u.useMemo(() => {
-    if (a)
-      return null;
-    const o = !h && !S(F, n);
-    return h || o ? C() : null;
-  }, [a, h, n, F, C]);
-  return O !== null ? O : A;
-}
-function ne(e) {
-  const s = M(), { name: t, disabled: n, control: r = s.control, shouldUnregister: a, defaultValue: i, exact: l = !0 } = e, c = X(r._names.array, t), f = u.useMemo(() => y(r._formValues, t, y(r._defaultValues, t, i)), [r, t, i]), V = se({
-    control: r,
-    name: t,
-    defaultValue: f,
-    exact: l
-  }), d = te({
-    control: r,
-    name: t,
-    exact: l
-  }), g = u.useRef(e), A = u.useRef(void 0), v = u.useRef(r.register(t, {
-    ...e.rules,
-    value: V,
-    ...P(e.disabled) ? { disabled: e.disabled } : {}
-  }));
-  g.current = e;
-  const C = u.useMemo(() => Object.defineProperties({}, {
-    invalid: {
-      enumerable: !0,
-      get: () => !!y(d.errors, t)
-    },
-    isDirty: {
-      enumerable: !0,
-      get: () => !!y(d.dirtyFields, t)
-    },
-    isTouched: {
-      enumerable: !0,
-      get: () => !!y(d.touchedFields, t)
-    },
-    isValidating: {
-      enumerable: !0,
-      get: () => !!y(d.validatingFields, t)
-    },
-    error: {
-      enumerable: !0,
-      get: () => y(d.errors, t)
-    }
-  }), [d, t]), b = u.useCallback((o) => v.current.onChange({
-    target: {
-      value: J(o),
-      name: t
-    },
-    type: I.CHANGE
-  }), [t]), h = u.useCallback(() => v.current.onBlur({
-    target: {
-      value: y(r._formValues, t),
-      name: t
-    },
-    type: I.BLUR
-  }), [t, r._formValues]), F = u.useCallback((o) => {
-    const m = y(r._fields, t);
-    m && m._f && o && (m._f.ref = {
-      focus: () => E(o.focus) && o.focus(),
-      select: () => E(o.select) && o.select(),
-      setCustomValidity: (_) => E(o.setCustomValidity) && o.setCustomValidity(_),
-      reportValidity: () => E(o.reportValidity) && o.reportValidity()
-    });
-  }, [r._fields, t]), O = u.useMemo(() => ({
-    name: t,
-    value: V,
-    ...P(n) || d.disabled ? { disabled: d.disabled || n } : {},
-    onChange: b,
-    onBlur: h,
-    ref: F
-  }), [t, n, d.disabled, b, h, F, V]);
-  return u.useEffect(() => {
-    const o = r._options.shouldUnregister || a, m = A.current;
-    m && m !== t && !c && r.unregister(m), r.register(t, {
-      ...g.current.rules,
-      ...P(g.current.disabled) ? { disabled: g.current.disabled } : {}
-    });
-    const _ = (x, K) => {
-      const N = y(r._fields, x);
-      N && N._f && (N._f.mount = K);
-    };
-    if (_(t, !0), o) {
-      const x = W(y(r._options.defaultValues, t, g.current.defaultValue));
-      D(r._defaultValues, t, x), R(y(r._formValues, t)) && D(r._formValues, t, x);
-    }
-    return !c && r.register(t), A.current = t, () => {
-      (c ? o && !r._state.action : o) ? r.unregister(t) : _(t, !1);
-    };
-  }, [t, r, c, a]), u.useEffect(() => {
-    r._setDisabledField({
-      disabled: n,
-      name: t
-    });
-  }, [n, t, r]), u.useMemo(() => ({
-    field: O,
-    formState: d,
-    fieldState: C
-  }), [O, d, C]);
-}
-const ae = (e) => e.render(ne(e));
+var B = "DialogTitleWarning", [Pe, j] = q(B, {
+  contentName: f,
+  titleName: y,
+  docsSlug: "dialog"
+}), ie = ({ titleId: e }) => {
+  const o = j(B), n = `\`${o.contentName}\` requires a \`${o.titleName}\` for the component to be accessible for screen reader users.
+
+If you want to hide the \`${o.titleName}\`, you can wrap it with our VisuallyHidden component.
+
+For more information, see https://radix-ui.com/primitives/docs/components/${o.docsSlug}`;
+  return s.useEffect(() => {
+    e && (document.getElementById(e) || console.error(n));
+  }, [n, e]), null;
+}, se = "DialogDescriptionWarning", ce = ({ contentRef: e, descriptionId: o }) => {
+  const a = `Warning: Missing \`Description\` or \`aria-describedby={undefined}\` for {${j(se).contentName}}.`;
+  return s.useEffect(() => {
+    var t;
+    const r = (t = e.current) == null ? void 0 : t.getAttribute("aria-describedby");
+    o && r && (document.getElementById(o) || console.warn(a));
+  }, [a, e, o]), null;
+}, Oe = x, Ie = T, xe = M, Ae = w, Te = S, be = W, Me = G, we = $;
 export {
-  ae as Controller,
-  oe as FormProvider,
-  y as get,
-  D as set,
-  ne as useController,
-  M as useFormContext,
-  te as useFormState,
-  se as useWatch
+  we as Close,
+  Te as Content,
+  Me as Description,
+  x as Dialog,
+  $ as DialogClose,
+  S as DialogContent,
+  G as DialogDescription,
+  w as DialogOverlay,
+  M as DialogPortal,
+  W as DialogTitle,
+  T as DialogTrigger,
+  Ae as Overlay,
+  xe as Portal,
+  Oe as Root,
+  be as Title,
+  Ie as Trigger,
+  Pe as WarningProvider,
+  Ne as createDialogScope
 };

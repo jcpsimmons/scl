@@ -1,5 +1,4 @@
 import * as React from 'react';
-export type SyntaxLanguage = 'javascript' | 'typescript' | 'html' | 'css' | 'json' | 'markdown' | 'none';
 export interface TerminalTextareaProps {
     /** Number of visible lines (rows) */
     visibleLines?: number;
@@ -11,10 +10,6 @@ export interface TerminalTextareaProps {
     onChange?: (value: string) => void;
     /** Callback when cursor position changes */
     onCursorChange?: (line: number, column: number) => void;
-    /** Enable Vim mode */
-    vimMode?: boolean;
-    /** Syntax highlighting language */
-    language?: SyntaxLanguage;
     /** Placeholder text */
     placeholder?: string;
     /** Read-only mode */

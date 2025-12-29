@@ -1,163 +1,243 @@
-import * as v from "react";
-import { composeEventHandlers as g } from "./index123.js";
-import { createContextScope as x } from "./index92.js";
-import { createRovingFocusGroupScope as C, Root as E, Item as F } from "./index106.js";
-import { Presence as w } from "./index97.js";
-import { Primitive as b } from "./index89.js";
-import { useDirection as D } from "./index107.js";
-import { useControllableState as V } from "./index88.js";
-import { useId as G } from "./index94.js";
-import { jsx as l } from "react/jsx-runtime";
-var p = "Tabs", [L] = x(p, [
-  C
-]), h = C(), [$, T] = L(p), I = v.forwardRef(
-  (e, r) => {
-    const {
-      __scopeTabs: s,
-      value: t,
-      onValueChange: n,
-      defaultValue: c,
-      orientation: o = "horizontal",
-      dir: d,
-      activationMode: f = "automatic",
-      ...m
-    } = e, i = D(d), [a, u] = V({
-      prop: t,
-      onChange: n,
-      defaultProp: c ?? "",
-      caller: p
-    });
-    return /* @__PURE__ */ l(
-      $,
-      {
-        scope: s,
-        baseId: G(),
-        value: a,
-        onValueChange: u,
-        orientation: o,
-        dir: i,
-        activationMode: f,
-        children: /* @__PURE__ */ l(
-          b.div,
-          {
-            dir: i,
-            "data-orientation": o,
-            ...m,
-            ref: r
-          }
-        )
-      }
-    );
+import * as i from "react";
+import { composeEventHandlers as P } from "./index84.js";
+import { useComposedRefs as O } from "./index83.js";
+import { createContextScope as G } from "./index81.js";
+import { DismissableLayer as H } from "./index95.js";
+import { useFocusGuards as K } from "./index96.js";
+import { FocusScope as $ } from "./index97.js";
+import { useId as j } from "./index87.js";
+import { createPopperScope as _, Root as U, Anchor as x, Content as V, Arrow as W } from "./index98.js";
+import { Portal as Z } from "./index99.js";
+import { Presence as w } from "./index94.js";
+import { Primitive as E } from "./index86.js";
+import { createSlot as q } from "./index89.js";
+import { useControllableState as z } from "./index85.js";
+import { hideOthers as B } from "./index100.js";
+import J from "./index101.js";
+import { jsx as p } from "react/jsx-runtime";
+var C = "Popover", [b] = G(C, [
+  _
+]), m = _(), [Q, f] = b(C), F = (o) => {
+  const {
+    __scopePopover: n,
+    children: t,
+    open: a,
+    defaultOpen: e,
+    onOpenChange: r,
+    modal: s = !1
+  } = o, c = m(n), u = i.useRef(null), [l, g] = i.useState(!1), [h, d] = z({
+    prop: a,
+    defaultProp: e ?? !1,
+    onChange: r,
+    caller: C
+  });
+  return /* @__PURE__ */ p(U, { ...c, children: /* @__PURE__ */ p(
+    Q,
+    {
+      scope: n,
+      contentId: j(),
+      triggerRef: u,
+      open: h,
+      onOpenChange: d,
+      onOpenToggle: i.useCallback(() => d((R) => !R), [d]),
+      hasCustomAnchor: l,
+      onCustomAnchorAdd: i.useCallback(() => g(!0), []),
+      onCustomAnchorRemove: i.useCallback(() => g(!1), []),
+      modal: s,
+      children: t
+    }
+  ) });
+};
+F.displayName = C;
+var N = "PopoverAnchor", S = i.forwardRef(
+  (o, n) => {
+    const { __scopePopover: t, ...a } = o, e = f(N, t), r = m(t), { onCustomAnchorAdd: s, onCustomAnchorRemove: c } = e;
+    return i.useEffect(() => (s(), () => c()), [s, c]), /* @__PURE__ */ p(x, { ...r, ...a, ref: n });
   }
 );
-I.displayName = p;
-var R = "TabsList", _ = v.forwardRef(
-  (e, r) => {
-    const { __scopeTabs: s, loop: t = !0, ...n } = e, c = T(R, s), o = h(s);
-    return /* @__PURE__ */ l(
-      E,
+S.displayName = N;
+var y = "PopoverTrigger", D = i.forwardRef(
+  (o, n) => {
+    const { __scopePopover: t, ...a } = o, e = f(y, t), r = m(t), s = O(n, e.triggerRef), c = /* @__PURE__ */ p(
+      E.button,
       {
-        asChild: !0,
+        type: "button",
+        "aria-haspopup": "dialog",
+        "aria-expanded": e.open,
+        "aria-controls": e.contentId,
+        "data-state": L(e.open),
+        ...a,
+        ref: s,
+        onClick: P(o.onClick, e.onOpenToggle)
+      }
+    );
+    return e.hasCustomAnchor ? c : /* @__PURE__ */ p(x, { asChild: !0, ...r, children: c });
+  }
+);
+D.displayName = y;
+var A = "PopoverPortal", [X, Y] = b(A, {
+  forceMount: void 0
+}), M = (o) => {
+  const { __scopePopover: n, forceMount: t, children: a, container: e } = o, r = f(A, n);
+  return /* @__PURE__ */ p(X, { scope: n, forceMount: t, children: /* @__PURE__ */ p(w, { present: t || r.open, children: /* @__PURE__ */ p(Z, { asChild: !0, container: e, children: a }) }) });
+};
+M.displayName = A;
+var v = "PopoverContent", k = i.forwardRef(
+  (o, n) => {
+    const t = Y(v, o.__scopePopover), { forceMount: a = t.forceMount, ...e } = o, r = f(v, o.__scopePopover);
+    return /* @__PURE__ */ p(w, { present: a || r.open, children: r.modal ? /* @__PURE__ */ p(eo, { ...e, ref: n }) : /* @__PURE__ */ p(ro, { ...e, ref: n }) });
+  }
+);
+k.displayName = v;
+var oo = q("PopoverContent.RemoveScroll"), eo = i.forwardRef(
+  (o, n) => {
+    const t = f(v, o.__scopePopover), a = i.useRef(null), e = O(n, a), r = i.useRef(!1);
+    return i.useEffect(() => {
+      const s = a.current;
+      if (s) return B(s);
+    }, []), /* @__PURE__ */ p(J, { as: oo, allowPinchZoom: !0, children: /* @__PURE__ */ p(
+      I,
+      {
         ...o,
-        orientation: c.orientation,
-        dir: c.dir,
-        loop: t,
-        children: /* @__PURE__ */ l(
-          b.div,
-          {
-            role: "tablist",
-            "aria-orientation": c.orientation,
-            ...n,
-            ref: r
-          }
+        ref: e,
+        trapFocus: t.open,
+        disableOutsidePointerEvents: !0,
+        onCloseAutoFocus: P(o.onCloseAutoFocus, (s) => {
+          var c;
+          s.preventDefault(), r.current || (c = t.triggerRef.current) == null || c.focus();
+        }),
+        onPointerDownOutside: P(
+          o.onPointerDownOutside,
+          (s) => {
+            const c = s.detail.originalEvent, u = c.button === 0 && c.ctrlKey === !0, l = c.button === 2 || u;
+            r.current = l;
+          },
+          { checkForDefaultPrevented: !1 }
+        ),
+        onFocusOutside: P(
+          o.onFocusOutside,
+          (s) => s.preventDefault(),
+          { checkForDefaultPrevented: !1 }
         )
-      }
-    );
-  }
-);
-_.displayName = R;
-var y = "TabsTrigger", A = v.forwardRef(
-  (e, r) => {
-    const { __scopeTabs: s, value: t, disabled: n = !1, ...c } = e, o = T(y, s), d = h(s), f = P(o.baseId, t), m = S(o.baseId, t), i = t === o.value;
-    return /* @__PURE__ */ l(
-      F,
-      {
-        asChild: !0,
-        ...d,
-        focusable: !n,
-        active: i,
-        children: /* @__PURE__ */ l(
-          b.button,
-          {
-            type: "button",
-            role: "tab",
-            "aria-selected": i,
-            "aria-controls": m,
-            "data-state": i ? "active" : "inactive",
-            "data-disabled": n ? "" : void 0,
-            disabled: n,
-            id: f,
-            ...c,
-            ref: r,
-            onMouseDown: g(e.onMouseDown, (a) => {
-              !n && a.button === 0 && a.ctrlKey === !1 ? o.onValueChange(t) : a.preventDefault();
-            }),
-            onKeyDown: g(e.onKeyDown, (a) => {
-              [" ", "Enter"].includes(a.key) && o.onValueChange(t);
-            }),
-            onFocus: g(e.onFocus, () => {
-              const a = o.activationMode !== "manual";
-              !i && !n && a && o.onValueChange(t);
-            })
-          }
-        )
-      }
-    );
-  }
-);
-A.displayName = y;
-var M = "TabsContent", N = v.forwardRef(
-  (e, r) => {
-    const { __scopeTabs: s, value: t, forceMount: n, children: c, ...o } = e, d = T(M, s), f = P(d.baseId, t), m = S(d.baseId, t), i = t === d.value, a = v.useRef(i);
-    return v.useEffect(() => {
-      const u = requestAnimationFrame(() => a.current = !1);
-      return () => cancelAnimationFrame(u);
-    }, []), /* @__PURE__ */ l(w, { present: n || i, children: ({ present: u }) => /* @__PURE__ */ l(
-      b.div,
-      {
-        "data-state": i ? "active" : "inactive",
-        "data-orientation": d.orientation,
-        role: "tabpanel",
-        "aria-labelledby": f,
-        hidden: !u,
-        id: m,
-        tabIndex: 0,
-        ...o,
-        ref: r,
-        style: {
-          ...e.style,
-          animationDuration: a.current ? "0s" : void 0
-        },
-        children: u && c
       }
     ) });
   }
+), ro = i.forwardRef(
+  (o, n) => {
+    const t = f(v, o.__scopePopover), a = i.useRef(!1), e = i.useRef(!1);
+    return /* @__PURE__ */ p(
+      I,
+      {
+        ...o,
+        ref: n,
+        trapFocus: !1,
+        disableOutsidePointerEvents: !1,
+        onCloseAutoFocus: (r) => {
+          var s, c;
+          (s = o.onCloseAutoFocus) == null || s.call(o, r), r.defaultPrevented || (a.current || (c = t.triggerRef.current) == null || c.focus(), r.preventDefault()), a.current = !1, e.current = !1;
+        },
+        onInteractOutside: (r) => {
+          var u, l;
+          (u = o.onInteractOutside) == null || u.call(o, r), r.defaultPrevented || (a.current = !0, r.detail.originalEvent.type === "pointerdown" && (e.current = !0));
+          const s = r.target;
+          ((l = t.triggerRef.current) == null ? void 0 : l.contains(s)) && r.preventDefault(), r.detail.originalEvent.type === "focusin" && e.current && r.preventDefault();
+        }
+      }
+    );
+  }
+), I = i.forwardRef(
+  (o, n) => {
+    const {
+      __scopePopover: t,
+      trapFocus: a,
+      onOpenAutoFocus: e,
+      onCloseAutoFocus: r,
+      disableOutsidePointerEvents: s,
+      onEscapeKeyDown: c,
+      onPointerDownOutside: u,
+      onFocusOutside: l,
+      onInteractOutside: g,
+      ...h
+    } = o, d = f(v, t), R = m(t);
+    return K(), /* @__PURE__ */ p(
+      $,
+      {
+        asChild: !0,
+        loop: !0,
+        trapped: a,
+        onMountAutoFocus: e,
+        onUnmountAutoFocus: r,
+        children: /* @__PURE__ */ p(
+          H,
+          {
+            asChild: !0,
+            disableOutsidePointerEvents: s,
+            onInteractOutside: g,
+            onEscapeKeyDown: c,
+            onPointerDownOutside: u,
+            onFocusOutside: l,
+            onDismiss: () => d.onOpenChange(!1),
+            children: /* @__PURE__ */ p(
+              V,
+              {
+                "data-state": L(d.open),
+                role: "dialog",
+                id: d.contentId,
+                ...R,
+                ...h,
+                ref: n,
+                style: {
+                  ...h.style,
+                  "--radix-popover-content-transform-origin": "var(--radix-popper-transform-origin)",
+                  "--radix-popover-content-available-width": "var(--radix-popper-available-width)",
+                  "--radix-popover-content-available-height": "var(--radix-popper-available-height)",
+                  "--radix-popover-trigger-width": "var(--radix-popper-anchor-width)",
+                  "--radix-popover-trigger-height": "var(--radix-popper-anchor-height)"
+                }
+              }
+            )
+          }
+        )
+      }
+    );
+  }
+), T = "PopoverClose", to = i.forwardRef(
+  (o, n) => {
+    const { __scopePopover: t, ...a } = o, e = f(T, t);
+    return /* @__PURE__ */ p(
+      E.button,
+      {
+        type: "button",
+        ...a,
+        ref: n,
+        onClick: P(o.onClick, () => e.onOpenChange(!1))
+      }
+    );
+  }
 );
-N.displayName = M;
-function P(e, r) {
-  return `${e}-trigger-${r}`;
+to.displayName = T;
+var no = "PopoverArrow", ao = i.forwardRef(
+  (o, n) => {
+    const { __scopePopover: t, ...a } = o, e = m(t);
+    return /* @__PURE__ */ p(W, { ...e, ...a, ref: n });
+  }
+);
+ao.displayName = no;
+function L(o) {
+  return o ? "open" : "closed";
 }
-function S(e, r) {
-  return `${e}-content-${r}`;
-}
-var Q = I, U = _, W = A, X = N;
+var _o = F, xo = S, wo = D, Eo = M, bo = k;
 export {
-  X as Content,
-  U as List,
-  Q as Root,
-  I as Tabs,
-  N as TabsContent,
-  _ as TabsList,
-  A as TabsTrigger,
-  W as Trigger
+  xo as Anchor,
+  bo as Content,
+  F as Popover,
+  S as PopoverAnchor,
+  ao as PopoverArrow,
+  to as PopoverClose,
+  k as PopoverContent,
+  M as PopoverPortal,
+  D as PopoverTrigger,
+  Eo as Portal,
+  _o as Root,
+  wo as Trigger
 };

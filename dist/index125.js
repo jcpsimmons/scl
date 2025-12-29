@@ -1,9 +1,7 @@
-function h(f, c, { checkForDefaultPrevented: p = !0 } = {}) {
-  return function(s) {
-    if (f == null || f(s), p === !1 || !s.defaultPrevented)
-      return c == null ? void 0 : c(s);
-  };
-}
+var r = "right-scroll-bar-position", a = "width-before-scroll-bar", l = "with-scroll-bars-hidden", e = "--removed-body-scroll-bar-size";
 export {
-  h as composeEventHandlers
+  a as fullWidthClassName,
+  l as noScrollbarsClassName,
+  e as removedBarSizeVariable,
+  r as zeroRightClassName
 };

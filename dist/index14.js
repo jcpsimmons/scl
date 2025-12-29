@@ -1,22 +1,22 @@
 import { jsx as t, jsxs as i } from "react/jsx-runtime";
 import * as o from "react";
-import { Command as r } from "./index58.js";
+import { Command as r } from "./index64.js";
 import { cn as d } from "./index2.js";
 import { Dialog as s, DialogContent as n } from "./index15.js";
-import l from "./index59.js";
+import l from "./index65.js";
 const p = o.forwardRef(({ className: e, ...a }, m) => /* @__PURE__ */ t(
   r,
   {
     ref: m,
     className: d(
-      "flex h-full w-full flex-col overflow-hidden bg-black bg-background text-primary",
+      "flex h-full w-full flex-col overflow-hidden bg-black text-primary",
       e
     ),
     ...a
   }
 ));
 p.displayName = r.displayName;
-const v = ({ children: e, ...a }) => /* @__PURE__ */ t(s, { ...a, children: /* @__PURE__ */ t(n, { className: "overflow-hidden p-0", children: /* @__PURE__ */ t(p, { className: "[&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-muted-foreground [&_[cmdk-group]:not([hidden])_~[cmdk-group]]:pt-0 [&_[cmdk-group]]:px-2 [&_[cmdk-input-wrapper]_svg]:h-5 [&_[cmdk-input-wrapper]_svg]:w-5 [&_[cmdk-input]]:h-12 [&_[cmdk-item]]:px-2 [&_[cmdk-item]]:py-3 [&_[cmdk-item]_svg]:h-5 [&_[cmdk-item]_svg]:w-5", children: e }) }) }), c = o.forwardRef(({ className: e, ...a }, m) => /* @__PURE__ */ i("div", { className: "flex items-center border-b-2 border-primary px-3", "cmdk-input-wrapper": "", children: [
+const v = ({ children: e, ...a }) => /* @__PURE__ */ t(s, { ...a, children: /* @__PURE__ */ t(n, { className: "overflow-hidden p-0", children: /* @__PURE__ */ t(p, { className: "[&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-muted-foreground [&_[cmdk-group]:not([hidden])_~[cmdk-group]]:pt-0 [&_[cmdk-group]]:px-2 [&_[cmdk-input-wrapper]_svg]:h-5 [&_[cmdk-input-wrapper]_svg]:w-5 [&_[cmdk-input]]:h-12 [&_[cmdk-item]]:px-2 [&_[cmdk-item]]:py-3 [&_[cmdk-item]_svg]:h-5 [&_[cmdk-item]_svg]:w-5", children: e }) }) }), c = o.forwardRef(({ className: e, ...a }, m) => /* @__PURE__ */ i("div", { className: "flex items-center border-b-2 border-primary bg-black px-3", "cmdk-input-wrapper": "", children: [
   /* @__PURE__ */ t(l, { className: "mr-2 h-4 w-4 shrink-0 text-primary opacity-50" }),
   /* @__PURE__ */ t(
     r.Input,

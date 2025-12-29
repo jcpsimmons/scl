@@ -1,9 +1,13 @@
-function h(f, c, { checkForDefaultPrevented: p = !0 } = {}) {
-  return function(s) {
-    if (f == null || f(s), p === !1 || !s.defaultPrevented)
-      return c == null ? void 0 : c(s);
-  };
+import * as o from "react";
+import { useLayoutEffect as a } from "./index78.js";
+var s = o[" useId ".trim().toString()] || (() => {
+}), f = 0;
+function i(t) {
+  const [e, r] = o.useState(s());
+  return a(() => {
+    r((u) => u ?? String(f++));
+  }, [t]), t || (e ? `radix-${e}` : "");
 }
 export {
-  h as composeEventHandlers
+  i as useId
 };

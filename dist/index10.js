@@ -1,52 +1,52 @@
 import { jsx as d } from "react/jsx-runtime";
-import * as o from "react";
-import { cn as t } from "./index2.js";
-const s = o.forwardRef(({ className: a, ...r }, e) => /* @__PURE__ */ d(
+import * as t from "react";
+import { cn as o } from "./index2.js";
+const s = t.forwardRef(({ className: a, ...r }, e) => /* @__PURE__ */ d(
   "div",
   {
     ref: e,
-    className: t(
-      "border bg-card text-card-foreground",
+    className: o(
+      "border-2 bg-card text-card-foreground",
       a
     ),
     ...r
   }
 ));
 s.displayName = "Card";
-const i = o.forwardRef(({ className: a, ...r }, e) => /* @__PURE__ */ d(
+const i = t.forwardRef(({ className: a, ...r }, e) => /* @__PURE__ */ d(
   "div",
   {
     ref: e,
-    className: t("flex flex-col space-y-1.5 p-6 pb-0", a),
+    className: o("flex flex-col space-y-1.5", a),
     ...r
   }
 ));
 i.displayName = "CardHeader";
-const m = o.forwardRef(({ className: a, ...r }, e) => /* @__PURE__ */ d(
+const m = t.forwardRef(({ className: a, ...r }, e) => /* @__PURE__ */ d(
   "div",
   {
     ref: e,
-    className: t("bg-primary text-primary-foreground px-4 py-2 font-semibold leading-none tracking-tight w-full", a),
+    className: o("bg-primary text-primary-foreground px-2 py-1 text-sm font-semibold leading-none tracking-tight w-full", a),
     ...r
   }
 ));
 m.displayName = "CardTitle";
-const f = o.forwardRef(({ className: a, ...r }, e) => /* @__PURE__ */ d(
+const f = t.forwardRef(({ className: a, ...r }, e) => /* @__PURE__ */ d(
   "div",
   {
     ref: e,
-    className: t("text-sm text-muted-foreground", a),
+    className: o("px-6 pt-2 text-sm text-muted-foreground", a),
     ...r
   }
 ));
 f.displayName = "CardDescription";
-const c = o.forwardRef(({ className: a, ...r }, e) => /* @__PURE__ */ d("div", { ref: e, className: t("p-6", a), ...r }));
+const c = t.forwardRef(({ className: a, ...r }, e) => /* @__PURE__ */ d("div", { ref: e, className: o("p-6", a), ...r }));
 c.displayName = "CardContent";
-const l = o.forwardRef(({ className: a, ...r }, e) => /* @__PURE__ */ d(
+const l = t.forwardRef(({ className: a, ...r }, e) => /* @__PURE__ */ d(
   "div",
   {
     ref: e,
-    className: t("flex items-center p-6 pt-0", a),
+    className: o("flex items-center p-6 pt-0", a),
     ...r
   }
 ));

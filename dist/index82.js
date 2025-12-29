@@ -1,11 +1,48 @@
-import e from "./index163.js";
-/**
- * @license lucide-react v0.460.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const r = e("ChevronUp", [["path", { d: "m18 15-6-6-6 6", key: "153udz" }]]);
+import r from "react";
+import { createContextScope as y } from "./index81.js";
+import { useComposedRefs as M } from "./index83.js";
+import { createSlot as x } from "./index89.js";
+import { jsx as u } from "react/jsx-runtime";
+function g(s) {
+  const m = s + "CollectionProvider", [A, N] = y(m), [_, f] = A(
+    m,
+    { collectionRef: { current: null }, itemMap: /* @__PURE__ */ new Map() }
+  ), p = (c) => {
+    const { scope: e, children: l } = c, o = r.useRef(null), t = r.useRef(/* @__PURE__ */ new Map()).current;
+    return /* @__PURE__ */ u(_, { scope: e, itemMap: t, collectionRef: o, children: l });
+  };
+  p.displayName = m;
+  const a = s + "CollectionSlot", E = x(a), C = r.forwardRef(
+    (c, e) => {
+      const { scope: l, children: o } = c, t = f(a, l), n = M(e, t.collectionRef);
+      return /* @__PURE__ */ u(E, { ref: n, children: o });
+    }
+  );
+  C.displayName = a;
+  const d = s + "CollectionItemSlot", R = "data-radix-collection-item", T = x(d), I = r.forwardRef(
+    (c, e) => {
+      const { scope: l, children: o, ...t } = c, n = r.useRef(null), S = M(e, n), i = f(d, l);
+      return r.useEffect(() => (i.itemMap.set(n, { ref: n, ...t }), () => void i.itemMap.delete(n))), /* @__PURE__ */ u(T, { [R]: "", ref: S, children: o });
+    }
+  );
+  I.displayName = d;
+  function O(c) {
+    const e = f(s + "CollectionConsumer", c);
+    return r.useCallback(() => {
+      const o = e.collectionRef.current;
+      if (!o) return [];
+      const t = Array.from(o.querySelectorAll(`[${R}]`));
+      return Array.from(e.itemMap.values()).sort(
+        (i, v) => t.indexOf(i.ref.current) - t.indexOf(v.ref.current)
+      );
+    }, [e.collectionRef, e.itemMap]);
+  }
+  return [
+    { Provider: p, Slot: C, ItemSlot: I },
+    O,
+    N
+  ];
+}
 export {
-  r as default
+  g as createCollection
 };
