@@ -9,21 +9,21 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          'bg-primary text-primary-foreground border-2 border-primary hover:bg-primary/90 active:bg-primary-foreground active:text-primary',
+          'bg-primary text-primary-foreground border-2 border-primary hover:bg-primary-foreground hover:text-primary active:bg-primary-foreground active:text-primary',
         secondary:
-          'bg-secondary text-secondary-foreground border-2 border-secondary hover:bg-secondary/90 active:bg-secondary-foreground active:text-secondary',
+          'bg-secondary text-secondary-foreground border-2 border-secondary hover:bg-secondary-foreground hover:text-secondary active:bg-secondary-foreground active:text-secondary',
         outline:
-          'bg-transparent text-primary border-2 border-primary hover:bg-primary/10 active:bg-primary active:text-primary-foreground',
+          'bg-transparent text-primary border-2 border-primary hover:bg-primary hover:text-primary-foreground active:bg-primary active:text-primary-foreground',
         'secondary-outline':
-          'bg-transparent text-secondary border-2 border-secondary hover:bg-secondary/10 active:bg-secondary active:text-secondary-foreground',
+          'bg-transparent text-secondary border-2 border-secondary hover:bg-secondary hover:text-secondary-foreground active:bg-secondary active:text-secondary-foreground',
         ghost:
-          'bg-transparent text-primary border-2 border-transparent hover:border-primary/50 active:bg-primary active:text-primary-foreground',
+          'bg-transparent text-primary border-2 border-transparent hover:border-primary hover:bg-primary hover:text-primary-foreground active:bg-primary active:text-primary-foreground',
         link:
-          'bg-transparent text-primary underline-offset-4 hover:underline border-none active:text-primary-foreground',
+          'bg-transparent text-primary underline-offset-4 hover:underline hover:text-primary-foreground border-none active:text-primary-foreground',
         destructive:
-          'bg-destructive text-destructive-foreground border-2 border-destructive hover:bg-destructive/90 active:bg-destructive-foreground active:text-destructive',
+          'bg-destructive text-destructive-foreground border-2 border-destructive hover:bg-destructive-foreground hover:text-destructive active:bg-destructive-foreground active:text-destructive',
         'destructive-outline':
-          'bg-transparent text-destructive border-2 border-destructive hover:bg-destructive/10 active:bg-destructive active:text-destructive-foreground',
+          'bg-transparent text-destructive border-2 border-destructive hover:bg-destructive hover:text-destructive-foreground active:bg-destructive active:text-destructive-foreground',
       },
       size: {
         default: 'h-11 px-6 py-3 text-sm',
