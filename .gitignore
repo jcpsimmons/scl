@@ -1,5 +1,33 @@
+# Dependencies
 node_modules
+
+# Build output
 dist
 storybook-static
+
+# Vercel
 .vercel
 .next
+
+# Claude Code
+.claude
+
+# Playwright
+.playwright-mcp
+playwright-report
+test-results
+
+# Coverage
+coverage
+
+# OS
+.DS_Store
+
+# Logs
+*.log
+
+# Editor
+*.swp
+*.swo
+.idea
+.vscode
