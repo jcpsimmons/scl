@@ -176,9 +176,6 @@ export default function App() {
             </div>
           ))}
         </div>
-        <p className="text-center text-muted-foreground text-sm mt-12">
-          Pure, saturated CRT colors. No pastels. No gradients. No subtlety.
-        </p>
       </section>
 
       <Separator className="max-w-5xl mx-auto" />
