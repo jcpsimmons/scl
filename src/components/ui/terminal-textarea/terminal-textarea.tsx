@@ -26,6 +26,7 @@ const TerminalTextarea = React.forwardRef<HTMLDivElement, TerminalTextareaProps>
       onCursorChange,
       placeholder,
       readOnly = false,
+      ...textareaProps
     },
     ref
   ) => {
