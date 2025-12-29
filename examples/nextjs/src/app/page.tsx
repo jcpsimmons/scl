@@ -152,7 +152,7 @@ export default function App() {
         <h2 className="text-2xl font-bold text-center mb-8">
           <span className="text-primary">&gt;</span> PALETTE
         </h2>
-        <div className="flex flex-wrap justify-center gap-4">
+        <div className="flex flex-wrap justify-center">
           {[
             { name: 'GREEN', color: 'hsl(120 100% 50%)', textDark: true },
             { name: 'HOTPINK', color: 'hsl(300 100% 50%)', textDark: true },
