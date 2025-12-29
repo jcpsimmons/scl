@@ -6,8 +6,8 @@ This example demonstrates how to use `@drjoshcsimmons/scl` in a Next.js app.
 
 ```bash
 cd examples/nextjs
-pnpm install
-pnpm dev
+bun install
+bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000).
