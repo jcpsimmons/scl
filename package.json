@@ -6,13 +6,6 @@
     "type": "git",
     "url": "https://github.com/jcpsimmons/scl"
   },
-  "pnpm": {
-    "overrides": {
-      "lru-cache": "^10.0.0",
-      "semver": "^7.6.0",
-      "browserslist": "^4.24.0"
-    }
-  },
   "main": "./dist/index.js",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
