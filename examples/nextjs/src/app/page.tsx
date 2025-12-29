@@ -165,7 +165,7 @@ export default function App() {
           ].map((c) => (
             <div key={c.name} className="group relative">
               <div
-                className="w-24 h-8 sm:w-32 sm:h-10 transition-transform hover:scale-110 hover:z-10"
+                className="w-10 h-6 sm:w-16 sm:h-8 transition-transform hover:scale-110 hover:z-10"
                 style={{ backgroundColor: c.color }}
               />
               <span
