@@ -365,6 +365,7 @@ const DitheredImage = React.forwardRef<HTMLCanvasElement, DitheredImageProps>(
         canvas.height = h;
         gl.viewport(0, 0, w, h);
 
+        // biome-ignore lint/correctness/useHookAtTopLevel: This is WebGL's useProgram, not a React hook
         gl.useProgram(program);
 
         let textureData: ImageData | HTMLImageElement = image;
