@@ -28,7 +28,9 @@
     "build:storybook": "storybook build -o storybook-static",
     "test": "vitest",
     "test:coverage": "vitest --coverage",
-    "lint": "eslint src --ext .ts,.tsx",
+    "lint": "biome lint src",
+    "format": "biome format --write src",
+    "check": "biome check --write src",
     "typecheck": "tsc --noEmit",
     "prepublishOnly": "npm run build"
   },
