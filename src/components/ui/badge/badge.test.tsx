@@ -25,7 +25,7 @@ describe('Badge', () => {
 
   it('applies outline variant', () => {
     render(<Badge variant="outline">Outline</Badge>);
-    expect(screen.getByText('Outline')).toHaveClass('text-foreground');
+    expect(screen.getByText('Outline')).toHaveClass('text-primary');
   });
 
   it('merges custom className', () => {
