@@ -28,11 +28,26 @@ export default function Home() {
   const [checked, setChecked] = useState(false)
   const [switchOn, setSwitchOn] = useState(false)
   const [progress, setProgress] = useState(45)
-  const [copied, setCopied] = useState(false)
+  const [copiedId, setCopiedId] = useState<string | null>(null)
   const [typedText, setTypedText] = useState('')
 
   const installCmd = 'npm install @drjoshcsimmons/scl'
   const fullText = '> SIMSIES COMPONENT LIBRARY'
+
+  const codeSnippets = {
+    install: 'npm install @drjoshcsimmons/scl',
+    css: `// In your global CSS file
+@import '@drjoshcsimmons/scl/globals.css';`,
+    usage: `import { Button, Card } from '@drjoshcsimmons/scl'
+
+export default function App() {
+  return (
+    <Card>
+      <Button>Click me</Button>
+    </Card>
+  )
+}`,
+  }
 
   useEffect(() => {
     let i = 0
@@ -47,10 +62,10 @@ export default function Home() {
     return () => clearInterval(timer)
   }, [])
 
-  const copyToClipboard = () => {
-    navigator.clipboard.writeText(installCmd)
-    setCopied(true)
-    setTimeout(() => setCopied(false), 2000)
+  const copyToClipboard = (text: string, id: string) => {
+    navigator.clipboard.writeText(text)
+    setCopiedId(id)
+    setTimeout(() => setCopiedId(null), 2000)
   }
 
   return (
