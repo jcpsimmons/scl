@@ -271,6 +271,7 @@ const DitheredImage = React.forwardRef<HTMLCanvasElement, DitheredImageProps>(
         return;
       }
 
+      // biome-ignore lint/correctness/useHookAtTopLevel: This is WebGL's useProgram, not a React hook
       gl.useProgram(program);
       programRef.current = program;
 
