@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { cn } from '@/lib/utils';
 
-export interface TerminalTextareaProps {
+export interface TerminalTextareaProps
+  extends Omit<React.TextareaHTMLAttributes<HTMLTextAreaElement>, 'onChange'> {
   /** Number of visible lines (rows) */
   visibleLines?: number;
   /** Show line numbers */
@@ -12,12 +13,6 @@ export interface TerminalTextareaProps {
   onChange?: (value: string) => void;
   /** Callback when cursor position changes */
   onCursorChange?: (line: number, column: number) => void;
-  /** Placeholder text */
-  placeholder?: string;
-  /** Read-only mode */
-  readOnly?: boolean;
-  /** Additional CSS classes */
-  className?: string;
 }
 
 const TerminalTextarea = React.forwardRef<HTMLDivElement, TerminalTextareaProps>(
