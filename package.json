@@ -1,6 +1,6 @@
 {
   "name": "@drjoshcsimmons/scl",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "A retro terminal-themed React component library built on Radix and Tailwind",
   "keywords": [
     "react",
