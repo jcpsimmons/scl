@@ -30,9 +30,9 @@ To test against the local library build instead of npm:
 
 ```bash
 # From repo root
-pnpm build
+bun run build
 
 # From examples/nextjs
-pnpm link ../../
-pnpm dev
+bun link ../../
+bun dev
 ```
