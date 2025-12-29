@@ -8,16 +8,18 @@ SCL (Simsies Component Library) is a React component library built on shadcn/ui,
 
 ## Commands
 
+**Always use Bun** - never use npm, pnpm, or yarn.
+
 ```bash
-pnpm install          # Install dependencies
-pnpm dev              # Run Storybook on port 6006
-pnpm build            # Build library (tsc + vite)
-pnpm test             # Run vitest tests
-pnpm test <pattern>   # Run specific test file
-pnpm test:coverage    # Run tests with coverage
-pnpm lint             # Run ESLint
-pnpm typecheck        # Run TypeScript type checking
-pnpm build:storybook  # Build Storybook static site
+bun install          # Install dependencies
+bun dev              # Run Storybook on port 6006
+bun run build        # Build library (tsc + vite)
+bun test             # Run vitest tests
+bun test <pattern>   # Run specific test file
+bun test:coverage    # Run tests with coverage
+bun run lint         # Run ESLint
+bun run typecheck    # Run TypeScript type checking
+bun run build:storybook  # Build Storybook static site
 ```
 
 ## Architecture
