@@ -346,7 +346,7 @@ export default function App() {
             </CardHeader>
             <CardContent>
               <div className="relative">
-                <code className="block bg-background p-4 pr-12 border border-primary text-sm">
+                <code className="block bg-background p-4 pr-12 border border-primary text-sm overflow-x-auto">
                   {codeSnippets.install}
                 </code>
                 <Button
