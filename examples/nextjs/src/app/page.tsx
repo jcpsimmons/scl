@@ -456,7 +456,7 @@ export default function App() {
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-2">
               <Terminal className="w-5 h-5 text-primary" />
-              <span className="font-mono text-sm">SCL v0.1.8</span>
+              <span className="font-mono text-sm">SCL v{sclVersion}</span>
             </div>
             <div className="flex items-center gap-4 text-sm text-muted-foreground">
               <a
