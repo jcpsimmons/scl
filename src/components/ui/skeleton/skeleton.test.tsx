@@ -5,7 +5,7 @@ import { Skeleton } from './skeleton'
 describe('Skeleton', () => {
   it('renders with default styles', () => {
     render(<Skeleton data-testid="skeleton" />)
-    expect(screen.getByTestId('skeleton')).toHaveClass('animate-pulse')
+    expect(screen.getByTestId('skeleton')).toHaveClass('animate-blink')
   })
 
   it('merges custom className', () => {
