@@ -89,6 +89,7 @@ const TerminalTextarea = React.forwardRef<HTMLDivElement, TerminalTextareaProps>
           </div>
         )}
         <textarea
+          {...textareaProps}
           ref={textareaRef}
           value={value}
           onChange={handleChange}
