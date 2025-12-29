@@ -4,26 +4,26 @@ import { cva, type VariantProps } from 'class-variance-authority'
 import { cn } from '@/lib/utils'
 
 const buttonVariants = cva(
-  'inline-flex items-center justify-center gap-2 whitespace-nowrap font-mono font-bold uppercase tracking-wider transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-30 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0',
+  'inline-flex items-center justify-center gap-2 whitespace-nowrap font-mono font-bold uppercase tracking-wider transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-30 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0',
   {
     variants: {
       variant: {
         default:
-          'bg-primary text-primary-foreground border-2 border-primary hover:bg-primary/90 active:bg-primary/80',
+          'bg-primary text-primary-foreground border-2 border-primary hover:bg-primary/90 active:bg-primary-foreground active:text-primary',
         secondary:
-          'bg-secondary text-secondary-foreground border-2 border-secondary hover:bg-secondary/90 active:bg-secondary/80',
+          'bg-secondary text-secondary-foreground border-2 border-secondary hover:bg-secondary/90 active:bg-secondary-foreground active:text-secondary',
         outline:
-          'bg-transparent text-primary border-2 border-primary hover:bg-primary/10 active:bg-primary/20',
+          'bg-transparent text-primary border-2 border-primary hover:bg-primary/10 active:bg-primary active:text-primary-foreground',
         'secondary-outline':
-          'bg-transparent text-secondary border-2 border-secondary hover:bg-secondary/10 active:bg-secondary/20',
+          'bg-transparent text-secondary border-2 border-secondary hover:bg-secondary/10 active:bg-secondary active:text-secondary-foreground',
         ghost:
-          'bg-transparent text-primary border-2 border-transparent hover:border-primary/50 active:bg-primary/10',
+          'bg-transparent text-primary border-2 border-transparent hover:border-primary/50 active:bg-primary active:text-primary-foreground',
         link:
-          'bg-transparent text-primary underline-offset-4 hover:underline border-none',
+          'bg-transparent text-primary underline-offset-4 hover:underline border-none active:text-primary-foreground',
         destructive:
-          'bg-destructive text-destructive-foreground border-2 border-destructive hover:bg-destructive/90 active:bg-destructive/80',
+          'bg-destructive text-destructive-foreground border-2 border-destructive hover:bg-destructive/90 active:bg-destructive-foreground active:text-destructive',
         'destructive-outline':
-          'bg-transparent text-destructive border-2 border-destructive hover:bg-destructive/10 active:bg-destructive/20',
+          'bg-transparent text-destructive border-2 border-destructive hover:bg-destructive/10 active:bg-destructive active:text-destructive-foreground',
       },
       size: {
         default: 'h-11 px-6 py-3 text-sm',
