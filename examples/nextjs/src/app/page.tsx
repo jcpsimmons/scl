@@ -82,9 +82,6 @@ export default function App() {
       {/* Hero Section */}
       <section className="container mx-auto px-4 py-16 max-w-5xl">
         <div className="text-center space-y-6">
-          <div className="flex items-center justify-center gap-3 mb-4">
-            <Terminal className="w-12 h-12 text-primary" />
-          </div>
           <h1 className="text-4xl md:text-6xl font-bold tracking-tight">
             <span className="text-primary">{typedText}</span>
             <span className="animate-blink">_</span>
