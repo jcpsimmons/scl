@@ -91,8 +91,8 @@ export default function App() {
             <code className="bg-card border-2 border-primary px-4 py-2 text-sm font-mono">
               {installCmd}
             </code>
-            <Button variant="outline" size="sm" onClick={copyToClipboard}>
-              {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+            <Button variant="outline" size="sm" onClick={() => copyToClipboard(installCmd, 'hero')}>
+              {copiedId === 'hero' ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
             </Button>
           </div>
 
