@@ -31,7 +31,7 @@
   ],
   "scripts": {
     "dev": "storybook dev -p 6006",
-    "build": "tsc && vite build",
+    "build": "tsc && vite build && cp src/styles/globals.css dist/globals.css",
     "build:storybook": "storybook build -o storybook-static",
     "test": "vitest",
     "test:coverage": "vitest --coverage",
