@@ -173,7 +173,7 @@ Check out the components at [jcpsimmons.github.io/scl](https://jcpsimmons.github
 ║   • No shadows (we live in FLATLAND)                               ║
 ║   • BigBlueTerm437 monospace font (embrace the CRT vibes)          ║
 ║   • CSS variables for theming (HSL colors because we're not        ║
-║     savages who use hex in 2024)                                   ║
+║     savages who use hex in 2099)                                   ║
 ║   • Dark mode (obviously)                                          ║
 ║                                                                    ║
 ║   If you want rounded corners and drop shadows, Material UI is     ║
@@ -202,7 +202,7 @@ It's my name. Well, part of it. Don't overthink it.
 ```
     ┌────────────────────────────────────────────────────────┐
     │                                                        │
-    │   React ──────────────► Because it's 2024              │
+    │   React ──────────────► Because it's 2099              │
     │      │                                                 │
     │      ▼                                                 │
     │   Radix UI ──────────► Accessibility handled           │
