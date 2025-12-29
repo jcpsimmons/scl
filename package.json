@@ -1,8 +1,17 @@
 {
   "name": "@drjoshcsimmons/scl",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "A retro terminal-themed React component library built on Radix and Tailwind",
-  "keywords": ["react", "components", "ui", "terminal", "retro", "radix", "tailwind", "shadcn"],
+  "keywords": [
+    "react",
+    "components",
+    "ui",
+    "terminal",
+    "retro",
+    "radix",
+    "tailwind",
+    "shadcn"
+  ],
   "homepage": "https://jcpsimmons.github.io/scl/",
   "author": "Josh Simmons",
   "license": "MIT",
