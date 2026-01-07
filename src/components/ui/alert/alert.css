@@ -1,0 +1,71 @@
+/* Alert Component Styles */
+
+.scl-alert {
+  position: relative;
+  width: 100%;
+  padding: var(--scl-space-3) var(--scl-space-4);
+  font-size: var(--scl-text-sm);
+  font-weight: 500;
+  font-family: var(--scl-font-mono);
+  border: 2px solid;
+}
+
+.scl-alert svg {
+  position: absolute;
+  left: var(--scl-space-4);
+  top: var(--scl-space-4);
+}
+
+.scl-alert svg + div {
+  transform: translateY(-3px);
+}
+
+.scl-alert svg ~ * {
+  padding-left: var(--scl-space-7);
+}
+
+/* Variants */
+.scl-alert--default {
+  background-color: var(--scl-primary);
+  color: var(--scl-primary-foreground);
+  border-color: var(--scl-primary);
+}
+
+.scl-alert--default svg {
+  color: var(--scl-primary-foreground);
+}
+
+.scl-alert--secondary {
+  background-color: var(--scl-secondary);
+  color: var(--scl-secondary-foreground);
+  border-color: var(--scl-secondary);
+}
+
+.scl-alert--secondary svg {
+  color: var(--scl-secondary-foreground);
+}
+
+.scl-alert--destructive {
+  background-color: var(--scl-destructive);
+  color: var(--scl-destructive-foreground);
+  border-color: var(--scl-destructive);
+}
+
+.scl-alert--destructive svg {
+  color: var(--scl-destructive-foreground);
+}
+
+.scl-alert__title {
+  margin-bottom: var(--scl-space-1);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.025em;
+}
+
+.scl-alert__description {
+  font-size: var(--scl-text-sm);
+}
+
+.scl-alert__description p {
+  line-height: 1.625;
+}

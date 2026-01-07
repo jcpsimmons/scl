@@ -1,37 +1,32 @@
 import * as ProgressPrimitive from '@radix-ui/react-progress';
 import * as React from 'react';
-import { cn } from '@/lib/utils';
+import { cx } from '@/lib/utils';
+import './progress.css';
 
 export interface ProgressProps
   extends React.ComponentPropsWithoutRef<typeof ProgressPrimitive.Root> {
-  /** Progress value from 0 to 100 */
   value?: number;
-  /** Show percentage text */
   showPercentage?: boolean;
-  /** Custom label text */
   label?: string;
 }
 
 const Progress = React.forwardRef<React.ElementRef<typeof ProgressPrimitive.Root>, ProgressProps>(
   ({ className, value = 0, showPercentage = false, label, ...props }, ref) => {
     return (
-      <div className="w-full min-w-[200px]">
+      <div className="scl-progress-wrapper">
         {(label || showPercentage) && (
-          <div className="flex justify-center items-center gap-2 mb-2 font-mono text-sm font-bold text-primary">
+          <div className="scl-progress-label">
             {label && <span>{label}</span>}
             {showPercentage && <span>{Math.round(value)}%</span>}
           </div>
         )}
         <ProgressPrimitive.Root
           ref={ref}
-          className={cn(
-            'relative h-6 w-full overflow-hidden bg-background border-2 border-primary',
-            className
-          )}
+          className={cx('scl-progress', className)}
           {...props}
         >
           <ProgressPrimitive.Indicator
-            className="h-full bg-primary"
+            className="scl-progress__indicator"
             style={{ width: `${value}%` }}
           />
         </ProgressPrimitive.Root>

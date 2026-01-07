@@ -1,0 +1,40 @@
+/* Checkbox Component Styles */
+
+.scl-checkbox {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 1.5rem;
+  width: 1.5rem;
+  flex-shrink: 0;
+  border: 2px solid var(--scl-primary);
+  background-color: var(--scl-background);
+  cursor: pointer;
+}
+
+.scl-checkbox:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 1px var(--scl-ring) !important;
+}
+
+.scl-checkbox:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.scl-checkbox[data-state="checked"] {
+  background-color: var(--scl-primary);
+  color: var(--scl-primary-foreground);
+}
+
+.scl-checkbox__indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: currentColor;
+}
+
+.scl-checkbox__icon {
+  width: 1.25rem;
+  height: 1.25rem;
+}

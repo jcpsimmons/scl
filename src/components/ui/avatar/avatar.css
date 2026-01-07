@@ -1,0 +1,32 @@
+/* Avatar Component Styles */
+
+.scl-avatar {
+  position: relative;
+  display: flex;
+  height: 2.5rem;
+  width: 2.5rem;
+  flex-shrink: 0;
+  overflow: hidden;
+  border: 1px solid var(--scl-primary);
+}
+
+.scl-avatar__image {
+  aspect-ratio: 1;
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+}
+
+.scl-avatar__fallback {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--scl-background);
+  border: 1px solid var(--scl-primary);
+  color: var(--scl-primary);
+  font-family: var(--scl-font-mono);
+  font-size: var(--scl-text-sm);
+  font-weight: 500;
+}

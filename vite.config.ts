@@ -22,10 +22,14 @@ export default defineConfig({
       output: {
         preserveModules: true,
         preserveModulesRoot: 'src',
+        assetFileNames: 'globals[extname]',
       },
     },
     copyPublicDir: false,
     cssCodeSplit: false,
+  },
+  css: {
+    // No PostCSS/Tailwind needed - pure CSS
   },
   resolve: {
     alias: {

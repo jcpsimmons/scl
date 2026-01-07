@@ -1,0 +1,16 @@
+/* Separator Component Styles */
+
+.scl-separator {
+  flex-shrink: 0;
+  background-color: var(--scl-primary);
+}
+
+.scl-separator--horizontal {
+  height: 2px;
+  width: 100%;
+}
+
+.scl-separator--vertical {
+  height: 100%;
+  width: 3px;
+}

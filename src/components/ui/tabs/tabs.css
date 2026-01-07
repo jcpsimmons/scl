@@ -1,0 +1,55 @@
+/* Tabs Component Styles */
+
+.scl-tabs-list {
+  display: inline-flex;
+  height: 2.25rem;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--scl-muted);
+  padding: var(--scl-space-1);
+  color: var(--scl-muted-foreground);
+}
+
+.scl-tabs-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  padding: var(--scl-space-1) var(--scl-space-3);
+  font-size: var(--scl-text-sm);
+  font-weight: 500;
+  font-family: var(--scl-font-mono);
+  background: none;
+  border: 2px solid transparent;
+  color: var(--scl-muted-foreground);
+  cursor: pointer;
+}
+
+.scl-tabs-trigger:focus-visible {
+  outline: var(--scl-focus-ring-width) solid var(--scl-ring);
+  outline-offset: var(--scl-focus-ring-offset);
+}
+
+.scl-tabs-trigger:disabled {
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+.scl-tabs-trigger[data-state="active"] {
+  background-color: var(--scl-background);
+  color: var(--scl-primary);
+  border-color: var(--scl-primary);
+}
+
+.scl-tabs-trigger[data-state="inactive"] {
+  border-color: transparent;
+}
+
+.scl-tabs-content {
+  margin-top: var(--scl-space-2);
+}
+
+.scl-tabs-content:focus-visible {
+  outline: var(--scl-focus-ring-width) solid var(--scl-ring);
+  outline-offset: var(--scl-focus-ring-offset);
+}

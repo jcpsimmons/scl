@@ -1,7 +1,21 @@
 import * as CheckboxPrimitive from '@radix-ui/react-checkbox';
-import { Check } from 'lucide-react';
 import * as React from 'react';
-import { cn } from '@/lib/utils';
+import { cx } from '@/lib/utils';
+import './checkbox.css';
+
+const CheckIcon = () => (
+  <svg
+    className="scl-checkbox__icon"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="3"
+    strokeLinecap="square"
+    strokeLinejoin="miter"
+  >
+    <polyline points="20 6 9 17 4 12" />
+  </svg>
+);
 
 const Checkbox = React.forwardRef<
   React.ElementRef<typeof CheckboxPrimitive.Root>,
@@ -9,14 +23,11 @@ const Checkbox = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <CheckboxPrimitive.Root
     ref={ref}
-    className={cn(
-      'peer h-6 w-6 shrink-0 border-2 border-primary bg-background focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground flex items-center justify-center',
-      className
-    )}
+    className={cx('scl-checkbox', className)}
     {...props}
   >
-    <CheckboxPrimitive.Indicator className={cn('flex items-center justify-center text-current')}>
-      <Check className="h-5 w-5" />
+    <CheckboxPrimitive.Indicator className="scl-checkbox__indicator">
+      <CheckIcon />
     </CheckboxPrimitive.Indicator>
   </CheckboxPrimitive.Root>
 ));

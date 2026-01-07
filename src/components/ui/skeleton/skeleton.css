@@ -1,0 +1,10 @@
+/* Skeleton Component Styles */
+
+.scl-skeleton {
+  border: 1px solid rgba(var(--scl-color-green), 0.3);
+  background-color: rgba(var(--scl-color-green), 0.1);
+}
+
+.scl-skeleton--blink {
+  animation: scl-blink 1s step-end infinite;
+}

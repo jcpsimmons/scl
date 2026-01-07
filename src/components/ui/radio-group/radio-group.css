@@ -1,0 +1,43 @@
+/* Radio Group Component Styles */
+
+.scl-radio-group {
+  display: grid;
+  gap: var(--scl-space-2);
+}
+
+.scl-radio-group__item {
+  height: 1.5rem;
+  width: 1.5rem;
+  border: 2px solid var(--scl-primary);
+  background-color: var(--scl-background);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.scl-radio-group__item:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 1px var(--scl-ring) !important;
+}
+
+.scl-radio-group__item:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.scl-radio-group__item[data-state="checked"] {
+  background-color: var(--scl-primary);
+}
+
+.scl-radio-group__indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.scl-radio-group__dot {
+  width: 0.75rem;
+  height: 0.75rem;
+  background-color: var(--scl-primary-foreground);
+}

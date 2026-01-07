@@ -1,0 +1,35 @@
+/* Textarea Component Styles */
+
+.scl-textarea {
+  display: flex;
+  min-height: 60px;
+  width: 100%;
+  border: 2px solid var(--scl-primary);
+  background-color: var(--scl-background);
+  color: var(--scl-primary);
+  padding: var(--scl-space-2) var(--scl-space-3);
+  font-size: var(--scl-text-base);
+  font-family: var(--scl-font-mono);
+  resize: vertical;
+}
+
+.scl-textarea::placeholder {
+  color: var(--scl-primary);
+  opacity: 0.5;
+}
+
+.scl-textarea:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 1px var(--scl-primary) !important;
+}
+
+.scl-textarea:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+@media (min-width: 768px) {
+  .scl-textarea {
+    font-size: var(--scl-text-sm);
+  }
+}

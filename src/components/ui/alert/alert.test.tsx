@@ -18,12 +18,12 @@ describe('Alert', () => {
 
   it('applies default variant', () => {
     render(<Alert>Default Alert</Alert>);
-    expect(screen.getByRole('alert')).toHaveClass('bg-primary');
+    expect(screen.getByRole('alert')).toHaveClass('scl-alert--default');
   });
 
   it('applies destructive variant', () => {
     render(<Alert variant="destructive">Error Alert</Alert>);
-    expect(screen.getByRole('alert')).toHaveClass('bg-destructive');
+    expect(screen.getByRole('alert')).toHaveClass('scl-alert--destructive');
   });
 
   it('forwards ref to Alert', () => {

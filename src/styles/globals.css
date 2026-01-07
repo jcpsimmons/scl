@@ -1,300 +1,235 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* SCL Global Styles - Pure CSS (No Tailwind) */
 
+/* Font Face */
 @font-face {
   font-family: 'BigBlueTerm437';
   src: url('/fonts/BigBlueTerm437.ttf') format('truetype');
 }
 
-@layer base {
-  :root {
-    /* Color palette */
-    --color-green: 120 100% 50%;
-    --color-hotpink: 300 100% 50%;
-    --color-yellow: 60 100% 50%;
-    --color-blue: 240 100% 50%;
-    --color-cyan: 180 100% 50%;
-    --color-white: 0 0% 100%;
-    --color-amber: 45 100% 50%;
-    --color-red: 0 100% 50%;
+/* CSS Custom Properties (Design Tokens) */
+:root {
+  /* Color Palette */
+  --scl-color-green: hsl(120, 100%, 50%);
+  --scl-color-hotpink: hsl(300, 100%, 50%);
+  --scl-color-yellow: hsl(60, 100%, 50%);
+  --scl-color-blue: hsl(240, 100%, 50%);
+  --scl-color-cyan: hsl(180, 100%, 50%);
+  --scl-color-white: hsl(0, 0%, 100%);
+  --scl-color-amber: hsl(45, 100%, 50%);
+  --scl-color-red: hsl(0, 100%, 50%);
+  --scl-color-black: hsl(0, 0%, 0%);
 
-    /* Statusline colors (vim powerline style) */
-    --statusline-bg: 210 100% 35%;
-    --statusline-fg: 60 100% 50%;
+  /* Semantic Colors */
+  --scl-primary: var(--scl-color-green);
+  --scl-primary-foreground: var(--scl-color-black);
+  --scl-secondary: var(--scl-color-hotpink);
+  --scl-secondary-foreground: var(--scl-color-black);
+  --scl-destructive: var(--scl-color-red);
+  --scl-destructive-foreground: var(--scl-color-black);
 
-    /* Semantic colors (swappable) */
-    --primary: var(--color-green);
-    --primary-foreground: 0 0% 0%;
-    --secondary: var(--color-hotpink);
-    --secondary-foreground: 0 0% 0%;
+  /* Background & Foreground */
+  --scl-background: var(--scl-color-black);
+  --scl-foreground: var(--scl-primary);
 
-    /* Core UI (derived from primary) */
-    --background: 0 0% 0%;
-    --foreground: var(--primary);
-    --border: var(--primary);
-    --input: 0 0% 0%;
-    --ring: var(--primary);
+  /* Border & Ring */
+  --scl-border: var(--scl-primary);
+  --scl-ring: var(--scl-primary);
+  --scl-input: var(--scl-color-black);
 
-    /* Card/popover */
-    --card: 0 0% 0%;
-    --card-foreground: var(--primary);
-    --popover: 0 0% 0%;
-    --popover-foreground: var(--primary);
+  /* Muted */
+  --scl-muted: hsl(0, 0%, 8%);
+  --scl-muted-foreground: var(--scl-primary);
 
-    /* Muted */
-    --muted: 0 0% 8%;
-    --muted-foreground: var(--primary);
+  /* Card & Popover */
+  --scl-card: var(--scl-color-black);
+  --scl-card-foreground: var(--scl-primary);
+  --scl-popover: var(--scl-color-black);
+  --scl-popover-foreground: var(--scl-primary);
 
-    /* Accent (secondary) */
-    --accent: var(--secondary);
-    --accent-foreground: var(--secondary-foreground);
+  /* Accent */
+  --scl-accent: var(--scl-secondary);
+  --scl-accent-foreground: var(--scl-secondary-foreground);
 
-    /* Destructive (always red) */
-    --destructive: var(--color-red);
-    --destructive-foreground: 0 0% 0%;
+  /* Spacing Scale */
+  --scl-space-0: 0;
+  --scl-space-px: 1px;
+  --scl-space-0-5: 0.125rem;
+  --scl-space-1: 0.25rem;
+  --scl-space-1-5: 0.375rem;
+  --scl-space-2: 0.5rem;
+  --scl-space-2-5: 0.625rem;
+  --scl-space-3: 0.75rem;
+  --scl-space-3-5: 0.875rem;
+  --scl-space-4: 1rem;
+  --scl-space-5: 1.25rem;
+  --scl-space-6: 1.5rem;
+  --scl-space-7: 1.75rem;
+  --scl-space-8: 2rem;
+  --scl-space-9: 2.25rem;
+  --scl-space-10: 2.5rem;
+  --scl-space-11: 2.75rem;
+  --scl-space-12: 3rem;
+  --scl-space-14: 3.5rem;
+  --scl-space-16: 4rem;
 
-    /* Chart colors */
-    --chart-1: var(--color-green);
-    --chart-2: var(--color-yellow);
-    --chart-3: var(--color-hotpink);
-    --chart-4: var(--color-blue);
-    --chart-5: var(--color-amber);
+  /* Font Sizes */
+  --scl-text-xs: 0.75rem;
+  --scl-text-sm: 0.875rem;
+  --scl-text-base: 1rem;
+  --scl-text-lg: 1.125rem;
+  --scl-text-xl: 1.25rem;
+  --scl-text-2xl: 1.5rem;
+  --scl-text-3xl: 1.875rem;
 
-    /* Sidebar */
-    --sidebar-background: 0 0% 0%;
-    --sidebar-foreground: var(--primary);
-    --sidebar-primary: var(--primary);
-    --sidebar-primary-foreground: var(--primary-foreground);
-    --sidebar-accent: var(--secondary);
-    --sidebar-accent-foreground: var(--secondary-foreground);
-    --sidebar-border: var(--primary);
-    --sidebar-ring: var(--primary);
+  /* Font Family */
+  --scl-font-mono: 'BigBlueTerm437', monospace;
 
-    --radius: 0px;
-  }
+  /* Animation Durations */
+  --scl-duration-fast: 150ms;
+  --scl-duration-normal: 200ms;
+  --scl-duration-slow: 300ms;
 
-  /* Theme utility classes for per-section color swapping */
-  .theme-yellow {
-    --primary: 60 100% 50%;
-  }
-  .theme-blue {
-    --primary: 240 100% 50%;
-    --primary-foreground: 0 0% 100%;
-  }
-  .theme-white {
-    --primary: 0 0% 100%;
-  }
-  .theme-amber {
-    --primary: 45 100% 50%;
-  }
-  .theme-hotpink {
-    --primary: 300 100% 50%;
-  }
-  .theme-cyan {
-    --primary: 180 100% 50%;
-  }
-  .theme-secondary {
-    --primary: 300 100% 50%;
-    --primary-foreground: 0 0% 0%;
-  }
+  /* Focus Ring */
+  --scl-focus-ring-width: 2px;
+  --scl-focus-ring-offset: 2px;
 }
 
-@layer base {
-  * {
-    border-color: hsl(var(--border));
-  }
-
-  html {
-    background-color: #000000;
-  }
-
-  body {
-    background-color: hsl(var(--background));
-    color: hsl(var(--primary));
-    font-family: 'BigBlueTerm437', monospace;
-  }
-
-  /* Kill all shadows globally */
-  *,
-  *::before,
-  *::after {
-    box-shadow: none !important;
-    text-shadow: none !important;
-  }
-
-  /* Kill all border radius globally */
-  *,
-  *::before,
-  *::after {
-    border-radius: 0 !important;
-  }
+/* Theme Variants */
+.scl-theme-yellow {
+  --scl-primary: var(--scl-color-yellow);
+}
+.scl-theme-blue {
+  --scl-primary: var(--scl-color-blue);
+  --scl-primary-foreground: var(--scl-color-white);
+}
+.scl-theme-white {
+  --scl-primary: var(--scl-color-white);
+}
+.scl-theme-amber {
+  --scl-primary: var(--scl-color-amber);
+}
+.scl-theme-hotpink {
+  --scl-primary: var(--scl-color-hotpink);
+}
+.scl-theme-cyan {
+  --scl-primary: var(--scl-color-cyan);
 }
 
-/* Win95 style scrollbar from original app */
-@layer components {
-  .win95-scroll {
-    scrollbar-width: auto;
-    scrollbar-color: #bcbcbc #d4d0c8;
-  }
-
-  .win95-scroll::-webkit-scrollbar {
-    width: 16px;
-    background-color: #d4d0c8;
-  }
-
-  .win95-scroll::-webkit-scrollbar-track {
-    background: linear-gradient(180deg, #f5f5f5 0%, #d4d0c8 100%);
-    border: 1px solid #808080;
-  }
-
-  .win95-scroll::-webkit-scrollbar-thumb {
-    background-color: #bcbcbc;
-    border: 1px solid #808080;
-  }
-
-  .win95-scroll::-webkit-scrollbar-thumb:hover {
-    background-color: #d6d6d6;
-  }
-
-  .win95-scroll::-webkit-scrollbar-button {
-    height: 16px;
-    background-color: #d4d0c8;
-    border: 1px solid #808080;
-  }
-
-  /* Terminal header styles */
-  .header-title {
-    background: hsl(var(--primary));
-    color: hsl(var(--primary-foreground));
-    font-weight: bold;
-    line-height: 1;
-    display: inline-block;
-    position: relative;
-  }
-
-  .header-title::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    border-left-color: hsl(var(--primary));
-    border-top-color: transparent;
-    border-bottom-color: transparent;
-    border-style: solid;
-    border-top-width: 10px;
-    border-bottom-width: 10px;
-    border-left-width: 6px;
-    right: -6px;
-  }
-
-  .header-button {
-    position: absolute;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    background: hsl(var(--background));
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: hsl(var(--primary));
-    transition: background-color 0.2s;
-    display: flex;
-    align-items: center;
-  }
-
-  .header-button:hover {
-    background: hsl(var(--muted));
-  }
-
-  .header-button:focus {
-    outline: 1px solid hsl(var(--primary));
-  }
-
-  .terminal-glow {
-    box-shadow: 0 0 8px hsl(var(--primary) / 0.6) !important;
-  }
+/* Base Styles */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  border-radius: 0;
+  box-shadow: none;
+  text-shadow: none;
 }
 
-/* Custom color utilities - workaround for Tailwind JIT not generating these */
-@layer utilities {
-  .bg-primary {
-    background-color: hsl(var(--primary));
-  }
-  .bg-secondary {
-    background-color: hsl(var(--secondary));
-  }
-  .bg-destructive {
-    background-color: hsl(var(--destructive));
-  }
-  .bg-muted {
-    background-color: hsl(var(--muted));
-  }
-  .bg-accent {
-    background-color: hsl(var(--accent));
-  }
-  .bg-card {
-    background-color: hsl(var(--card));
-  }
-  .bg-popover {
-    background-color: hsl(var(--popover));
-  }
-  .bg-background {
-    background-color: hsl(var(--background));
-  }
-  .text-primary {
-    color: hsl(var(--primary));
-  }
-  .text-secondary {
-    color: hsl(var(--secondary));
-  }
-  .text-destructive {
-    color: hsl(var(--destructive));
-  }
-  .text-primary-foreground {
-    color: hsl(var(--primary-foreground));
-  }
-  .text-secondary-foreground {
-    color: hsl(var(--secondary-foreground));
-  }
-  .text-destructive-foreground {
-    color: hsl(var(--destructive-foreground));
-  }
-  .text-muted-foreground {
-    color: hsl(var(--muted-foreground));
-  }
-  .text-card-foreground {
-    color: hsl(var(--card-foreground));
-  }
-  .text-popover-foreground {
-    color: hsl(var(--popover-foreground));
-  }
-  .border-primary {
-    border-color: hsl(var(--primary));
-  }
-  .border-secondary {
-    border-color: hsl(var(--secondary));
-  }
-  .border-destructive {
-    border-color: hsl(var(--destructive));
-  }
-  .ring-primary {
-    --tw-ring-color: hsl(var(--primary));
-  }
+html {
+  background-color: var(--scl-background);
+}
 
-  /* Blink animation utility - only blinks the fill, not the border */
-  .animate-blink {
-    animation: blink 0.25s step-end infinite;
-  }
+body {
+  background-color: var(--scl-background);
+  color: var(--scl-foreground);
+  font-family: var(--scl-font-mono);
+  line-height: 1.5;
+}
 
-  @keyframes blink {
-    0%, 100% {
-      background-color: hsl(var(--primary));
-    }
-    50% {
-      background-color: transparent;
-    }
-  }
+/* Animations */
+@keyframes scl-accordion-down {
+  from { height: 0; }
+  to { height: var(--radix-accordion-content-height); }
+}
+
+@keyframes scl-accordion-up {
+  from { height: var(--radix-accordion-content-height); }
+  to { height: 0; }
+}
+
+@keyframes scl-collapsible-down {
+  from { height: 0; }
+  to { height: var(--radix-collapsible-content-height); }
+}
+
+@keyframes scl-collapsible-up {
+  from { height: var(--radix-collapsible-content-height); }
+  to { height: 0; }
+}
+
+@keyframes scl-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scl-fade-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes scl-slide-in-from-top {
+  from { transform: translateY(-100%); }
+  to { transform: translateY(0); }
+}
+
+@keyframes scl-slide-in-from-bottom {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+@keyframes scl-slide-in-from-left {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(0); }
+}
+
+@keyframes scl-slide-in-from-right {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+
+@keyframes scl-zoom-in {
+  from { transform: scale(0.95); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+@keyframes scl-zoom-out {
+  from { transform: scale(1); opacity: 1; }
+  to { transform: scale(0.95); opacity: 0; }
+}
+
+@keyframes scl-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+@keyframes scl-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Win95 Scrollbar */
+.scl-win95-scroll {
+  scrollbar-width: auto;
+  scrollbar-color: #bcbcbc #d4d0c8;
+}
+
+.scl-win95-scroll::-webkit-scrollbar {
+  width: 16px;
+  background-color: #d4d0c8;
+}
+
+.scl-win95-scroll::-webkit-scrollbar-track {
+  background: linear-gradient(180deg, #f5f5f5 0%, #d4d0c8 100%);
+  border: 1px solid #808080;
+}
+
+.scl-win95-scroll::-webkit-scrollbar-thumb {
+  background-color: #bcbcbc;
+  border: 1px solid #808080;
+}
+
+.scl-win95-scroll::-webkit-scrollbar-thumb:hover {
+  background-color: #d6d6d6;
 }
