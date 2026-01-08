@@ -24,7 +24,7 @@
 
 .scl-table__footer {
   border-top: 2px solid var(--scl-primary);
-  background-color: rgba(var(--scl-muted), 0.5);
+  background-color: hsla(0, 0%, 8%, 0.5);
   font-weight: 500;
 }
 

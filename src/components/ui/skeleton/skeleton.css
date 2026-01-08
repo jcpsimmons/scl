@@ -1,8 +1,8 @@
 /* Skeleton Component Styles */
 
 .scl-skeleton {
-  border: 1px solid rgba(var(--scl-color-green), 0.3);
-  background-color: rgba(var(--scl-color-green), 0.1);
+  border: 1px solid hsla(120, 100%, 50%, 0.3);
+  background-color: hsla(120, 100%, 50%, 0.1);
 }
 
 .scl-skeleton--blink {
