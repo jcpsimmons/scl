@@ -1,4 +1,4 @@
-import * as React from 'react';
+import type * as React from 'react';
 import { cx } from '@/lib/utils';
 import './skeleton.css';
 

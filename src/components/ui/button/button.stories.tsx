@@ -108,7 +108,7 @@ export const WithIcon: Story = {
 export const AsLink: Story = {
   render: () => (
     <Button asChild>
-      <a href="#">[View Documentation]</a>
+      <a href="/docs">[View Documentation]</a>
     </Button>
   ),
 };
