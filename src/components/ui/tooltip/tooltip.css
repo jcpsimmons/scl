@@ -1,0 +1,11 @@
+/* Tooltip Component Styles */
+
+.scl-tooltip-content {
+  z-index: 50;
+  overflow: hidden;
+  background-color: var(--scl-primary);
+  padding: var(--scl-space-1-5) var(--scl-space-3);
+  font-size: var(--scl-text-xs);
+  font-family: var(--scl-font-mono);
+  color: var(--scl-primary-foreground);
+}

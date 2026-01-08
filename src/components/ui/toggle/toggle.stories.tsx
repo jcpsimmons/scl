@@ -6,10 +6,6 @@ const meta: Meta<typeof Toggle> = {
   component: Toggle,
   tags: ['autodocs'],
   argTypes: {
-    variant: {
-      control: 'select',
-      options: ['default', 'outline'],
-    },
     size: {
       control: 'select',
       options: ['default', 'sm', 'lg'],
@@ -30,14 +26,6 @@ export const Default: Story = {
   },
 };
 
-export const Outline: Story = {
-  args: {
-    children: 'B',
-    variant: 'outline',
-    'aria-label': 'Toggle bold',
-  },
-};
-
 export const WithText: Story = {
   args: {
     children: 'Toggle me',
@@ -46,7 +34,7 @@ export const WithText: Story = {
 
 export const AllSizes: Story = {
   render: () => (
-    <div className="flex items-center gap-4">
+    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
       <Toggle size="sm" aria-label="Small">
         Sm
       </Toggle>

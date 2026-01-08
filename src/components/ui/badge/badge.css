@@ -1,0 +1,56 @@
+/* Badge Component Styles */
+
+.scl-badge {
+  display: inline-flex;
+  align-items: center;
+  border: 2px solid;
+  padding: var(--scl-space-0-5) var(--scl-space-2-5);
+  font-size: var(--scl-text-xs);
+  font-weight: 600;
+  font-family: var(--scl-font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.scl-badge:focus {
+  outline: var(--scl-focus-ring-width) solid var(--scl-ring);
+  outline-offset: var(--scl-focus-ring-offset);
+}
+
+/* Filled variants */
+.scl-badge--default {
+  border-color: var(--scl-primary);
+  background-color: var(--scl-primary);
+  color: var(--scl-primary-foreground);
+}
+
+.scl-badge--secondary {
+  border-color: var(--scl-secondary);
+  background-color: var(--scl-secondary);
+  color: var(--scl-secondary-foreground);
+}
+
+.scl-badge--destructive {
+  border-color: var(--scl-destructive);
+  background-color: var(--scl-destructive);
+  color: var(--scl-destructive-foreground);
+}
+
+/* Outline variants */
+.scl-badge--outline {
+  border-color: var(--scl-primary);
+  background-color: transparent;
+  color: var(--scl-primary);
+}
+
+.scl-badge--secondary-outline {
+  border-color: var(--scl-secondary);
+  background-color: transparent;
+  color: var(--scl-secondary);
+}
+
+.scl-badge--destructive-outline {
+  border-color: var(--scl-destructive);
+  background-color: transparent;
+  color: var(--scl-destructive);
+}

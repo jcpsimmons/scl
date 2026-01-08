@@ -1,0 +1,11 @@
+/* Popover Component Styles */
+
+.scl-popover-content {
+  z-index: 50;
+  width: 18rem;
+  border: 2px solid var(--scl-primary);
+  background-color: var(--scl-background);
+  padding: var(--scl-space-4);
+  color: var(--scl-primary);
+  outline: none;
+}

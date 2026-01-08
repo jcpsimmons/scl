@@ -1,0 +1,37 @@
+/* Scroll Area Component Styles */
+
+.scl-scroll-area {
+  position: relative;
+  overflow: hidden;
+}
+
+.scl-scroll-area__viewport {
+  height: 100%;
+  width: 100%;
+}
+
+.scl-scroll-area__scrollbar {
+  display: flex;
+  touch-action: none;
+  user-select: none;
+}
+
+.scl-scroll-area__scrollbar--vertical {
+  height: 100%;
+  width: 0.625rem;
+  border-left: 1px solid transparent;
+  padding: 1px;
+}
+
+.scl-scroll-area__scrollbar--horizontal {
+  height: 0.625rem;
+  flex-direction: column;
+  border-top: 1px solid transparent;
+  padding: 1px;
+}
+
+.scl-scroll-area__thumb {
+  position: relative;
+  flex: 1;
+  background-color: var(--scl-primary);
+}

@@ -1,0 +1,65 @@
+/* Table Component Styles */
+
+.scl-table-wrapper {
+  position: relative;
+  width: 100%;
+  overflow: auto;
+}
+
+.scl-table {
+  width: 100%;
+  caption-side: bottom;
+  font-size: var(--scl-text-sm);
+  font-family: var(--scl-font-mono);
+  border-collapse: collapse;
+}
+
+.scl-table__header tr {
+  border-bottom: 2px solid var(--scl-primary);
+}
+
+.scl-table__body tr:last-child {
+  border-bottom: none;
+}
+
+.scl-table__footer {
+  border-top: 2px solid var(--scl-primary);
+  background-color: hsla(0, 0%, 8%, 0.5);
+  font-weight: 500;
+}
+
+.scl-table__footer tr:last-child {
+  border-bottom: none;
+}
+
+.scl-table__row {
+  border-bottom: 1px solid var(--scl-primary);
+}
+
+.scl-table__row:hover {
+  background-color: var(--scl-muted);
+}
+
+.scl-table__row[data-state="selected"] {
+  background-color: var(--scl-muted);
+}
+
+.scl-table__head {
+  height: 2.5rem;
+  padding: 0 var(--scl-space-2);
+  text-align: left;
+  vertical-align: middle;
+  font-weight: 500;
+  color: var(--scl-muted-foreground);
+}
+
+.scl-table__cell {
+  padding: var(--scl-space-2);
+  vertical-align: middle;
+}
+
+.scl-table__caption {
+  margin-top: var(--scl-space-4);
+  font-size: var(--scl-text-sm);
+  color: var(--scl-muted-foreground);
+}

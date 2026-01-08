@@ -5,14 +5,13 @@ import { Skeleton } from './skeleton';
 describe('Skeleton', () => {
   it('renders with default styles', () => {
     render(<Skeleton data-testid="skeleton" />);
-    expect(screen.getByTestId('skeleton')).toHaveClass('animate-blink');
+    expect(screen.getByTestId('skeleton')).toHaveClass('scl-skeleton');
   });
 
   it('merges custom className', () => {
-    render(<Skeleton className="h-4 w-[250px]" data-testid="skeleton" />);
+    render(<Skeleton className="custom-class" data-testid="skeleton" />);
     const skeleton = screen.getByTestId('skeleton');
-    expect(skeleton).toHaveClass('h-4');
-    expect(skeleton).toHaveClass('w-[250px]');
+    expect(skeleton).toHaveClass('custom-class');
   });
 
   it('accepts additional HTML attributes', () => {

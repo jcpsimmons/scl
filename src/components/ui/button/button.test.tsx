@@ -12,13 +12,13 @@ describe('Button', () => {
   it('applies variant classes correctly', () => {
     render(<Button variant="destructive">Delete</Button>);
     const button = screen.getByRole('button');
-    expect(button).toHaveClass('bg-destructive');
+    expect(button).toHaveClass('scl-button--destructive');
   });
 
   it('applies size classes correctly', () => {
     render(<Button size="sm">Small</Button>);
     const button = screen.getByRole('button');
-    expect(button).toHaveClass('h-9');
+    expect(button).toHaveClass('scl-button--sm');
   });
 
   it('forwards ref correctly', () => {

@@ -9,7 +9,7 @@ const meta: Meta<typeof Button> = {
     variant: {
       control: 'select',
       options: [
-        'default',
+        'primary',
         'destructive',
         'outline',
         'secondary',
@@ -43,7 +43,7 @@ export const Default: Story = {
 
 export const Primary: Story = {
   args: {
-    variant: 'default',
+    variant: 'primary',
     children: '[Start Quiz]',
   },
 };
@@ -57,8 +57,8 @@ export const Secondary: Story = {
 
 export const AllVariants: Story = {
   render: () => (
-    <div className="flex flex-col gap-4 items-start">
-      <Button variant="default">[Start Quiz]</Button>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', alignItems: 'flex-start' }}>
+      <Button variant="primary">[Start Quiz]</Button>
       <Button variant="secondary">Reset Progress</Button>
       <Button variant="outline">Continue</Button>
       <Button variant="secondary-outline">Secondary Outline</Button>
@@ -72,7 +72,7 @@ export const AllVariants: Story = {
 
 export const AllSizes: Story = {
   render: () => (
-    <div className="flex items-center gap-4">
+    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
       <Button size="sm">[Start]</Button>
       <Button size="default">[Start Quiz]</Button>
       <Button size="lg">[Begin Assessment]</Button>
@@ -92,7 +92,7 @@ export const Disabled: Story = {
 
 export const WithIcon: Story = {
   render: () => (
-    <div className="flex flex-col gap-4 items-start">
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', alignItems: 'flex-start' }}>
       <Button>
         <span>→</span>
         Next Question
@@ -108,58 +108,7 @@ export const WithIcon: Story = {
 export const AsLink: Story = {
   render: () => (
     <Button asChild>
-      <a href="#">[View Documentation]</a>
+      <a href="/docs">[View Documentation]</a>
     </Button>
-  ),
-};
-
-export const InteractiveDemo: Story = {
-  render: () => (
-    <div className="flex flex-col gap-6 p-8 bg-black rounded-lg">
-      <div className="text-white font-mono text-center">
-        <p className="text-gray-400 mb-2">14 questions • ~3 minutes</p>
-        <Button size="lg" className="mb-4">
-          [Start Quiz]
-        </Button>
-        <p className="text-sm">
-          Press{' '}
-          <Button variant="ghost" size="sm" className="inline-flex mx-1">
-            ENTER
-          </Button>{' '}
-          to start
-        </p>
-      </div>
-      <div className="flex justify-between items-center">
-        <Button variant="secondary">Reset Progress</Button>
-        <Button variant="destructive">Clear Data</Button>
-      </div>
-    </div>
-  ),
-};
-
-export const WithThemeColors: Story = {
-  render: () => (
-    <div className="flex flex-col gap-4">
-      <div className="flex gap-4 items-center">
-        <Button>Default (Green)</Button>
-        <Button variant="outline">Green Outline</Button>
-      </div>
-      <div className="flex gap-4 items-center theme-cyan">
-        <Button>Cyan Fill</Button>
-        <Button variant="outline">Cyan Outline</Button>
-      </div>
-      <div className="flex gap-4 items-center theme-yellow">
-        <Button>Yellow Fill</Button>
-        <Button variant="outline">Yellow Outline</Button>
-      </div>
-      <div className="flex gap-4 items-center theme-hotpink">
-        <Button>Hot Pink Fill</Button>
-        <Button variant="outline">Hot Pink Outline</Button>
-      </div>
-      <div className="flex gap-4 items-center theme-amber">
-        <Button>Amber Fill</Button>
-        <Button variant="outline">Amber Outline</Button>
-      </div>
-    </div>
   ),
 };

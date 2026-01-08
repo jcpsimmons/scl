@@ -1,0 +1,41 @@
+/* Card Component Styles */
+
+.scl-card {
+  border: 2px solid var(--scl-primary);
+  background-color: var(--scl-card);
+  color: var(--scl-card-foreground);
+}
+
+.scl-card__header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--scl-space-1-5);
+}
+
+.scl-card__title {
+  background-color: var(--scl-primary);
+  color: var(--scl-primary-foreground);
+  padding: var(--scl-space-1) var(--scl-space-2);
+  font-size: var(--scl-text-sm);
+  font-weight: 600;
+  font-family: var(--scl-font-mono);
+  line-height: 1;
+  letter-spacing: -0.025em;
+  width: 100%;
+}
+
+.scl-card__description {
+  padding: var(--scl-space-2) var(--scl-space-6) 0;
+  font-size: var(--scl-text-sm);
+  color: var(--scl-muted-foreground);
+}
+
+.scl-card__content {
+  padding: var(--scl-space-6);
+}
+
+.scl-card__footer {
+  display: flex;
+  align-items: center;
+  padding: 0 var(--scl-space-6) var(--scl-space-6);
+}

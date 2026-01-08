@@ -25,15 +25,6 @@ describe('Toggle', () => {
     expect(ref.current).toBeInstanceOf(HTMLButtonElement);
   });
 
-  it('applies variant classes', () => {
-    render(
-      <Toggle variant="outline" aria-label="Toggle">
-        B
-      </Toggle>
-    );
-    expect(screen.getByRole('button')).toHaveClass('border');
-  });
-
   it('calls onPressedChange when toggled', async () => {
     const user = userEvent.setup();
     const onPressedChange = vi.fn();

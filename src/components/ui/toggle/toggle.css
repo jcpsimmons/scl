@@ -1,0 +1,65 @@
+/* Toggle Component Styles */
+
+.scl-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--scl-space-2);
+  font-size: var(--scl-text-sm);
+  font-weight: 500;
+  font-family: var(--scl-font-mono);
+  border: 2px solid var(--scl-primary);
+  cursor: pointer;
+  transition: all var(--scl-duration-fast);
+}
+
+.scl-toggle:focus-visible {
+  outline: var(--scl-focus-ring-width) solid var(--scl-ring);
+  outline-offset: var(--scl-focus-ring-offset);
+}
+
+.scl-toggle:disabled {
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+.scl-toggle svg {
+  pointer-events: none;
+  width: 1rem;
+  height: 1rem;
+  flex-shrink: 0;
+}
+
+.scl-toggle[data-state="on"] {
+  background-color: var(--scl-primary);
+  color: var(--scl-primary-foreground);
+}
+
+.scl-toggle[data-state="off"] {
+  background-color: transparent;
+  color: var(--scl-primary);
+}
+
+.scl-toggle:hover {
+  background-color: var(--scl-primary);
+  color: var(--scl-primary-foreground);
+}
+
+/* Sizes */
+.scl-toggle--default {
+  height: 2.25rem;
+  padding: 0 var(--scl-space-2);
+  min-width: 2.25rem;
+}
+
+.scl-toggle--sm {
+  height: 2rem;
+  padding: 0 var(--scl-space-1-5);
+  min-width: 2rem;
+}
+
+.scl-toggle--lg {
+  height: 2.5rem;
+  padding: 0 var(--scl-space-2-5);
+  min-width: 2.5rem;
+}

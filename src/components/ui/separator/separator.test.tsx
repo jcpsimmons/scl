@@ -6,12 +6,12 @@ import { Separator } from './separator';
 describe('Separator', () => {
   it('renders horizontal separator by default', () => {
     render(<Separator data-testid="separator" />);
-    expect(screen.getByTestId('separator')).toHaveClass('h-[2px]', 'w-full');
+    expect(screen.getByTestId('separator')).toHaveClass('scl-separator--horizontal');
   });
 
   it('renders vertical separator', () => {
     render(<Separator orientation="vertical" data-testid="separator" />);
-    expect(screen.getByTestId('separator')).toHaveClass('h-full', 'w-[3px]');
+    expect(screen.getByTestId('separator')).toHaveClass('scl-separator--vertical');
   });
 
   it('forwards ref correctly', () => {
@@ -21,8 +21,8 @@ describe('Separator', () => {
   });
 
   it('merges custom className', () => {
-    render(<Separator className="my-4" data-testid="separator" />);
-    expect(screen.getByTestId('separator')).toHaveClass('my-4');
+    render(<Separator className="custom-class" data-testid="separator" />);
+    expect(screen.getByTestId('separator')).toHaveClass('custom-class');
   });
 
   it('is decorative by default', () => {

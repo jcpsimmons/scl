@@ -1,4 +1,6 @@
-import { cn } from '@/lib/utils';
+import type * as React from 'react';
+import { cx } from '@/lib/utils';
+import './skeleton.css';
 
 interface SkeletonProps extends React.HTMLAttributes<HTMLDivElement> {
   blink?: boolean;
@@ -7,7 +9,7 @@ interface SkeletonProps extends React.HTMLAttributes<HTMLDivElement> {
 function Skeleton({ className, blink = true, ...props }: SkeletonProps) {
   return (
     <div
-      className={cn('border border-primary/30 bg-primary/10', blink && 'animate-blink', className)}
+      className={cx('scl-skeleton', blink && 'scl-skeleton--blink', className)}
       {...props}
     />
   );

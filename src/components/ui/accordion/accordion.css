@@ -1,0 +1,58 @@
+/* Accordion Component Styles */
+
+.scl-accordion-item {
+  border-bottom: 2px solid var(--scl-primary);
+  width: 100%;
+}
+
+.scl-accordion-header {
+  display: flex;
+}
+
+.scl-accordion-trigger {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--scl-space-4) 0;
+  font-size: var(--scl-text-sm);
+  font-weight: 500;
+  font-family: var(--scl-font-mono);
+  text-align: left;
+  background: none;
+  border: none;
+  color: var(--scl-primary);
+  cursor: pointer;
+}
+
+.scl-accordion-trigger:hover {
+  text-decoration: underline;
+}
+
+.scl-accordion-trigger__icon {
+  width: 1rem;
+  height: 1rem;
+  flex-shrink: 0;
+  color: var(--scl-muted-foreground);
+  transition: transform var(--scl-duration-normal);
+}
+
+.scl-accordion-trigger[data-state="open"] .scl-accordion-trigger__icon {
+  transform: rotate(180deg);
+}
+
+.scl-accordion-content {
+  overflow: hidden;
+  font-size: var(--scl-text-sm);
+  color: var(--scl-primary);
+}
+
+.scl-accordion-content[data-state="closed"] {
+  height: 0;
+  visibility: hidden;
+}
+
+.scl-accordion-content__inner {
+  padding-bottom: var(--scl-space-4);
+  padding-top: 0;
+}

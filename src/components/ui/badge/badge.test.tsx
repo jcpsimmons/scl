@@ -10,22 +10,22 @@ describe('Badge', () => {
 
   it('applies default variant', () => {
     render(<Badge>Default</Badge>);
-    expect(screen.getByText('Default')).toHaveClass('bg-primary');
+    expect(screen.getByText('Default')).toHaveClass('scl-badge--default');
   });
 
   it('applies destructive variant', () => {
     render(<Badge variant="destructive">Error</Badge>);
-    expect(screen.getByText('Error')).toHaveClass('bg-destructive');
+    expect(screen.getByText('Error')).toHaveClass('scl-badge--destructive');
   });
 
   it('applies secondary variant', () => {
     render(<Badge variant="secondary">Secondary</Badge>);
-    expect(screen.getByText('Secondary')).toHaveClass('bg-secondary');
+    expect(screen.getByText('Secondary')).toHaveClass('scl-badge--secondary');
   });
 
   it('applies outline variant', () => {
     render(<Badge variant="outline">Outline</Badge>);
-    expect(screen.getByText('Outline')).toHaveClass('text-primary');
+    expect(screen.getByText('Outline')).toHaveClass('scl-badge--outline');
   });
 
   it('merges custom className', () => {

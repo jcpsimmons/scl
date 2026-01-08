@@ -1,0 +1,33 @@
+/* Progress Component Styles */
+
+.scl-progress-wrapper {
+  width: 100%;
+  min-width: 200px;
+}
+
+.scl-progress-label {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--scl-space-2);
+  margin-bottom: var(--scl-space-2);
+  font-family: var(--scl-font-mono);
+  font-size: var(--scl-text-sm);
+  font-weight: 700;
+  color: var(--scl-primary);
+}
+
+.scl-progress {
+  position: relative;
+  height: 1.5rem;
+  width: 100%;
+  overflow: hidden;
+  background-color: var(--scl-background);
+  border: 2px solid var(--scl-primary);
+}
+
+.scl-progress__indicator {
+  height: 100%;
+  background-color: var(--scl-primary);
+  transition: width var(--scl-duration-normal);
+}

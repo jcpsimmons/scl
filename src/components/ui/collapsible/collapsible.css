@@ -1,0 +1,11 @@
+/* Collapsible Component Styles */
+/* Collapsible uses Radix primitives directly with minimal styling */
+
+.scl-collapsible-content[data-state="closed"] {
+  height: 0;
+  overflow: hidden;
+}
+
+.scl-collapsible-content[data-state="open"] {
+  animation: scl-collapsible-down var(--scl-duration-normal) ease-out;
+}

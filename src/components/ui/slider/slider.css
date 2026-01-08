@@ -1,0 +1,48 @@
+/* Slider Component Styles */
+
+.scl-slider {
+  position: relative;
+  display: flex;
+  width: 100%;
+  touch-action: none;
+  user-select: none;
+  align-items: center;
+}
+
+.scl-slider__track {
+  position: relative;
+  height: 0.5rem;
+  width: 100%;
+  flex-grow: 1;
+  overflow: hidden;
+  border: 1px solid var(--scl-primary);
+  background-color: var(--scl-background);
+}
+
+.scl-slider__range {
+  position: absolute;
+  height: 100%;
+  background-color: var(--scl-primary);
+}
+
+.scl-slider__thumb {
+  display: block;
+  height: 1.25rem;
+  width: 0.75rem;
+  border: 2px solid var(--scl-primary);
+  background-color: var(--scl-primary);
+  cursor: pointer;
+}
+
+.scl-slider__thumb:focus-visible {
+  outline: none;
+}
+
+.scl-slider__thumb:hover {
+  background-color: var(--scl-background);
+}
+
+.scl-slider__thumb:disabled {
+  pointer-events: none;
+  opacity: 0.5;
+}
