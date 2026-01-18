@@ -8,7 +8,7 @@
     "start": "next start"
   },
   "dependencies": {
-    "@drjoshcsimmons/scl": "^0.2.1",
+    "@drjoshcsimmons/scl": "^0.2.7",
     "@vercel/analytics": "^1.4.0",
     "lucide-react": "^0.460.0",
     "next": "^15.0.0",

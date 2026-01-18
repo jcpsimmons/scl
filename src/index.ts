@@ -28,5 +28,8 @@ export * from './components/ui/tooltip';
 // Utilities
 export { cx, cn } from './lib/utils';
 
+// Hooks
+export { useFontLoaded } from './hooks/use-font-loaded';
+
 // Tokens
 export * from './tokens';
