@@ -71,3 +71,11 @@ export const File: Story = {
     type: 'file',
   },
 };
+
+export const Error: Story = {
+  args: {
+    placeholder: 'Invalid input',
+    error: true,
+    defaultValue: 'bad-email',
+  },
+};

@@ -16,6 +16,15 @@
   transition: all var(--scl-duration-fast);
 }
 
+.scl-button--loading {
+  cursor: wait;
+}
+
+.scl-button__spinner {
+  display: inline-block;
+  animation: scl-spin 1s linear infinite;
+}
+
 .scl-button:focus-visible {
   outline: var(--scl-focus-ring-width) solid var(--scl-ring);
   outline-offset: var(--scl-focus-ring-offset);

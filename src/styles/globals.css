@@ -234,3 +234,47 @@ body {
 .scl-win95-scroll::-webkit-scrollbar-thumb:hover {
   background-color: #d6d6d6;
 }
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Light Mode (opt-in via class) */
+.scl-theme-light {
+  --scl-background: var(--scl-color-white);
+  --scl-foreground: var(--scl-color-black);
+  --scl-primary: hsl(120, 80%, 25%);
+  --scl-primary-foreground: var(--scl-color-white);
+  --scl-secondary: hsl(300, 80%, 35%);
+  --scl-secondary-foreground: var(--scl-color-white);
+  --scl-muted: hsl(0, 0%, 92%);
+  --scl-muted-foreground: hsl(120, 80%, 25%);
+  --scl-card: var(--scl-color-white);
+  --scl-card-foreground: var(--scl-color-black);
+  --scl-popover: var(--scl-color-white);
+  --scl-popover-foreground: var(--scl-color-black);
+  --scl-border: hsl(120, 80%, 25%);
+  --scl-ring: hsl(120, 80%, 25%);
+  --scl-input: var(--scl-color-white);
+}
+
+/* Screen Reader Only utility */
+.scl-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}

@@ -112,3 +112,10 @@ export const AsLink: Story = {
     </Button>
   ),
 };
+
+export const Loading: Story = {
+  args: {
+    children: 'Submitting...',
+    loading: true,
+  },
+};

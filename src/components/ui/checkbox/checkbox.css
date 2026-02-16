@@ -13,8 +13,8 @@
 }
 
 .scl-checkbox:focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 1px var(--scl-ring) !important;
+  outline: var(--scl-focus-ring-width) solid var(--scl-ring);
+  outline-offset: var(--scl-focus-ring-offset);
 }
 
 .scl-checkbox:disabled {

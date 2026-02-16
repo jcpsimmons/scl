@@ -41,16 +41,19 @@ export const spacing = {
   96: '24rem',
 } as const;
 
+/**
+ * Border radius tokens. All values are 0px — SCL enforces sharp corners everywhere.
+ */
 export const borderRadius = {
   none: '0px',
-  sm: 'calc(var(--radius) - 4px)',
-  md: 'calc(var(--radius) - 2px)',
-  DEFAULT: 'var(--radius)',
-  lg: 'var(--radius)',
-  xl: 'calc(var(--radius) + 4px)',
-  '2xl': 'calc(var(--radius) + 8px)',
-  '3xl': 'calc(var(--radius) + 16px)',
-  full: '9999px',
+  sm: '0px',
+  md: '0px',
+  DEFAULT: '0px',
+  lg: '0px',
+  xl: '0px',
+  '2xl': '0px',
+  '3xl': '0px',
+  full: '0px',
 } as const;
 
 export type SpacingTokens = typeof spacing;

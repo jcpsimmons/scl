@@ -18,8 +18,23 @@
 }
 
 .scl-input:focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 1px var(--scl-primary) !important;
+  outline: var(--scl-focus-ring-width) solid var(--scl-ring);
+  outline-offset: var(--scl-focus-ring-offset);
+}
+
+/* Error state */
+.scl-input--error {
+  border-color: var(--scl-destructive);
+  color: var(--scl-destructive);
+}
+
+.scl-input--error:focus-visible {
+  outline-color: var(--scl-destructive);
+}
+
+.scl-input--error::placeholder {
+  color: var(--scl-destructive);
+  opacity: 0.5;
 }
 
 .scl-input:disabled {

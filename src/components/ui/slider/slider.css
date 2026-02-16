@@ -35,7 +35,8 @@
 }
 
 .scl-slider__thumb:focus-visible {
-  outline: none;
+  outline: var(--scl-focus-ring-width) solid var(--scl-ring);
+  outline-offset: var(--scl-focus-ring-offset);
 }
 
 .scl-slider__thumb:hover {

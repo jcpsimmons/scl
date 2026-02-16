@@ -15,9 +15,9 @@
   font-family: var(--scl-font-mono);
 }
 
-.scl-select-trigger:focus {
-  outline: none;
-  box-shadow: 0 0 0 1px var(--scl-ring) !important;
+.scl-select-trigger:focus-visible {
+  outline: var(--scl-focus-ring-width) solid var(--scl-ring);
+  outline-offset: var(--scl-focus-ring-offset);
 }
 
 .scl-select-trigger:disabled {

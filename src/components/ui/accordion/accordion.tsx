@@ -3,6 +3,7 @@ import * as React from 'react';
 import { cx } from '@/lib/utils';
 import './accordion.css';
 
+/** Root accordion container. Manages open/closed state of accordion items. */
 const Accordion = AccordionPrimitive.Root;
 
 const ChevronIcon = () => (

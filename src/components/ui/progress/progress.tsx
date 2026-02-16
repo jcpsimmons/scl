@@ -15,7 +15,7 @@ const Progress = React.forwardRef<React.ElementRef<typeof ProgressPrimitive.Root
     return (
       <div className="scl-progress-wrapper">
         {(label || showPercentage) && (
-          <div className="scl-progress-label">
+          <div className="scl-progress-label" role="status" aria-live="polite">
             {label && <span>{label}</span>}
             {showPercentage && <span>{Math.round(value)}%</span>}
           </div>

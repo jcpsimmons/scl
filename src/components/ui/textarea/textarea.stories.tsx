@@ -56,3 +56,11 @@ export const WithRows: Story = {
     rows: 5,
   },
 };
+
+export const Error: Story = {
+  args: {
+    placeholder: 'Error state',
+    error: true,
+    defaultValue: 'Invalid content',
+  },
+};

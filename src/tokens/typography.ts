@@ -5,6 +5,7 @@
 
 export const typography = {
   fontFamily: {
+    terminal: ['BigBlueTerm437', 'monospace'],
     sans: [
       'ui-sans-serif',
       'system-ui',
